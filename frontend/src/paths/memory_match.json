@@ -1,0 +1,6 @@
+{
+  "created": 0,
+  "screen": {"w": 0, "h": 0},
+  "_note": "Record your path here: reset (camera turn + walk to Memory Match board + press E). Use the recorder in the macro to capture this path, then save it here. The macro will replay these events when Memory Match cooldown is ready.",
+  "events": []
+}

@@ -1,0 +1,874 @@
+{
+  "meta": {
+    "feature": "quest_board",
+    "label": "board_path",
+    "created": "2026-09-15T08:26:37.080943+00:00",
+    "speed_multiplier": 1.0
+  },
+  "events": [
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.2563657760620117
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.7629022598266602
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.794337272644043
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.8246314525604248
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.8564848899841309
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.8877477645874023
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.9188590049743652
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.9500164985656738
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 1.9844856262207031
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.0158164501190186
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.046457529067993
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.077910900115967
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.1085476875305176
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.1397078037261963
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.170999050140381
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.202333450317383
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.234020948410034
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.2654080390930176
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.2964742183685303
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.3276989459991455
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.3587751388549805
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.3901748657226562
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.421609401702881
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.4527769088745117
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.4866249561309814
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.518249988555908
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.549349546432495
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.5804402828216553
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.6117002964019775
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.6429800987243652
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.6742727756500244
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.7050020694732666
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.736412286758423
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.767901659011841
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.799100875854492
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.830479145050049
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.8613524436950684
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.891986131668091
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.9240713119506836
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.9570727348327637
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 2.991248846054077
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.0219552516937256
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.0539464950561523
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.084989070892334
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.1162705421447754
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.147568941116333
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.1784374713897705
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.2094366550445557
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.2413170337677
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.272322654724121
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.303454875946045
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.3347678184509277
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.3660531044006348
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.396667957305908
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.428151845932007
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.4595861434936523
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.494117498397827
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.525010585784912
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.556570529937744
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.5874135494232178
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.6188547611236572
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.649839401245117
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.6813101768493652
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.7123868465423584
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.7435390949249268
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.7743618488311768
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.8058903217315674
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.837596893310547
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.868591070175171
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.899688959121704
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.931156873703003
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.9619662761688232
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 3.9967315196990967
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 4.027568817138672
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 4.059211492538452
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "space",
+      "delta": 0,
+      "t": 4.063964605331421
+    },
+    {
+      "type": "key_up",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "space",
+      "delta": 0,
+      "t": 4.171662330627441
+    },
+    {
+      "type": "key_up",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 6.176089763641357
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.179303407669067
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.682163953781128
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.714142560958862
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.744955539703369
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.775400638580322
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.807098627090454
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.8382298946380615
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.869701147079468
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.901297330856323
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.932060718536377
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.963680982589722
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 6.997623920440674
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 7.0288636684417725
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 7.060115098953247
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 7.091366291046143
+    },
+    {
+      "type": "key_up",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "d",
+      "delta": 0,
+      "t": 7.101129770278931
+    },
+    {
+      "type": "key_down",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 7.194296360015869
+    },
+    {
+      "type": "key_up",
+      "x": 0,
+      "y": 0,
+      "button": "",
+      "key": "s",
+      "delta": 0,
+      "t": 7.371234655380249
+    }
+  ]
+}

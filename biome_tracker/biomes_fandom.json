@@ -1,0 +1,2144 @@
+{
+ "NORMAL": {
+  "name": "NORMAL",
+  "color": "",
+  "chat_message": "",
+  "category": "weather",
+  "spawn_chance": "Default biome (always available)",
+  "duration": "",
+  "how_to_get": "The basic, grassy and plain biome — the default world state that is active whenever no other biome runs.",
+  "description": "The basic, grassy, and plain biome. This biome does not currently have any Auras related to it. It appears as a normal grassy map with no special features whatsoever. It is the default biome of the game, and the one that will be switched to after other weather/biomes disappear until another one is chosen. During Christmas events, this biome is replaced by Snowy; During Easter events, this biome is replaced by Eggland",
+  "breakthrough_multiplier": null,
+  "native_auras": [],
+  "image_file": "Daytime img.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/NORMAL",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c9/Daytime_img.png/revision/latest?cb=20241116044859"
+ },
+ "WINDY": {
+  "name": "WINDY",
+  "color": "#91F7FF",
+  "chat_message": "A refreshing and cool wind passes through the world..",
+  "category": "weather",
+  "spawn_chance": "1 in 500/s (0.2%/s)",
+  "duration": "2 minutes",
+  "how_to_get": "A common weather biome: a refreshing breeze rolls across the island, and Windy-native auras keep their boosted odds while it is active.",
+  "description": "[Windy]:  Windy has a spawn rate of 1 in 500/s (0.2%/s) and a duration of 2 minutes. There are no changes in the atmosphere and the ground, although the leaves on the trees move, and the swirl line of wind flow to the East. This biome has a Breakthrough Multiplier of 3x, it features 7 unique auras (and 1 mutation)",
+  "breakthrough_multiplier": 3,
+  "native_auras": [
+   {
+    "name": "Wind",
+    "native_rarity": 300,
+    "breakthrough_rarity": 900,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Flow",
+    "native_rarity": 29000,
+    "breakthrough_rarity": 87000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Stormal",
+    "native_rarity": 30000,
+    "breakthrough_rarity": 90000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Vortex",
+    "native_rarity": 133333,
+    "breakthrough_rarity": 399999,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Stormal : Hurricane",
+    "native_rarity": 4500000,
+    "breakthrough_rarity": 13500000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Aviator",
+    "native_rarity": 8000000,
+    "breakthrough_rarity": 24000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Maelstrom",
+    "native_rarity": 103333333,
+    "breakthrough_rarity": 309999999,
+    "exclusive_only": false,
+    "limited": false
+   }
+  ],
+  "image_file": "Windy img(fixed).png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/WINDY",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/19/Windy_img%28fixed%29.png/revision/latest?cb=20241116060252",
+  "music_file": "Smooth Vibes (c).mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Smooth_Vibes_(c).mp3"
+ },
+ "SNOWY": {
+  "name": "SNOWY",
+  "color": "#C4F5F6",
+  "chat_message": "White snow and cold begin to cover the surroundings..",
+  "category": "weather",
+  "spawn_chance": "1 in 600/s (0.166%/s)",
+  "duration": "2 minutes",
+  "how_to_get": "A common weather biome: snow begins to blanket the island, and Snowy-native auras keep their boosted odds while it is active.",
+  "description": "[Snowy]:  Snowy has a spawn rate of 1 in 600/s (0.166%/s) and a duration of 2 minutes. During Christmas event 2025, this biome replaces the normal biome. This biome turns the ground white and envelops the map in a thin mist. This biome has a Breakthrough Multiplier of 3x, it includes 5 unique Auras",
+  "breakthrough_multiplier": 3,
+  "native_auras": [
+   {
+    "name": "Glacier",
+    "native_rarity": 768,
+    "breakthrough_rarity": 2304,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Permafrost",
+    "native_rarity": 24500,
+    "breakthrough_rarity": 73500,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Blizzard",
+    "native_rarity": 9105000,
+    "breakthrough_rarity": 27315000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Chillsear",
+    "native_rarity": 125000000,
+    "breakthrough_rarity": 375000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Eisveil",
+    "native_rarity": 276666666,
+    "breakthrough_rarity": 830000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Shard Surfer",
+    "native_rarity": 75000000,
+    "breakthrough_rarity": 225000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Wonderland",
+    "native_rarity": 4000000,
+    "breakthrough_rarity": 12000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Santa Frost",
+    "native_rarity": 15000000,
+    "breakthrough_rarity": 45000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Winter Fantasy",
+    "native_rarity": 24000000,
+    "breakthrough_rarity": 72000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Express",
+    "native_rarity": 30000000,
+    "breakthrough_rarity": 90000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Abominable",
+    "native_rarity": 40000000,
+    "breakthrough_rarity": 120000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Atlas : Yuletide",
+    "native_rarity": 170000000,
+    "breakthrough_rarity": 510000000,
+    "exclusive_only": false,
+    "limited": true
+   }
+  ],
+  "image_file": "snowy_img.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/SNOWY",
+  "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/snowy_img.png",
+  "music_file": "Winter.ogg",
+  "music_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8a/Winter.ogg/revision/latest?cb=20240309085500"
+ },
+ "RAINY": {
+  "name": "RAINY",
+  "color": "#4385FF",
+  "chat_message": "Strong winds and showers sweep through the world..",
+  "category": "weather",
+  "spawn_chance": "1 in 750/s (0.133%/s)",
+  "duration": "2 minutes",
+  "how_to_get": "A common weather biome: showers sweep over the island, and Rainy-native auras keep their boosted odds while it is active.",
+  "description": "[Rainy]:  Rainy has a spawn rate of 1 in 750/s (0.133%/s) and a duration of 2 minutes. It starts to rain, and the atmosphere is covered in a gray, cloudy fog. This biome has a Breakthrough Multiplier of 4x, it includes 11 unique Auras (with 4 being mutations) and an exclusive",
+  "breakthrough_multiplier": 4,
+  "native_auras": [
+   {
+    "name": "Evanescent",
+    "native_rarity": 840000,
+    "breakthrough_rarity": 3360000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Poseidon",
+    "native_rarity": 1000000,
+    "breakthrough_rarity": 4000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Sharkyn",
+    "native_rarity": 2500000,
+    "breakthrough_rarity": 10000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Sailor",
+    "native_rarity": 3000000,
+    "breakthrough_rarity": 12000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Sailor : Flying Dutchman",
+    "native_rarity": 20000000,
+    "breakthrough_rarity": 80000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Aquaria",
+    "native_rarity": 20000000,
+    "breakthrough_rarity": 80000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Sharkyn : HammerHead",
+    "native_rarity": 30000000,
+    "breakthrough_rarity": 120000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Lumenpool",
+    "native_rarity": 55000000,
+    "breakthrough_rarity": 220000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Abyssal Hunter",
+    "native_rarity": 100000000,
+    "breakthrough_rarity": 400000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Sailor : Admiral",
+    "native_rarity": 135000000,
+    "breakthrough_rarity": 540000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Poseidon : Atlantis",
+    "native_rarity": 212500000,
+    "breakthrough_rarity": 850000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Leviathan",
+    "native_rarity": 1730400000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Lumenpool : Ramenpool",
+    "native_rarity": 157500000,
+    "breakthrough_rarity": 630000000,
+    "exclusive_only": false,
+    "limited": true
+   }
+  ],
+  "image_file": "Rainy.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/RAINY",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ec/Rainy.png/revision/latest?cb=20240510014540",
+  "music_file": "Lo-fi Chill A.mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Lo-fi_Chill_A.mp3"
+ },
+ "SAND STORM": {
+  "name": "SAND STORM",
+  "color": "#F4C27C",
+  "chat_message": "A harsh Sand Storm blocks your path...",
+  "category": "weather",
+  "spawn_chance": "1 in 3,000/s (0.033%/s)",
+  "duration": "650 seconds (10 minutes and 50 seconds)",
+  "how_to_get": "Desert weather biome released in the Era 9 update; Sand Storm-native auras keep their boosted odds while it is active.",
+  "description": "[Sand Storm]:  Sandstorm is a biome released in the Era 9 update. It has a spawn chance of 1 in 3,000/s (0.033%/s) and lasts for 650 seconds (10 minutes and 50 seconds). The biome appears to be a desert-like map with sandy texture replacing the grass, the tree leaves are replaced to a yellow-ish color. The whole map is covered in sand, which represents a sandstorm in real life. This biome has a Breakthrough Multiplier of 4x, it includes 6 unique Auras (with 1 being a mutation)",
+  "breakthrough_multiplier": 4,
+  "native_auras": [
+   {
+    "name": "Gilded",
+    "native_rarity": 128,
+    "breakthrough_rarity": 512,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Jackpot",
+    "native_rarity": 194,
+    "breakthrough_rarity": 777,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Gilded : Crowned",
+    "native_rarity": 5000,
+    "breakthrough_rarity": 20000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Anubis",
+    "native_rarity": 1800000,
+    "breakthrough_rarity": 7200000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Outlaw",
+    "native_rarity": 2000000,
+    "breakthrough_rarity": 8000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Atlas",
+    "native_rarity": 90000000,
+    "breakthrough_rarity": 360000000,
+    "exclusive_only": false,
+    "limited": false
+   }
+  ],
+  "image_file": "Sand Storm.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/SAND_STORM",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7c/Sand_Storm.png/revision/latest?cb=20241229095728",
+  "music_file": "Sandstorm.mp3",
+  "music_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4c/Sandstorm.mp3/revision/latest?cb=20241129162351"
+ },
+ "HELL": {
+  "name": "HELL",
+  "color": "#5C1219",
+  "chat_message": "A strong and violent energy of chaos overtakes the world..",
+  "category": "weather",
+  "spawn_chance": "1 in 6,666/s (0.015%/s)",
+  "duration": "666 seconds (11 minutes and 6 seconds)",
+  "how_to_get": "Chaotic weather biome from the Era 7 update; Hell-native auras keep their boosted odds while it is active.",
+  "description": "[Hell]:  The Hell Biome is a biome that released in the Era 7 update. It has a spawn chance of 1 in 6,666/s (0.015%/s) and lasts for 666 seconds (11 minutes and 6 seconds). Not much currently is known about it, but from appearance it seems to be a biome that consists of trees having their leaves dyed red, waterfalls and lakes being turned into lava, and having a hell-themed atmosphere. This biome has a Breakthrough Multiplier of 6x, it includes 7 unique Auras (with 1 being a mutation)",
+  "breakthrough_multiplier": 6,
+  "native_auras": [
+   {
+    "name": "Undead",
+    "native_rarity": 2000,
+    "breakthrough_rarity": 12000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Undead : Devil",
+    "native_rarity": 111111,
+    "breakthrough_rarity": 666666,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Hades",
+    "native_rarity": 1111111,
+    "breakthrough_rarity": 6666666,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Hellbound",
+    "native_rarity": 14166666,
+    "breakthrough_rarity": 85000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Felled",
+    "native_rarity": 30000000,
+    "breakthrough_rarity": 180000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Bloodlust",
+    "native_rarity": 50000000,
+    "breakthrough_rarity": 300000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Pythios",
+    "native_rarity": 111111111,
+    "breakthrough_rarity": 666666666,
+    "exclusive_only": false,
+    "limited": false
+   }
+  ],
+  "image_file": "New Hell Biome.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/HELL",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b3/New_Hell_Biome.png/revision/latest?cb=20260105024637",
+  "music_file": "Sakupen Hell.mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Sakupen_Hell.mp3"
+ },
+ "STARFALL": {
+  "name": "STARFALL",
+  "color": "#6784E0",
+  "chat_message": "Beautiful and dreamy starlight pours into the world..",
+  "category": "weather",
+  "spawn_chance": "1 in 7,500/s (0.013%/s)",
+  "duration": "10 minutes",
+  "how_to_get": "A dark blue sky with dreamy starlight pouring over the island; Starfall-native auras keep their boosted odds while it is active.",
+  "description": "[Starfall]:  With a spawn rate of 1 in 7,500/s (0.013%/s) and a duration of 10 minutes, the Starfall biome has a dark blue atmosphere with stars falling from the sky. The map seems darker, and the ground turns black and light blue. Stella's Star has a 1 in 20 (5%) chance of spawning instead of regular potions and coins while this biome is active. This biome has a Breakthrough Multiplier of 5x, it includes 11 unique Auras (with 3 being mutations)",
+  "breakthrough_multiplier": 5,
+  "native_auras": [
+   {
+    "name": "Starlight",
+    "native_rarity": 10000,
+    "breakthrough_rarity": 50000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "StarRider",
+    "native_rarity": 10000,
+    "breakthrough_rarity": 50000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Starlight : Kunzite",
+    "native_rarity": 200000,
+    "breakthrough_rarity": 1000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Astral",
+    "native_rarity": 267200,
+    "breakthrough_rarity": 1336200,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Orion",
+    "native_rarity": 600000,
+    "breakthrough_rarity": 3000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Stargazer",
+    "native_rarity": 1840000,
+    "breakthrough_rarity": 9200000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Starscourge",
+    "native_rarity": 2000000,
+    "breakthrough_rarity": 10000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Sirius",
+    "native_rarity": 2800000,
+    "breakthrough_rarity": 14000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Starborn",
+    "native_rarity": 14400000,
+    "breakthrough_rarity": 72000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Starscourge : Radiant",
+    "native_rarity": 20000000,
+    "breakthrough_rarity": 100000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Astral : Zodiac",
+    "native_rarity": 53400000,
+    "breakthrough_rarity": 267200000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "StarRider : Starfish",
+    "native_rarity": 25000,
+    "breakthrough_rarity": 250000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "StarRider : yourdidit",
+    "native_rarity": 246913,
+    "breakthrough_rarity": 1234567,
+    "exclusive_only": false,
+    "limited": true
+   }
+  ],
+  "image_file": "StarfallInGame.gif",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/STARFALL",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cd/StarfallInGame.gif/revision/latest?cb=20260116104138",
+  "music_file": "Analysis.mp3",
+  "music_url": "https://static.wikia.nocookie.net/sol-rng/images/5/59/Analysis.mp3/revision/latest?cb=20240402124155"
+ },
+ "HEAVEN": {
+  "name": "HEAVEN",
+  "color": "#E7C698",
+  "chat_message": "A hand of angel leads you into divine place...",
+  "category": "weather",
+  "spawn_chance": "1 in 7,777/s (0.0129%/s)",
+  "duration": "240 seconds (4 minutes)",
+  "how_to_get": "Divine weather biome from the Eon 1-12 update; Heaven-native auras keep their boosted odds while it is active.",
+  "description": "[Heaven]:  The Heaven is a biome that was released in the Eon 1-12 update. It has a 1 in 7,777/s (0.0128584%/s) chance of appearing, lasting for 240 seconds (4 minutes). During the Heaven biome, the map turns into a yellow-themed area as mist obscures the player's vision. The trees, grass, and other features also turn a yellow color. On the very top of the map, there is a yellow glowing sigil with a bright star in it. This biome has a Breakthrough Multiplier of 5x, it includes 11 unique Auras (with 2 being mutations)",
+  "breakthrough_multiplier": 5,
+  "native_auras": [
+   {
+    "name": "Divinus",
+    "native_rarity": 6,
+    "breakthrough_rarity": 32,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Divinus : Angel",
+    "native_rarity": 24000,
+    "breakthrough_rarity": 120000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Hope",
+    "native_rarity": 97745,
+    "breakthrough_rarity": 488725,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Faith",
+    "native_rarity": 1450000,
+    "breakthrough_rarity": 7250000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Divinus : Guardian",
+    "native_rarity": 1555555,
+    "breakthrough_rarity": 7777777,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Icarus",
+    "native_rarity": 3132000,
+    "breakthrough_rarity": 15660000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Oculus",
+    "native_rarity": 4666668,
+    "breakthrough_rarity": 23333340,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Dominion",
+    "native_rarity": 14000000,
+    "breakthrough_rarity": 70000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Prophecy",
+    "native_rarity": 55129886,
+    "breakthrough_rarity": 275649430,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Archangel",
+    "native_rarity": 70000000,
+    "breakthrough_rarity": 350000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Ascendant",
+    "native_rarity": 187000000,
+    "breakthrough_rarity": 935000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Aether : Disappointment",
+    "native_rarity": 6666666,
+    "breakthrough_rarity": 33333330,
+    "exclusive_only": false,
+    "limited": true
+   }
+  ],
+  "image_file": "HeavenBiomeInGame.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/HEAVEN",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0a/HeavenBiomeInGame.png/revision/latest?cb=20251206084838"
+ },
+ "CORRUPTION": {
+  "name": "CORRUPTION",
+  "color": "#9042FF",
+  "chat_message": "Poisonous pollution spreads throughout the world..",
+  "category": "weather",
+  "spawn_chance": "1 in 9,000/s (0.011%/s)",
+  "duration": "650 seconds (10 minutes and 50 seconds)",
+  "how_to_get": "Toxic weather biome from the Era 7 update; Corruption-native auras keep their boosted odds while it is active.",
+  "description": "[Corruption]:  The Corruption Biome is a biome that was released in the Era 7 Update. It has a spawn chance of 1 in 9,000/s (0.0111%/s) and lasts for 650 seconds (10 minutes and 50 seconds). Some purple particles appear on the map, and the water turns into a purple liquid. Additionally, the map is shrouded in a purple fog. On the top of the map, there is a purple orb. Similarly to the Heaven biome, black lines with purple outlines rain upon the island, it has a Breakthrough Multiplier of 5x, and it includes 6 unique auras (with 1 being a mutation) and an exclusive",
+  "breakthrough_multiplier": 5,
+  "native_auras": [
+   {
+    "name": "Hazard",
+    "native_rarity": 1400,
+    "breakthrough_rarity": 7000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Corrosive",
+    "native_rarity": 2400,
+    "breakthrough_rarity": 12000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Hazard : Rays",
+    "native_rarity": 14000,
+    "breakthrough_rarity": 70000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Symbiosis",
+    "native_rarity": 266240,
+    "breakthrough_rarity": 1331201,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Parasite",
+    "native_rarity": 600000,
+    "breakthrough_rarity": 3000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Impeached",
+    "native_rarity": 40000000,
+    "breakthrough_rarity": 200000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Monarch",
+    "native_rarity": 3000000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Impeached : Imcrine",
+    "native_rarity": 50000000,
+    "breakthrough_rarity": 250000000,
+    "exclusive_only": false,
+    "limited": true
+   }
+  ],
+  "image_file": "CorruptionBiomeNew.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/CORRUPTION",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/80/CorruptionBiomeNew.png/revision/latest?cb=20260104105018",
+  "music_file": "Corruption Is the worst biome.mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Corruption_Is_the_worst_biome.mp3"
+ },
+ "NULL": {
+  "name": "NULL",
+  "color": "",
+  "chat_message": "It's too dark here..",
+  "category": "weather",
+  "spawn_chance": "1 in 10,100/s",
+  "duration": "99 seconds (1 minute and 39 seconds)",
+  "how_to_get": "A dark void biome. Breakthrough does not work inside Null, and a few auras can only be rolled here.",
+  "description": "[Null]: It's too dark here.. During the Null biome, the map turns into a gray-themed area as mist obscures the player's vision. The trees, ground, and other features also turn a gray color. This biome has a 1 in 10,100/s (0.0075%/s) chance of appearing every second, and only lasts for 99 seconds (1 minute and 39 seconds). According to the now deleted Official Trello, this biome's description reads as, \"err#r. e##or. A f@ta1 err0r 0ccurred during biome se1ection......\". This biome has a Breakthrough Multiplier of 1000x, and has 1 special, 4 unique auras and an exclusive. The Null biome is also necessary to get into The Limbo.",
+  "breakthrough_multiplier": 1000,
+  "native_auras": [
+   {
+    "name": "Undefined",
+    "native_rarity": 1111,
+    "breakthrough_rarity": 1111000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Flowed",
+    "native_rarity": 2121,
+    "breakthrough_rarity": 2121121,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Shiftlock",
+    "native_rarity": 3325,
+    "breakthrough_rarity": 3325000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Nihility",
+    "native_rarity": 9000,
+    "breakthrough_rarity": 9000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Empty",
+    "native_rarity": 11111111,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Breakthrough (Aura)",
+    "native_rarity": 1999999999,
+    "breakthrough_rarity": null,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Defined",
+    "native_rarity": 2222,
+    "breakthrough_rarity": 2222000,
+    "exclusive_only": false,
+    "limited": true
+   }
+  ],
+  "image_file": "Null daytime.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/NULL",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/38/Null_daytime.png/revision/latest?cb=20241227051448",
+  "music_file": "Tension： Luminate.mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Tension：_Luminate.mp3"
+ },
+ "DREAMSPACE": {
+  "name": "DREAMSPACE",
+  "color": "#FF69B4",
+  "chat_message": "You begin to feel sleepy...",
+  "category": "rare",
+  "spawn_chance": "1 in 3,500,000/s",
+  "duration": "3mins 12sec (192s)",
+  "how_to_get": "Extremely rare dream biome; its exclusive auras (Star Rider, ★ series and more) cannot roll in any other biome.",
+  "description": "[Dreamspace]: You begin to feel sleepy... [Dreamspace]: Waking up... Not to be confused with Dreamscape, an aura with a similar name. The Dreamspace biome is the second rarest biome, having a chance of 1 in 3,500,000/s (0.00002857%/s) to spawn during Normal Biome. This biome has a duration of 3mins 12sec (192s). This biome is themed pink, surrounded by pink effects similar as the effect while rolling a 1m+ aura. There are also tables, doors, beds, chairs that are colored pink floating in the sky. All the leaves of the trees turn pink and the wood turns white with white soil. In some corners of the island there are tall pink trunks that have many branches. The whole island is covered in pink mist. This biome is themed around someone who dreams and sees his imagination. There was a bug when released where you could accidentally obtain the new biome with the Biome Randomizer or the Strange Controller, but it was shortly fixed. Because of this bug, the first server to be in the Dreamspace biome and have players obtain both the ★ and ★★ Dreamspace auras; These players being Neon(NeonOof2) and Nexzo(NotNexz) each obtaining the first ★ and ★★ auras respectively. This biome has no Breakthrough Multiplier, and as of now has five auras, more could exist though. Each respective star auras have their unique features. ★ has one small pink star orbiting the player. ★★ instead has two medium sized pink stars orbiting the player , forming a 180° angle between each star. Lastly, ★★★ has the same two orbiting starts, as well as two pink pillars to the side of the player. Meanwhile, Dreammetric, has its own distinct appearance.",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "★",
+    "native_rarity": 100,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "★★",
+    "native_rarity": 1000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "★★★",
+    "native_rarity": 10000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Borealis",
+    "native_rarity": 13333333,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Dreammetric",
+    "native_rarity": 320000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "Dreamspace_Biome.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/DREAMSPACE",
+  "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Dreamspace_Biome.png",
+  "music_file": "DreamspaceTheme.mp3",
+  "music_url": "https://static.wikia.nocookie.net/sol-rng/images/9/9e/DreamspaceTheme.mp3/revision/latest?cb=20250209185457"
+ },
+ "GLITCHED": {
+  "name": "GLITCHED",
+  "color": "#65FF65",
+  "chat_message": "",
+  "category": "rare",
+  "spawn_chance": "1 in 30,000",
+  "duration": "2 minutes and 44 seconds (164 seconds) before disappearing",
+  "how_to_get": "The rarest biome in the game. All native auras ignore Breakthrough odds, and it no longer posts any messages in the chatbox when it spawns.",
+  "description": "For more uses of \"Glitch\", see Glitch (disambiguation). The biome no longer sends the messages below in the chatbox when it spawns. [Manager]: Unexpected error occurred. [Code 404] [Manager]: [Code 404] has resolved. The Glitched biome is the rarest biome in the game, having a chance of 1 in 30,000 (0.00333%) to be chosen every biome change. However, it had a 1 in 15,000 (0.00666%) chance during the \"x2 Glitched Biome\" event. Every tree has their leaves turn into a glowing glitchy computer fuzz while the entire map is covered in a deep darkness. The ground turns black and gray with the pitch-black sky, simulating the event where the \"sky\" parts breaks down. The biome lasts for 2 minutes and 44 seconds (164 seconds) before disappearing. All native auras (except auras native to Rare Biomes) ignore Breakthrough odds, meaning they are obtainable at their native rarities. It also grants the hidden achievement \"??? (Something Went Wrong)\" upon a player's first time encounter (Must be in the server before the biome spawns). This biome features three unique auras that cannot be obtained in any other biome:",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Fault",
+    "native_rarity": 3000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Glitch",
+    "native_rarity": 12210110,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Oppression",
+    "native_rarity": 220000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "GlitchedBiomeSpawnIndicator.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/GLITCHED",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/db/GlitchedBiomeSpawnIndicator.png/revision/latest?cb=20260218180224",
+  "music_file": "OgresnidelyWhiplash.mp3",
+  "music_url": "https://static.wikia.nocookie.net/sol-rng/images/d/da/OgresnidelyWhiplash.mp3/revision/latest?cb=20250724091942"
+ },
+ "CYBERSPACE": {
+  "name": "CYBERSPACE",
+  "color": "#004FA3",
+  "chat_message": "Signal_Received | From: Island_SOL",
+  "category": "rare",
+  "spawn_chance": "1/5,000 (via Strange Controller / Biome Randomizer)",
+  "duration": "12 minutes",
+  "how_to_get": "Digital biome reached via the Strange Controller or Biome Randomizer; a signal log prints in the chat when it starts.",
+  "description": "[Cyberspace]:  [STATUS: SENDING...] [LOCATION: ISLAND_SOL] [HOST: JAKE] [REQUEST: APPROVED] [STATUS: RECIEVED] WELCOME_[USERNAME]_ CYBERSPACE_ [Cyberspace]: Signal Lost. The Cyberspace biome is the third rarest biome. It has a 1/5,000 (0.02%) chance to appear when using either the Strange Controller or the Biome Randomizer. The biome lasts for 12 minutes. This biome has a Breakthrough Multiplier of 2x, it includes 16 unique auras (6 being mutations) and two auras that cannot be obtained in any other biome",
+  "breakthrough_multiplier": 2,
+  "native_auras": [
+   {
+    "name": "Forbidden",
+    "native_rarity": 202,
+    "breakthrough_rarity": 404,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Player",
+    "native_rarity": 1500,
+    "breakthrough_rarity": 3000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Player : Respawn",
+    "native_rarity": 999999,
+    "breakthrough_rarity": 1999999,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Virtual",
+    "native_rarity": 1250000,
+    "breakthrough_rarity": 2500000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Metabytes",
+    "native_rarity": 2000000,
+    "breakthrough_rarity": 4000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Virtual : Fatal Error",
+    "native_rarity": 20206500,
+    "breakthrough_rarity": 40413000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Matrix",
+    "native_rarity": 25000000,
+    "breakthrough_rarity": 50000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Antivirus",
+    "native_rarity": 31250000,
+    "breakthrough_rarity": 62500000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Virtual : Full Control",
+    "native_rarity": 40000000,
+    "breakthrough_rarity": 80000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Virtual : WorldWide",
+    "native_rarity": 43750000,
+    "breakthrough_rarity": 87500000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Virtual Memory",
+    "native_rarity": 116116116,
+    "breakthrough_rarity": 232232232,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Cytokinesis",
+    "native_rarity": 165200236,
+    "breakthrough_rarity": 330400472,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Matrix : Overdrive",
+    "native_rarity": 251500000,
+    "breakthrough_rarity": 503000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Matrix : Reality",
+    "native_rarity": 300510051,
+    "breakthrough_rarity": 601020102,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Aegis",
+    "native_rarity": 412500000,
+    "breakthrough_rarity": 825000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Pixelation",
+    "native_rarity": 536870912,
+    "breakthrough_rarity": 1073741824,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Meta",
+    "native_rarity": 10000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Illusionary",
+    "native_rarity": 10000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Eggis",
+    "native_rarity": 575000000,
+    "breakthrough_rarity": 1150000000,
+    "exclusive_only": false,
+    "limited": true
+   }
+  ],
+  "image_file": "CyberspaceNew.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/CYBERSPACE",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e9/CyberspaceNew.png/revision/latest?cb=20260730105943",
+  "music_file": "Underworld Factory.ogg",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Underworld_Factory.ogg"
+ },
+ "SINGULARITY": {
+  "name": "SINGULARITY",
+  "color": "#FFA375",
+  "chat_message": "The Singularity pulls in everything, including you...",
+  "category": "rare",
+  "spawn_chance": "1 in 100 to replace STARFALL",
+  "duration": "20 minutes or until someone in the server rolls Astraios, which will play the aura's aftermath effect",
+  "how_to_get": "Replaces Starfall with a 1 in 100 chance; it ends after 20 minutes or the moment someone rolls Astraios.",
+  "description": "[Singularity]: The Singularity pulls in everything, including you... It seems like you have committed an act you shouldn't have. The Singularity biome has a 1/100 (1%) chance to replace the Starfall Biome when it spawns. The method of how Starfall spawns does not matter, be it from a Biome Randomizer, Biome Selector, or even just a naturally spawning Starfall. It can also be spawned using a Singularity Catalyst. If a player is present before the biome spawns and witnesses the cutscene of it spawning, the Accretion Disk buff will be given. The biome lasts for 20 minutes or until someone in the server rolls Astraios, which will play the aura's aftermath effect. This biome has a Breakthrough Multiplier of 5x, it includes 3 unique auras and 9 exclusives:",
+  "breakthrough_multiplier": 5,
+  "native_auras": [
+   {
+    "name": "Comet",
+    "native_rarity": 24000,
+    "breakthrough_rarity": 120000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Pleiades",
+    "native_rarity": 65358,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Pulsar",
+    "native_rarity": 83345,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Constella",
+    "native_rarity": 86988,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Galaxy",
+    "native_rarity": 1000000,
+    "breakthrough_rarity": 5000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Vega",
+    "native_rarity": 2580000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Astronaut",
+    "native_rarity": 6117196,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Centurion",
+    "native_rarity": 25000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Gargantua",
+    "native_rarity": 86000000,
+    "breakthrough_rarity": 430000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Projection",
+    "native_rarity": 197000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Point : Zero",
+    "native_rarity": 521121900,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Astraios",
+    "native_rarity": 1750000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "AstraiosClosingSingularity.mp4",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/SINGULARITY",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/db/AstraiosClosingSingularity.mp4/revision/latest?cb=20260526191759",
+  "music_file": "SUBVERSION ACT (SRNG Ver.) (Loop).mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SUBVERSION_ACT_(SRNG_Ver.)_(Loop).mp3"
+ },
+ "TIME": {
+  "name": "TIME",
+  "color": "",
+  "chat_message": "",
+  "category": "weather",
+  "spawn_chance": "Passive — cycles between Daytime and Nighttime",
+  "duration": "Passive",
+  "how_to_get": "Passive world state — it simply cycles between Daytime and Nighttime and never spawns as an event biome.",
+  "description": "Time is a passive type of biome that doesn't interfere with any of the other biomes, except for a visual change. Time cycles between Daytime and Nighttime. Daytime has a Breakthrough Multiplier of 10x and includes 2 unique auras (one being a mutation):",
+  "breakthrough_multiplier": 10,
+  "native_auras": [
+   {
+    "name": "Solar",
+    "native_rarity": 5000,
+    "breakthrough_rarity": 50000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Solar : Solstice",
+    "native_rarity": 500000,
+    "breakthrough_rarity": 5000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Lunar",
+    "native_rarity": 5000,
+    "breakthrough_rarity": 50000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Lunar : Full Moon",
+    "native_rarity": 500000,
+    "breakthrough_rarity": 5000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Twilight",
+    "native_rarity": 600000,
+    "breakthrough_rarity": 6000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Lullaby",
+    "native_rarity": 1700000,
+    "breakthrough_rarity": 17000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Twilight : Iridescent Memory",
+    "native_rarity": 6000000,
+    "breakthrough_rarity": 60000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Melodic : Serenade",
+    "native_rarity": 7700000,
+    "breakthrough_rarity": 77000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Twilight : Withering Grace",
+    "native_rarity": 18000000,
+    "breakthrough_rarity": 180000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Dreamer",
+    "native_rarity": 31500000,
+    "breakthrough_rarity": 315000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Dream Catcher",
+    "native_rarity": 2222222222,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "SUBVERSION ACT (SRNG Ver.) (Loop).mp3",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/TIME",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/03/SUBVERSION_ACT_%28SRNG_Ver.%29_%28Loop%29.mp3/revision/latest?cb=20260430203946",
+  "hidden": true,
+  "music_file": "Inside Tracks - Sunset Chill (Bed Version).mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Inside_Tracks_-_Sunset_Chill_(Bed_Version).mp3"
+ },
+ "GRAVEYARD": {
+  "name": "GRAVEYARD",
+  "color": "#FFFFFF",
+  "chat_message": "Nameless ghosts past by you...",
+  "category": "event",
+  "spawn_chance": "1 in 4 (25%) per Nighttime",
+  "duration": "Until Night ends",
+  "how_to_get": "Night event biome: when Night begins it can override the current biome (except Glitched) and lasts until Night ends.",
+  "description": "[Graveyard]:  Graveyard has a spawn rate of 1 in 4 (25%) per Nighttime, overriding the current biome except Glitched, and lasts until Night ends. In the recent Halloween update, Graveyard was brought back, and now has a 1 in 3 (33.3%) chance to spawn during night, overriding any current biome except for Glitched and Dreamscape This biome was added during the Halloween Update 2024, It consists of various shades of grey trees, grass, rocks, tombstones, and coffins are scattered across the map. 2024 Limited Auras",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Lunar : Nightfall",
+    "native_rarity": 3000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Cryptfire",
+    "native_rarity": 21000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Soul Hunter",
+    "native_rarity": 40000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Dullahan",
+    "native_rarity": 72000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Harvester",
+    "native_rarity": 666000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Apostolos : Veil",
+    "native_rarity": 800000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Lunar : Cultist",
+    "native_rarity": 2000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Headless",
+    "native_rarity": 3200000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Werewolf",
+    "native_rarity": 3600000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Grief",
+    "native_rarity": 88250000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Graveborn",
+    "native_rarity": 290000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Afterparty",
+    "native_rarity": 440000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Apocalypse",
+    "native_rarity": 624000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Banshee",
+    "native_rarity": 730000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Ravage",
+    "native_rarity": 930000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "Graveyard_Biome.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/GRAVEYARD",
+  "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Graveyard_Biome.png"
+ },
+ "PUMPKIN MOON": {
+  "name": "PUMPKIN MOON",
+  "color": "#D55F09",
+  "chat_message": "An evil and eerie energy has taken over the world!",
+  "category": "event",
+  "spawn_chance": "1 in 4 (25%) per Nighttime",
+  "duration": "Until Night ends",
+  "how_to_get": "Night event biome: when Night begins it can override the current biome (except Glitched) and lasts until Night ends.",
+  "description": "[Pumpkin Moon]:  Pumpkin Moon has a spawn rate of 1 in 4 (25%) per Nighttime, overriding the current biome except Glitched, and lasts until Night ends. In the recent halloween update, Pumpkin Moon was brought back with now 1 in 3 (33.3%) chance per Night, overriding any current biome except for Glitched and Dreamscape This biome was added during the Halloween Update 2024, it consists of orange theming and adds lamp posts, pumpkins and dirt pathways to the map. During this biome, a merchant named \"Jack\" will spawn, selling a very large variety of potions, runes, and other objects for a currency known as \"Pumpkin|Pump Tokens\". In the 2025 Halloween Update, Jack was brought back but now contains a new feature known as Aura Hunts and a replaced currency known as Bounty Medals, along with selling auras. 2024 Limited Auras",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Pump",
+    "native_rarity": 200000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Vital",
+    "native_rarity": 6000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Moonflower",
+    "native_rarity": 10000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Nightmare Sky",
+    "native_rarity": 190000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Apostolos : Veil",
+    "native_rarity": 800000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Pump : Trickster",
+    "native_rarity": 600000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Celestial : Wicked",
+    "native_rarity": 1500000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Sinister",
+    "native_rarity": 15000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Headless : Horseman",
+    "native_rarity": 32000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Phantasma",
+    "native_rarity": 462000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Arachnophobia",
+    "native_rarity": 940000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "Hallowed_Biome.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/PUMPKIN_MOON",
+  "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Hallowed_Biome.png"
+ },
+ "BLAZING SUN": {
+  "name": "BLAZING SUN",
+  "color": "#FFFF00",
+  "chat_message": "The hot sunlight begins to shine on you.",
+  "category": "event",
+  "spawn_chance": "1 in 4 (25%) per Daytime transition",
+  "duration": "3 minutes",
+  "how_to_get": "Day event biome: a 1 in 4 (25%) chance to appear whenever it turns Daytime, lasting for 3 minutes.",
+  "description": "[Blazing Sun]:  Blazing Sun has a 1 in 4 (25%) chance of spawning whenever it turns Daytime (during Summer 2025, it could also be spawned after using Biome Randomizer or Strange Controller), lasting for 3 minutes. Blazing Sun will override the current biome upon spawning. (Except for Rare Biomes) Blazing Sun had a Breakthrough Multiplier of 2x during Summer 2025 and was added during the Eon 1-6 Summer 2025 Update, it consists of orange effects like the corruption biome. It has some beams, and fire themed fog. 2025 Limited Auras",
+  "breakthrough_multiplier": 2,
+  "native_auras": [
+   {
+    "name": "Manta",
+    "native_rarity": 150000000,
+    "breakthrough_rarity": 300000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Aegis : Watergun",
+    "native_rarity": 412500000,
+    "breakthrough_rarity": 825000000,
+    "exclusive_only": false,
+    "limited": false
+   },
+   {
+    "name": "Raft",
+    "native_rarity": 8000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Buoyant",
+    "native_rarity": 32000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Breeze",
+    "native_rarity": 80000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Heatstroke",
+    "native_rarity": 83430,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Floaty",
+    "native_rarity": 600000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Beach Ball",
+    "native_rarity": 1938000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Watermelon : Summersnack",
+    "native_rarity": 3200000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Vendor",
+    "native_rarity": 17500000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Nostalgia",
+    "native_rarity": 20270000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Coconut",
+    "native_rarity": 34720000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "FruitPunch",
+    "native_rarity": 45000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Goose Rave",
+    "native_rarity": 50000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Vacation",
+    "native_rarity": 58620000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Bayview",
+    "native_rarity": 60000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Bubble : Cascade",
+    "native_rarity": 110000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Life Guard : On-Duty",
+    "native_rarity": 600000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Tropical Isles",
+    "native_rarity": 730000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Pool Party",
+    "native_rarity": 972000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Crabtropica",
+    "native_rarity": 1334221000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Taverna",
+    "native_rarity": 1444444444,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Centaurus",
+    "native_rarity": 3000000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "Blazing.gif",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/BLAZING_SUN",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c2/Blazing.gif/revision/latest?cb=20260905154556",
+  "music_file": "The blazing sun song.ogg",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/The_blazing_sun_song.ogg"
+ },
+ "BLOOD RAIN": {
+  "name": "BLOOD RAIN",
+  "color": "#FF0000",
+  "chat_message": "Drops of blood begin to fall from the sky...",
+  "category": "event",
+  "spawn_chance": "Summoned with a Cursed Rune Fragment",
+  "duration": "10 minutes",
+  "how_to_get": "Summoned by using a Cursed Rune Fragment during Graveyard or Pumpkin Moon; the fragment is bought from Fischl's shop.",
+  "description": "[Blood Rain]:  Blood Rain lasts for 10 minutes and is summoned by using a Cursed Rune Fragment during Graveyard or Pumpkin Moon which is obtainable from Fischl's shop. It consists of a bloody scenery and giant red crosses scattered around the map in different sizes with varying looks, with some being hollow as well. Deep maroon fog can be seen with surrounding water also being blood-like. Black coffins standing against some structures and buildings can also be found, with a similar glowing cross symbol as one of the map crosses",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Shucks",
+    "native_rarity": 4460000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Oni",
+    "native_rarity": 6666666,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Reaper",
+    "native_rarity": 66000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Accursed",
+    "native_rarity": 82000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Bloodgarden",
+    "native_rarity": 88000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Crimson",
+    "native_rarity": 120000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Wraithlight",
+    "native_rarity": 695000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Malediction",
+    "native_rarity": 730000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Lamenthyr",
+    "native_rarity": 1000000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Erebus",
+    "native_rarity": 1200000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   }
+  ],
+  "image_file": "Bloodrain.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/BLOOD_RAIN",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e5/Bloodrain.png/revision/latest?cb=20251018035833",
+  "music_file": "Beneath-the-Dread-Moon.ogg",
+  "music_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e9/Beneath-the-Dread-Moon.ogg/revision/latest?cb=20251020160221"
+ },
+ "AURORA": {
+  "name": "AURORA",
+  "color": "#857EF0",
+  "chat_message": "An aurora begins to appear in the sky...",
+  "category": "event",
+  "spawn_chance": "1 in 50,000/s",
+  "duration": "5 minutes",
+  "how_to_get": "Rare event biome: an aurora begins to appear in the sky and native Aurora auras become available while it lasts.",
+  "description": "[Aurora]: An aurora begins to appear in the sky... [Aurora]: The aurora dissapears... Aurora lasts for 5 minutes and is summoned by using a Glowing Snow Globe during Snowy or naturally at a 1 in 50,000/s (0.002%/s) chance. The Glowing Snow Globe can be obtained by spinning the Christmas Roulette. The biome has a Breakthrough Multiplier of 2x and appears to be the exact same as the Snowy biome, with the only main difference being the Aurora manifesting in the sky.",
+  "breakthrough_multiplier": 2,
+  "native_auras": [
+   {
+    "name": "Snowball",
+    "native_rarity": 5000,
+    "breakthrough_rarity": 10000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "StarRider : Snowflake",
+    "native_rarity": 120000,
+    "breakthrough_rarity": 240000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Cryogenic",
+    "native_rarity": 250000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Gingerbread",
+    "native_rarity": 1875000,
+    "breakthrough_rarity": 3750000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Jackfrost",
+    "native_rarity": 2350000,
+    "breakthrough_rarity": 4700000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Lost Soul : Wander",
+    "native_rarity": 4700000,
+    "breakthrough_rarity": 9400000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Frostwood",
+    "native_rarity": 12250000,
+    "breakthrough_rarity": 24500000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "North Pole",
+    "native_rarity": 22500000,
+    "breakthrough_rarity": 45000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Sky Burst",
+    "native_rarity": 30000000,
+    "breakthrough_rarity": 60000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Encase",
+    "native_rarity": 115000000,
+    "breakthrough_rarity": 230000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "CryoFang",
+    "native_rarity": 190000000,
+    "breakthrough_rarity": 380000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Northern",
+    "native_rarity": 202500000,
+    "breakthrough_rarity": 405000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "EveNight",
+    "native_rarity": 212000000,
+    "breakthrough_rarity": 424000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Workshop",
+    "native_rarity": 350000000,
+    "breakthrough_rarity": 700000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Parol",
+    "native_rarity": 380000000,
+    "breakthrough_rarity": 760000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Sovereign : Frostveil",
+    "native_rarity": 500000000,
+    "breakthrough_rarity": 1000000000,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Winter Garden",
+    "native_rarity": 725006013,
+    "breakthrough_rarity": 1450012025,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Dream Traveler",
+    "native_rarity": 1012506013,
+    "breakthrough_rarity": 2025012025,
+    "exclusive_only": false,
+    "limited": true
+   },
+   {
+    "name": "Workshop : System",
+    "native_rarity": 325000000,
+    "breakthrough_rarity": 650000000,
+    "exclusive_only": false,
+    "limited": true
+   }
+  ],
+  "image_file": "Aurora_Biome.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/AURORA",
+  "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Aurora_Biome.png"
+ },
+ "EGGLAND": {
+  "name": "EGGLAND",
+  "color": "",
+  "chat_message": "",
+  "category": "event",
+  "spawn_chance": "Eggland replaces the normal biome during the 2026 Easter Event.",
+  "duration": "",
+  "how_to_get": "Easter event biome that replaces the Normal biome during the 2026 Easter event.",
+  "description": "Eggland replaces the normal biome during the 2026 Easter Event. This biome turns the ground a light green and the trees' wood white, giant versions of the Point Eggs can be seen around the map; pink, green, blue and yellow colored leaves and flowers as well as large pink fog rain from above. It reduces the egg drop time from 1 minute to 30 seconds.",
+  "breakthrough_multiplier": null,
+  "native_auras": [],
+  "image_file": "Eggland Biome.jpg",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/EGGLAND",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7e/Eggland_Biome.jpg/revision/latest?cb=20260330151134",
+  "music_file": "SoftieSpringByVibinAlone.mp3",
+  "music_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0c/SoftieSpringByVibinAlone.mp3/revision/latest?cb=20260404074628"
+ },
+ "INCINERATOR": {
+  "name": "INCINERATOR",
+  "color": "#FC6537",
+  "chat_message": "It's hotter than usual today! It's a heatwave!",
+  "category": "event",
+  "spawn_chance": "1/10 (can spawn after Event Turret)",
+  "duration": "4 minutes (240 seconds)",
+  "how_to_get": "Heatwave event biome that can follow an Event Turret; the chat announces the heatwave when it starts.",
+  "description": "[Incinerator]:  The sun is rising even hotter today... Incinerator lasts for 4 minutes (240 seconds) and can spawn at a 1/10 (10%) chance after firing the Event Turret (Overcharge/Normal doesn't matter). Incinerator appears similar to Blazing Sun but the effect on every player's screen is much more opaque and has heat particles added on to it. The map is also filled with flame effects spawning randomly. Whenever Incinerator spawns, a cutscene will play",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Raft",
+    "native_rarity": 4000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Buoyant",
+    "native_rarity": 16000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Breeze",
+    "native_rarity": 40000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Heatstroke",
+    "native_rarity": 41715,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Floaty",
+    "native_rarity": 300000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Beach Ball",
+    "native_rarity": 969000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Watermelon : Summersnack",
+    "native_rarity": 1600000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Vendor",
+    "native_rarity": 8750000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Nostalgia",
+    "native_rarity": 10135000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Coconut",
+    "native_rarity": 17360000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "FruitPunch",
+    "native_rarity": 22500000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Goose Rave",
+    "native_rarity": 25000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Vacation",
+    "native_rarity": 29310000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Bayview",
+    "native_rarity": 30000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Bubble : Cascade",
+    "native_rarity": 55000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Life Guard : On-Duty",
+    "native_rarity": 300000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Tropical Isles",
+    "native_rarity": 365000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Pool Party",
+    "native_rarity": 486000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Crabtropica",
+    "native_rarity": 667110500,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Taverna",
+    "native_rarity": 722222222,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   },
+   {
+    "name": "Centaurus",
+    "native_rarity": 1500000000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": true
+   }
+  ],
+  "image_file": "Incinerator.png",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/INCINERATOR",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5b/Incinerator.png/revision/latest?cb=20260905213324"
+ },
+ "THE HYPERSPACE REALM": {
+  "name": "THE HYPERSPACE REALM",
+  "color": "#1C4587",
+  "chat_message": "",
+  "category": "admin",
+  "spawn_chance": "Admin-only",
+  "duration": "Admin-controlled",
+  "how_to_get": "Admin-only hub dimension that hosts the portals to the engineer realms.",
+  "description": "The Hyperspace Realm is an exclusive biome that is linked to Prowler|Another Realm, the Engineer of Space. It can only be spawned by the developers. The Hyperspace Realm includes 1 unique aura: The Hyperspace Realm|[ ABNORMALITY ] is a variation of The Hyperspace Realm that provides a different effect. The Hyperspace Realm|[ ABNORMALITY ] makes all native auras (except auras native to Rare Biomes) ignore Breakthrough odds, meaning they are obtainable at their native rarities. The Hyperspace Realm gives the Prowler|I effect. If you attempt to use the Biome Randomizer or Strange Controller, a warning message will pop up saying: \"You're in a wrong dimension.\"",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Prowler",
+    "native_rarity": 540000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "AnotherRealmCutscene.gif",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/THE_HYPERSPACE_REALM",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c8/AnotherRealmCutscene.gif/revision/latest?cb=20251101222712",
+  "music_file": "Camellia - Literal Crystal In The Cyphisonia.mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Camellia_-_Literal_Crystal_In_The_Cyphisonia.mp3"
+ },
+ "THE NULL'S EXISTENCE": {
+  "name": "THE NULL'S EXISTENCE",
+  "color": "#666666",
+  "chat_message": "",
+  "category": "admin",
+  "spawn_chance": "Admin-only",
+  "duration": "Admin-controlled",
+  "how_to_get": "Exclusive admin biome linked to Mastermind, the Engineer of Time.",
+  "description": "The Null's Existence is an exclusive biome that is linked to Mastermind, the Engineer of Time. It can only be spawned by the developers. The Null's Existence includes 1 unique aura:",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Clockwork",
+    "native_rarity": 530000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "MastermindCutscene.gif",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/THE_NULL%27S_EXISTENCE",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6f/MastermindCutscene.gif/revision/latest?cb=20251220111045",
+  "music_file": "Bermuda_Δ_Triangle_-_Camellia.mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Bermuda_Δ_Triangle_-_Camellia.mp3"
+ },
+ "THE CITADEL OF ORDERS": {
+  "name": "THE CITADEL OF ORDERS",
+  "color": "#B86815",
+  "chat_message": "",
+  "category": "admin",
+  "spawn_chance": "Admin-only",
+  "duration": "Admin-controlled",
+  "how_to_get": "Exclusive admin biome linked to Edict, the Engineer of Justice.",
+  "description": "The Citadel Of Orders is an exclusive biome that is linked to Edict, the Engineer of Justice. It can only be spawned by the developers. The Citadel Of Orders includes 3 unique auras:",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Attorney",
+    "native_rarity": 270000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Verdict",
+    "native_rarity": 700000,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Apostolos",
+    "native_rarity": 222000000,
+    "breakthrough_rarity": 444000000,
+    "exclusive_only": false,
+    "limited": false
+   }
+  ],
+  "image_file": "Order.gif",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/THE_CITADEL_OF_ORDERS",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/56/Order.gif/revision/latest?cb=20260215041927",
+  "music_file": "Camellia - Parallel Universe Shifter.mp3",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Camellia_-_Parallel_Universe_Shifter.mp3"
+ },
+ "赤い満月": {
+  "name": "赤い満月",
+  "color": "#980000",
+  "chat_message": "",
+  "category": "admin",
+  "spawn_chance": "Admin-only",
+  "duration": "Admin-controlled",
+  "how_to_get": "The Red Full Moon is an exclusive biome linked to Red Full Moon, the Engineer of Chaos.",
+  "description": "赤い満月|The Red Full Moon biome is an exclusive biome that is linked to Red Full Moon, the Engineer of Chaos. It can only be spawned by the developers. 赤い満月|The Red Full Moon includes 2 unique auras:",
+  "breakthrough_multiplier": null,
+  "native_auras": [
+   {
+    "name": "Observer of the Crimson Moon",
+    "native_rarity": 444444,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   },
+   {
+    "name": "Seeker of the Crimson Moon",
+    "native_rarity": 666666,
+    "breakthrough_rarity": null,
+    "exclusive_only": true,
+    "limited": false
+   }
+  ],
+  "image_file": "RfmEventCutsceneNew.gif",
+  "fandom_page": "https://sol-rng.fandom.com/wiki/%E8%B5%A4%E3%81%84%E6%BA%80%E6%9C%88",
+  "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/80/RfmEventCutsceneNew.gif/revision/latest?cb=20260720192643",
+  "music_file": "Derpcat - Throwback (TubeRipper.cc).ogg",
+  "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Derpcat_-_Throwback_(TubeRipper.cc).ogg"
+ }
+}

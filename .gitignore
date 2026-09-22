@@ -1,0 +1,38 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Node / frontend
+frontend/node_modules/
+frontend/node_modules/.tmp/
+frontend/node_modules/.vite-temp/
+
+# Build outputs
+build/
+build-protected/
+dist/
+dist-protected/
+EndSolMacro-protected.exe
+*.spec.bak
+
+# Frontend dist is produced by npm run build (keep it only inside release EXEs)
+frontend/dist/
+
+# Local runtime data and diagnostics
+logs/
+logs/memory_match/
+*.log
+
+# Secrets / personal config — NEVER commit
+config.json
+config_folder/
+*.local.json
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

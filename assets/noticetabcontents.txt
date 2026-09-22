@@ -1,0 +1,8 @@
+# v1.0.6 (What's new?)
+
+* Memory Match: fixed getting stuck on tiles with the same item but different quantity
+* Memory Match: quantity is now also detected by pixel comparison, not only OCR
+* More waiting time after pressing Start so the tile grid fully reveals
+* Transcendent auras now have a blue shimmer instead of silver
+* Media cache is now limited to 300 MB and cleaned automatically at startup
+* The macro now uses its own GitHub repository for updates and data files
