@@ -6,6 +6,7 @@ Automation macro for **Sol's RNG** (Roblox): biome tracking with Discord webhook
 > Based on [Noteab-Macro](https://github.com/xVapure/Noteab-Macro) by xVapure — thanks to the original author. This project is an independent continuation with its own feature set.
 
 <img width="1024" height="1024" alt="endsol-macro" src="https://github.com/user-attachments/assets/c7dad909-1fa2-4610-9d52-654c430217fa" />
+
 ## Features
 
 - **Biome detection** — reads Roblox logs, detects every biome, sends rich Discord webhook messages (customizable titles, colors, pings).
