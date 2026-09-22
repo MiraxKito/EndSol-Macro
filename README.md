@@ -15,7 +15,7 @@ Automation macro for **Sol's RNG** (Roblox): biome tracking with Discord webhook
 - **Quest Board** — accepts/dismisses quests by your per-type preferences, tolerant to OCR noise.
 - **Fishing** — fully automatic fishing with selling and failsafes.
 - **Custom paths** — record your own walk routes (fishing spot, obby, egg routes, Memory Match) with VIP/non-VIP speed handling.
-- **Sol's Book** — built-in wiki browser with live Fandom data: auras, biomes, videos, crafting recipes. <img width="1646" height="840" alt="image" src="https://github.com/user-attachments/assets/a81f48dd-0b2a-46f3-9df6-a8911986dbc1" />
+- **Sol's Book** — built-in wiki browser with live Fandom data: auras, biomes, videos. <img width="1646" height="840" alt="image" src="https://github.com/user-attachments/assets/a81f48dd-0b2a-46f3-9df6-a8911986dbc1" />
 
 - **Auto Pop / Strange Controller / Biome Randomizer**, daily rewards, anti-AFK, auto-reconnect, multi-instance support.
 - **Remote control** — Discord bot integration for status and control from your phone.
