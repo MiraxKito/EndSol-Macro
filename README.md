@@ -1,9 +1,11 @@
+
 # EndSol Macro
 
 Automation macro for **Sol's RNG** (Roblox): biome tracking with Discord webhooks, Memory Match and Quest Board auto-play, fishing, auto item usage, custom walk paths, and an in-game wiki browser (Sol's Book) — all in one desktop panel.
 
 > Based on [Noteab-Macro](https://github.com/xVapure/Noteab-Macro) by xVapure — thanks to the original author. This project is an independent continuation with its own feature set.
 
+<img width="1024" height="1024" alt="endsol-macro" src="https://github.com/user-attachments/assets/c7dad909-1fa2-4610-9d52-654c430217fa" />
 ## Features
 
 - **Biome detection** — reads Roblox logs, detects every biome, sends rich Discord webhook messages (customizable titles, colors, pings).
@@ -12,10 +14,15 @@ Automation macro for **Sol's RNG** (Roblox): biome tracking with Discord webhook
 - **Quest Board** — accepts/dismisses quests by your per-type preferences, tolerant to OCR noise.
 - **Fishing** — fully automatic fishing with selling and failsafes.
 - **Custom paths** — record your own walk routes (fishing spot, obby, egg routes, Memory Match) with VIP/non-VIP speed handling.
-- **Sol's Book** — built-in wiki browser with live Fandom data: auras, biomes, videos, crafting recipes.
+- **Sol's Book** — built-in wiki browser with live Fandom data: auras, biomes, videos, crafting recipes. <img width="1646" height="840" alt="image" src="https://github.com/user-attachments/assets/a81f48dd-0b2a-46f3-9df6-a8911986dbc1" />
+
 - **Auto Pop / Strange Controller / Biome Randomizer**, daily rewards, anti-AFK, auto-reconnect, multi-instance support.
 - **Remote control** — Discord bot integration for status and control from your phone.
 - **Panel** — desktop app (pywebview + React) with EN/RU localization and deep UI customization.
+
+<img width="959" height="537" alt="image" src="https://github.com/user-attachments/assets/5ead6f00-94f6-4d46-b720-8623be4fe121" />
+
+<img width="1920" height="1036" alt="image" src="https://github.com/user-attachments/assets/c44821a2-8c5e-478d-bca4-33ddb0964e7e" />
 
 ## Installation
 
