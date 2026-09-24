@@ -39,6 +39,10 @@ if exist AGENTS.md (
     echo [OK] Removed AGENTS.md before publishing.
 )
 
+REM ---- 3. Clean local build junk (__pycache__ / .pyc) ---------
+del /s /q "*.pyc" >nul 2>&1
+for /d /r . %%d in (__pycache__) do if exist "%%d" rd /s /q "%%d"
+
 REM ---- 4. Safety check: make sure secrets are ignored -------
 REM Needs an existing repository, therefore runs after git init.
 git check-ignore -q config.json
@@ -77,17 +81,35 @@ if "%REMOTE_HAS_MAIN%"=="1" (
 
 git diff --cached --quiet >nul 2>&1
 if errorlevel 1 (
-    git commit -m "%VERSION% source update" -m "Auto-update toggle restored, biome media galleries, media thumbnails (FPS fix), fishing delay default 200, reset settings button, resilient remote bot."
+    git commit -m "%VERSION% source update" -m "Auto-update toggle restored, biome media galleries, media thumbnails (FPS fix), fishing delay default 200, reset settings button, resilient remote bot, Donations tab enabled."
     if errorlevel 1 (
         echo [ERROR] Commit failed. Resolve any git errors above and re-run.
         pause
         exit /b 1
     )
 ) else (
-    echo [OK] Local files match the remote - nothing to commit.
+    echo [OK] Nothing new to commit locally.
 )
 
-REM ---- 8. Push -----------------------------------------------
+REM ---- 8. Pull remote changes first (keeps GitHub-side edits) -
+if "%REMOTE_HAS_MAIN%"=="1" (
+    if exist .git\MERGE_HEAD (
+        echo [OK] Finishing a previous unfinished merge...
+    ) else (
+        echo [OK] Pulling changes that exist only on GitHub...
+        git pull origin main --no-edit --allow-unrelated-histories
+        if errorlevel 1 (
+            echo.
+            echo [CONFLICT] GitHub and local changes touch the same files.
+            echo Fix the conflicts: run "git status", edit the marked files,
+            echo then run "git add ." and start this script again.
+            pause
+            exit /b 1
+        )
+    )
+)
+
+REM ---- 9. Push -----------------------------------------------
 echo.
 echo Pushing to GitHub... (credentials are taken from Windows Credential Manager)
 git push -u origin main
@@ -97,7 +119,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM ---- 9. Release tag ----------------------------------------
+REM ---- 10. Release tag ----------------------------------------
 git ls-remote --exit-code --tags origin refs/tags/%VERSION% >nul 2>&1
 if errorlevel 1 (
     git tag -f %VERSION%

@@ -77,7 +77,7 @@ const navItems = [
   { id: "solbook", label: "Sol’s Book", icon: "📚" },
   { id: "instructions", label: "Instructions", icon: "📖" },
   { id: "credits", label: "Credits", icon: "💜" },
-  { id: "donations", label: "Donations <3", icon: "💎", disabled: true },
+  { id: "donations", label: "Donations <3", icon: "💎" },
 ];
 
 export default function Sidebar({
