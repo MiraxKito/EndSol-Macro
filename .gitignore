@@ -36,3 +36,23 @@ Thumbs.db
 .DS_Store
 .vscode/
 .idea/
+# ── Development-only files — never public ──────────────────────
+publish_github.bat
+AGENTS.md
+*.zip
+.env
+desktop.ini
+
+# Local runtime data that must never leak into the repo
+node_modules/
+media_cache/
+custom_paths/
+Calibrations/
+profiles/
+images/
+multi_instances.json
+config.backup-*.json
+config.json.bak*
+config.json.before_restore
+config.json.migration_backup
+*.preserve
