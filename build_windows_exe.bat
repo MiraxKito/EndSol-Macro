@@ -6,14 +6,27 @@ title EndSol Macro - Windows EXE Builder
 set "PY_CMD="
 set "VENV_PY=.venv\Scripts\python.exe"
 
-echo [1/6] Detecting Python 3.13...
-if exist "%LocalAppData%\Programs\Python\Python313\python.exe" (
-  set "PY_CMD=%LocalAppData%\Programs\Python\Python313\python.exe"
+REM Prefer Python 3.10/3.11: the winocr dependency (winsdk) ships
+REM prebuilt wheels only up to 3.11. On 3.12+ pip falls back to
+REM compiling winsdk from source, which looks like an endless
+REM "Preparing metadata (pyproject.toml)" with 100% CPU.
+echo [1/6] Detecting Python 3.10 or 3.11...
+if exist "%LocalAppData%\Programs\Python\Python310\python.exe" (
+  set "PY_CMD=%LocalAppData%\Programs\Python\Python310\python.exe"
   goto :found_python
 )
-py -3.13 --version >nul 2>nul
+py -3.10 --version >nul 2>nul
 if not errorlevel 1 (
-  set "PY_CMD=py -3.13"
+  set "PY_CMD=py -3.10"
+  goto :found_python
+)
+if exist "%LocalAppData%\Programs\Python\Python311\python.exe" (
+  set "PY_CMD=%LocalAppData%\Programs\Python\Python311\python.exe"
+  goto :found_python
+)
+py -3.11 --version >nul 2>nul
+if not errorlevel 1 (
+  set "PY_CMD=py -3.11"
   goto :found_python
 )
 py -3 --version >nul 2>nul
@@ -31,11 +44,11 @@ if not defined PY_CMD (
   echo Python was not found. Trying automatic installation with winget...
   winget --version >nul 2>nul
   if errorlevel 1 goto :fail_no_installer
-  winget install --id Python.Python.3.13 --exact --scope user --accept-source-agreements --accept-package-agreements
+  winget install --id Python.Python.3.10 --exact --scope user --accept-source-agreements --accept-package-agreements
   if errorlevel 1 goto :fail
-  set "PATH=%LocalAppData%\Programs\Python\Python313;%LocalAppData%\Programs\Python\Python313\Scripts;%PATH%"
-  py -3.13 --version >nul 2>nul
-  if not errorlevel 1 set "PY_CMD=py -3.13"
+  set "PATH=%LocalAppData%\Programs\Python\Python310;%LocalAppData%\Programs\Python\Python310\Scripts;%PATH%"
+  py -3.10 --version >nul 2>nul
+  if not errorlevel 1 set "PY_CMD=py -3.10"
   if not defined PY_CMD (
     python --version >nul 2>nul
     if not errorlevel 1 set "PY_CMD=python"
@@ -101,7 +114,7 @@ exit /b 0
 echo ERROR: Python/Node.js is missing and winget is unavailable. Install App Installer from Microsoft Store, then rerun.
 goto :pause_fail
 :fail_python
-echo ERROR: Python 3.13 was not found. Install it from https://www.python.org/downloads/
+echo ERROR: Python 3.10/3.11 was not found. Install Python 3.10 from https://www.python.org/downloads/ (winsdk wheels exist only up to 3.11)
 goto :pause_fail
 :fail_node
 echo ERROR: Node.js installation completed but npm was not detected. Restart this script or Windows and retry.
