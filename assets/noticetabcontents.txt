@@ -1,8 +1,8 @@
 # v1.0.6 (What's new?)
 
-* Memory Match: fixed getting stuck on tiles with the same item but different quantity
-* Memory Match: quantity is now also detected by pixel comparison, not only OCR
-* More waiting time after pressing Start so the tile grid fully reveals
-* Transcendent auras now have a blue shimmer instead of silver
-* Media cache is now limited to 300 MB and cleaned automatically at startup
-* The macro now uses its own GitHub repository for updates and data files
+* Memory Match: quantity detection reworked (binarized reads + pixel comparison), no more false pairs
+* Custom Eden Path recordings are now actually used
+* Sol's Book: The Limbo dimension added; Crafting/Potion badges separated; better media captions
+* Feature Schedule on the Status page; Config Profiles; Clear Logs button
+* Optional extras (off by default): dry-run mode, key-release failsafe, daily stats webhook, rare-aura desktop notifications
+* Media cache limited to 300 MB; macro moved to its own GitHub repository

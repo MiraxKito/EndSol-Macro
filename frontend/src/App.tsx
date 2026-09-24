@@ -108,8 +108,8 @@ function App() {
   const [updateStatus, setUpdateStatus] = useState<string | null>(null);
   const autoUpdateTriggerRef = useRef<string | null>(null);
   const startupUpdateCheckRequestedRef = useRef(false);
-  // Auto-update disabled — original EndSol repo URL removed.
-  const isAutoUpdateEnabled = false;
+  // Auto-update follows the "Auto Update (Startup)" toggle in Other Features.
+  const isAutoUpdateEnabled = config ? config.auto_update_enabled === true : false;
 
 
   const startMacro = async () => {
@@ -286,8 +286,13 @@ function App() {
     startupUpdateCheckRequestedRef.current = true;
 
     const requestUpdateCheck = async () => {
-      // Auto-update disabled — skip update check entirely.
-      return;
+      try {
+        if (window.pywebview?.api?.check_for_updates) {
+          await window.pywebview.api.check_for_updates();
+        }
+      } catch (err) {
+        console.error("Update check failed:", err);
+      }
     };
 
     const onReady = () => {

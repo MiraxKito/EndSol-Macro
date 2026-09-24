@@ -124,7 +124,7 @@ export default function FishingPage() {
                         <label className="form-label">Fishing actions delay (in miliseconds)</label>
                         <input
                             className="form-input"
-                            value={config.fishing_actions_delay_ms ?? "100"}
+                            value={config.fishing_actions_delay_ms ?? "200"}
                             onChange={(e) => updateConfig("fishing_actions_delay_ms", e.target.value)}
                             style={{ width: "90px" }}
                         />

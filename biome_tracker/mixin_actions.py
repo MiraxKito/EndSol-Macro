@@ -1164,6 +1164,9 @@ class ActionsMixin:
             self._obby_running = False
 
     def _run_obby_macro(self, json_file_path):
+        if self.dry_run_active():
+            self.dry_run_log("play the Obby path (bundled route)")
+            return
         try:
             with open(json_file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -1279,6 +1282,9 @@ class ActionsMixin:
 
     def _run_obby_events(self, all_events, walk_mult: float | None = None):
         """Run obby playback from a list of events (used by custom paths)."""
+        if self.dry_run_active():
+            self.dry_run_log("play the Obby path")
+            return
         _ALLOWED_KEYS = {"w", "a", "s", "d", "space"}
         events = [
             e for e in all_events
@@ -1374,21 +1380,27 @@ class ActionsMixin:
                     pass
                 time.sleep(0.02)
 
-    def _run_eden_macro(self, json_file_path):
-        try:
-            with open(json_file_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-        except Exception as e:
-            self.error_logging(e, f"Failed to load eden macro from {json_file_path}")
+    def _run_eden_macro(self, json_file_path, custom_events=None, walk_mult=None):
+        if self.dry_run_active():
+            self.dry_run_log("play the Eden path")
             return
-
-        if isinstance(data, dict) and "events" in data:
-            all_events = data["events"]
-        elif isinstance(data, list):
-            all_events = data
+        if custom_events is not None:
+            all_events = list(custom_events)
         else:
-            print("[Eden] eden.json has unexpected format. Skipping.")
-            return
+            try:
+                with open(json_file_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            except Exception as e:
+                self.error_logging(e, f"Failed to load eden macro from {json_file_path}")
+                return
+
+            if isinstance(data, dict) and "events" in data:
+                all_events = data["events"]
+            elif isinstance(data, list):
+                all_events = data
+            else:
+                print("[Eden] eden.json has unexpected format. Skipping.")
+                return
 
         _ALLOWED_KEYS = {"w", "a", "s", "d", "space"}
         events = [
@@ -1405,10 +1417,18 @@ class ActionsMixin:
         def _cancelled():
             return not self.detection_running
 
+        # Walk-speed handling: custom paths carry a recorded_nonvip stamp
+        # (same as obby); legacy paths stretch when Non-VIP mode is on.
+        if walk_mult is None:
+            non_vip = bool(self.config.get("non_vip_movement_path", False))
+            speed_multiplier = 1.22 if non_vip else 1.0
+        else:
+            speed_multiplier = float(walk_mult)
+
         pressed_keys = set()
         start_wall = time.time()
 
-        print(f"[Eden] Playback ({len(events)} events)...")
+        print(f"[Eden] Playback ({len(events)} events, speed_mult={speed_multiplier:.2f})...")
 
         try:
             for ev in events:
@@ -1417,6 +1437,8 @@ class ActionsMixin:
                     return
 
                 ev_t = float(ev.get("t", base_t)) - base_t
+                if speed_multiplier != 1.0:
+                    ev_t *= speed_multiplier
                 target_wall = start_wall + ev_t
 
                 now = time.time()
@@ -1474,6 +1496,11 @@ class ActionsMixin:
                     continue
 
     
+                if self.dry_run_active():
+                    self.dry_run_log("collect easter eggs (walk the egg route)")
+                    self.last_egg_collect_time = datetime.now()
+                    time.sleep(2)
+                    continue
                 self._egg_collection_pending = True
                 
                 if (getattr(self, "_br_sc_running", False) or
@@ -2515,13 +2542,29 @@ class ActionsMixin:
             if not self.detection_running:
                 return
 
-            # 6. Eden path playback
-            eden_file = os.path.join(os.getcwd(), "paths", "eden.json")
-            if os.path.exists(eden_file):
-                print("[Eden Pathing] Starting eden path playback...")
-                self._run_eden_macro(eden_file)
-            else:
-                print("[Eden Pathing] Macro file not found: " + eden_file)
+            # 6. Eden path playback (custom path takes priority, same as obby)
+            played = False
+            try:
+                from .custom_path_manager import load_path_for_feature_meta, resolve_walk_multiplier
+                custom_events, custom_meta = load_path_for_feature_meta("eden")
+                if custom_events:
+                    print("[Eden Pathing] Using custom Eden path.")
+                    non_vip_now = bool(self.config.get("non_vip_movement_path", False))
+                    eff = resolve_walk_multiplier(custom_meta, non_vip_now)
+                    # Legacy paths (no walk-speed stamp) keep the old
+                    # behavior: stretch when Non-VIP mode is on.
+                    walk_mult = eff if eff is not None else (1.22 if non_vip_now else 1.0)
+                    self._run_eden_macro(None, custom_events=custom_events, walk_mult=walk_mult)
+                    played = True
+            except Exception as e:
+                self.error_logging(e, "Error loading custom Eden path - falling back to the bundled eden.json")
+            if not played:
+                eden_file = os.path.join(os.getcwd(), "paths", "eden.json")
+                if os.path.exists(eden_file):
+                    print("[Eden Pathing] Starting eden path playback...")
+                    self._run_eden_macro(eden_file)
+                else:
+                    print("[Eden Pathing] Macro file not found: " + eden_file)
         except Exception as e:
             print(f"[Eden Pathing] ERROR: {e}")
             self.error_logging(e, "Error in perform_eden_path_sync")
@@ -3665,6 +3708,9 @@ class ActionsMixin:
                 pass
 
     def _use_br_sc_impl(self, item_name):
+        if self.dry_run_active():
+            self.dry_run_log(f"use item: {item_name}")
+            return
         self._br_sc_running = True
         fishing_override = bool(getattr(self, "_fishing_br_sc_override", False))
         _inventory_opened = False

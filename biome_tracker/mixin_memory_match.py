@@ -376,10 +376,13 @@ def _ocr_quantity_from_file(image_path: str) -> str | None:
     """
     OCR the quantity ("x10", "x 1,000"...) from a tile screenshot.
 
-    The quantity is the ONLY text on a tile - it lives in the bottom strip.
-    Real logs showed Windows OCR returning nothing for the plain 3x bottom
-    strip, so several candidates are tried (different strip heights, 4x
-    upscale, autocontrast, full tile) and the first quantity-like hit wins.
+    The quantity is drawn as TINY bright text with a dark outline in the
+    tile's bottom strip (~10px tall at 1080p) - too small for OCR as-is,
+    which is why real logs returned empty reads. The pipeline that works
+    (validated on real board screenshots): binarize the bright text at
+    several thresholds, crop tightly to the text bounding box, upscale 8x
+    and feed BOTH polarities (white-on-black and black-on-white) to OCR.
+    Legacy whole-tile / autocontrast candidates stay as fallbacks.
     Returns None when nothing quantity-like was recognized.
     """
     try:
@@ -387,10 +390,29 @@ def _ocr_quantity_from_file(image_path: str) -> str | None:
         img = Image.open(image_path)
         w, h = img.size
         candidates = []
+        # Primary: binarized bright-text candidates.
+        try:
+            strip = img.crop((int(w * 0.08), int(h * 0.60), int(w * 0.92), int(h * 0.99))).convert("L")
+            for th in (170, 185, 200):
+                bw = strip.point(lambda v: 255 if v >= th else 0)
+                bbox = bw.getbbox()
+                if not bbox:
+                    continue
+                x0, y0, x1, y1 = bbox
+                crop = bw.crop((max(0, x0 - 8), max(0, y0 - 6),
+                                min(bw.width, x1 + 8), min(bw.height, y1 + 6)))
+                if crop.width < 8 or crop.height < 6:
+                    continue
+                big = crop.resize((crop.width * 8, crop.height * 8), Image.LANCZOS)
+                candidates.append(big)
+                candidates.append(ImageOps.invert(big))
+        except Exception:
+            pass
+        # Fallbacks: plain strips / full tile (old behavior).
         for top in (0.62, 0.55, 0.70):
-            strip = img.crop((0, int(h * top), w, h))
-            strip = strip.resize((max(1, strip.width * 4), max(1, strip.height * 4)))
-            candidates.append(ImageOps.autocontrast(ImageOps.grayscale(strip)))
+            strip2 = img.crop((0, int(h * top), w, h))
+            strip2 = strip2.resize((max(1, strip2.width * 4), max(1, strip2.height * 4)))
+            candidates.append(ImageOps.autocontrast(ImageOps.grayscale(strip2)))
         full = img.resize((max(1, w * 3), max(1, h * 3)))
         candidates.append(ImageOps.autocontrast(ImageOps.grayscale(full)))
         for i, cand in enumerate(candidates):
@@ -405,9 +427,11 @@ def _ocr_quantity_from_file(image_path: str) -> str | None:
                     os.remove(qty_path)
                 except Exception:
                     pass
-            m = re.search(r"x\s*([\d,]{1,9})", text or "")
+            # Accept with or without the leading "x"; tolerate OCR damage
+            # like "x5,00" -> keep digits, commas and dots only.
+            m = re.search(r"x\s*([\d][\d,\.]{0,8})", text or "")
             if m:
-                return f"x{m.group(1)}"
+                return "x" + m.group(1).rstrip(".,")
         return None
     except Exception:
         return None
@@ -1645,7 +1669,14 @@ class MemoryMatchMixin:
     def _mm_play_via_scheduler(self):
         """Wrapper that runs play_memory_match in scheduler context."""
         try:
+            if self.dry_run_active():
+                self.dry_run_log("play one Memory Match session")
+                return
             res = self.play_memory_match()
+            try:
+                self._daily_bump("mm_pairs", int(res.get("matches", 0) or 0))
+            except Exception:
+                pass
             try:
                 self.append_log(f"[MemoryMatch] Done: {res.get('matches')}/{res.get('turns_used')} pairs")
             except Exception:

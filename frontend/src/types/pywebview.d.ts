@@ -7,6 +7,11 @@ interface PyWebViewApi {
   get_full_biome_data(): Promise<Record<string, unknown>>;
   get_full_aura_data(): Promise<Record<string, unknown>>;
   get_aura_detail?(auraName: string): Promise<Record<string, unknown>>;
+  get_biome_detail?(biomeName: string): Promise<Record<string, unknown>>;
+  ensure_media_thumbnail?(url: string, maxDim?: number): Promise<Record<string, unknown>>;
+  reset_config_to_defaults?(): Promise<Record<string, unknown>>;
+  get_remote_bot_status?(): Promise<{ running: boolean; enabled: boolean; core?: boolean }>;
+  restart_remote_bot?(): Promise<Record<string, unknown>>;
   get_rare_biome_custom(): Promise<Record<string, unknown>>;
   set_biome_detection(enabled: boolean): Promise<void>;
   get_macro_version(): Promise<string>;

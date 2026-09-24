@@ -76,6 +76,12 @@ DEFAULT_CONFIG: dict = {
     "eden_contract_button": [746, 931],
     "eden_contract_interval": "3",
 
+    # ── Optional extras (all OFF by default) ─────────────────────────
+    "dry_run": False,
+    "key_release_failsafe": False,
+    "daily_stats_webhook": False,
+    "rare_aura_desktop_notify": False,
+
     # ── Merchant ─────────────────────────────────────────────────────
     "ping_jester": False,
     "ping_mari": False,
@@ -97,7 +103,7 @@ DEFAULT_CONFIG: dict = {
     "fishing_merchant_every_x_fish": "30",
     "fishing_use_br_sc_every_x_fish": False,
     "fishing_br_sc_every_x_fish": "30",
-    "fishing_actions_delay_ms": "100",
+    "fishing_actions_delay_ms": "200",
     "fishing_playback_multiplier": 1.0,
     "fishing_equip_aura_before_movement": False,
     "fishing_movement_aura_name": "",

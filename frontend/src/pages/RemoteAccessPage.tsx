@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useT } from "../i18n";
 import { useConfig } from "../contexts/ConfigContext";
 import ToggleSwitch from "../components/ToggleSwitch";
@@ -8,6 +8,36 @@ export default function RemoteAccessPage() {
     const { config, saveConfig, error } = useConfig();
     const t = useT();
     const [showHelp, setShowHelp] = useState(false);
+    const remoteEnabled = !!config?.remote_access_enabled;
+    const [botRunning, setBotRunning] = useState<boolean | null>(null);
+    const [botMsg, setBotMsg] = useState("");
+
+    // Live bot status: the bot used to die silently on transient network
+    // errors, so the panel now shows whether the gateway is actually online.
+    useEffect(() => {
+        if (!remoteEnabled) { setBotRunning(null); return; }
+        let alive = true;
+        const poll = () => {
+            window.pywebview?.api?.get_remote_bot_status?.().then((s: any) => {
+                if (alive && s) setBotRunning(!!s.running);
+            }).catch(() => {});
+        };
+        poll();
+        const id = setInterval(poll, 5000);
+        return () => { alive = false; clearInterval(id); };
+    }, [remoteEnabled]);
+
+    const handleRestartBot = async () => {
+        setBotMsg(t("Restarting the bot…"));
+        try {
+            const res = await window.pywebview?.api?.restart_remote_bot?.();
+            setBotMsg(res?.success
+                ? (res.running ? t("Bot restarted — connecting to Discord…") : t("Bot thread did not survive startup — check the logs"))
+                : (res?.reason || t("Restart failed")));
+        } catch (e) {
+            setBotMsg(t("Restart failed"));
+        }
+    };
 
     if (error) return <div style={{ padding: "20px", color: "red" }}>Error: {error}</div>;
     if (!config) return <div style={{ padding: "20px" }}>Loading...</div>;
@@ -94,6 +124,21 @@ export default function RemoteAccessPage() {
                                 placeholder="123456789012345678"
                                 style={{ width: "220px" }}
                             />
+                        </div>
+
+                        <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: '0.9rem', color: botRunning === null ? 'var(--text-muted)' : botRunning ? '#4ade80' : '#f87171' }}>
+                                {botRunning === null ? t("Bot status: unknown") : botRunning ? t("Bot status: online") : t("Bot status: offline")}
+                            </span>
+                            <button
+                                className="btn"
+                                onClick={handleRestartBot}
+                                style={{ padding: '6px 14px', cursor: 'pointer' }}
+                                title={t("Stops the bot and starts a fresh Discord session")}
+                            >
+                                {t("Restart bot")}
+                            </button>
+                            {botMsg && <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{botMsg}</span>}
                         </div>
 
                         <div>

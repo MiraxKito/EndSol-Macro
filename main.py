@@ -480,6 +480,12 @@ class Api:
             return self._tracker.load_fandom_aura_detail(aura_name)
         return {"error": "Tracker unavailable"}
 
+    def get_biome_detail(self, biome_name):
+        """Fandom gallery + music for a biome (same pipeline as aura media)."""
+        if self._tracker and hasattr(self._tracker, "load_fandom_biome_detail"):
+            return self._tracker.load_fandom_biome_detail(biome_name)
+        return {"error": "Tracker unavailable"}
+
     # ── Media cache & download (Sol's Book) ─────────────────────────────
     # Root cause of videos/music failing inside the WebView: Fandom's CDN
     # (Cloudflare) 403-challenges media requests that carry no Referer —
@@ -653,6 +659,55 @@ class Api:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
+    def ensure_media_thumbnail(self, url, max_dim=288):
+        """Static downscaled preview for grids/lists/galleries.
+
+        Root cause of the FPS drops while browsing Sol's Book media: the
+        thumbnail strips and galleries rendered the FULL obtainment GIFs
+        (several MB, dozens of frames) side by side, and WebView2 kept
+        compositing every animation at once. The fix: lists get a small
+        static PNG (first frame for GIFs) generated once per file; the
+        full animation is only loaded in the main viewer.
+        """
+        base = {}
+        try:
+            base = self.ensure_media_cached(url) or {}
+            if not base.get("success"):
+                return base
+            src = Path(base["path"])
+            if src.suffix.lower() not in (".gif", ".png", ".jpg", ".jpeg", ".webp"):
+                return base  # videos/audio have no thumbnail
+            try:
+                max_dim = max(64, min(int(max_dim or 288), 512))
+            except Exception:
+                max_dim = 288
+            thumb = src.with_name(src.stem + f"_t{max_dim}.png")
+            if not thumb.exists() or thumb.stat().st_size <= 0:
+                from PIL import Image
+                with Image.open(str(src)) as im:
+                    try:
+                        im.seek(0)  # first frame for animated sources
+                    except Exception:
+                        pass
+                    frame = im.convert("RGBA")
+                    w, h = frame.size
+                    scale = min(1.0, max_dim / float(max(w, h)))
+                    if scale < 1.0:
+                        frame = frame.resize(
+                            (max(1, int(w * scale)), max(1, int(h * scale))),
+                            Image.LANCZOS,
+                        )
+                    tmp = thumb.with_name(thumb.name + ".part")
+                    frame.save(str(tmp), "PNG")
+                os.replace(str(tmp), str(thumb))
+            return {"success": True, "cached": True, "path": str(thumb),
+                    "local_url": thumb.as_uri(), "full_url": base.get("local_url")}
+        except Exception as e:
+            # Any thumbnail failure falls back to the full cached file.
+            if base.get("success") and base.get("local_url"):
+                return base
+            return {"success": False, "error": str(e)}
+
     def download_media(self, url, filename=""):
         """Save a Fandom media file via a Save-As dialog (works where the
         WebView's built-in cross-origin download button silently does nothing)."""
@@ -742,6 +797,97 @@ class Api:
         try:
             os.startfile(str(APPDATA_BASE))
             return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    # ── Extras (v1.0.6): schedule, profiles, logs ──────────────────────
+    def get_feature_schedule(self):
+        try:
+            if not self._tracker:
+                return {"success": False, "error": "Tracker not available"}
+            return {"success": True, **self._tracker.feature_schedule()}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def _profiles_dir(self):
+        d = APPDATA_BASE / "profiles"
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def list_config_profiles(self):
+        try:
+            names = sorted(p.stem for p in self._profiles_dir().glob("*.json"))
+            return {"success": True, "profiles": names}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def save_config_profile(self, name):
+        try:
+            safe = re.sub(r"[^\w\-. ]+", "_", str(name or "").strip())[:60]
+            if not safe:
+                return {"success": False, "error": "Profile name is empty"}
+            cfg = self.get_config()
+            if not isinstance(cfg, dict):
+                return {"success": False, "error": "Config is not available"}
+            payload = {
+                "format": "EndSolMacroProfile",
+                "version": 1,
+                "saved_at": datetime.now(timezone.utc).isoformat(),
+                "config": cfg,
+            }
+            path = self._profiles_dir() / (safe + ".json")
+            path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+            return {"success": True, "name": safe, "path": str(path)}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def delete_config_profile(self, name):
+        try:
+            safe = re.sub(r"[^\w\-. ]+", "_", str(name or "").strip())[:60]
+            path = self._profiles_dir() / (safe + ".json")
+            if path.exists():
+                path.unlink()
+                return {"success": True, "name": safe}
+            return {"success": False, "error": f"Profile '{safe}' not found"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def load_config_profile(self, name):
+        try:
+            safe = re.sub(r"[^\w\-. ]+", "_", str(name or "").strip())[:60]
+            path = self._profiles_dir() / (safe + ".json")
+            if not path.exists():
+                return {"success": False, "error": f"Profile '{safe}' not found"}
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            cfg = payload.get("config") if isinstance(payload, dict) else None
+            if not isinstance(cfg, dict):
+                return {"success": False, "error": "This is not an EndSol profile file."}
+            if self._tracker and isinstance(getattr(self._tracker, "config", None), dict):
+                self._tracker.config.update(cfg)
+            save_config(cfg)
+            return {"success": True, "name": safe, "count": len(cfg)}
+        except json.JSONDecodeError:
+            return {"success": False, "error": "Invalid profile JSON file."}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def clear_logs(self):
+        """Archive and truncate the macro and error logs."""
+        try:
+            import shutil as _shutil
+            logs_dir = APPDATA_BASE / "logs"
+            stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            cleared = []
+            for name in ("macro_logs.txt", "error_logs.txt"):
+                log_file = logs_dir / name
+                if log_file.exists():
+                    try:
+                        _shutil.copyfile(str(log_file), str(logs_dir / f"{log_file.stem}_{stamp}{log_file.suffix}"))
+                    except Exception:
+                        pass
+                    log_file.write_text("", encoding="utf-8")
+                    cleared.append(name)
+            return {"success": True, "cleared": cleared}
         except Exception as e:
             return {"success": False, "error": str(e)}
 
@@ -1217,6 +1363,31 @@ class Api:
         except Exception as exc:
             return {"success": False, "reason": f"Remote toggle failed: {exc}"}
 
+    def get_remote_bot_status(self):
+        """Live Discord-bot status for the Remote Access page."""
+        tracker = getattr(self, "_tracker", None)
+        if tracker is None or not hasattr(tracker, "get_remote_bot_status"):
+            return {"running": False, "enabled": False, "core": False}
+        try:
+            status = tracker.get_remote_bot_status()
+            status["core"] = True
+            return status
+        except Exception:
+            return {"running": False, "enabled": False, "core": True}
+
+    def restart_remote_bot(self):
+        """Force-restart the Discord bot (fresh gateway session)."""
+        tracker = getattr(self, "_tracker", None)
+        if tracker is None or not hasattr(tracker, "restart_remote_bot"):
+            return {"success": False, "reason": "Macro core is not running yet."}
+        try:
+            token = str((getattr(tracker, "config", {}) or {}).get("remote_bot_token") or "").strip()
+            if not token:
+                return {"success": False, "reason": "Bot token is empty — paste it first."}
+            return tracker.restart_remote_bot()
+        except Exception as exc:
+            return {"success": False, "reason": f"Restart failed: {exc}"}
+
     def reset_daily_event_claim(self):
         """Clear the stored claim date so the next 03:00 MSK window re-collects."""
         tracker = getattr(self, "_tracker", None)
@@ -1229,6 +1400,66 @@ class Api:
                 "success": True,
                 "claimed_date": "",
                 "message": "Claim date reset — the macro will collect again at the next 03:00 MSK window.",
+            }
+        except Exception as exc:
+            return {"success": False, "reason": f"Reset failed: {exc}"}
+
+    # Keys that survive a full reset: they are connection data (accounts and
+    # endpoints), not preferences — retyping them after every reset would be
+    # pure friction.
+    _RESET_PRESERVED_KEYS = ("webhook_url", "webhook_urls", "remote_bot_token", "remote_allowed_user_id")
+
+    def reset_config_to_defaults(self):
+        """Reset the ACTIVE config to app defaults.
+
+        Writes an empty disk config and lets load_config rebuild the full
+        default set (same code path as a first launch), so calibration
+        positions, toggles, paths — everything goes back to stock. A
+        timestamped backup of the previous config is kept next to it.
+        """
+        tracker = getattr(self, "_tracker", None)
+        if tracker is None or not isinstance(getattr(tracker, "config", None), dict):
+            return {"success": False, "reason": "Macro core is not running yet."}
+        try:
+            from biome_tracker import config as core_config
+            path = core_config.get_config_file()
+            old = {}
+            try:
+                old = dict(core_config.load_config() or {})
+            except Exception:
+                old = {}
+            backup = ""
+            try:
+                if path.exists():
+                    from datetime import datetime as _dt
+                    stamp = _dt.now().strftime("%Y%m%d-%H%M%S")
+                    backup_path = path.with_name(f"config.backup-{stamp}.json")
+                    shutil.copyfile(str(path), str(backup_path))
+                    backup = str(backup_path)
+            except Exception:
+                backup = ""
+            # Empty disk config -> load_config() rebuilds pure defaults.
+            # _write_config replaces the file directly (save_config MERGES,
+            # which would keep every old value).
+            core_config._write_config(path, {})
+            fresh = tracker.load_config() or {}
+            for key in self._RESET_PRESERVED_KEYS:
+                if old.get(key):
+                    fresh[key] = old[key]
+            tracker.config.clear()
+            tracker.config.update(fresh)
+            tracker.save_config()
+            # Remote access resets to OFF -> bring the bot down if it ran.
+            if not tracker.config.get("remote_access_enabled"):
+                try:
+                    tracker.stop_remote_bot()
+                except Exception:
+                    pass
+            return {
+                "success": True,
+                "backup": backup,
+                "message": ("All settings were reset to defaults."
+                            + (f" Previous config saved as {backup}" if backup else "")),
             }
         except Exception as exc:
             return {"success": False, "reason": f"Reset failed: {exc}"}

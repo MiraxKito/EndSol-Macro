@@ -1,6 +1,32 @@
 from .base_support import *
 
 class RemoteMixin:
+    # Live state for the panel: True while the Discord gateway is connected.
+    _remote_bot_running = False
+
+    def get_remote_bot_status(self):
+        """Status for the React panel: running now / enabled in config."""
+        return {
+            "running": bool(getattr(self, "_remote_bot_running", False)
+                            and getattr(self, "remote_bot_thread", None)
+                            and self.remote_bot_thread.is_alive()),
+            "enabled": bool((getattr(self, "config", {}) or {}).get("remote_access_enabled", False)),
+        }
+
+    def restart_remote_bot(self):
+        """Explicit stop-then-start so the panel button gives a fresh session
+        even when the old thread is stuck in a reconnect wait."""
+        try:
+            self.stop_remote_bot()
+            thread = getattr(self, "remote_bot_thread", None)
+            if thread and thread.is_alive():
+                thread.join(timeout=6)
+        except Exception:
+            pass
+        self.start_remote_bot()
+        alive = bool(getattr(self, "remote_bot_thread", None) and self.remote_bot_thread.is_alive())
+        return {"success": True, "running": alive}
+
     def _remote_access_toggle(self):
         self.save_config()
         if self.remote_access_var.get():
@@ -36,6 +62,7 @@ class RemoteMixin:
     def stop_remote_bot(self):
         try:
             self.remote_worker_running = False
+            self._remote_bot_running = False
             if getattr(self, "remote_bot_obj", None):
                 try:
                     import asyncio
@@ -438,14 +465,43 @@ class RemoteMixin:
                 pass
             worker = threading.Thread(target=self._remote_queue_worker, daemon=True)
             worker.start()
-            try:
-                loop.run_until_complete(bot.start(token))
-            except Exception as e:
-                print(f"[Remote] bot.run() failed: {e}")
+            # Resilient connection: transient network errors used to kill the
+            # bot thread for good ("the bot turns itself off"). Now it
+            # reconnects with a pause until the user turns Remote Access off,
+            # or until the error is clearly fatal (bad token / missing intents).
+            attempt = 0
+            while getattr(self, "remote_worker_running", False):
+                self._remote_bot_running = True
                 try:
-                    self.error_logging(e, "Remote bot.run() failed")
-                except Exception:
-                    pass
+                    loop.run_until_complete(bot.start(token))
+                    break  # clean stop (close() was called)
+                except discord.LoginFailure as e:
+                    self._remote_bot_running = False
+                    print(f"[Remote] Login failed - not retrying: {e}")
+                    try:
+                        self.error_logging(e, "Remote bot login failed (bad token?)")
+                    except Exception:
+                        pass
+                    break
+                except discord.PrivilegedIntentsRequired as e:
+                    self._remote_bot_running = False
+                    print(f"[Remote] Privileged intents missing - not retrying: {e}")
+                    try:
+                        self.error_logging(e, "Remote bot needs Message Content / Server Members intents")
+                    except Exception:
+                        pass
+                    break
+                except Exception as e:
+                    attempt += 1
+                    self._remote_bot_running = False
+                    wait_s = min(60, 10 * attempt)
+                    print(f"[Remote] bot connection lost (attempt {attempt}), retrying in {wait_s}s: {e}")
+                    try:
+                        self.error_logging(e, "Remote bot connection lost, will retry")
+                    except Exception:
+                        pass
+                    time.sleep(wait_s)
+            self._remote_bot_running = False
         except Exception as e:
             print(f"[Remote] _remote_bot_thread_func crashed: {e}")
             try:

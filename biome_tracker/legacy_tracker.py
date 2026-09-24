@@ -7,6 +7,7 @@ from .mixin_remote import RemoteMixin
 from .mixin_recorder import RecorderMixin
 from .mixin_memory_match import MemoryMatchMixin
 from .mixin_quest_board import QuestBoardMixin
+from .mixin_extras import ExtrasMixin
 
 class LegacyBiomeTracker(
     LifecycleMixin,
@@ -18,5 +19,6 @@ class LegacyBiomeTracker(
     RecorderMixin,
     MemoryMatchMixin,
     QuestBoardMixin,
+    ExtrasMixin,
 ):
     pass

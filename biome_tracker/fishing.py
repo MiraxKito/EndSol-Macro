@@ -174,7 +174,7 @@ def load_fishing_config(raw_config: dict[str, Any] | None = None) -> dict[str, A
         "fishing_merchant_ocr_every_x_fish_amt": _coerce_int(raw.get("fishing_merchant_ocr_every_x_fish_amt"), 30, 1, 100000),
         "fishing_use_br_sc_every_x_fish": bool(raw.get("fishing_use_br_sc_every_x_fish", False)),
         "fishing_br_sc_every_x_fish": _coerce_int(raw.get("fishing_br_sc_every_x_fish"), 30, 1, 100000),
-        "fishing_actions_delay_ms": _coerce_int(raw.get("fishing_actions_delay_ms"), 100, 0, 5000),
+        "fishing_actions_delay_ms": _coerce_int(raw.get("fishing_actions_delay_ms"), 200, 0, 5000),
         "fishing_playback_multiplier": _coerce_float(raw.get("fishing_playback_multiplier"), 1.0, 1.0, 2.0),
         "non_vip_movement_path": bool(raw.get("non_vip_movement_path", False)),
 
@@ -189,7 +189,7 @@ def load_fishing_config(raw_config: dict[str, Any] | None = None) -> dict[str, A
 
 
 def _get_fishing_actions_delay_seconds(cfg: dict[str, Any]) -> float:
-    return _coerce_int(cfg.get("fishing_actions_delay_ms"), 100, 0, 5000) / 1000.0
+    return _coerce_int(cfg.get("fishing_actions_delay_ms"), 200, 0, 5000) / 1000.0
 
 
 def _get_pixel_rgb(x: int, y: int, sct: Any | None = None) -> tuple[int, int, int]:

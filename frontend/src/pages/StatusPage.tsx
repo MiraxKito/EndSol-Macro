@@ -19,7 +19,25 @@ export default function StatusPage() {
     const [autoScroll, setAutoScroll] = useState(true);
     const [modulePage, setModulePage] = useState(0);
     const [moduleFilter, setModuleFilter] = useState<"all" | "active" | "idle" | "disabled">("all");
+    const [schedule, setSchedule] = useState<any>(null);
     const logContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchSchedule = async () => {
+            try {
+                const api = window.pywebview?.api as any;
+                if (api?.get_feature_schedule && isMounted) {
+                    setSchedule(await api.get_feature_schedule());
+                }
+            } catch (err) {
+                console.error("Failed to fetch feature schedule:", err);
+            }
+        };
+        void fetchSchedule();
+        const scheduleInterval = setInterval(fetchSchedule, 5000);
+        return () => { isMounted = false; clearInterval(scheduleInterval); };
+    }, []);
 
     useEffect(() => {
         let isMounted = true;
@@ -150,6 +168,26 @@ export default function StatusPage() {
                     </ul>
                 </div>
             )}
+
+            <div className="card">
+                <div className="card-header">
+                    <div className="card-icon">🗓️</div>
+                    <div style={{ flex: 1 }}>
+                        <h3>Feature Schedule</h3>
+                        <p>What each automation will do next and when it becomes eligible</p>
+                    </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "6px" }}>
+                    {(schedule?.features || []).map((f: any) => (
+                        <div key={f.name} className="form-hint">
+                            <b style={{ color: f.active ? "#86efac" : f.enabled ? "inherit" : "#6b7280" }}>{f.name}</b>
+                            {": "}
+                            {f.active ? "running now" : !f.enabled ? "disabled" : (f.note || "waiting")}
+                        </div>
+                    ))}
+                    {!schedule?.success && <div className="form-hint">Schedule is unavailable (macro not started).</div>}
+                </div>
+            </div>
 
             <div className="card">
                 <div className="card-header">

@@ -201,7 +201,7 @@ export const RU_P7: Record<string, string> = {
     "⚠️ Compatibility warning": "⚠️ Предупреждение о совместимости",
     "Supported features": "Поддерживаемые функции",
     "EndSol Macro functionality outside Multiple-Instances mode": "Функциональность EndSol Macro вне режима мульти-окон",
-    "v1.0.6 — Memory Match & quality-of-life fixes":
+    "v1.0.6 — Memory Match, Sol's Book & new extras":
         "v1.0.6 — фиксы Memory Match и мелкие улучшения",
     "Memory Match plays more reliably; Transcendent auras shine blue; media cache stays small":
         "Memory Match играет надёжнее; ауры Transcendent переливаются голубым; медиа-кэш больше не растёт",

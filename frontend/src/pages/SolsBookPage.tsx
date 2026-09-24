@@ -70,15 +70,51 @@ const auraFlags = (e: Entry | null | undefined) => Array.isArray(e?.flags) ? e.f
 /** Event auras: wiki "Event" rarity class, the limited flag, or the field. */
 const isEventAura = (e: Entry | null | undefined) =>
   !!e && (entryRarityType(e) === "Event" || auraFlags(e).includes("limited") || !!e.limited);
-/** Crafted auras: workshop recipes and potion-only auras. */
-const isCraftedAura = (e: Entry | null | undefined) =>
-  !!e && (auraFlags(e).includes("craftable") || !!e.rarity_is_potion || e.obtainment_type === "craftable");
+/** Crafted auras: real Workshop recipes (craftable flag, not potion-only). */
+const isCraftableAura = (e: Entry | null | undefined) =>
+  !!e && auraFlags(e).includes("craftable") && !e.rarity_is_potion;
+/** Potion-only auras: obtained by drinking a potion, not by crafting. */
+const isPotionAura = (e: Entry | null | undefined) => !!e && !!e.rarity_is_potion;
 
 /** Canonical display order for aura rarity types (rare → special, Other last). */
 const RARITY_ORDER = [
   "Basic", "Epic", "Unique", "Legendary", "Mythic", "Exalted", "Glorious",
   "Transcendent", "Challenged", "Challenged+", "Event", "Dev Exclusive",
 ];
+
+/**
+ * THE LIMBO is a dimension, not a weather biome, but it hosts its own auras
+ * and mechanics - shown inside the Biomes chapter as its own entry. Images
+ * are live Fandom files (loaded through the media cache) with captions.
+ */
+const LIMBO_EXCLUSIVE_FALLBACK = [
+  "Nothing", "Raven", "Gothic", "Anima", "Empty", "Imaginary",
+  "Juxtaposition", "Elude", "Unknown", "Raven Plague",
+];
+const THE_LIMBO_ENTRY = (exclusiveAuras: string[]): Entry => ({
+  name: "THE LIMBO",
+  color: "0x5B2AA8",
+  category: "Dimension",
+  spawn_chance: "Entry dimension (not a weather roll)",
+  duration: "Stays until you leave",
+  chat_message: "Doesn't post a chat message on spawn",
+  thumbnail_url: "https://static.wikia.nocookie.net/sol-rng/images/3/33/LimboEntrance.png/revision/latest?cb=20260503035230",
+  description: "A hidden dimension added in the Eon 1-5 Update, captioned \"The Timeless Land\". "
+    + "Unlocked through Stella's second quest: the Glass Candle recipe lets you past the Unnamed Entity, "
+    + "then four candle quests open the way. Only Limbo-exclusive auras can be rolled here - Overworld auras "
+    + "are impossible to obtain, and most Overworld buffs are disabled (gear buffs and Final Luck still work), "
+    + "so survival relies on Forbidden Potions and Void Hearts. Four falls into the void are survivable; "
+    + "the fifth sends you back to Sol's Island. The Portable Crack allows re-entry. Home of Dave and Eden (NPC).",
+  exclusive_auras: exclusiveAuras,
+  gallery: [
+    { url: "https://static.wikia.nocookie.net/sol-rng/images/3/33/LimboEntrance.png/revision/latest?cb=20260503035230", caption: "The Limbo entrance, guarded by the Unnamed Entity" },
+    { url: "https://static.wikia.nocookie.net/sol-rng/images/d/d2/Limbo_Outside.png/revision/latest?cb=20250817144719", caption: "The dark void with floating semi-blue-grey islands" },
+    { url: "https://static.wikia.nocookie.net/sol-rng/images/f/f9/Limbo_bridge.png/revision/latest?cb=20250615193902", caption: "Torch-lit pathway between the islands" },
+    { url: "https://static.wikia.nocookie.net/sol-rng/images/b/b8/LimboCandles.png/revision/latest?cb=20260306190644", caption: "One of the four candle quests" },
+    { url: "https://static.wikia.nocookie.net/sol-rng/images/3/31/Sol%27s_RNG_Limbo_v1.10.png/revision/latest?cb=20260818125121", caption: "Infographic: current Limbo auras (v1.10, by MattPlays607)" },
+  ],
+  _metadata_source: "fandom",
+});
 
 /** Normalize rarity/type names: dedupes UNIQUE/Unique, CHALLENGED/Challenged… */
 const canonicalRarity = (raw: any) => {
@@ -145,7 +181,7 @@ const auraRarityText = (e: Entry) => {
   // Crafted/potion auras: the stored number is the potion chance, never a
   // global roll chance — "1 in 1000 anywhere" would mislead. Obtainment
   // already lists every potion source with its exact chance.
-  if (isCraftedAura(e)) {
+  if (isCraftableAura(e) || isPotionAura(e)) {
     const rn = e.rarity_name ? canonicalRarity(e.rarity_name) : "";
     return `${rn ? rn + " · " : ""}Crafted — see Obtainment`;
   }
@@ -205,7 +241,16 @@ export default function SolsBookPage() {
         window.pywebview?.api?.get_full_aura_data?.(),
         window.pywebview?.api?.get_data_source_status?.(),
       ]);
-      if (biomeData && typeof biomeData === "object") setBiomes(biomeData);
+      if (biomeData && typeof biomeData === "object") {
+        // THE LIMBO is a dimension, not a weather biome - synthesize its
+        // entry in the Biomes chapter, collecting its exclusive auras from
+        // the loaded aura data (static fallback keeps it useful offline).
+        const limboAuras = Object.entries(auraData || {})
+          .filter(([, v]) => /limbo/i.test(String((v as any)?.obtainment || ""))
+            || /limbo/i.test(JSON.stringify((v as any)?.exclusive_biomes || "")))
+          .map(([n]) => prettyName(n));
+        setBiomes({ ...biomeData, "THE LIMBO": THE_LIMBO_ENTRY(limboAuras.length ? limboAuras : LIMBO_EXCLUSIVE_FALLBACK) });
+      }
       if (auraData && typeof auraData === "object") setAuras(auraData);
       if (sourceData && typeof sourceData === "object") setSourceStatus(sourceData);
     } finally { setLoading(false); }
@@ -260,6 +305,23 @@ export default function SolsBookPage() {
   const auraMusicUrl = typeof entry?.music_url === "string" && entry.music_url ? entry.music_url : "";
   const auraMusicFile = typeof entry?.music_file === "string" ? entry.music_file : "";
 
+  // Biome media mirrors the aura pipeline: Fandom gallery images (fetched
+  // lazily per selection) + the biome theme music, rendered by the same
+  // zoomable viewer. THE LIMBO keeps its hardcoded gallery — the detail
+  // fetch only merges on success.
+  const biomeImageUrls = useMemo(() => {
+    if (section !== "biomes" || !entry) return [];
+    const fromGallery = Array.isArray(entry.gallery)
+      ? entry.gallery.map((g: any) => (typeof g?.url === "string" ? g.url : "")).filter(Boolean)
+      : [];
+    return Array.from(new Set([
+      typeof entry.thumbnail_url === "string" ? entry.thumbnail_url : "",
+      ...fromGallery,
+    ].filter((url): url is string => url.length > 0)));
+  }, [section, entry]);
+  const biomeMusicUrl = typeof entry?.music_url === "string" && entry.music_url ? entry.music_url : "";
+  const biomeMusicFile = typeof entry?.music_file === "string" ? entry.music_file : "";
+
   useEffect(() => {
     if (!selected || !entries.some(([name]) => name === selected)) {
       setSelected(entries[0]?.[0] || null);
@@ -277,6 +339,16 @@ export default function SolsBookPage() {
       if (!alive || !detail || detail.error) return;
       setAuras(current => ({ ...current, [selected]: { ...current[selected], ...detail } }));
     }).finally(() => { if (alive) setDetailLoading(false); });
+    return () => { alive = false; };
+  }, [section, selected]);
+
+  useEffect(() => {
+    if (section !== "biomes" || !selected || !window.pywebview?.api?.get_biome_detail) return;
+    let alive = true;
+    void window.pywebview.api.get_biome_detail(selected).then((detail: Record<string, any>) => {
+      if (!alive || !detail || detail.error) return;
+      setBiomes(current => ({ ...current, [selected]: { ...current[selected], ...detail } }));
+    }).catch(() => {});
     return () => { alive = false; };
   }, [section, selected]);
 
@@ -344,21 +416,24 @@ export default function SolsBookPage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                   <h3 style={{ margin: "5px 0 4px", fontSize: 25 }}>{entry?.name ? String(entry.name) : prettyName(selected)}</h3>
                   {section === "auras" && isEventAura(entry) && <span className="book-badge" style={{ color: "#21FF11" }}>Event</span>}
-                  {section === "auras" && isCraftedAura(entry) && <span className="book-badge" style={{ color: "#F7F917" }}>Crafting</span>}
+                  {section === "auras" && isCraftableAura(entry) && <span className="book-badge" style={{ color: "#F7F917" }}>Crafting</span>}
+                  {section === "auras" && isPotionAura(entry) && <span className="book-badge" style={{ color: "#F554EF" }}>Potion</span>}
                 </div>
                 <div style={{ color: "#9d99b8", fontSize: 12 }}>{sourceLabel(entry._metadata_source || entry.metadata_source)}{detailLoading ? " · loading Fandom article…" : ""}</div>
               </div>
             </div>
 
-            {section === "auras" && (
+            {(
               <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
                 <button className={`btn ${detailTab === "info" ? "btn-accent" : ""}`} style={{ padding: "6px 16px" }} onClick={() => setDetailTab("info")}>ℹ Info</button>
-                <button className={`btn ${detailTab === "media" ? "btn-accent" : ""}`} style={{ padding: "6px 16px" }} onClick={() => setDetailTab("media")}>🎞 Media{(() => { const n = auraImageUrls.length + (auraVideoUrl ? 1 : 0); return n ? ` (${n})` : ""; })()}</button>
+                <button className={`btn ${detailTab === "media" ? "btn-accent" : ""}`} style={{ padding: "6px 16px" }} onClick={() => setDetailTab("media")}>🎞 Media{(() => { const n = section === "auras" ? auraImageUrls.length + (auraVideoUrl ? 1 : 0) : biomeImageUrls.length + (biomeMusicUrl ? 1 : 0); return n ? ` (${n})` : ""; })()}</button>
               </div>
             )}
 
             {detailTab === "media" && section === "auras" ? (
               <AuraMediaViewer urls={auraImageUrls} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={prettyName(selected)} accent={accent} />
+            ) : detailTab === "media" && section === "biomes" ? (
+              <AuraMediaViewer urls={biomeImageUrls} videoUrl="" videoKind="" cutsceneNote="" musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={prettyName(selected)} accent={accent} />
             ) : section === "biomes" ? <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity / spawn" value={entry.spawn_chance || "Unknown"} />
@@ -366,7 +441,17 @@ export default function SolsBookPage() {
                 <Fact label="Biome Message" value={entry.chat_message || "Doesn't post a chat message on spawn"} />
               </div>
               <Section title="Chronicle"><p style={{ lineHeight: 1.7, color: "var(--text-secondary)" }}>{entry.description || entry.how_to_get || "No extended description is available for this entry yet."}</p></Section>
-              {entry.thumbnail_url && <Section title="In-game preview"><div><CachedImage url={String(entry.thumbnail_url)} alt={String(selected)} style={{ maxWidth: "100%", maxHeight: 170, objectFit: "contain", background: "rgba(255,255,255,.06)" }} /></div></Section>}
+              {entry.thumbnail_url && <Section title="In-game preview"><div><CachedThumb url={String(entry.thumbnail_url)} alt={String(selected)} style={{ maxWidth: "100%", maxHeight: 170, objectFit: "contain", background: "rgba(255,255,255,.06)" }} /></div></Section>}
+              {Array.isArray((entry as any).gallery) && (entry as any).gallery.length > 0 && <Section title="Gallery">
+                <div style={{ display: "grid", gap: 12 }}>
+                  {(entry as any).gallery.map((g: any, i: number) => (
+                    <div key={i}>
+                      <CachedThumb url={String(g?.url || "")} alt={String(g?.caption || `Gallery ${i + 1}`)} style={{ maxWidth: "100%", maxHeight: 200, objectFit: "contain", background: "rgba(255,255,255,.06)" }} />
+                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>{String(g?.caption || "")}</div>
+                    </div>
+                  ))}
+                </div>
+              </Section>}
               {entry.music_url && <Section title="🎵 Theme music"><CachedAudio url={String(entry.music_url)} /></Section>}
               {entry.exclusive_auras && <Section title="Exclusive auras"><p style={{ color: "var(--text-secondary)" }}>{Array.isArray(entry.exclusive_auras) ? entry.exclusive_auras.join(", ") : String(entry.exclusive_auras)}</p></Section>}
             </> : <>
@@ -455,8 +540,56 @@ function CachedImage({ url, alt, style, onClick }: { url?: string; alt?: string;
   );
 }
 
-/** Audio box with cache-backed playback and a working Save button. */
-function CachedAudio({ url, fileLabel }: { url?: string; fileLabel?: string; accent?: string }) {
+/**
+ * Thumbnail source backed by the Python media cache. Lists/grids/galleries
+ * get a small STATIC preview (first frame for GIFs) — rendering a wall of
+ * full obtainment GIFs at once was eating GPU/CPU and dropping FPS. The
+ * full animation is only loaded in the main viewer.
+ */
+function useCachedThumbnail(remoteUrl?: string): { src: string; state: "idle" | "loading" | "ready" | "failed" } {
+  const [src, setSrc] = useState("");
+  const [state, setState] = useState<"idle" | "loading" | "ready" | "failed">("idle");
+  useEffect(() => {
+    setSrc("");
+    if (!remoteUrl) { setState("idle"); return; }
+    let alive = true;
+    setState("loading");
+    const api = window.pywebview?.api;
+    const req = api?.ensure_media_thumbnail
+      ? api.ensure_media_thumbnail(remoteUrl)
+      : api?.ensure_media_cached?.(remoteUrl);
+    Promise.resolve(req).then((res: Record<string, any>) => {
+      if (!alive) return;
+      if (res && res.success && res.local_url) { setSrc(String(res.local_url)); setState("ready"); }
+      else setState("failed");
+    }).catch(() => { if (alive) setState("failed"); });
+    return () => { alive = false; };
+  }, [remoteUrl]);
+  return { src, state };
+}
+
+/** Static-preview image for lists/galleries (falls back to the full file). */
+function CachedThumb({ url, alt, style, onClick }: { url?: string; alt?: string; style?: React.CSSProperties; onClick?: () => void }) {
+  const { src } = useCachedThumbnail(url || undefined);
+  const [failed, setFailed] = useState(false);
+  if (!url) return null;
+  const effective = (!failed && src) ? src : url;
+  return (
+    <img
+      src={effective}
+      alt={alt}
+      onClick={onClick}
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+      referrerPolicy="no-referrer"
+      onError={() => { if (src) setFailed(true); }}
+      style={style}
+    />
+  );
+}
+
+/** Audio box with cache-backed playback and a working Save button. */function CachedAudio({ url, fileLabel }: { url?: string; fileLabel?: string; accent?: string }) {
   const { src, state } = useCachedMedia(url || undefined);
   const [saveState, setSaveState] = useState("");
   if (!url) return null;
@@ -531,7 +664,14 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
     : "Video from the wiki";
   const caption = active.kind === "video"
     ? kindLabel
-    : isAnimated ? "Obtainment cutscene (collection animation)" : "Collection / in-game art";
+    : isAnimated ? "Obtainment cutscene (collection animation)"
+    : (() => {
+        // Humanized caption from the wiki file name when it is informative
+        // (e.g. "Neferkhaf ingame"), generic label otherwise.
+        const human = mediaFileName(active.url).replace(/\.[a-z0-9]+$/i, "").replace(/[_\-]+/g, " ").trim();
+        const label = isAnimated ? "obtainment cutscene" : "collection / in-game art";
+        return human ? `${human.charAt(0).toUpperCase() + human.slice(1)} — ${label}` : label.charAt(0).toUpperCase() + label.slice(1);
+      })();
 
   const onWheel = (e: React.WheelEvent) => {
     if (active.kind !== "image") return;
@@ -638,7 +778,7 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
           {items.map((item, i) => (
             <button key={item.kind + item.url} onClick={() => { setIdx(i); setZoom(1); setPan({ x: 0, y: 0 }); }}
               style={{ padding: 0, position: "relative", border: i === idx ? `2px solid ${accent}` : "2px solid transparent", background: "rgba(255,255,255,.06)", cursor: "pointer", lineHeight: 0 }}>
-              <CachedImage url={item.url} alt={`${name} media ${i + 1}`}
+              <CachedThumb url={item.url} alt={`${name} media ${i + 1}`}
                 style={{ width: 74, height: 74, objectFit: "contain", background: "rgba(255,255,255,.05)" }} />
               {item.kind === "video" && (
                 <span style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", fontSize: 22, color: "#fff", background: "rgba(0,0,0,.35)" }}>▶</span>

@@ -211,7 +211,7 @@ class ConfigMixin:
             "fishing_merchant_every_x_fish": self.config.get("fishing_merchant_every_x_fish", "30"),
             "fishing_use_br_sc_every_x_fish": self.config.get("fishing_use_br_sc_every_x_fish", False),
             "fishing_br_sc_every_x_fish": self.config.get("fishing_br_sc_every_x_fish", "30"),
-            "fishing_actions_delay_ms": self.config.get("fishing_actions_delay_ms", "100"),
+            "fishing_actions_delay_ms": self.config.get("fishing_actions_delay_ms", "200"),
             "fishing_playback_multiplier": self.config.get("fishing_playback_multiplier", 1.0),
 
             # ── Easter Egg Path  ──
@@ -472,7 +472,7 @@ class ConfigMixin:
                 "fishing_merchant_every_x_fish": "30",
                 "fishing_use_br_sc_every_x_fish": False,
                 "fishing_br_sc_every_x_fish": "30",
-                "fishing_actions_delay_ms": "100",
+                "fishing_actions_delay_ms": "200",
                 "fishing_playback_multiplier": 1.0,
                 "collect_easter_egg": False,
                 "egg_collect_interval_min": "30",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useConfig } from "../contexts/ConfigContext";
 import ToggleSwitch from "../components/ToggleSwitch";
 import { useT, usePanelLang, type Lang } from "../i18n";
@@ -8,12 +8,58 @@ export default function OtherFeaturesPage() {
     const t = useT();
     const panelLang = usePanelLang();
     const [pendingLang, setPendingLang] = useState<Lang | null>(null);
+    const [profileName, setProfileName] = useState("");
+    const [profiles, setProfiles] = useState<string[]>([]);
+    const [profileMsg, setProfileMsg] = useState("");
+    const [resetArmed, setResetArmed] = useState(false);
+    const [resetMsg, setResetMsg] = useState("");
+
+    const handleResetSettings = async () => {
+        if (!resetArmed) { setResetArmed(true); setTimeout(() => setResetArmed(false), 5000); return; }
+        setResetArmed(false);
+        const res = await window.pywebview?.api?.reset_config_to_defaults?.();
+        if (res?.success) {
+            setResetMsg(res.message || t("All settings were reset to defaults"));
+            // The panel caches the whole config object — reload it so every
+            // page reflects the defaults immediately.
+            setTimeout(() => { try { window.location.reload(); } catch { /* ignore */ } }, 1500);
+        } else {
+            setResetMsg(res?.reason || res?.error || t("Reset failed"));
+        }
+    };
+
+    const refreshProfiles = () => {
+        window.pywebview?.api?.list_config_profiles?.().then((r: any) => {
+            if (r?.success) setProfiles(r.profiles || []);
+        });
+    };
+    useEffect(() => { refreshProfiles(); }, []);
 
     if (error) return <div style={{ padding: "20px", color: "red" }}>Error: {error}</div>;
     if (!config) return <div style={{ padding: "20px" }}>Loading...</div>;
 
     const updateConfig = (key: string, value: any) => {
         saveConfig({ ...config, [key]: value });
+    };
+
+    const handleSaveProfile = async () => {
+        const name = profileName.trim();
+        if (!name) { setProfileMsg(t("Enter a profile name first")); return; }
+        const res = await window.pywebview?.api?.save_config_profile?.(name);
+        setProfileMsg(res?.success ? t("Profile saved") + ": " + res.name : (res?.error || t("Failed to save profile")));
+        if (res?.success) { setProfileName(""); refreshProfiles(); }
+    };
+    const handleLoadProfile = async (name: string) => {
+        const res = await window.pywebview?.api?.load_config_profile?.(name);
+        setProfileMsg(res?.success ? t("Profile loaded") + ": " + res.name : (res?.error || t("Failed to load profile")));
+    };
+    const handleDeleteProfile = async (name: string) => {
+        const res = await window.pywebview?.api?.delete_config_profile?.(name);
+        if (res?.success) { setProfileMsg(t("Profile deleted") + ": " + name); refreshProfiles(); }
+    };
+    const handleClearLogs = async () => {
+        const res = await window.pywebview?.api?.clear_logs?.();
+        setProfileMsg(res?.success ? t("Logs cleared") : (res?.error || t("Failed to clear logs")));
     };
 
     // Language switch. Custom tab labels (panel customization) take priority
@@ -141,6 +187,98 @@ export default function OtherFeaturesPage() {
                 </div>
 
                 <ToggleSwitch
+                    label={t("Dry-run mode (log actions without performing them)")}
+                    description={t("The macro detects everything and writes to the log what it WOULD do, but takes no action. Great for testing calibrations.")}
+                    checked={config.dry_run || false}
+                    onChange={(val) => updateConfig("dry_run", val)}
+                />
+                <ToggleSwitch
+                    label={t("Key-release failsafe after reconnect")}
+                    description={t("Force-release W/A/S/D/Space after every reconnect so a cut-off path playback cannot leave the character running in one direction. Off by default.")}
+                    checked={config.key_release_failsafe || false}
+                    onChange={(val) => updateConfig("key_release_failsafe", val)}
+                />
+                <ToggleSwitch
+                    label={t("Daily stats webhook (once per day at 00:05)")}
+                    description={t("Sends one Discord message per day with the session counters (auras, biomes, Memory Match pairs, fish).")}
+                    checked={config.daily_stats_webhook || false}
+                    onChange={(val) => updateConfig("daily_stats_webhook", val)}
+                />
+                <ToggleSwitch
+                    label={t("Windows notification on Legendary+ auras")}
+                    description={t("Shows a desktop notification for Legendary or rarer auras - useful when no Discord webhook is configured. Off by default.")}
+                    checked={config.rare_aura_desktop_notify || false}
+                    onChange={(val) => updateConfig("rare_aura_desktop_notify", val)}
+                />
+
+                <div className="setting-row" style={{ padding: '15px 20px', borderBottom: '1px solid var(--border)' }}>
+                    <div style={{ marginBottom: 10 }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text-bright)' }}>{t("Config Profiles")}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t("Save the current settings under a name and switch between sets (e.g. Biome farming / Egg run)")}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                        <input
+                            className="form-input"
+                            placeholder={t("Profile name")}
+                            value={profileName}
+                            onChange={(e) => setProfileName(e.target.value)}
+                            style={{ width: 180, backgroundColor: 'var(--bg-card)', color: 'var(--text)', border: '1px solid var(--border)' }}
+                        />
+                        <button className="btn primary" onClick={handleSaveProfile} style={{ padding: '8px 16px', cursor: 'pointer' }}>
+                            {t("Save profile")}
+                        </button>
+                    </div>
+                    {profiles.length > 0 && (
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+                            {profiles.map((name) => (
+                                <span key={name} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid var(--border)', padding: '4px 8px', fontSize: '0.85rem' }}>
+                                    {name}
+                                    <button onClick={() => handleLoadProfile(name)} style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'var(--accent)', fontWeight: 600 }}>{t("Load")}</button>
+                                    <button onClick={() => handleDeleteProfile(name)} style={{ cursor: 'pointer', background: 'none', border: 'none', color: '#f87171' }}>✕</button>
+                                </span>
+                            ))}
+                        </div>
+                    )}
+                    {profileMsg && <div style={{ marginTop: 8, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{profileMsg}</div>}
+                </div>
+
+                <div className="setting-row" style={{ padding: '15px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <div style={{ fontWeight: 600, color: 'var(--text-bright)' }}>{t("Clear Logs")}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t("Archives and truncates the macro and error logs")}</div>
+                    </div>
+                    <button
+                        className="btn primary"
+                        onClick={handleClearLogs}
+                        style={{ padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', backgroundColor: 'var(--primary)', color: 'white', border: 'none', fontWeight: 600 }}
+                    >
+                        {t("Clear")}
+                    </button>
+                </div>
+
+                <div className="setting-row" style={{ padding: '15px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <div style={{ fontWeight: 600, color: 'var(--text-bright)' }}>{t("Reset All Settings")}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t("Resets every setting of the active config to defaults. Webhooks and the bot token are kept; a backup of the old config is saved. The panel reloads after the reset.")}</div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+                        <button
+                            className="btn"
+                            onClick={handleResetSettings}
+                            style={{
+                                padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600,
+                                backgroundColor: resetArmed ? '#b91c1c' : 'transparent',
+                                color: resetArmed ? 'white' : '#f87171',
+                                border: `1px solid ${resetArmed ? '#b91c1c' : '#f87171'}`,
+                            }}
+                        >
+                            {resetArmed ? t("Click again to confirm") : t("Reset settings")}
+                        </button>
+                        {resetMsg && <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', maxWidth: 420, textAlign: 'right' }}>{resetMsg}</div>}
+                    </div>
+                </div>
+
+                <ToggleSwitch
                     label="GLITCHED visual effect on macro UI when GLITCHED biome is found (to look cool ofc)"
                     description={<span style={{ color: "red", fontWeight: "bold" }}>ONLY USE THIS IF YOU ARE NON PHOTOSENSITIVE</span>}
                     checked={config.enable_glitch_effect || false}
@@ -169,10 +307,9 @@ export default function OtherFeaturesPage() {
 
                 <ToggleSwitch
                     label="Auto Update (Startup)"
-                    description="⚠️ Disabled — auto-update points to original EndSol repo. Do not enable until repo is changed."
-                    checked={false}
-                    onChange={() => {}}
-                    disabled={true}
+                    description="Automatically check for, download and install new releases on startup (EXE builds only)"
+                    checked={config.auto_update_enabled === true}
+                    onChange={(val) => updateConfig("auto_update_enabled", val)}
                 />
 
                 <ToggleSwitch

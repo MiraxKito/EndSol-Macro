@@ -677,6 +677,7 @@ class DetectionMixin:
             (self.merchant_ocr_check_loop, "Merchant OCR Check"),
             (self.eden_contract_loop, "Eden Contract"),
             (self.memory_match_loop, "Memory Match"),
+            (self.start_daily_stats_loop, "Daily Stats"),
         ]
 
         for thread_func, name in threads:
@@ -1555,6 +1556,136 @@ class DetectionMixin:
                 last_error = "Fandom aura page could not be parsed"
         return {"error": last_error}
 
+    def load_fandom_biome_detail(self, biome_name):
+        """Collect a biome's real wiki images as a gallery (like THE LIMBO).
+
+        The wiki has NO per-biome pages — every biome lives on the big
+        "Biomes" page. Its layout is consistent (verified against the live
+        page): a biome's images sit in the zone right BEFORE its
+        ==={{Biome|X}}=== heading (the same rule the thumbnail parser uses),
+        and the biome's own theme music is embedded inside its section body.
+        """
+        name = str(biome_name or "").strip()
+        if not name:
+            return {"error": "Empty biome name"}
+        src = getattr(self, "biome_data", None)
+        if not isinstance(src, dict) or not src:
+            try:
+                src = self.load_biome_data() or {}
+            except Exception:
+                src = {}
+        entry = dict((src or {}).get(name) or {})
+        cache = getattr(self, "_fandom_biome_detail_cache", None)
+        if not isinstance(cache, dict):
+            cache = {}
+        if name in cache:
+            return cache[name]
+        text = self._get_fandom_biomes_wikitext()
+        if not text:
+            return {"error": "Fandom Biomes page unavailable"}
+
+        pattern = re.compile(r"(?m)^=+\s*([^=].*?)\s*=+\s*$")
+        matches = list(pattern.finditer(text))
+        heads = [(m.group(1).strip(), m.start(), m.end()) for m in matches]
+
+        def _canon(s):
+            return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
+
+        def _heading_biome(raw):
+            if "{{Biome" not in raw:
+                return None
+            inner = raw.replace("{{", "").replace("}}", "")
+            parts = [p.strip() for p in inner.split("|") if p.strip()]
+            if len(parts) >= 2 and parts[0].lower() == "biome":
+                return parts[1]
+            return parts[0] if parts else None
+
+        target = _canon(name)
+        if not target:
+            return {"error": "Biome name is not matchable"}
+        idx = None
+        for i, (raw_head, _s, _e) in enumerate(heads):
+            bn = _heading_biome(raw_head)
+            if bn and _canon(bn) and _canon(bn) == target:
+                idx = i
+                break
+        if idx is None:
+            # NORMAL has no {{Biome|...}} template on the wiki — its section
+            # is a plain "Normal" heading. TIME is hidden and never requested.
+            if target == "normal":
+                for i, (raw_head, _s, _e) in enumerate(heads):
+                    if "{{Biome" not in raw_head and _canon(raw_head) == "normal":
+                        idx = i
+                        break
+        if idx is None:
+            return {"error": "Biome section not found on the Fandom Biomes page"}
+
+        # Images live right before the heading; limit the look-back window so
+        # the previous biome's body text stays out of the gallery.
+        prev_end = heads[idx - 1][2] if idx > 0 else 0
+        zone = text[max(prev_end, heads[idx][1] - 2600):heads[idx][1]]
+        # The biome's own theme music sits inside its section body.
+        next_start = heads[idx + 1][1] if idx + 1 < len(heads) else len(text)
+        body = text[heads[idx][2]:next_start]
+
+        gallery, seen = [], set()
+
+        def _add(raw_file, caption=""):
+            base = str(raw_file or "").split("|")[0].strip()
+            if not base or base.lower() in seen:
+                return
+            # Galleries are images only; audio/video handled separately.
+            if re.search(r"\.(?:mp4|webm|mov|ogv|ogg|oga|mp3|wav)(?:\?|$)", base, re.I):
+                return
+            seen.add(base.lower())
+            human = re.sub(r"\.[a-z0-9]+$", "", base, flags=re.I)
+            human = re.sub(r"[_\-]+", " ", human)
+            human = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", human).strip()
+            gallery.append({
+                "url": self._FANDOM_WIKI_URL + "Special:FilePath/" + base.replace(" ", "_"),
+                "file": base,
+                "caption": (caption or "").strip() or (human[:80] if human else base),
+            })
+
+        for m in re.finditer(r"\[\[File:([^\]\]]+)\]\]", zone):
+            _add(m.group(1))
+
+        if not entry.get("music_url"):
+            m_audio = re.search(r"\[\[File:([^\]\]]+\.(?:ogg|oga|mp3|wav))", body, re.I)
+            if m_audio:
+                audio = m_audio.group(1).strip()
+                entry["music_url"] = self._FANDOM_WIKI_URL + "Special:FilePath/" + audio.replace(" ", "_")
+                entry["music_file"] = audio
+
+        entry["gallery"] = gallery[:8]
+        entry["_metadata_source"] = "fandom_article"
+        if not entry.get("fandom_page"):
+            entry["fandom_page"] = self._FANDOM_WIKI_URL + "Biomes"
+        cache[name] = entry
+        self._fandom_biome_detail_cache = cache
+        return entry
+
+    def _get_fandom_biomes_wikitext(self):
+        """Raw wikitext of the Biomes page, fetched once per session."""
+        text = getattr(self, "_fandom_biomes_wikitext_cache", "")
+        if text:
+            return text
+        try:
+            response = fandom_get(
+                "https://sol-rng.fandom.com/api.php?action=parse&page=Biomes&prop=wikitext&format=json",
+                timeout=30,
+            )
+            if response is None or not response.ok:
+                return ""
+            raw = response.json()
+            text = (((raw.get("parse") or {}).get("wikitext") or {}).get("*")
+                    if isinstance(raw, dict) else "") or ""
+            if text:
+                self._fandom_biomes_wikitext_cache = text
+            return text
+        except Exception:
+            return ""
+
     # ------------------------------------------------------------------
     # Fandom Biomes page parser (prose format: ==={{Biome|X}}=== sections)
     # ------------------------------------------------------------------
@@ -2260,6 +2391,12 @@ class DetectionMixin:
 
                                 self.send_aura_webhook(parsed_aura_name, formatted_rarity, biome_message, screenshot_path=screenshot_path)
                                 self.last_aura_found = parsed_aura_name
+                                try:
+                                    self._daily_bump("auras")
+                                    if isinstance(rarity, (int, float)) and rarity >= 100000:
+                                        self.desktop_notify("Rare aura!", f"{parsed_aura_name} ({formatted_rarity or 'unknown chance'})")
+                                except Exception:
+                                    pass
 
                                 force_record_auras = str(self.config.get("force_record_auras", "") or "").lower()
                                 force_record_list = [x.strip() for x in force_record_auras.split(",") if x.strip()]
@@ -2304,6 +2441,10 @@ class DetectionMixin:
                                 biome_message = f"[From {self.current_biome}!]" if getattr(self, "current_biome", None) and getattr(self, "current_biome") != "NORMAL" else ""
                                 self.send_aura_webhook(aura, None, biome_message, screenshot_path=screenshot_path)
                                 self.last_aura_found = aura
+                                try:
+                                    self._daily_bump("auras")
+                                except Exception:
+                                    pass
 
                                 force_record_auras = str(self.config.get("force_record_auras", "") or "").lower()
                                 force_record_list = [x.strip() for x in force_record_auras.split(",") if x.strip()]
@@ -2478,6 +2619,10 @@ class DetectionMixin:
                         self.error_logging(e, "Error taking rare biome screenshot")
                         screenshot_path = None
 
+                try:
+                    self._daily_bump("biomes")
+                except Exception:
+                    pass
                 self.send_webhook(biome, message_type, "start", screenshot_path=screenshot_path)
 
             if last_biome in rare_biomes and biome not in rare_biomes:
@@ -2563,6 +2708,7 @@ class DetectionMixin:
             self._roblox_fullscreened = False
             self.reconnect_confirm_deadline = time.monotonic() + 60
             self.set_title_threadsafe(f"""EndSol Macro {current_ver} (Running)""")
+            self.failsafe_release_if_enabled("after reconnect")
             self.save_config()
         except Exception as e:
             self.error_logging(e, "_resume_timer_after_reconnect")
@@ -2574,6 +2720,7 @@ class DetectionMixin:
         self.terminate_roblox_processes()
         self.check_disconnect_loop(current_attempt)
         self.reconnecting_state = False
+        self.failsafe_release_if_enabled("after fallback reconnect")
 
     def _start_player_logger_thread(self):
         if hasattr(self, "player_logger_thread") and self.player_logger_thread and self.player_logger_thread.is_alive():

@@ -4,11 +4,18 @@ export default function NoticePage() {
   const t = useT();
   return <>
     <div className="page-header"><h2>{t("Notice")}</h2><p>{t("Current EndSol Macro changes")}</p></div>
-    <div className="card"><div className="card-header"><div className="card-icon">📖</div><div><h3>v1.0.6 — Memory Match & quality-of-life fixes</h3><p>Memory Match plays more reliably; Transcendent auras shine blue; media cache stays small</p></div></div>
+    <div className="card"><div className="card-header"><div className="card-icon">📖</div><div><h3>v1.0.6 — Memory Match, Sol's Book & new extras</h3><p>Memory Match reads quantities reliably; The Limbo added to Sol's Book; new optional automations and tools</p></div></div>
       <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
-        <li><b>Memory Match:</b> no longer gets stuck flipping the same two tiles when items look identical but have different quantities. Quantities are now also compared pixel-wise, so unreadable text can no longer create false pairs.</li>
-        <li><b>Memory Match:</b> more waiting time after pressing Start, so the tile grid fully reveals before the game begins.</li>
-        <li><b>Sol's Book:</b> Transcendent auras now have a blue shimmer instead of silver.</li>
+        <li><b>Memory Match:</b> no longer gets stuck flipping the same two tiles when items look identical but have different quantities. Quantities are detected with a new image-processing pipeline (binarized text, upscaled reads) and compared pixel-wise, so unreadable text can no longer create false pairs.</li>
+        <li><b>Custom paths:</b> custom Eden Path recordings are now used during Eden pathing (previously only the bundled route played).</li>
+        <li><b>Sol's Book:</b> the Crafting badge no longer shows on potion-only auras — they now get their own Potion badge; media captions are more informative.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>✅ New</h4><ul>
+        <li><b>Sol's Book:</b> The Limbo dimension in the Biomes chapter with its exclusive auras and a captioned image gallery.</li>
+        <li><b>Feature Schedule</b> on the Status page: what every automation will do next and when.</li>
+        <li><b>Config Profiles:</b> save and switch complete setting sets with one click.</li>
+        <li><b>Optional toggles (off by default):</b> Dry-run mode (log actions without performing them), key-release failsafe after reconnect, daily stats webhook, Windows notifications on Legendary+ auras.</li>
+        <li><b>Clear Logs</b> button in System Settings.</li>
       </ul></div>
       <div className="changelog-item"><h4>✨ Other</h4><ul>
         <li>The media cache is limited to 300 MB and cleaned up automatically at every startup.</li>
