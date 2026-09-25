@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/endsol-macro.svg" alt="EndSol Macro" width="140" />
+<p align="center"><img width="400" height="400" alt="endsol-macro" src="https://github.com/user-attachments/assets/f178a686-26c4-4e6b-a310-c285e7f1860c" /></p>
 
 # EndSol Macro
 
@@ -10,8 +10,7 @@ Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest B
 
 [Download](https://github.com/MiraxKito/EndSol-Macro/releases/latest) · [Report an issue](https://github.com/MiraxKito/EndSol-Macro/issues) · [Discussions](https://github.com/MiraxKito/EndSol-Macro/discussions)
 
-<!-- 📸 PLACEHOLDER — hero banner / main panel screenshot. Replace this block with your image on GitHub. -->
-<p align="center"><i>— hero screenshot placeholder —</i></p>
+<p align="center"><img width="972" height="548" alt="image" src="https://github.com/user-attachments/assets/ae9756fa-7d9c-4088-97cd-8a7250832310" /></p>
 
 </div>
 
@@ -35,13 +34,15 @@ Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest B
 **Sol's Book — built-in wiki 📖**
 - Browse **Auras, Biomes, Items and Gauntlets** databases synced from the Sol's RNG Fandom Wiki: rarity, obtainment, crafting recipes, effects, descriptions.
 - **Media tab** per entry — cutscene videos, opening cutscenes, image galleries and theme music, played from a local cache so they work reliably and offline after the first view.
+<p align="center"><img width="1920" height="1018" alt="aura tab endsol" src="https://github.com/user-attachments/assets/6206bc39-43c4-4822-8906-47108675a294" /></p>
+
 
 **Panel**
 - Desktop app built with **pywebview + React**: EN/RU localization, theming, panel customization, live logs and diagnostics.
 - **Remote control** — Discord bot integration: check status and control the macro from your phone.
 
-<!-- 📸 PLACEHOLDER — Sol's Book screenshot. Replace this block with your image on GitHub. -->
-<p align="center"><i>— Sol's Book screenshot placeholder —</i></p>
+<p align="center"><img width="1920" height="1018" alt="biome tab endsol" src="https://github.com/user-attachments/assets/d693b23d-1b2a-4608-a9c1-9d098bfa444c" /></p>
+
 
 ## 🚀 Installation
 
