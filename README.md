@@ -44,16 +44,16 @@ Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest B
 <p align="center"><img width="1920" height="1018" alt="biome tab endsol" src="https://github.com/user-attachments/assets/d693b23d-1b2a-4608-a9c1-9d098bfa444c" /></p>
 
 
-## 🚀 Installation
+## Installation
 
 ### Ready EXE (recommended)
 
 1. Download `EndSolMacro.exe` from the [Releases](https://github.com/MiraxKito/EndSol-Macro/releases/latest) page.
 2. Run it — everything is packed into one file. User data lives in `%LOCALAPPDATA%\EndSolMacro`.
 3. Follow the in-panel instructions:
-   - calibrate the Memory Match / Quest Board grids,
-   - set up your Discord webhook,
-   - open Roblox, press **F1** to start (or **F2** to stop).
+   - set up your Discord webhook and private server link,
+   - set up your calibrations (if you are not on 1920x1080px, 100% scale and fullscreen),
+   - press **F1** to start (or **F2** to stop).
 
 ### From source
 
