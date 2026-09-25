@@ -453,3 +453,16 @@ def get_default_config() -> dict:
     """Return a deep copy of the default config so callers can't mutate it."""
     import copy
     return copy.deepcopy(DEFAULT_CONFIG)
+
+
+# --- Memory Match 5x4 Defaults ---
+DEFAULT_CONFIG.setdefault("memory_match_start_delay", 1.0)
+DEFAULT_CONFIG.setdefault("memory_match_reveal_delay", 3.0)
+DEFAULT_CONFIG.setdefault("memory_match_cell_width", 76)
+DEFAULT_CONFIG.setdefault("memory_match_cell_height", 76)
+DEFAULT_CONFIG.setdefault("memory_match_close_x", None)
+DEFAULT_CONFIG.setdefault("memory_match_close_y", None)
+
+# 20 слотов по умолчанию (сетка 5 колонок x 4 ряда)
+if "memory_match_cells" not in DEFAULT_CONFIG or len(DEFAULT_CONFIG["memory_match_cells"]) != 20:
+    DEFAULT_CONFIG["memory_match_cells"] = [[0, 0] for _ in range(20)]

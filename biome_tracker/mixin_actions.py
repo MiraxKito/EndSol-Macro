@@ -3406,6 +3406,9 @@ class ActionsMixin:
             return datetime.now(timezone.utc)
 
     def check_roblox_procs(self):
+        now = time.time()
+        if hasattr(self, "_last_roblox_procs") and now - getattr(self, "_last_roblox_procs_time", 0) < 2.0:
+            return self._last_roblox_procs
         try:
             current_user = psutil.Process().username()
             current_user_norm = str(current_user or "").strip().lower()
@@ -3426,13 +3429,20 @@ class ActionsMixin:
             if roblox_processes:
                 try:
                     hwnds = self._find_roblox_hwnds()
-                    if not hwnds: return False
+                    if not hwnds:
+                        self._last_roblox_procs = False
+                        self._last_roblox_procs_time = time.time()
+                        return False
                 except Exception: pass
+                self._last_roblox_procs = True
+                self._last_roblox_procs_time = time.time()
                 return True
 
         except Exception as e:
             self.error_logging(e, "Error in check_roblox_procs function.")
 
+        self._last_roblox_procs = False
+        self._last_roblox_procs_time = time.time()
         return False  # no Roblox processes are found
 
     def terminate_roblox_processes(self):

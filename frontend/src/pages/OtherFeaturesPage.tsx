@@ -250,7 +250,7 @@ export default function OtherFeaturesPage() {
                     <button
                         className="btn primary"
                         onClick={handleClearLogs}
-                        style={{ padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', backgroundColor: 'var(--primary)', color: 'white', border: 'none', fontWeight: 600 }}
+                        style={{ padding: '8px 18px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600 }}
                     >
                         {t("Clear")}
                     </button>
@@ -266,10 +266,10 @@ export default function OtherFeaturesPage() {
                             className="btn"
                             onClick={handleResetSettings}
                             style={{
-                                padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600,
-                                backgroundColor: resetArmed ? '#b91c1c' : 'transparent',
-                                color: resetArmed ? 'white' : '#f87171',
-                                border: `1px solid ${resetArmed ? '#b91c1c' : '#f87171'}`,
+                                padding: '8px 18px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600,
+                                backgroundColor: resetArmed ? 'rgba(239, 68, 68, 0.2)' : 'transparent',
+                                color: '#f87171',
+                                border: '1px solid var(--border)',
                             }}
                         >
                             {resetArmed ? t("Click again to confirm") : t("Reset settings")}

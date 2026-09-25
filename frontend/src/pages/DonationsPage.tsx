@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const BOOSTY_URL = "https://boosty.to/eds_mirax/donation";
+const BOOSTY_URL = "https://boosty.to/eds_mirax/donate";
 
 export default function DonationsPage() {
     const [donators, setDonators] = useState<string>("Loading supporters list...");

@@ -28,7 +28,7 @@ export default function CustomizationPage() {
     const [biomes, setBiomes] = useState<Record<string, BiomeData>>({});
     const [rareCustom, setRareCustom] = useState<Record<string, RareCustom>>({});
     const [selectedBiome, setSelectedBiome] = useState<string>("");
-    const [previewMode, setPreviewMode] = useState<"start" | "end">("start");
+    const previewMode = "start";
     const [sendingTest, setSendingTest] = useState(false);
     const [testResult, setTestResult] = useState<{ success: boolean; error?: string } | null>(null);
     const [customMessages, setCustomMessages] = useState<Record<string, { start?: string; end?: string }>>({});
@@ -427,32 +427,6 @@ export default function CustomizationPage() {
                             </div>
                         </div>
                     </div>
-                </div>
-
-                {/* Start/End toggle */}
-                <div className="card" style={{ display: "flex", gap: "8px" }}>
-                    <button
-                        className="btn"
-                        style={{
-                            flex: 1,
-                            backgroundColor: previewMode === "start" ? "#10b981" : "rgba(255,255,255,0.05)",
-                            color: previewMode === "start" ? "#fff" : "var(--text-secondary)"
-                        }}
-                        onClick={() => setPreviewMode("start")}
-                    >
-                        ▶ Start Preview
-                    </button>
-                    <button
-                        className="btn"
-                        style={{
-                            flex: 1,
-                            backgroundColor: previewMode === "end" ? "#ef4444" : "rgba(255,255,255,0.05)",
-                            color: previewMode === "end" ? "#fff" : "var(--text-secondary)"
-                        }}
-                        onClick={() => setPreviewMode("end")}
-                    >
-                        ■ End Preview
-                    </button>
                 </div>
 
                 {/* MIDDLE: Select Biome */}

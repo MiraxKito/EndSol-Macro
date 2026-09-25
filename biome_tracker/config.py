@@ -26,7 +26,7 @@ APPDATA_BASE = Path(_os.environ.get("LOCALAPPDATA", _os.path.expanduser("~"))) /
 APPDATA_CONFIG = APPDATA_BASE / "config.json"
 
 # ── Project GitHub repo (single source of truth for all remote URLs) ─────
-# Releases drive the in-app updater: tag = version ("v1.0.6" ...),
+# Releases drive the in-app updater: tag = version ("v1.0.7" ...),
 # release asset = EndSolMacro.exe. All gameplay data comes from the Sol's
 # RNG Fandom wiki (plus the bundled offline snapshot) — nothing else is
 # fetched. Optional files under assets/ in this repo:

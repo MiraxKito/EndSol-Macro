@@ -26,6 +26,10 @@ mkdir dist-protected
   --include-package=biome_tracker ^
   --include-data-dir=frontend\dist=dist ^
   --include-data-file=biome_tracker\auras_cache.json=biome_tracker\auras_cache.json ^
+  --include-data-file=biome_tracker\biomes_fandom.json=biome_tracker\biomes_fandom.json ^
+  --include-data-file=biome_tracker\auras_fandom.json=biome_tracker\auras_fandom.json ^
+  --include-data-file=biome_tracker\items_fandom.json=biome_tracker\items_fandom.json ^
+  --include-data-file=biome_tracker\gauntlets_fandom.json=biome_tracker\gauntlets_fandom.json ^
   --include-data-dir=crafting_files_do_not_open=crafting_files_do_not_open ^
   --include-data-dir=paths=paths ^
   --include-data-dir=lib=lib ^

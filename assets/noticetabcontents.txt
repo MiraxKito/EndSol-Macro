@@ -1,3 +1,12 @@
+# v1.0.7 (What's new?)
+
+* Memory Match: Fixed tile matching logic (reworked tolerance checks, prevented valid pairs from being discarded)
+* Sol's Book: Added comprehensive Items and Gauntlets databases loaded straight from Fandom Wiki
+* Performance: PSUtil process scanning throttled and cached to prevent FPS drops on low-end systems
+* Donations: Corrected Boosty donation URL to end with /donate
+* UI: Standardized angular border-radius style across all panel components
+* Discord Webhooks & Bot: Updated version stamping and footer metadata
+
 # v1.0.6 (What's new?)
 
 * Memory Match: quantity detection reworked (binarized reads + pixel comparison), no more false pairs

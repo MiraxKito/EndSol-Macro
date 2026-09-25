@@ -78,7 +78,7 @@ export default function CustomPathsPage() {
       </p>
 
       {/* How the recorder works — step-by-step */}
-      <section style={{ background: "var(--surface)", borderRadius: 12, padding: 16, marginBottom: 20, fontSize: 13, lineHeight: 1.7 }}>
+      <div className="card" style={{ marginBottom: 20, fontSize: 13, lineHeight: 1.7, borderRadius: "4px" }}>
         <h3 style={{ marginTop: 0, marginBottom: 8, fontSize: 14 }}>How to record a path (4 steps)</h3>
         <ol style={{ margin: 0, paddingLeft: 20 }}>
           <li>Click <b>Record new path</b> below — the Custom Path Recorder window opens.</li>
@@ -91,15 +91,16 @@ export default function CustomPathsPage() {
           Everyone on the same server can pick a different spot so you won't get in each other's way.
           The walk to the fish seller stays built-in and is not recorded.
         </p>
-      </section>
+      </div>
 
       {/* Save recording section */}
-      <section style={{ background: "var(--surface)", borderRadius: 12, padding: 20, marginBottom: 24 }}>
+      <div className="card" style={{ marginBottom: 24, borderRadius: "4px" }}>
         <h3 style={{ marginTop: 0, marginBottom: 12 }}>Save Current Recording as Custom Path</h3>
         <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 14 }}>
           <button
+            className="btn btn-accent"
             onClick={() => void openRecorder()}
-            style={{ padding: "8px 20px", borderRadius: 8, border: "none", background: "#6366f1", color: "#fff", fontWeight: 600, cursor: "pointer" }}
+            style={{ padding: "8px 18px", borderRadius: "4px", fontWeight: 600, cursor: "pointer" }}
           >
             Record new path (open Recorder)
           </button>
@@ -116,15 +117,17 @@ export default function CustomPathsPage() {
         <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
           <input
             type="text"
+            className="form-input"
             placeholder="Path name (e.g. walk_to_quest_board)"
             value={recordingName}
             onChange={(e) => setRecordingName(e.target.value)}
-            style={{ flex: 1, minWidth: 200, padding: "8px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--input-bg)", color: "var(--text-primary)" }}
+            style={{ flex: 1, minWidth: 200, borderRadius: "4px" }}
           />
           <select
+            className="form-input"
             value={recordingFeature}
             onChange={(e) => setRecordingFeature(e.target.value)}
-            style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--input-bg)", color: "var(--text-primary)" }}
+            style={{ borderRadius: "4px" }}
           >
             <option value="">No feature (generic)</option>
             {featureOptions.map(([key, label]) => (
@@ -132,16 +135,17 @@ export default function CustomPathsPage() {
             ))}
           </select>
           <button
+            className="btn btn-primary"
             onClick={() => void saveRecording()}
-            style={{ padding: "8px 20px", borderRadius: 8, border: "none", background: "#22c55e", color: "#fff", fontWeight: 600, cursor: "pointer" }}
+            style={{ padding: "8px 18px", borderRadius: "4px", fontWeight: 600, cursor: "pointer" }}
           >
             Save Recording
           </button>
         </div>
-      </section>
+      </div>
 
       {/* Existing custom paths */}
-      <section style={{ background: "var(--surface)", borderRadius: 12, padding: 20 }}>
+      <div className="card" style={{ borderRadius: "4px" }}>
         <h3 style={{ marginTop: 0, marginBottom: 12 }}>Saved Custom Paths ({paths.length})</h3>
         {paths.length === 0 ? (
           <p style={{ opacity: 0.5 }}>No custom paths recorded yet. Use the Recorder to capture a path, then save it above.</p>
@@ -150,7 +154,7 @@ export default function CustomPathsPage() {
             {paths.map((p) => (
               <div key={p.id} style={{
                 display: "flex", alignItems: "center", gap: 12, padding: "12px 16px",
-                background: "var(--surface-hover, rgba(255,255,255,0.04))", borderRadius: 8,
+                background: "var(--surface-hover, rgba(255,255,255,0.04))", borderRadius: "4px",
                 border: p.feature ? "1px solid rgba(34,197,94,0.3)" : "1px solid var(--border)"
               }}>
                 <div style={{ flex: 1 }}>
@@ -164,9 +168,10 @@ export default function CustomPathsPage() {
                   {p.created && <div style={{ fontSize: 11, opacity: 0.4 }}>{new Date(p.created).toLocaleString()}</div>}
                 </div>
                 <select
+                  className="form-input"
                   value={p.feature}
                   onChange={(e) => void assignFeature(p.id, e.target.value)}
-                  style={{ padding: "6px 10px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--input-bg)", color: "var(--text-primary)", fontSize: 13 }}
+                  style={{ padding: "6px 10px", borderRadius: "4px", fontSize: 13 }}
                 >
                   <option value="">Unassigned</option>
                   {featureOptions.map(([key, label]) => (
@@ -174,8 +179,9 @@ export default function CustomPathsPage() {
                   ))}
                 </select>
                 <button
+                  className="btn"
                   onClick={() => void deletePath(p.id)}
-                  style={{ padding: "6px 12px", borderRadius: 6, border: "1px solid rgba(239,68,68,0.3)", background: "transparent", color: "#ef4444", cursor: "pointer", fontSize: 13 }}
+                  style={{ padding: "6px 12px", borderRadius: "4px", border: "1px solid var(--border)", background: "transparent", color: "#f87171", cursor: "pointer", fontSize: 13 }}
                 >
                   Delete
                 </button>
@@ -183,10 +189,10 @@ export default function CustomPathsPage() {
             ))}
           </div>
         )}
-      </section>
+      </div>
 
       {message && (
-        <div style={{ marginTop: 16, padding: "8px 12px", borderRadius: 8, background: "rgba(59,130,246,0.1)", color: "#60a5fa", fontSize: 13 }}>
+        <div style={{ marginTop: 16, padding: "8px 12px", borderRadius: "4px", background: "rgba(59,130,246,0.1)", color: "#60a5fa", fontSize: 13 }}>
           {message}
         </div>
       )}

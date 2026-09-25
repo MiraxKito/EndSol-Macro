@@ -92,7 +92,7 @@ except Exception as e:
 
 # i added this so we can easily change macro version upon releases without having to change multiple back-end & front-end behaviours
 # for future people that is reading the open source code, hello :p
-current_version = "v1.0.6"
+current_version = "v1.0.7"
 os.environ["ENDSOL_MACRO_VERSION"] = current_version
 from biome_tracker.config import GITHUB_RELEASES_API, GITHUB_RAW_BASE
 UPDATE_LATEST_RELEASE_API_URL = GITHUB_RELEASES_API
@@ -708,6 +708,10 @@ class Api:
                 return base
             return {"success": False, "error": str(e)}
 
+    def ensure_media_preview(self, url, max_dim=288):
+        """Backward-compatible alias — some UI builds call the preview name."""
+        return self.ensure_media_thumbnail(url, max_dim=max_dim)
+
     def download_media(self, url, filename=""):
         """Save a Fandom media file via a Save-As dialog (works where the
         WebView's built-in cross-origin download button silently does nothing)."""
@@ -784,6 +788,50 @@ class Api:
         _th.Thread(target=_run, daemon=True).start()
         return {"ok": True}
 
+    def get_full_item_data(self):
+        import json
+        import sys
+        data = {}
+        try:
+            base = sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.path.dirname(os.path.abspath(__file__))
+            bundled = os.path.join(base, "biome_tracker", "items_fandom.json")
+            if os.path.isfile(bundled):
+                with open(bundled, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+        except Exception:
+            pass
+        if not data:
+            try:
+                cached = os.path.join(APPDATA_BASE, "cache", "items_fandom.json")
+                if os.path.isfile(cached):
+                    with open(cached, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+            except Exception:
+                pass
+        return data if isinstance(data, dict) else {}
+
+    def get_full_gauntlet_data(self):
+        import json
+        import sys
+        data = {}
+        try:
+            base = sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.path.dirname(os.path.abspath(__file__))
+            bundled = os.path.join(base, "biome_tracker", "gauntlets_fandom.json")
+            if os.path.isfile(bundled):
+                with open(bundled, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+        except Exception:
+            pass
+        if not data:
+            try:
+                cached = os.path.join(APPDATA_BASE, "cache", "gauntlets_fandom.json")
+                if os.path.isfile(cached):
+                    with open(cached, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+            except Exception:
+                pass
+        return data if isinstance(data, dict) else {}
+
     def get_full_aura_data(self):
         if self._tracker:
             data = getattr(self._tracker, "auras_data", None)
@@ -800,7 +848,7 @@ class Api:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    # ── Extras (v1.0.6): schedule, profiles, logs ──────────────────────
+    # ── Extras (v1.0.7): schedule, profiles, logs ──────────────────────
     def get_feature_schedule(self):
         try:
             if not self._tracker:

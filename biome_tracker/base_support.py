@@ -15,7 +15,8 @@ import keyboard as kb
 import json, requests, time, os, threading, re, webbrowser, random, keyboard, pyautogui, autoit, psutil, \
     locale, win32gui, win32process, win32con, ctypes, queue, mouse, sys, hashlib, winocr, asyncio, win32api, traceback
 
-current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.0.6")
+current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.0.7")
+current_version = current_ver
 
 rare_biomes = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY"]
 admin_biomes = ["THE HYPERSPACE REALM", "赤い満月", "THE NULL'S EXISTENCE", "THE CITADEL OF ORDERS"]

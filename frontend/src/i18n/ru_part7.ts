@@ -201,6 +201,10 @@ export const RU_P7: Record<string, string> = {
     "⚠️ Compatibility warning": "⚠️ Предупреждение о совместимости",
     "Supported features": "Поддерживаемые функции",
     "EndSol Macro functionality outside Multiple-Instances mode": "Функциональность EndSol Macro вне режима мульти-окон",
+    "v1.0.7 — Memory Match, Sol's Book (Items & Gauntlets), Optimization & UI Polish":
+        "v1.0.7 — Memory Match, Sol's Book (Предметы и Перчатки), Оптимизация и стиль UI",
+    "Fixed Memory Match tile matching; added Items & Gauntlets tabs to Sol's Book; FPS optimization; UI styling":
+        "Исправлен поиск пар в Memory Match; добавлены разделы Предметов и Перчаток в Sol's Book; оптимизация FPS; полировка UI",
     "v1.0.6 — Memory Match, Sol's Book & new extras":
         "v1.0.6 — фиксы Memory Match и мелкие улучшения",
     "Memory Match plays more reliably; Transcendent auras shine blue; media cache stays small":

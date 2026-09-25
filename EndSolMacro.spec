@@ -22,6 +22,8 @@ datas = [
     (str(ROOT / "biome_tracker" / "auras_cache.json"), "biome_tracker"),
     (str(ROOT / "biome_tracker" / "biomes_fandom.json"), "biome_tracker"),
     (str(ROOT / "biome_tracker" / "auras_fandom.json"), "biome_tracker"),
+    (str(ROOT / "biome_tracker" / "items_fandom.json"), "biome_tracker"),
+    (str(ROOT / "biome_tracker" / "gauntlets_fandom.json"), "biome_tracker"),
     (str(ROOT / "crafting_files_do_not_open"), "crafting_files_do_not_open"),
     (str(ROOT / "paths"), "paths"),
     (str(ROOT / "assets" / "endsol-macro.ico"), "assets"),

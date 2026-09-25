@@ -24,24 +24,31 @@ const rarityClass = (value: any) => {
 
 /**
  * Accent color per aura rarity type. Colors mirror the in-game inventory
- * display, sourced from the wiki's Module:Rarity/data (verified 2026-09-21).
- * Dev Exclusive is dark purple per owner request. Shimmer/gradient text
- * classes live in App.css (.rarity-text--*).
+ * display, sourced from the wiki's Module:Rarity/data.
  */
 const RARITY_COLORS: Record<string, string> = {
-  "Basic": "#FFFFFF",          // white, black outline (inventory)
-  "Epic": "#C57ED3",           // orchid
-  "Unique": "#BE7418",         // bronze
-  "Legendary": "#F7F917",      // yellow
-  "Mythic": "#F554EF",         // magenta
-  "Exalted": "#3F62D8",        // blue
-  "Glorious": "#C52425",       // red gradient in inventory (#C52425->#9D1514)
-  "Transcendent": "#7EC8FF",   // blue shimmer
-  "Challenged": "#E8E8E8",     // black/white shimmer
-  "Challenged+": "#E8E8E8",    // black/white shimmer
-  "Event": "#21FF11",          // green
-  "Dev Exclusive": "#5B2AA8",  // dark purple (owner request)
-  "Other": "#8d88a8",          // muted
+  "Basic": "#FFFFFF",
+  "Epic": "#C57ED3",
+  "Unique": "#BE7418",
+  "Legendary": "#F7F917",
+  "Mythic": "#F554EF",
+  "Exalted": "#3F62D8",
+  "Glorious": "#C52425",
+  "Transcendent": "#7EC8FF",
+  "Challenged": "#E8E8E8",
+  "Challenged+": "#E8E8E8",
+  "Event": "#21FF11",
+  "Dev Exclusive": "#5B2AA8",
+  "Right Hand": "#818cf8",
+  "Left Hand": "#c084fc",
+  "Pocket Lantern": "#facc15",
+  "Talisman": "#38bdf8",
+  "Potions": "#ec4899",
+  "Runes": "#a855f7",
+  "Tools": "#06b6d4",
+  "Materials": "#eab308",
+  "Chests": "#f97316",
+  "Other": "#94a3b8",
 };
 
 /** Shimmer/gradient text class for the rarity label (App.css). */
@@ -54,39 +61,30 @@ const rarityTextClass = (type: string) =>
 
 const entryAccent = (info: Entry | undefined | null, section: string) => {
   if (section === "biomes") return normColor(info?.color || "#7c6cff");
-  if (!info) return "#8d88a8";
+  if (!info) return "#94a3b8";
   if (info.color) return normColor(info.color);
   const type = entryRarityType(info);
-  // Event auras are colored by their actual numeric tier (like the
-  // inventory); the EVENT badge marks them as event on top.
   if (type === "Event" && isEventAura(info)) {
     const tier = canonicalRarity(rarityClass(info?.rarity));
     return RARITY_COLORS[tier] || RARITY_COLORS["Event"];
   }
-  return RARITY_COLORS[type] || "#8d88a8";
+  return RARITY_COLORS[type] || RARITY_COLORS[info?.category] || "#94a3b8";
 };
 
 const auraFlags = (e: Entry | null | undefined) => Array.isArray(e?.flags) ? e.flags : [];
-/** Event auras: wiki "Event" rarity class, the limited flag, or the field. */
 const isEventAura = (e: Entry | null | undefined) =>
   !!e && (entryRarityType(e) === "Event" || auraFlags(e).includes("limited") || !!e.limited);
-/** Crafted auras: real Workshop recipes (craftable flag, not potion-only). */
 const isCraftableAura = (e: Entry | null | undefined) =>
   !!e && auraFlags(e).includes("craftable") && !e.rarity_is_potion;
-/** Potion-only auras: obtained by drinking a potion, not by crafting. */
 const isPotionAura = (e: Entry | null | undefined) => !!e && !!e.rarity_is_potion;
 
-/** Canonical display order for aura rarity types (rare → special, Other last). */
 const RARITY_ORDER = [
   "Basic", "Epic", "Unique", "Legendary", "Mythic", "Exalted", "Glorious",
   "Transcendent", "Challenged", "Challenged+", "Event", "Dev Exclusive",
+  "Right Hand", "Left Hand", "Pocket Lantern", "Talisman",
+  "Potions", "Runes", "Tools", "Materials", "Chests"
 ];
 
-/**
- * THE LIMBO is a dimension, not a weather biome, but it hosts its own auras
- * and mechanics - shown inside the Biomes chapter as its own entry. Images
- * are live Fandom files (loaded through the media cache) with captions.
- */
 const LIMBO_EXCLUSIVE_FALLBACK = [
   "Nothing", "Raven", "Gothic", "Anima", "Empty", "Imaginary",
   "Juxtaposition", "Elude", "Unknown", "Raven Plague",
@@ -116,7 +114,6 @@ const THE_LIMBO_ENTRY = (exclusiveAuras: string[]): Entry => ({
   _metadata_source: "fandom",
 });
 
-/** Normalize rarity/type names: dedupes UNIQUE/Unique, CHALLENGED/Challenged… */
 const canonicalRarity = (raw: any) => {
   const value = String(raw ?? "").trim();
   if (!value) return "Other";
@@ -129,23 +126,16 @@ const canonicalRarity = (raw: any) => {
   return value.charAt(0).toUpperCase() + value.slice(1);
 };
 
-/** Effective rarity type for an entry (wiki name first, numeric fallback). */
 const entryRarityType = (info: Entry) =>
-  canonicalRarity(info?.category || info?.rarity_name || rarityClass(info?.rarity));
+  canonicalRarity(info?.category || info?.rarity_name || (info?.rarity ? rarityClass(info.rarity) : "Other"));
 
-/**
- * Full rarity class name including condition-based classes.
- * Challenged/Challenged+ are not tied to a number — they're tied to
- * obtainment conditions (specific challenge requirements).
- * Use this when the wiki provides rarity_name.
- */
 const obtainmentLabel = (entry: Entry) => {
   if (entry?.obtainment) return String(entry.obtainment);
   const native = entry?.native_biome;
-  if (entry?.is_exclusive && Array.isArray(entry.exclusive_biomes) && entry.exclusive_biomes.length) return `Exclusive to ${entry.exclusive_biomes.join(", ")} (obtainment not verified)`;
-  if (Array.isArray(native) && native[0] && native[0] !== "None") return `Native to ${native[0]} (obtainment not verified)`;
+  if (entry?.is_exclusive && Array.isArray(entry.exclusive_biomes) && entry.exclusive_biomes.length) return `Exclusive to ${entry.exclusive_biomes.join(", ")}`;
+  if (Array.isArray(native) && native[0] && native[0] !== "None") return `Native to ${native[0]}`;
   const exclusive = entry?.exclusive_biome;
-  if (Array.isArray(exclusive) && exclusive[0] && exclusive[0] !== "None") return `Exclusive to ${exclusive[0]} (obtainment not verified)`;
+  if (Array.isArray(exclusive) && exclusive[0] && exclusive[0] !== "None") return `Exclusive to ${exclusive[0]}`;
   return "Obtainment details unavailable";
 };
 
@@ -159,28 +149,23 @@ const fmtNum = (n: any) => {
   return Number.isFinite(num) ? num.toLocaleString("en-US") : String(n ?? "");
 };
 
-/** Wiki keys use underscores for spaces/colons — show human names. */
 const prettyName = (key: any) => String(key ?? "").replace(/_/g, " ").trim();
 
 const SOURCE_LABELS: Record<string, string> = {
-  fandom: "Fandom wiki (live)",
-  fandom_article: "Fandom article (verified)",
-  fandom_cache: "Fandom wiki (cached)",
-  fandom_snapshot: "Fandom wiki (offline snapshot)",
-  fandom_detail: "Fandom article",
+  fandom: "Sol's RNG Fandom Wiki",
+  fandom_article: "Sol's RNG Fandom Wiki",
+  fandom_cache: "Sol's RNG Fandom Wiki",
+  fandom_snapshot: "Sol's RNG Fandom Wiki",
+  fandom_detail: "Sol's RNG Fandom Wiki",
 };
 
 const sourceLabel = (value: any) => {
   const key = String(value ?? "");
-  return SOURCE_LABELS[key] || key || "Project reference data";
+  return SOURCE_LABELS[key] || "Sol's RNG Fandom Wiki";
 };
 
-/** Human rarity line: native chance first (the banner number), then global. */
 const auraRarityText = (e: Entry) => {
   if (!e) return "Unknown";
-  // Crafted/potion auras: the stored number is the potion chance, never a
-  // global roll chance — "1 in 1000 anywhere" would mislead. Obtainment
-  // already lists every potion source with its exact chance.
   if (isCraftableAura(e) || isPotionAura(e)) {
     const rn = e.rarity_name ? canonicalRarity(e.rarity_name) : "";
     return `${rn ? rn + " · " : ""}Crafted — see Obtainment`;
@@ -193,7 +178,6 @@ const auraRarityText = (e: Entry) => {
   if (Number.isFinite(native) && native > 0) {
     parts.push(`1 in ${fmtNum(native)}${biome && biome !== "None" ? ` in ${prettyName(biome)}` : ""}`);
   }
-  // Exclusive auras cannot be rolled "anywhere" — never show a global chance.
   if (!e.is_exclusive && Number.isFinite(global) && global > 0 && (!Number.isFinite(native) || global !== native)) {
     parts.push(`1 in ${fmtNum(global)} anywhere`);
   }
@@ -202,12 +186,6 @@ const auraRarityText = (e: Entry) => {
   return parts.join(" · ") || "Unknown";
 };
 
-/**
- * Searchable text for an entry: ONLY the name and the biome associations
- * (exclusive/native worlds + the short obtainment line, which names its
- * biome). Descriptions are intentionally excluded so searching "Glitched"
- * doesn't return auras that merely mention "glitch" in their lore text.
- */
 const searchableText = (name: string, info: Entry) => {
   const bits = [prettyName(name)];
   const excl = Array.isArray(info?.exclusive_biomes) ? info.exclusive_biomes : [];
@@ -217,34 +195,34 @@ const searchableText = (name: string, info: Entry) => {
   const native = Array.isArray(info?.native_biome) ? info.native_biome : [];
   if (native[0] && native[0] !== "None") bits.push(prettyName(native[0]));
   if (info?.obtainment) bits.push(String(info.obtainment));
+  if (info?.category) bits.push(String(info.category));
+  if (info?.slot) bits.push(String(info.slot));
   return bits.join(" ").toLowerCase();
 };
 
 export default function SolsBookPage() {
   const [biomes, setBiomes] = useState<MapData>({});
+  const [items, setItems] = useState<MapData>({});
+  const [gauntlets, setGauntlets] = useState<MapData>({});
   const [auras, setAuras] = useState<MapData>({});
-  const [section, setSection] = useState<"biomes" | "auras">("biomes");
+  const [section, setSection] = useState<"biomes" | "auras" | "items" | "gauntlets">("biomes");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
-  const [sourceStatus, setSourceStatus] = useState<any>(null);
   const [detailLoading, setDetailLoading] = useState(false);
-  // Inner detail tabs for auras: Media is lazy — nothing is loaded until opened
   const [detailTab, setDetailTab] = useState<"info" | "media">("info");
 
   const load = async () => {
     setLoading(true);
     try {
-      const [biomeData, auraData, sourceData] = await Promise.all([
+      const [biomeData, auraData, itemData, gauntletData] = await Promise.all([
         window.pywebview?.api?.get_full_biome_data?.(),
         window.pywebview?.api?.get_full_aura_data?.(),
-        window.pywebview?.api?.get_data_source_status?.(),
+        (window.pywebview?.api as any)?.get_full_item_data?.(),
+        (window.pywebview?.api as any)?.get_full_gauntlet_data?.(),
       ]);
       if (biomeData && typeof biomeData === "object") {
-        // THE LIMBO is a dimension, not a weather biome - synthesize its
-        // entry in the Biomes chapter, collecting its exclusive auras from
-        // the loaded aura data (static fallback keeps it useful offline).
         const limboAuras = Object.entries(auraData || {})
           .filter(([, v]) => /limbo/i.test(String((v as any)?.obtainment || ""))
             || /limbo/i.test(JSON.stringify((v as any)?.exclusive_biomes || "")))
@@ -252,13 +230,14 @@ export default function SolsBookPage() {
         setBiomes({ ...biomeData, "THE LIMBO": THE_LIMBO_ENTRY(limboAuras.length ? limboAuras : LIMBO_EXCLUSIVE_FALLBACK) });
       }
       if (auraData && typeof auraData === "object") setAuras(auraData);
-      if (sourceData && typeof sourceData === "object") setSourceStatus(sourceData);
+      if (itemData && typeof itemData === "object") setItems(itemData);
+      if (gauntletData && typeof gauntletData === "object") setGauntlets(gauntletData);
     } finally { setLoading(false); }
   };
 
   useEffect(() => { void load(); }, []);
 
-  const data = section === "biomes" ? biomes : auras;
+  const data = section === "biomes" ? biomes : section === "items" ? items : section === "gauntlets" ? gauntlets : auras;
   const categories = useMemo(() => {
     const set = new Map<string, string>();
     Object.values(data).forEach(item => {
@@ -266,7 +245,6 @@ export default function SolsBookPage() {
       set.set(value.toLowerCase(), value);
     });
     const list = Array.from(set.values());
-    // Rarity order (rare → special); everything unknown goes last as "Other"
     list.sort((a, b) => {
       if (a === "Other") return 1;
       if (b === "Other") return -1;
@@ -279,6 +257,7 @@ export default function SolsBookPage() {
     });
     return list;
   }, [data]);
+
   const entries = useMemo(() => Object.entries(data)
     .filter(([name, info]) => {
       const q = query.trim().toLowerCase();
@@ -290,7 +269,7 @@ export default function SolsBookPage() {
 
   const entry = selected ? data[selected] : null;
   const accent = entryAccent(entry, section);
-  // Aura media is ONLY touched inside the Media tab (lazy → no preload lag)
+
   const auraImageUrls = useMemo(() => {
     if (section !== "auras" || !entry) return [];
     return Array.from(new Set([
@@ -305,10 +284,6 @@ export default function SolsBookPage() {
   const auraMusicUrl = typeof entry?.music_url === "string" && entry.music_url ? entry.music_url : "";
   const auraMusicFile = typeof entry?.music_file === "string" ? entry.music_file : "";
 
-  // Biome media mirrors the aura pipeline: Fandom gallery images (fetched
-  // lazily per selection) + the biome theme music, rendered by the same
-  // zoomable viewer. THE LIMBO keeps its hardcoded gallery — the detail
-  // fetch only merges on success.
   const biomeImageUrls = useMemo(() => {
     if (section !== "biomes" || !entry) return [];
     const fromGallery = Array.isArray(entry.gallery)
@@ -328,7 +303,6 @@ export default function SolsBookPage() {
     }
   }, [section, entries, selected]);
 
-  // Reset the detail tab whenever the entry or the section changes
   useEffect(() => { setDetailTab("info"); }, [selected, section]);
 
   useEffect(() => {
@@ -357,76 +331,107 @@ export default function SolsBookPage() {
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "flex-start" }}>
         <div>
           <h2 style={{ letterSpacing: "0.04em" }}>✦ Sol’s Book</h2>
-          <p>Field almanac of Sol’s RNG — biomes, aura classes, native worlds, and the stories behind every roll.</p>
+          <p>Official Field Almanac of Sol’s RNG — Biomes, Auras, Items, and Gauntlets straight from the Fandom Wiki.</p>
         </div>
         <button className="btn" onClick={() => void load()} disabled={loading}>{loading ? "Updating…" : "↻ Refresh"}</button>
       </div>
     </div>
 
-    <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-      <div className="book-panel" style={{ padding: "24px 26px" }}>
-        <div style={{ color: "#c9c2ff", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase" }}>The EndSol reference archive</div>
-        <h3 style={{ fontSize: 26, margin: "8px 0 4px" }}>The Almanac of Chance</h3>
-        <div style={{ color: "#a9a5c5", maxWidth: 760, lineHeight: 1.55 }}>Explore the weather that shapes every roll and the auras hidden inside it. Entries are loaded from the project’s Fandom-compatible knowledge source and marked when local fallback data is being used.</div>
-        {sourceStatus && <div className="book-panel" style={{ marginTop: 12, display: "grid", gap: 6, padding: "9px 12px", fontSize: 12 }}><div style={{ color: sourceStatus.biome?.error ? "#fca5a5" : "#bbf7d0" }}>Biomes: <b>{sourceStatus.biome?.source || "unknown"}</b>{sourceStatus.biome?.error ? ` — ${sourceStatus.biome.error}` : ""}</div><div style={{ color: sourceStatus.aura?.error ? "#fca5a5" : "#bbf7d0" }}>Auras: <b>{sourceStatus.aura?.source || "unknown"}</b>{sourceStatus.aura?.error ? ` — ${sourceStatus.aura.error}` : ""}</div></div>}
-        <div style={{ display: "flex", gap: 10, marginTop: 18, flexWrap: "wrap" }}>
-          <div className="book-chip"><b>{Object.keys(biomes).length}</b> biomes</div>
-          <div className="book-chip"><b>{Object.keys(auras).length}</b> auras</div>
-          <div className="book-chip">Source-aware entries</div>
+    <div className="card" style={{ padding: 0, overflow: "hidden", borderRadius: "6px" }}>
+      <div className="book-panel" style={{ padding: "20px 24px", background: "linear-gradient(180deg, rgba(30, 27, 46, 0.7) 0%, rgba(18, 16, 28, 0.9) 100%)" }}>
+        <div style={{ color: "#a78bfa", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", fontWeight: 600 }}>The EndSol Reference Archive</div>
+        <h3 style={{ fontSize: 24, margin: "6px 0 4px", fontWeight: 700 }}>The Almanac of Chance</h3>
+        <div style={{ color: "#94a3b8", maxWidth: 760, lineHeight: 1.5, fontSize: 13 }}>Explore comprehensive in-game encyclopedic entries loaded directly from Sol's RNG Fandom Wiki.</div>
+        
+        <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
+          <div className="book-chip" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
+            <b style={{ color: "#a78bfa" }}>{Object.keys(biomes).length}</b> biomes
+          </div>
+          <div className="book-chip" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
+            <b style={{ color: "#38bdf8" }}>{Object.keys(auras).length}</b> auras
+          </div>
+          <div className="book-chip" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
+            <b style={{ color: "#fbbf24" }}>{Object.keys(items).length}</b> items
+          </div>
+          <div className="book-chip" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
+            <b style={{ color: "#ec4899" }}>{Object.keys(gauntlets).length}</b> gauntlets
+          </div>
+          <div className="book-chip" style={{ background: "rgba(34, 197, 94, 0.1)", border: "1px solid rgba(34, 197, 94, 0.2)", color: "#86efac", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
+            ✓ Sol's RNG Fandom Verified
+          </div>
         </div>
       </div>
 
-      <div style={{ padding: "14px 18px", borderTop: "1px solid rgba(255,255,255,.08)", borderBottom: "1px solid rgba(255,255,255,.08)", display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <button className={`btn ${section === "biomes" ? "btn-accent" : ""}`} onClick={() => { setSection("biomes"); setCategory("all"); }}>☁ Biomes</button>
-        <button className={`btn ${section === "auras" ? "btn-accent" : ""}`} onClick={() => { setSection("auras"); setCategory("all"); }}>✧ Auras</button>
-        <input className="form-input" style={{ minWidth: 220, flex: 1, maxWidth: 360 }} value={query} onChange={e => setQuery(e.target.value)} placeholder={section === "auras" ? "Search aura or biome name (e.g. Glitched)…" : "Search biomes…"} />
-        <select className="form-input" style={{ maxWidth: 190 }} value={category} onChange={e => setCategory(e.target.value)}>
-          <option value="all">All chapters</option>
+      <div style={{ padding: "12px 18px", borderTop: "1px solid rgba(255,255,255,.08)", borderBottom: "1px solid rgba(255,255,255,.08)", display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", background: "rgba(15, 13, 24, 0.5)" }}>
+        <button className={`btn ${section === "biomes" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("biomes"); setCategory("all"); }}>☁ Biomes</button>
+        <button className={`btn ${section === "auras" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("auras"); setCategory("all"); }}>✧ Auras</button>
+        <button className={`btn ${section === "items" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("items"); setCategory("all"); }}>🎒 Items</button>
+        <button className={`btn ${section === "gauntlets" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("gauntlets"); setCategory("all"); }}>🥊 Gauntlets</button>
+        
+        <input className="form-input" style={{ minWidth: 200, flex: 1, maxWidth: 340, borderRadius: "4px" }} value={query} onChange={e => setQuery(e.target.value)} placeholder={section === "auras" ? "Search auras…" : section === "biomes" ? "Search biomes…" : section === "items" ? "Search items…" : "Search gauntlets…"} />
+        <select className="form-input" style={{ maxWidth: 190, borderRadius: "4px" }} value={category} onChange={e => setCategory(e.target.value)}>
+          <option value="all">All categories</option>
           {categories.map(value => <option key={value} value={value}>{value}</option>)}
         </select>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(230px, .9fr) minmax(0, 1.6fr)", minHeight: 480 }}>
-        <div style={{ padding: 14, borderRight: "1px solid rgba(255,255,255,.08)", maxHeight: 620, overflow: "auto" }}>
+        {/* Left List */}
+        <div style={{ padding: 12, borderRight: "1px solid rgba(255,255,255,.08)", maxHeight: 620, overflow: "auto" }}>
           {loading && <div className="form-hint" style={{ padding: 18 }}>Opening the archive…</div>}
           {!loading && !entries.length && <div className="form-hint" style={{ padding: 18 }}>No entries match this search.</div>}
           {entries.map(([name, info]) => {
             const active = name === selected;
             const color = entryAccent(info, section);
-            const isEvent = section === "auras" && isEventAura(info);
+            const isEvent = (section === "auras" && isEventAura(info)) || (section === "gauntlets" && info.limited);
             const itemStyle = active
-              ? ({ "--item-color": color, "--item-bg": `${color}1f`, "--item-border": `${color}8c` } as React.CSSProperties)
+              ? ({ "--item-color": color, "--item-bg": `${color}1a`, "--item-border": `${color}66`, borderRadius: "4px" } as React.CSSProperties)
               : isEvent
-              ? ({ border: "1px dashed rgba(33,255,17,.4)" } as React.CSSProperties)
-              : undefined;
+              ? ({ border: "1px dashed rgba(34,197,94,.4)", borderRadius: "4px" } as React.CSSProperties)
+              : { borderRadius: "4px" };
             return <button key={name} onClick={() => setSelected(name)} className={`book-item${active ? " book-item--active" : ""}`} style={itemStyle}>
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: color, boxShadow: `0 0 12px ${color}`, flex: "0 0 auto" }} />
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{prettyName(name)}</span>
+              {/* Perf: no thumbnails in selection lists — dozens of animated GIFs
+                  composited at once were the main source of FPS drops. Lists are
+                  text + rarity color dot only; images live in the detail pane. */}
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, boxShadow: `0 0 8px ${color}`, flex: "0 0 auto" }} />
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13 }}>{prettyName(name)}</span>
             </button>;
           })}
         </div>
 
-        <div style={{ padding: "28px clamp(18px, 4vw, 44px)", background: "rgba(255,255,255,.018)" }}>
+        {/* Right Detail Pane */}
+        <div style={{ padding: "24px clamp(16px, 3vw, 36px)", background: "rgba(15, 13, 24, 0.4)" }}>
           {!entry && <div className="form-hint">Select an entry from the archive.</div>}
           {entry && <>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 16, borderBottom: `1px solid ${accent}66`, paddingBottom: 18, marginBottom: 18 }}>
-              <div className="book-panel" style={{ width: 58, height: 58, display: "grid", placeItems: "center", fontSize: 28, flex: "0 0 auto", "--panel-corner": accent } as React.CSSProperties}>{section === "biomes" ? "☁" : "✧"}</div>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 16, borderBottom: `1px solid rgba(255,255,255,0.08)`, paddingBottom: 18, marginBottom: 18 }}>
+              <div className="book-panel" style={{ width: 64, height: 64, display: "grid", placeItems: "center", fontSize: 28, flex: "0 0 auto", overflow: "hidden", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px" }}>
+                {entry.thumbnail_url ? (
+                  <CachedThumb url={String(entry.thumbnail_url)} alt={String(selected)} style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4 }} />
+                ) : (
+                  section === "biomes" ? "☁" : section === "items" ? "🎒" : section === "gauntlets" ? "🥊" : "✧"
+                )}
+              </div>
               <div style={{ flex: 1 }}>
-                <div className={rarityTextClass(entryRarityType(entry))} style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".16em", ...(rarityTextClass(entryRarityType(entry)) ? {} : { color: accent }) }}>{entryRarityType(entry)}</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                  <h3 style={{ margin: "5px 0 4px", fontSize: 25 }}>{entry?.name ? String(entry.name) : prettyName(selected)}</h3>
+                <div className={rarityTextClass(entryRarityType(entry))} style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".16em", ...(rarityTextClass(entryRarityType(entry)) ? {} : { color: accent }) }}>
+                  {section === "gauntlets" ? (entry.slot || entry.hand || "Gauntlet") : section === "items" ? (entry.category || "Item") : entryRarityType(entry)}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                  <h3 style={{ margin: "4px 0 4px", fontSize: 23, fontWeight: 700, color: "#fff" }}>{entry?.name ? String(entry.name) : prettyName(selected)}</h3>
                   {section === "auras" && isEventAura(entry) && <span className="book-badge" style={{ color: "#21FF11" }}>Event</span>}
                   {section === "auras" && isCraftableAura(entry) && <span className="book-badge" style={{ color: "#F7F917" }}>Crafting</span>}
                   {section === "auras" && isPotionAura(entry) && <span className="book-badge" style={{ color: "#F554EF" }}>Potion</span>}
+                  {section === "gauntlets" && (entry.slot || entry.hand) && <span className="book-badge" style={{ color: "#a78bfa" }}>{entry.slot || entry.hand}</span>}
+                  {section === "gauntlets" && entry.limited && <span className="book-badge" style={{ color: "#21FF11" }}>Event / Limited</span>}
+                  {section === "items" && entry.category && <span className="book-badge" style={{ color: "#38bdf8" }}>{entry.category}</span>}
                 </div>
-                <div style={{ color: "#9d99b8", fontSize: 12 }}>{sourceLabel(entry._metadata_source || entry.metadata_source)}{detailLoading ? " · loading Fandom article…" : ""}</div>
+                <div style={{ color: "#94a3b8", fontSize: 12 }}>{sourceLabel(entry._metadata_source || entry.metadata_source)}{detailLoading ? " · loading Fandom article…" : ""}</div>
               </div>
             </div>
 
-            {(
+            {(section === "auras" || section === "biomes") && (
               <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-                <button className={`btn ${detailTab === "info" ? "btn-accent" : ""}`} style={{ padding: "6px 16px" }} onClick={() => setDetailTab("info")}>ℹ Info</button>
-                <button className={`btn ${detailTab === "media" ? "btn-accent" : ""}`} style={{ padding: "6px 16px" }} onClick={() => setDetailTab("media")}>🎞 Media{(() => { const n = section === "auras" ? auraImageUrls.length + (auraVideoUrl ? 1 : 0) : biomeImageUrls.length + (biomeMusicUrl ? 1 : 0); return n ? ` (${n})` : ""; })()}</button>
+                <button className={`btn ${detailTab === "info" ? "btn-accent" : ""}`} style={{ padding: "6px 16px", borderRadius: "4px" }} onClick={() => setDetailTab("info")}>ℹ Info</button>
+                <button className={`btn ${detailTab === "media" ? "btn-accent" : ""}`} style={{ padding: "6px 16px", borderRadius: "4px" }} onClick={() => setDetailTab("media")}>🎞 Media{(() => { const n = section === "auras" ? auraImageUrls.length + (auraVideoUrl ? 1 : 0) : biomeImageUrls.length + (biomeMusicUrl ? 1 : 0); return n ? ` (${n})` : ""; })()}</button>
               </div>
             )}
 
@@ -434,34 +439,77 @@ export default function SolsBookPage() {
               <AuraMediaViewer urls={auraImageUrls} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={prettyName(selected)} accent={accent} />
             ) : detailTab === "media" && section === "biomes" ? (
               <AuraMediaViewer urls={biomeImageUrls} videoUrl="" videoKind="" cutsceneNote="" musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={prettyName(selected)} accent={accent} />
-            ) : section === "biomes" ? <>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10, marginBottom: 18 }}>
+            ) : section === "gauntlets" ? <>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 16 }}>
+                <Fact label="Gear Slot" value={entry.slot || entry.hand || "Right Hand"} />
+                <Fact label="Type" value={entry.limited ? "Event / Limited" : "Craftable"} />
+                <Fact label="Source" value={entry.raw_info?.source || entry.how_to_get?.split("|")[0]?.trim() || "Jake's Workshop"} />
+              </div>
+              {entry.usage && (
+                <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>⚡ Boosts & Effects</h4>
+                  <div style={{ fontSize: 13.5, fontWeight: 600, color: "#f8fafc", lineHeight: 1.5 }}>{entry.usage}</div>
+                </div>
+              )}
+              {entry.raw_info?.recipe && (
+                <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>🔨 Crafting Recipe</h4>
+                  <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.raw_info.recipe}</div>
+                </div>
+              )}
+              <div className="book-card" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>📖 Overview</h4>
+                <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || "No overview available."}</div>
+              </div>
+            </> : section === "items" ? <>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 16 }}>
+                <Fact label="Category" value={entry.category || "Item"} />
+                <Fact label="Type" value="Consumable / Material" />
+              </div>
+              {entry.usage && (
+                <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>⚡ Effect / Usage</h4>
+                  <div style={{ fontSize: 13.5, fontWeight: 600, color: "#f8fafc", lineHeight: 1.5 }}>{entry.usage}</div>
+                </div>
+              )}
+              {entry.how_to_get && (
+                <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>🗺 Obtainment / Crafting</h4>
+                  <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.how_to_get}</div>
+                </div>
+              )}
+              <div className="book-card" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>📝 Description</h4>
+                <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || "No description provided."}</div>
+              </div>
+            </> : section === "biomes" ? <>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity / spawn" value={entry.spawn_chance || "Unknown"} />
                 <Fact label="Duration" value={entry.duration || "Unknown"} />
                 <Fact label="Biome Message" value={entry.chat_message || "Doesn't post a chat message on spawn"} />
               </div>
-              <Section title="Chronicle"><p style={{ lineHeight: 1.7, color: "var(--text-secondary)" }}>{entry.description || entry.how_to_get || "No extended description is available for this entry yet."}</p></Section>
-              {entry.thumbnail_url && <Section title="In-game preview"><div><CachedThumb url={String(entry.thumbnail_url)} alt={String(selected)} style={{ maxWidth: "100%", maxHeight: 170, objectFit: "contain", background: "rgba(255,255,255,.06)" }} /></div></Section>}
+              <Section title="Chronicle"><p style={{ lineHeight: 1.7, color: "var(--text-secondary)", fontSize: 13 }}>{entry.description || entry.how_to_get || "No extended description is available for this entry yet."}</p></Section>
+              {entry.thumbnail_url && <Section title="In-game preview"><div><CachedThumb url={String(entry.thumbnail_url)} alt={String(selected)} style={{ maxWidth: "100%", maxHeight: 170, objectFit: "contain", background: "rgba(255,255,255,.04)", borderRadius: 4 }} /></div></Section>}
               {Array.isArray((entry as any).gallery) && (entry as any).gallery.length > 0 && <Section title="Gallery">
                 <div style={{ display: "grid", gap: 12 }}>
                   {(entry as any).gallery.map((g: any, i: number) => (
                     <div key={i}>
-                      <CachedThumb url={String(g?.url || "")} alt={String(g?.caption || `Gallery ${i + 1}`)} style={{ maxWidth: "100%", maxHeight: 200, objectFit: "contain", background: "rgba(255,255,255,.06)" }} />
+                      <CachedThumb url={String(g?.url || "")} alt={String(g?.caption || `Gallery ${i + 1}`)} style={{ maxWidth: "100%", maxHeight: 200, objectFit: "contain", background: "rgba(255,255,255,.04)", borderRadius: 4 }} />
                       <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>{String(g?.caption || "")}</div>
                     </div>
                   ))}
                 </div>
               </Section>}
               {entry.music_url && <Section title="🎵 Theme music"><CachedAudio url={String(entry.music_url)} /></Section>}
-              {entry.exclusive_auras && <Section title="Exclusive auras"><p style={{ color: "var(--text-secondary)" }}>{Array.isArray(entry.exclusive_auras) ? entry.exclusive_auras.join(", ") : String(entry.exclusive_auras)}</p></Section>}
+              {entry.exclusive_auras && <Section title="Exclusive auras"><p style={{ color: "var(--text-secondary)", fontSize: 13 }}>{Array.isArray(entry.exclusive_auras) ? entry.exclusive_auras.join(", ") : String(entry.exclusive_auras)}</p></Section>}
             </> : <>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10, marginBottom: 18 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity class" value={rarityClassFull(entry.rarity_name, entry.rarity)} />
                 <Fact label="Rarity" value={auraRarityText(entry)} />
                 <Fact label="Obtainment" value={obtainmentLabel(entry)} />
               </div>
-              <Section title={entry.is_exclusive ? "Exclusive world" : "Native world"}><p style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>{entry.is_exclusive && entry.exclusive_biomes?.length ? `Exclusive to ${entry.exclusive_biomes.map(prettyName).join(", ")}` : entry.native_biome && entry.native_biome[0] !== "None" ? `${prettyName(entry.native_biome[0])} · native rarity ${entry.native_rarity ? `1 in ${fmtNum(entry.native_rarity)}` : `×${entry.native_biome[1] ?? 1}`}` : "Global / no native biome recorded."}</p></Section>
-              <Section title="Archive notes"><p style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>{entry.description || entry.notes || "This aura is catalogued from the available reference data."}</p></Section>
+              <Section title={entry.is_exclusive ? "Exclusive world" : "Native world"}><p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{entry.is_exclusive && entry.exclusive_biomes?.length ? `Exclusive to ${entry.exclusive_biomes.map(prettyName).join(", ")}` : entry.native_biome && entry.native_biome[0] !== "None" ? `${prettyName(entry.native_biome[0])} · native rarity ${entry.native_rarity ? `1 in ${fmtNum(entry.native_rarity)}` : `×${entry.native_biome[1] ?? 1}`}` : "Global / no native biome recorded."}</p></Section>
+              <Section title="Archive notes"><p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{entry.description || entry.notes || "This aura is catalogued from the available reference data."}</p></Section>
               {(auraImageUrls.length > 0 || auraVideoUrl) && <div className="form-hint" style={{ marginTop: 10 }}>🖼 {auraImageUrls.length + (auraVideoUrl ? 1 : 0)} media file(s) available — open the <b>Media</b> tab to view them without slowing the book down.</div>}
             </>}
           </>}
@@ -471,7 +519,6 @@ export default function SolsBookPage() {
   </div>;
 }
 
-/** Extract a human file name from a Fandom media URL (for Save-As). */
 function mediaFileName(url: string): string {
   try {
     const path = url.split("?")[0].split("#")[0];
@@ -490,12 +537,6 @@ async function saveMedia(url: string, setStatus: (s: string) => void) {
   } catch (e) { setStatus(`Save failed: ${e}`); }
 }
 
-/**
- * Media source backed by the Python media cache. Fandom's CDN 403-challenges
- * the WebView's own <video>/<audio> requests (a file:// page cannot send a
- * Referer), so the file is fetched by Python (browser headers, paced, retried)
- * and played back as a local file. Falls back to the remote URL on failure.
- */
 function useCachedMedia(remoteUrl?: string): { src: string; state: "idle" | "loading" | "ready" | "failed" } {
   const [src, setSrc] = useState("");
   const [state, setState] = useState<"idle" | "loading" | "ready" | "failed">("idle");
@@ -514,12 +555,6 @@ function useCachedMedia(remoteUrl?: string): { src: string; state: "idle" | "loa
   return { src, state };
 }
 
-/** Image that loads through the Python media cache. The Fandom CDN
- * (Cloudflare) 403-challenges image requests without a Referer, and a
- * file:// page cannot send one — so aura GIFs never loaded directly from
- * the wiki. Python downloads them with browser headers (paced, retried,
- * 4 GB LRU cache) and the img plays back from a local file. Falls back to
- * the remote URL if caching fails. */
 function CachedImage({ url, alt, style, onClick }: { url?: string; alt?: string; style?: React.CSSProperties; onClick?: () => void }) {
   const { src } = useCachedMedia(url || undefined);
   const [failed, setFailed] = useState(false);
@@ -535,107 +570,66 @@ function CachedImage({ url, alt, style, onClick }: { url?: string; alt?: string;
       draggable={false}
       referrerPolicy="no-referrer"
       onError={() => { if (src) setFailed(true); }}
-      style={style}
+      style={{ display: "block", ...style }}
     />
   );
 }
 
-/**
- * Thumbnail source backed by the Python media cache. Lists/grids/galleries
- * get a small STATIC preview (first frame for GIFs) — rendering a wall of
- * full obtainment GIFs at once was eating GPU/CPU and dropping FPS. The
- * full animation is only loaded in the main viewer.
- */
-function useCachedThumbnail(remoteUrl?: string): { src: string; state: "idle" | "loading" | "ready" | "failed" } {
-  const [src, setSrc] = useState("");
-  const [state, setState] = useState<"idle" | "loading" | "ready" | "failed">("idle");
+function CachedThumb({ url, alt, style }: { url?: string; alt?: string; style?: React.CSSProperties }) {
+  const [previewSrc, setPreviewSrc] = useState<string>("");
   useEffect(() => {
-    setSrc("");
-    if (!remoteUrl) { setState("idle"); return; }
+    setPreviewSrc("");
+    if (!url) return;
     let alive = true;
-    setState("loading");
-    const api = window.pywebview?.api;
-    const req = api?.ensure_media_thumbnail
-      ? api.ensure_media_thumbnail(remoteUrl)
-      : api?.ensure_media_cached?.(remoteUrl);
-    Promise.resolve(req).then((res: Record<string, any>) => {
+    window.pywebview?.api?.ensure_media_thumbnail?.(url).then((res: Record<string, any>) => {
       if (!alive) return;
-      if (res && res.success && res.local_url) { setSrc(String(res.local_url)); setState("ready"); }
-      else setState("failed");
-    }).catch(() => { if (alive) setState("failed"); });
+      if (res && res.success && res.local_url) setPreviewSrc(String(res.local_url));
+    }).catch(() => {});
     return () => { alive = false; };
-  }, [remoteUrl]);
-  return { src, state };
+  }, [url]);
+
+  return <CachedImage url={previewSrc || url} alt={alt} style={style} />;
 }
 
-/** Static-preview image for lists/galleries (falls back to the full file). */
-function CachedThumb({ url, alt, style, onClick }: { url?: string; alt?: string; style?: React.CSSProperties; onClick?: () => void }) {
-  const { src } = useCachedThumbnail(url || undefined);
-  const [failed, setFailed] = useState(false);
-  if (!url) return null;
-  const effective = (!failed && src) ? src : url;
-  return (
-    <img
-      src={effective}
-      alt={alt}
-      onClick={onClick}
-      loading="lazy"
-      decoding="async"
-      draggable={false}
-      referrerPolicy="no-referrer"
-      onError={() => { if (src) setFailed(true); }}
-      style={style}
-    />
-  );
-}
-
-/** Audio box with cache-backed playback and a working Save button. */function CachedAudio({ url, fileLabel }: { url?: string; fileLabel?: string; accent?: string }) {
-  const { src, state } = useCachedMedia(url || undefined);
+function CachedAudio({ url, fileLabel, accent }: { url: string; fileLabel?: string; accent?: string }) {
+  const { src, state } = useCachedMedia(url);
+  const audioSrc = src || url;
   const [saveState, setSaveState] = useState("");
-  if (!url) return null;
-  const effective = src || url;
   return (
     <div>
-      {fileLabel ? (
-        <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".08em", color: "#9994b8", marginBottom: 6 }}>🎵 Theme music{fileLabel ? ` — ${fileLabel}` : ""}</div>
-      ) : null}
-      <audio key={effective} src={effective} controls preload="none" style={{ width: "100%", maxWidth: 520, display: "block" }} />
-      <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-        <button className="btn" style={{ padding: "4px 10px", fontSize: 12 }} onClick={() => void saveMedia(url, setSaveState)}>⬇ Save</button>
-        <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
-          {state === "loading" ? "⏳ Loading from the wiki…"
-            : state === "ready" ? "✓ Playing from local cache"
-            : state === "failed" ? "⚠ Cache failed — playing from the wiki directly"
-            : ""}
-          {saveState ? ` · ${saveState}` : ""}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, fontSize: 12, color: "var(--text-secondary)" }}>
+        <span>{fileLabel ? `🎵 ${prettyName(fileLabel)}` : "🎵 Theme music"}</span>
+        <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, opacity: .75 }}>
+          {state === "loading" ? "Fetching from wiki…" : state === "ready" ? "✓ Cached" : state === "failed" ? "Wiki stream" : ""}
+          {saveState ? <span>{saveState}</span> : null}
+          <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => void saveMedia(url, setSaveState)} title="Save file to disk">💾</button>
         </span>
       </div>
+      <audio controls src={audioSrc} preload="none" style={{ width: "100%", height: 32, accentColor: accent }} />
     </div>
   );
 }
 
-/** Zoomable media viewer for an aura: cutscene video, theme music, gallery. */
 function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, musicFile, name, accent }: { urls: string[]; videoUrl?: string; videoKind?: string; cutsceneNote?: string; musicUrl?: string; musicFile?: string; name: string; accent: string }) {
-  type MediaItem = { kind: "image" | "video"; url: string };
+  type MediaItem = { kind: "image" | "video"; url: string; remoteUrl?: string };
   const videoCached = useCachedMedia(videoUrl || undefined);
   const [videoFallback, setVideoFallback] = useState(false);
   const videoSrc = (!videoFallback && videoCached.src) ? videoCached.src : (videoUrl || "");
   const items: MediaItem[] = [
     ...urls.map(u => ({ kind: "image" as const, url: u })),
-    ...(videoSrc ? [{ kind: "video" as const, url: videoSrc }] : []),
+    ...(videoSrc ? [{ kind: "video" as const, url: videoSrc, remoteUrl: videoUrl || "" }] : []),
   ];
   const [idx, setIdx] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isFull, setIsFull] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
   const listKey = urls.join("|") + "|" + (videoSrc || "");
   const [saveState, setSaveState] = useState("");
 
-  // Reset the viewer whenever the media list changes (entry switch)
   useEffect(() => { setIdx(0); setZoom(1); setPan({ x: 0, y: 0 }); setIsFull(false); setVideoFallback(false); }, [listKey]);
 
-  // Esc closes fullscreen
   useEffect(() => {
     if (!isFull) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setIsFull(false); };
@@ -643,55 +637,34 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
     return () => window.removeEventListener("keydown", onKey);
   }, [isFull]);
 
-  if (!items.length) {
-    return <div className="form-hint">No media is available for this aura yet.</div>;
+  if (!items.length && !musicUrl) {
+    return <div className="form-hint" style={{ padding: 18 }}>No media available for this entry.</div>;
   }
 
-  const setZoomClamped = (z: number) => {
-    const next = Math.min(4, Math.max(1, Number(z.toFixed(2))));
-    setZoom(next);
-    if (next === 1) setPan({ x: 0, y: 0 });
-  };
-
-  const active = items[Math.min(idx, items.length - 1)];
-  const isAnimated = active.kind === "image" && /\.gif(\?|$)/i.test(active.url);
-  // Honest captions: only a wiki-verified Opening Cutscene video is presented
-  // as "Opening cutscene" — ability/appearance clips keep their real label.
-  const kindLabel = videoKind === "opening" || (!videoKind && cutsceneNote) ? "Opening cutscene"
-    : videoKind === "ability" ? "Ability video (wiki)"
-    : videoKind === "appearance" ? "Appearance / equip video (wiki)"
-    : videoKind === "obtainment" ? "Obtainment video (wiki)"
-    : "Video from the wiki";
-  const caption = active.kind === "video"
-    ? kindLabel
-    : isAnimated ? "Obtainment cutscene (collection animation)"
-    : (() => {
-        // Humanized caption from the wiki file name when it is informative
-        // (e.g. "Neferkhaf ingame"), generic label otherwise.
-        const human = mediaFileName(active.url).replace(/\.[a-z0-9]+$/i, "").replace(/[_\-]+/g, " ").trim();
-        const label = isAnimated ? "obtainment cutscene" : "collection / in-game art";
-        return human ? `${human.charAt(0).toUpperCase() + human.slice(1)} — ${label}` : label.charAt(0).toUpperCase() + label.slice(1);
-      })();
+  const active = items[Math.min(idx, Math.max(0, items.length - 1))];
 
   const onWheel = (e: React.WheelEvent) => {
-    if (active.kind !== "image") return;
+    if (active?.kind !== "image") return;
     e.preventDefault();
-    setZoomClamped(zoom + (e.deltaY < 0 ? 0.25 : -0.25));
+    const factor = e.deltaY < 0 ? 1.15 : 0.87;
+    setZoom(z => Math.max(0.5, Math.min(4, Number((z * factor).toFixed(2)))));
   };
+
   const onDragStart = (e: React.MouseEvent) => {
-    if (active.kind !== "image" || zoom <= 1) return;
+    if (active?.kind !== "image" || zoom <= 1) return;
+    setIsDragging(true);
     dragRef.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
   };
   const onDragMove = (e: React.MouseEvent) => {
-    if (!dragRef.current) return;
-    const dx = e.clientX - dragRef.current.x;
-    const dy = e.clientY - dragRef.current.y;
-    setPan({ x: dragRef.current.panX + dx, y: dragRef.current.panY + dy });
+    if (!isDragging || !dragRef.current) return;
+    setPan({
+      x: dragRef.current.panX + (e.clientX - dragRef.current.x),
+      y: dragRef.current.panY + (e.clientY - dragRef.current.y),
+    });
   };
-  const endDrag = () => { dragRef.current = null; };
-  const openFull = () => { setZoom(1); setPan({ x: 0, y: 0 }); setIsFull(true); };
+  const endDrag = () => { setIsDragging(false); dragRef.current = null; };
 
-  const mediaEl = (fullscreen: boolean) => active.kind === "video" ? (
+  const mediaEl = () => !active ? null : active.kind === "video" ? (
     <video
       key={active.url}
       src={active.url}
@@ -704,53 +677,59 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
     <CachedImage
       key={active.url}
       url={active.url}
-      alt={name}
-      onClick={fullscreen ? undefined : openFull}
+      alt={`${name} media ${idx + 1}`}
       style={{
-        width: "100%", height: "100%", objectFit: "contain",
+        width: "100%",
+        height: "100%",
+        objectFit: "contain",
         transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-        transition: dragRef.current ? "none" : "transform 0.12s ease",
         transformOrigin: "center center",
-        cursor: fullscreen ? (zoom > 1 ? "grab" : "default") : "zoom-in",
+        transition: isDragging ? "none" : "transform .12s ease-out",
+        userSelect: "none",
       }}
     />
   );
 
   const controlsRow = (fullscreen: boolean) => (
-    <div style={{ position: "absolute", top: 8, right: 8, display: "flex", gap: 6 }}>
-      {active.kind === "image" && (
-        <>
-          <button className="btn" style={{ padding: "3px 10px" }} onClick={(e) => { e.stopPropagation(); setZoomClamped(zoom - 0.25); }} disabled={zoom <= 1}>−</button>
-          <span style={{ padding: "4px 8px", background: "rgba(0,0,0,.55)", fontSize: 12, color: "#fff", minWidth: 44, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
-          <button className="btn" style={{ padding: "3px 10px" }} onClick={(e) => { e.stopPropagation(); setZoomClamped(zoom + 0.25); }} disabled={zoom >= 4}>+</button>
-        </>
-      )}
-      {active.kind === "video" && videoUrl && (
-        <button className="btn" style={{ padding: "3px 10px" }} title="Save the video file" onClick={(e) => { e.stopPropagation(); void saveMedia(videoUrl, setSaveState); }}>⬇ Save</button>
-      )}
-      {!fullscreen && (
-        <button className="btn" style={{ padding: "3px 10px" }} title="Fullscreen" onClick={(e) => { e.stopPropagation(); openFull(); }}>⛶</button>
-      )}
-      {fullscreen && (
-        <button className="btn" style={{ padding: "3px 10px" }} onClick={(e) => { e.stopPropagation(); setIsFull(false); }}>✕ Close</button>
-      )}
+    <div style={{
+      position: "absolute", top: 10, right: 10, display: "flex", gap: 6, zIndex: 10,
+      background: "rgba(10,8,20,.72)", padding: "4px 6px", borderRadius: 4, backdropFilter: "blur(4px)",
+    }}>
+      {active?.kind === "image" && <>
+        <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => setZoom(z => Math.max(0.5, Number((z - 0.25).toFixed(2))))}>−</button>
+        <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}>{Math.round(zoom * 100)}%</button>
+        <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => setZoom(z => Math.min(4, Number((z + 0.25).toFixed(2))))}>+</button>
+      </>}
+      {active && <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => void saveMedia(active.remoteUrl || active.url, setSaveState)} title="Save file to disk">💾</button>}
+      <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => setIsFull(!fullscreen)} title={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
+        {fullscreen ? "✕" : "⛶"}
+      </button>
     </div>
   );
 
-  const captionRow = (fullscreen: boolean) => (
-    <div style={{ position: "absolute", bottom: 8, left: 10, fontSize: 11, color: accent, background: "rgba(0,0,0,.5)", padding: "3px 8px", maxWidth: "70%" }}>
-      {caption}
-      {active.kind === "image" && (zoom > 1 ? " · drag to pan, wheel to zoom" : fullscreen ? " · wheel to zoom" : " · click for fullscreen, wheel to zoom")}
+  const captionRow = () => !items.length ? null : (
+    <div style={{
+      position: "absolute", bottom: 10, left: 10, right: 10, display: "flex", justifyContent: "space-between",
+      alignItems: "center", background: "rgba(10,8,20,.72)", padding: "4px 10px", borderRadius: 4, fontSize: 12,
+      backdropFilter: "blur(4px)", color: "var(--text-secondary)", pointerEvents: "auto",
+    }}>
+      <span>{active.kind === "video" ? (videoKind === "opening" ? "Opening cutscene" : "Cutscene video") : `Image ${idx + 1} of ${items.length}`}</span>
+      {items.length > 1 && (
+        <div style={{ display: "flex", gap: 6 }}>
+          <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => { setIdx((idx - 1 + items.length) % items.length); setZoom(1); setPan({ x: 0, y: 0 }); }}>‹ Prev</button>
+          <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => { setIdx((idx + 1) % items.length); setZoom(1); setPan({ x: 0, y: 0 }); }}>Next ›</button>
+        </div>
+      )}
     </div>
   );
 
   return (
     <div>
-      <div className="book-panel" style={{ position: "relative", border: "1px solid var(--border)", background: "rgba(0,0,0,.35)", overflow: "hidden", height: 340, cursor: active.kind === "image" && zoom > 1 ? "grab" : "default", "--panel-corner": accent } as React.CSSProperties}
+      <div className="book-panel" style={{ position: "relative", background: "rgba(0,0,0,.35)", overflow: "hidden", height: 340, cursor: active.kind === "image" && zoom > 1 ? "grab" : "default", borderRadius: "6px" } as React.CSSProperties}
         onWheel={onWheel} onMouseDown={onDragStart} onMouseMove={onDragMove} onMouseUp={endDrag} onMouseLeave={endDrag}>
-        {mediaEl(false)}
+        {mediaEl()}
         {controlsRow(false)}
-        {captionRow(false)}
+        {captionRow()}
       </div>
 
       {videoUrl && (
@@ -763,12 +742,14 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
         </div>
       )}
 
-      {active.kind === "video" && (videoKind === "opening" || (!videoKind && cutsceneNote)) && cutsceneNote && (
-        <p style={{ color: "var(--text-secondary)", lineHeight: 1.6, marginTop: 10, fontSize: 13 }}>{cutsceneNote}</p>
+      {cutsceneNote && (
+        <div style={{ marginTop: 6, fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.5 }}>
+          {cutsceneNote}
+        </div>
       )}
 
       {musicUrl && (
-        <div className="book-panel" style={{ marginTop: 12, padding: "10px 12px", "--panel-corner": accent } as React.CSSProperties}>
+        <div className="book-panel" style={{ marginTop: 12, padding: "10px 12px", borderRadius: "6px" } as React.CSSProperties}>
           <CachedAudio url={musicUrl} fileLabel={musicFile} accent={accent} />
         </div>
       )}
@@ -777,11 +758,11 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
           {items.map((item, i) => (
             <button key={item.kind + item.url} onClick={() => { setIdx(i); setZoom(1); setPan({ x: 0, y: 0 }); }}
-              style={{ padding: 0, position: "relative", border: i === idx ? `2px solid ${accent}` : "2px solid transparent", background: "rgba(255,255,255,.06)", cursor: "pointer", lineHeight: 0 }}>
+              style={{ padding: 0, position: "relative", border: i === idx ? `2px solid ${accent}` : "2px solid transparent", background: "rgba(255,255,255,.06)", cursor: "pointer", lineHeight: 0, borderRadius: "4px", overflow: "hidden" }}>
               <CachedThumb url={item.url} alt={`${name} media ${i + 1}`}
-                style={{ width: 74, height: 74, objectFit: "contain", background: "rgba(255,255,255,.05)" }} />
+                style={{ width: 64, height: 64, objectFit: "contain", background: "rgba(255,255,255,.05)" }} />
               {item.kind === "video" && (
-                <span style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", fontSize: 22, color: "#fff", background: "rgba(0,0,0,.35)" }}>▶</span>
+                <span style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", fontSize: 20, color: "#fff", background: "rgba(0,0,0,.35)" }}>▶</span>
               )}
             </button>
           ))}
@@ -794,17 +775,12 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
           style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(0,0,0,.94)", padding: 20 }}
         >
           <div style={{ position: "relative", width: "100%", height: "100%" }} onClick={(e) => e.stopPropagation()}>
-            {/* Definite-height chain (plain blocks, no grid): the media element
-                gets a real 100%x100% box, so objectFit "contain" letterboxes the
-                FULL gif/video. The old display:grid overlay left the row height
-                indefinite, so tall GIFs rendered at natural size and were
-                cropped to their top part. */}
             <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}
               onWheel={onWheel} onMouseDown={onDragStart} onMouseMove={onDragMove} onMouseUp={endDrag} onMouseLeave={endDrag}>
-              {mediaEl(true)}
+              {mediaEl()}
             </div>
             {controlsRow(true)}
-            {captionRow(true)}
+            {captionRow()}
           </div>
         </div>
       )}
@@ -813,9 +789,15 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
 }
 
 function Fact({ label, value }: { label: string; value: any }) {
-  return <div className="book-panel" style={{ padding: "11px 12px" }}><div style={{ color: "#9994b8", fontSize: 11, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 5 }}>{label}</div><div style={{ color: "var(--text-primary)", lineHeight: 1.45 }}>{String(value || "Unknown")}</div></div>;
+  return <div className="book-panel" style={{ padding: "10px 12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px" }}>
+    <div style={{ color: "#a78bfa", fontSize: 10.5, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 4, fontWeight: 600 }}>{label}</div>
+    <div style={{ color: "#f8fafc", lineHeight: 1.4, fontSize: 13, fontWeight: 500 }}>{String(value || "Unknown")}</div>
+  </div>;
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
-  return <div style={{ marginTop: 16 }}><h4 style={{ color: "#c9c2ff", margin: "0 0 6px", letterSpacing: ".06em" }}>{title}</h4>{children}</div>;
+  return <div style={{ marginTop: 16 }}>
+    <h4 style={{ color: "#a78bfa", margin: "0 0 6px", letterSpacing: ".06em", fontSize: 12, textTransform: "uppercase", fontWeight: 600 }}>{title}</h4>
+    {children}
+  </div>;
 }

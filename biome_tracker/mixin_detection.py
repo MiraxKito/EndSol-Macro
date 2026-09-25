@@ -653,9 +653,12 @@ class DetectionMixin:
             _latest_log = self.get_latest_log_file()
             if _latest_log and os.path.exists(_latest_log):
                 self.last_position = os.path.getsize(_latest_log)
+                self.last_position_aura = os.path.getsize(_latest_log)
                 self._last_read_log_file_main = _latest_log
+                self._last_read_log_file_last_position_aura = _latest_log
         except Exception:
             self.last_position = 0
+            self.last_position_aura = 0
         self.last_br_time = datetime.min
         self.last_sc_time = datetime.min
         self.last_crack_time = datetime.min
@@ -2302,7 +2305,7 @@ class DetectionMixin:
                 if hasattr(self, '_auras_data_lower_map'):
                     delattr(self, '_auras_data_lower_map')
 
-            log_lines = self.read_full_log_file(log_file_path)
+            log_lines = self.read_log_file_for_detector(log_file_path, pos_attr='last_position_aura', filter_chat=True)
 
             for line in reversed(log_lines):
                 try:

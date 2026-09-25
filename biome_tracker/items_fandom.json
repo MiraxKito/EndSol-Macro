@@ -1,0 +1,1091 @@
+{
+  "Lucky Potion": {
+    "name": "Lucky Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/11/Lucky1Potion.png/revision/latest",
+    "how_to_get": "Find these around the ground. Obtained from traveling merchant, Mari . Obtained from traveling merchant, Jester . Obtained from Fishing Shop.",
+    "usage": "+25% (+1) Luck Lasts 1 minute (60s)",
+    "description": "Lucky Potion is a potions item in Sol's RNG. Obtainment: Find these around the ground. Obtained from traveling merchant, Mari . Obtained from traveling merchant, Jester . Obtained from Fishing Shop. Effect: +25% (+1) Luck Lasts 1 minute (60s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Speed Potion": {
+    "name": "Speed Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/70/Speed1Potion.png/revision/latest",
+    "how_to_get": "+10% Roll Speed Lasts 1 minute (60s)",
+    "usage": "+10% Roll Speed Lasts 1 minute (60s)",
+    "description": "Speed Potion is a potions item in Sol's RNG. Obtainment: +10% Roll Speed Lasts 1 minute (60s) Effect: +10% Roll Speed Lasts 1 minute (60s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Lucky Potion L": {
+    "name": "Lucky Potion L",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6f/Lucky_Potion_L.GIF/revision/latest",
+    "how_to_get": "Obtained from traveling merchant, Mari . Find these around the water.",
+    "usage": "+25% (+0.25) Luck Lasts 5 minutes (300s)",
+    "description": "Lucky Potion L is a potions item in Sol's RNG. Obtainment: Obtained from traveling merchant, Mari . Find these around the water. Effect: +25% (+0.25) Luck Lasts 5 minutes (300s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Lucky Potion XL": {
+    "name": "Lucky Potion XL",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/66/Lucky_potion_XL.gif/revision/latest",
+    "how_to_get": "+25% (+0.25) Luck Lasts 10 minutes (600s)",
+    "usage": "+25% (+0.25) Luck Lasts 10 minutes (600s)",
+    "description": "Lucky Potion XL is a potions item in Sol's RNG. Obtainment: +25% (+0.25) Luck Lasts 10 minutes (600s) Effect: +25% (+0.25) Luck Lasts 10 minutes (600s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Speed Potion L": {
+    "name": "Speed Potion L",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/30/Speed_Potion_L.GIF/revision/latest",
+    "how_to_get": "+10% Roll Speed Lasts 5 minutes (300s)",
+    "usage": "+10% Roll Speed Lasts 5 minutes (300s)",
+    "description": "Speed Potion L is a potions item in Sol's RNG. Obtainment: +10% Roll Speed Lasts 5 minutes (300s) Effect: +10% Roll Speed Lasts 5 minutes (300s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Speed Potion XL": {
+    "name": "Speed Potion XL",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d0/Speed_Potion_XL.GIF/revision/latest",
+    "how_to_get": "+10% Roll Speed Lasts 10 minutes (600s)",
+    "usage": "+10% Roll Speed Lasts 10 minutes (600s)",
+    "description": "Speed Potion XL is a potions item in Sol's RNG. Obtainment: +10% Roll Speed Lasts 10 minutes (600s) Effect: +10% Roll Speed Lasts 10 minutes (600s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Fortune Spoid I": {
+    "name": "Fortune Spoid I",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/47/Fortune_Spoid_I.GIF/revision/latest",
+    "how_to_get": "Obtained from traveling merchant, Mari .",
+    "usage": "+50% (+0.5) Luck Lasts 1 minute (60s)",
+    "description": "Fortune Spoid I is a potions item in Sol's RNG. Obtainment: Obtained from traveling merchant, Mari . Effect: +50% (+0.5) Luck Lasts 1 minute (60s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Fortune Spoid II": {
+    "name": "Fortune Spoid II",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/36/Fortune_Spoid_II.GIF/revision/latest",
+    "how_to_get": "+75% (+0.75) Luck Lasts 1 minute (60s)",
+    "usage": "+75% (+0.75) Luck Lasts 1 minute (60s)",
+    "description": "Fortune Spoid II is a potions item in Sol's RNG. Obtainment: +75% (+0.75) Luck Lasts 1 minute (60s) Effect: +75% (+0.75) Luck Lasts 1 minute (60s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Fortune Spoid III": {
+    "name": "Fortune Spoid III",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/Fortune_spoid_III.GIF/revision/latest",
+    "how_to_get": "+100% (+1.0) Luck Lasts 1 minute (60s)",
+    "usage": "+100% (+1.0) Luck Lasts 1 minute (60s)",
+    "description": "Fortune Spoid III is a potions item in Sol's RNG. Obtainment: +100% (+1.0) Luck Lasts 1 minute (60s) Effect: +100% (+1.0) Luck Lasts 1 minute (60s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Fortune Potion I": {
+    "name": "Fortune Potion I",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/22/Fortune1Potion.png/revision/latest",
+    "how_to_get": "10x Lucky Potion Obtained from Daily Quests .",
+    "usage": "+50% (+0.5) Luck Lasts 5 minutes (300s)",
+    "description": "Fortune Potion I is a potions item in Sol's RNG. Obtainment: 10x Lucky Potion Obtained from Daily Quests . Effect: +50% (+0.5) Luck Lasts 5 minutes (300s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Fortune Potion II": {
+    "name": "Fortune Potion II",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3e/Fortune2Potion.png/revision/latest",
+    "how_to_get": "25x Lucky Potion Obtained from Daily Quests .",
+    "usage": "+75% (+0.75) Luck Lasts 5 minutes (300s)",
+    "description": "Fortune Potion II is a potions item in Sol's RNG. Obtainment: 25x Lucky Potion Obtained from Daily Quests . Effect: +75% (+0.75) Luck Lasts 5 minutes (300s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Fortune Potion III": {
+    "name": "Fortune Potion III",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/73/Fortune3Potion.png/revision/latest",
+    "how_to_get": "50x Lucky Potion Obtained from Daily Quests . Obtained from Fishing Shop.",
+    "usage": "+100% (+1.0) Luck Lasts 5 minutes (300s)",
+    "description": "Fortune Potion III is a potions item in Sol's RNG. Obtainment: 50x Lucky Potion Obtained from Daily Quests . Obtained from Fishing Shop. Effect: +100% (+1.0) Luck Lasts 5 minutes (300s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Haste Potion I": {
+    "name": "Haste Potion I",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/60/Haste1Potion.png/revision/latest",
+    "how_to_get": "10x Speed Potion Obtained from Daily Quests .",
+    "usage": "+20% Roll Speed Lasts 5 minutes (300s)",
+    "description": "Haste Potion I is a potions item in Sol's RNG. Obtainment: 10x Speed Potion Obtained from Daily Quests . Effect: +20% Roll Speed Lasts 5 minutes (300s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Haste Potion II": {
+    "name": "Haste Potion II",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/1b/Haste2Potion.png/revision/latest",
+    "how_to_get": "25x Speed Potion Obtained from Daily Quests .",
+    "usage": "+25% Roll Speed Lasts 5 minutes (300s)",
+    "description": "Haste Potion II is a potions item in Sol's RNG. Obtainment: 25x Speed Potion Obtained from Daily Quests . Effect: +25% Roll Speed Lasts 5 minutes (300s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Haste Potion III": {
+    "name": "Haste Potion III",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/43/Haste_Potion_III.GIF/revision/latest",
+    "how_to_get": "50x Speed Potion Obtained from Daily Quests . Obtained from Fishing Shop.",
+    "usage": "+30% Roll Speed Lasts 5 minutes (300s)",
+    "description": "Haste Potion III is a potions item in Sol's RNG. Obtainment: 50x Speed Potion Obtained from Daily Quests . Obtained from Fishing Shop. Effect: +30% Roll Speed Lasts 5 minutes (300s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Potion of Bound": {
+    "name": "Potion of Bound",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a4/Potionofbound.png/revision/latest",
+    "how_to_get": "1x BOUNDED 3x Permafrost 10x Lost Soul 100x Lucky Potion Obtained from traveling merchant, Jester . Obtained from Daily Shop, Fischl Obtained from Fishing Shop. Obtained from the \"A sincere person\" achievement. (1x Potion of bound), \"Tip blessing\" achievement. (1x Potion of bound), and \"SUPERSTAR\" achievement. (1x Potion of bound). Obtained when finishing the NULL biome Daily Quests . (1x Potion of bound)",
+    "usage": "+5,000,000% (+50,000) Luck for the next roll after consumed.",
+    "description": "Potion of Bound is a potions item in Sol's RNG. Obtainment: 1x BOUNDED 3x Permafrost 10x Lost Soul 100x Lucky Potion Obtained from traveling merchant, Jester . Obtained from Daily Shop, Fischl Obtained from Fishing Shop. Obtained from the \"A sincere person\" achievement. (1x Potion of bound), \"Tip blessing\" achievement. (1x Potion of bound), and \"SUPERSTAR\" achievement. (1x Potion of bound). Obtained when finishing the NULL biome Daily Quests . (1x Potion of bound) Effect: +5,000,000% (+50,000) Luck for the next roll after consumed.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Heavenly Potion": {
+    "name": "Heavenly Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Heavenly2Potion.png/revision/latest",
+    "how_to_get": "250x Lucky Potion 2x Celestial 1x Exotic 2x Powered 5x Quartz Obtained from traveling merchant, Jester . Obtained from Daily Shop, Fischl . Obtained from Fishing Shop, Fishing Obtained from finishing the achievements \"Touch the grass\" (1x Heavenly Potion ), \"Eternal Time...\" (2x Heavenly Potion ), \"When is payday???\" (2x Heavenly Potion ), \"#DAY100\" (15x Heavenly Potion ) and \"Perfect Attendance Award\" (5x Heavenly Potion ) achievements. Obtained as a drop in the DREAMSPACE Biome.",
+    "usage": "+15,000,000% (+150,000) Luck for the next roll after consumed.",
+    "description": "Heavenly Potion is a potions item in Sol's RNG. Obtainment: 250x Lucky Potion 2x Celestial 1x Exotic 2x Powered 5x Quartz Obtained from traveling merchant, Jester . Obtained from Daily Shop, Fischl . Obtained from Fishing Shop, Fishing Obtained from finishing the achievements \"Touch the grass\" (1x Heavenly Potion ), \"Eternal Time...\" (2x Heavenly Potion ), \"When is payday???\" (2x Heavenly Potion ), \"#DAY100\" (15x Heavenly Potion ) and \"Perfect Attendance Award\" (5x Heavenly Potion ) achievements. Obtained as a drop in the DREAMSPACE Biome. Effect: +15,000,000% (+150,000) Luck for the next roll after consumed.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rage Potion": {
+    "name": "Rage Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a7/Ragepotiongif.gif/revision/latest",
+    "how_to_get": "10x Speed Potion 1x Diaboli 5x Rage Can also be found in the water.",
+    "usage": "+35% Roll Speed for 10 minutes.",
+    "description": "Rage Potion is a potions item in Sol's RNG. Obtainment: 10x Speed Potion 1x Diaboli 5x Rage Can also be found in the water. Effect: +35% Roll Speed for 10 minutes.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Diver Potion": {
+    "name": "Diver Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e0/DiverPotTransparent.webp/revision/latest",
+    "how_to_get": "20x Speed Potion 1x Nautilus Can also be found in the water.",
+    "usage": "+40% roll speed for 10 minutes.",
+    "description": "Diver Potion is a potions item in Sol's RNG. Obtainment: 20x Speed Potion 1x Nautilus Can also be found in the water. Effect: +40% roll speed for 10 minutes.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Jewelry Potion": {
+    "name": "Jewelry Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7b/Jewelry.png/revision/latest",
+    "how_to_get": "20x Lucky Potion 1x Aquamarine 1x Sapphire 1x Gilded 1x Emerald 1x Ruby 1x Topaz Can also be found in the water.",
+    "usage": "+120% Luck for 10 Minutes.",
+    "description": "Jewelry Potion is a potions item in Sol's RNG. Obtainment: 20x Lucky Potion 1x Aquamarine 1x Sapphire 1x Gilded 1x Emerald 1x Ruby 1x Topaz Can also be found in the water. Effect: +120% Luck for 10 Minutes.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Zombie Potion": {
+    "name": "Zombie Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e7/Zombiepot.png/revision/latest",
+    "how_to_get": "10x Lucky Potion 1x Undead 1x Bleeding Can also be found in the water.",
+    "usage": "+150% Luck for 10 Minutes",
+    "description": "Zombie Potion is a potions item in Sol's RNG. Obtainment: 10x Lucky Potion 1x Undead 1x Bleeding Can also be found in the water. Effect: +150% Luck for 10 Minutes",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Godly Potion (Zeus)": {
+    "name": "Godly Potion (Zeus)",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/60/GodZeusPOT.png/revision/latest",
+    "how_to_get": "25x Lucky Potion 25x Speed Potion 1x Zeus 1x Stormal 15x Wind",
+    "usage": "+200% Luck and +30% Roll Speed for 4 hours upon usage.",
+    "description": "Godly Potion (Zeus) is a potions item in Sol's RNG. Obtainment: 25x Lucky Potion 25x Speed Potion 1x Zeus 1x Stormal 15x Wind Effect: +200% Luck and +30% Roll Speed for 4 hours upon usage.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Godly Potion (Poseidon)": {
+    "name": "Godly Potion (Poseidon)",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b3/GodPoseidonPotion.png/revision/latest",
+    "how_to_get": "50x Speed Potion 1x Poseidon 1x Nautilus 1x Aquatic",
+    "usage": "-50% Luck and +75% Roll Speed for 4 hours upon usage.",
+    "description": "Godly Potion (Poseidon) is a potions item in Sol's RNG. Obtainment: 50x Speed Potion 1x Poseidon 1x Nautilus 1x Aquatic Effect: -50% Luck and +75% Roll Speed for 4 hours upon usage.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Godly Potion (Hades)": {
+    "name": "Godly Potion (Hades)",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ed/GodHadesPotion.png/revision/latest",
+    "how_to_get": "50x Lucky Potion 1x HADES 6x Diaboli 6x Bleeding",
+    "usage": "+300% Luck and -10% Roll Speed for 4 hours.",
+    "description": "Godly Potion (Hades) is a potions item in Sol's RNG. Obtainment: 50x Lucky Potion 1x HADES 6x Diaboli 6x Bleeding Effect: +300% Luck and -10% Roll Speed for 4 hours.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Godlike Potion": {
+    "name": "Godlike Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Godlike_pot.webp/revision/latest",
+    "how_to_get": "1x Godly Potion (Zeus) 1x Godly Potion (Hades) 1x Godly Potion (Poseidon) 600x Lucky Potion",
+    "usage": "+40,000,000% (+400,000) Luck for the next roll after consumed.",
+    "description": "Godlike Potion is a potions item in Sol's RNG. Obtainment: 1x Godly Potion (Zeus) 1x Godly Potion (Hades) 1x Godly Potion (Poseidon) 600x Lucky Potion Effect: +40,000,000% (+400,000) Luck for the next roll after consumed.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Mixed Potion": {
+    "name": "Mixed Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/38/Mixed_Potion.GIF/revision/latest",
+    "how_to_get": "Obtained from traveling merchant, Mari .",
+    "usage": "+25% Luck & +10% Roll Speed Lasts 3 minutes (180s)",
+    "description": "Mixed Potion is a potions item in Sol's RNG. Obtainment: Obtained from traveling merchant, Mari . Effect: +25% Luck & +10% Roll Speed Lasts 3 minutes (180s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Strange Potion I": {
+    "name": "Strange Potion I",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/73/Strange_Potion_I.png/revision/latest",
+    "how_to_get": "Obtained from traveling merchant, Jester .",
+    "usage": "A random blessing/curse that lasts 5 minutes (300s) from {The List I}. {The List I} The Chosen: +150% (+1.5) Luck & +30% Roll Speed. The Power I: +150% Luck . The Knowledge I: +30% Roll Speed. The Wrath I: -50% Luck . The Sloth I: -15% Roll Speed.",
+    "description": "Strange Potion I is a potions item in Sol's RNG. Obtainment: Obtained from traveling merchant, Jester . Effect: A random blessing/curse that lasts 5 minutes (300s) from {The List I}. {The List I} The Chosen: +150% (+1.5) Luck & +30% Roll Speed. The Power I: +150% Luck . The Knowledge I: +30% Roll Speed. The Wrath I: -50% Luck . The Sloth I: -15% Roll Speed.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Strange Potion II": {
+    "name": "Strange Potion II",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2b/Strange_Potion_II.png/revision/latest",
+    "how_to_get": "A random blessing/curse that lasts 10 minutes (600s) from {The List II}. {The List II} GODLIKE: +250% (+2.5) Luck & +40% Roll Speed. The Power II: +250 (+2.5) Luck . The Knowledge II: +40% Roll Speed. The Wrath II: -100% Luck . The Sloth II: -25% Roll Speed.",
+    "usage": "A random blessing/curse that lasts 10 minutes (600s) from {The List II}. {The List II} GODLIKE: +250% (+2.5) Luck & +40% Roll Speed. The Power II: +250 (+2.5) Luck . The Knowledge II: +40% Roll Speed. The Wrath II: -100% Luck . The Sloth II: -25% Roll Speed.",
+    "description": "Strange Potion II is a potions item in Sol's RNG. Obtainment: A random blessing/curse that lasts 10 minutes (600s) from {The List II}. {The List II} GODLIKE: +250% (+2.5) Luck & +40% Roll Speed. The Power II: +250 (+2.5) Luck . The Knowledge II: +40% Roll Speed. The Wrath II: -100% Luck . The Sloth II: -25% Roll Speed. Effect: A random blessing/curse that lasts 10 minutes (600s) from {The List II}. {The List II} GODLIKE: +250% (+2.5) Luck & +40% Roll Speed. The Power II: +250 (+2.5) Luck . The Knowledge II: +40% Roll Speed. The Wrath II: -100% Luck . The Sloth II: -25% Roll Speed.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Oblivion Potion": {
+    "name": "Oblivion Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/21/OblivionPotionRender.png/revision/latest",
+    "how_to_get": "+60,000,000% (+600,000) Luck for the next roll after consumed, consuming this negates all buffs (Except VIP and VIP+ final luck multiplier(s)). Its use is also the only method to obtain OBLIVION , with a 1 in 2,000 chance, and MEMORY , with a 1 in 100 chance.",
+    "usage": "+60,000,000% (+600,000) Luck for the next roll after consumed, consuming this negates all buffs (Except VIP and VIP+ final luck multiplier(s)). Its use is also the only method to obtain OBLIVION , with a 1 in 2,000 chance, and MEMORY , with a 1 in 100 chance.",
+    "description": "Oblivion Potion is a potions item in Sol's RNG. Obtainment: +60,000,000% (+600,000) Luck for the next roll after consumed, consuming this negates all buffs (Except VIP and VIP+ final luck multiplier(s)). Its use is also the only method to obtain OBLIVION , with a 1 in 2,000 chance, and MEMORY , with a 1 in 100 chance. Effect: +60,000,000% (+600,000) Luck for the next roll after consumed, consuming this negates all buffs (Except VIP and VIP+ final luck multiplier(s)). Its use is also the only method to obtain OBLIVION , with a 1 in 2,000 chance, and MEMORY , with a 1 in 100 chance.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Warp Potion": {
+    "name": "Warp Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3c/WarpPotionBetter.png/revision/latest",
+    "how_to_get": "x1 Arcane x5 COMET x100 Powered x200 Lunar x1,000 Speed Potion",
+    "usage": "+1000% Roll Speed for 2000 Rolls",
+    "description": "Warp Potion is a potions item in Sol's RNG. Obtainment: x1 Arcane x5 COMET x100 Powered x200 Lunar x1,000 Speed Potion Effect: +1000% Roll Speed for 2000 Rolls",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Transcendent Potion": {
+    "name": "Transcendent Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3a/Better_transcendent_potion_image.png/revision/latest",
+    "how_to_get": "Achievements The 20,000,000 and 30,000,000-roll achievements give 1 Transcendent Potion . The 50,000,000-roll achievement gives 3 Transcendent Potions . The 100,000,000-roll achievement gives 5 Transcendent Potions . The #DAY100 achievement gives 1 Transcendent Potion . The Innovator Pack Vol-3 , from the Innovator Event , gives 1 Transcendent Potion . Random Potion Sacks have a ~0.3% chance to give 1 Transcendent Potion .",
+    "usage": "+1000% Roll Speed for 20000 Rolls",
+    "description": "Transcendent Potion is a potions item in Sol's RNG. Obtainment: Achievements The 20,000,000 and 30,000,000-roll achievements give 1 Transcendent Potion . The 50,000,000-roll achievement gives 3 Transcendent Potions . The 100,000,000-roll achievement gives 5 Transcendent Potions . The #DAY100 achievement gives 1 Transcendent Potion . The Innovator Pack Vol-3 , from the Innovator Event , gives 1 Transcendent Potion . Random Potion Sacks have a ~0.3% chance to give 1 Transcendent Potion . Effect: +1000% Roll Speed for 20000 Rolls",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Gladiator Potion": {
+    "name": "Gladiator Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fa/GladiatorPotion.png/revision/latest",
+    "how_to_get": "Quest Board Obtained from Fishing Shop.",
+    "usage": "+100% Luck",
+    "description": "Gladiator Potion is a potions item in Sol's RNG. Obtainment: Quest Board Obtained from Fishing Shop. Effect: +100% Luck",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Forbidden Potion I": {
+    "name": "Forbidden Potion I",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/24/ForbiddenPotionOne.gif/revision/latest",
+    "how_to_get": "x2 Lucky Potion x1 Speed Potion x1 Darklight Shard",
+    "usage": "+70% Luck & +10% Roll Speed for 30 minutes upon usage.",
+    "description": "Forbidden Potion I is a materials item in Sol's RNG. Obtainment: x2 Lucky Potion x1 Speed Potion x1 Darklight Shard Effect: +70% Luck & +10% Roll Speed for 30 minutes upon usage.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Forbidden Potion II": {
+    "name": "Forbidden Potion II",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b7/ForbiddenPotionTwo.gif/revision/latest",
+    "how_to_get": "x20 Lucky Potion x10 Speed Potion x1 Darklight Orb",
+    "usage": "+325% Luck & +25% Roll Speed for 1 hour upon usage.",
+    "description": "Forbidden Potion II is a materials item in Sol's RNG. Obtainment: x20 Lucky Potion x10 Speed Potion x1 Darklight Orb Effect: +325% Luck & +25% Roll Speed for 1 hour upon usage.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Forbidden Potion III": {
+    "name": "Forbidden Potion III",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/05/ForbiddenPotionThree.gif/revision/latest",
+    "how_to_get": "x100 Lucky Potion x65 Speed Potion x1 Darklight Core",
+    "usage": "+1350% Luck & +75% Roll Speed for 3 hours upon usage.",
+    "description": "Forbidden Potion III is a materials item in Sol's RNG. Obtainment: x100 Lucky Potion x65 Speed Potion x1 Darklight Core Effect: +1350% Luck & +75% Roll Speed for 3 hours upon usage.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Raid Potion": {
+    "name": "Raid Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c8/RaidPotion.gif/revision/latest",
+    "how_to_get": "Boss Raids , Season Pass",
+    "usage": "+100% Luck",
+    "description": "Raid Potion is a potions item in Sol's RNG. Obtainment: Boss Raids , Season Pass Effect: +100% Luck",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Potion of the Dune": {
+    "name": "Potion of the Dune",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3c/PotionOfDune.gif/revision/latest",
+    "how_to_get": "Obtained from beating The Crawler",
+    "usage": "+1,000,000% (+10,000) Luck for the next roll after consumed. Its use is also the only method to obtain Neferkhaf Neferkhaf , with a 1 in 1,000 chance.",
+    "description": "Potion of the Dune is a potions item in Sol's RNG. Obtainment: Obtained from beating The Crawler Effect: +1,000,000% (+10,000) Luck for the next roll after consumed. Its use is also the only method to obtain Neferkhaf Neferkhaf , with a 1 in 1,000 chance.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Red Moon Potion I": {
+    "name": "Red Moon Potion I",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/86/RedMoonPotion.gif/revision/latest",
+    "how_to_get": "Obtained from beating The Amalgamation in Easy Mode.",
+    "usage": "+1,100,000% (+11,000) Luck for the next roll after consumed. Its use is also the only method to obtain Fragments Of The Crimson Moon , with a 1 in 1,000 chance.",
+    "description": "Red Moon Potion I is a potions item in Sol's RNG. Obtainment: Obtained from beating The Amalgamation in Easy Mode. Effect: +1,100,000% (+11,000) Luck for the next roll after consumed. Its use is also the only method to obtain Fragments Of The Crimson Moon , with a 1 in 1,000 chance.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Red Moon Potion II": {
+    "name": "Red Moon Potion II",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0f/Red_moon_potion_II.gif/revision/latest",
+    "how_to_get": "Obtained from beating The Amalgamation in Hell Mode.",
+    "usage": "+20,000,000% (+200,000) Luck for the next roll after consumed. Its use is also the only method to obtain Fragments Of The Crimson Moon , with a 1 in 100 chance.",
+    "description": "Red Moon Potion II is a potions item in Sol's RNG. Obtainment: Obtained from beating The Amalgamation in Hell Mode. Effect: +20,000,000% (+200,000) Luck for the next roll after consumed. Its use is also the only method to obtain Fragments Of The Crimson Moon , with a 1 in 100 chance.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Santa Claus Potion": {
+    "name": "Santa Claus Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/06/SantPotion.gif/revision/latest",
+    "how_to_get": "Obtained from opening normal, and rare gift boxes.",
+    "usage": "+150% Luck and +25% Roll Speed Lasts 10 minutes (600s)",
+    "description": "Santa Claus Potion is a potions item in Sol's RNG. Obtainment: Obtained from opening normal, and rare gift boxes. Effect: +150% Luck and +25% Roll Speed Lasts 10 minutes (600s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Sizemin Potion": {
+    "name": "Sizemin Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4e/SizeminPotionImage.png/revision/latest",
+    "how_to_get": "Obtained from buying them in the gamepass store during April Fools 2025 event.",
+    "usage": "Makes your character smaller for a set duration (Duration TBA)",
+    "description": "Sizemin Potion is a potions item in Sol's RNG. Obtainment: Obtained from buying them in the gamepass store during April Fools 2025 event. Effect: Makes your character smaller for a set duration (Duration TBA)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Sizemax Potion": {
+    "name": "Sizemax Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2d/Sizemax_In_Inventory.png/revision/latest",
+    "how_to_get": "Obtained from buying them in the gamepass store during April Fools 2025 event.",
+    "usage": "Makes your character larger for a set duration (Duration TBA)",
+    "description": "Sizemax Potion is a potions item in Sol's RNG. Obtainment: Obtained from buying them in the gamepass store during April Fools 2025 event. Effect: Makes your character larger for a set duration (Duration TBA)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Heavenly Potion I": {
+    "name": "Heavenly Potion I",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5a/Heavenly1Potion.png/revision/latest",
+    "how_to_get": "Unobtainable Former recipe: 100x Lucky Potion 50x Divinus 20x Gilded 1x Celestial Obtained from traveling merchant, Jester . Obtained from the \"A sincere person\" achievement. (1x Heavenly Potion I ) Obtained when finishing the NULL? biome Daily Quests . (1x Heavenly Potion I ) Obtained as a drop in the DREAMSPACE biome.",
+    "usage": "+1,500,000% (+15,000) Luck for the next roll after consumed.",
+    "description": "Heavenly Potion I is a potions item in Sol's RNG. Obtainment: Unobtainable Former recipe: 100x Lucky Potion 50x Divinus 20x Gilded 1x Celestial Obtained from traveling merchant, Jester . Obtained from the \"A sincere person\" achievement. (1x Heavenly Potion I ) Obtained when finishing the NULL? biome Daily Quests . (1x Heavenly Potion I ) Obtained as a drop in the DREAMSPACE biome. Effect: +1,500,000% (+15,000) Luck for the next roll after consumed.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Heavenly Potion II": {
+    "name": "Heavenly Potion II",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Heavenly2Potion.png/revision/latest",
+    "how_to_get": "Unobtainable Former recipe: 2x Heavenly Potion I 125x Lucky Potion 75x Divinus 50x Gilded 1x Exotic Obtained from traveling merchant, Jester . Obtained from finishing the achievements Heavenly Potion II ]]), \"When is payday???\" (2x Heavenly Potion II ), \"#DAY100\" (15x Heavenly Potion II ) and \"Perfect Attendance Award\" (5x Heavenly Potion II ) achievements. Obtained as a drop in the DREAMSPACE biome.",
+    "usage": "+20,000,000% (+200,000) Luck for the next roll after consumed.",
+    "description": "Heavenly Potion II is a potions item in Sol's RNG. Obtainment: Unobtainable Former recipe: 2x Heavenly Potion I 125x Lucky Potion 75x Divinus 50x Gilded 1x Exotic Obtained from traveling merchant, Jester . Obtained from finishing the achievements Heavenly Potion II ]]), \"When is payday???\" (2x Heavenly Potion II ), \"#DAY100\" (15x Heavenly Potion II ) and \"Perfect Attendance Award\" (5x Heavenly Potion II ) achievements. Obtained as a drop in the DREAMSPACE biome. Effect: +20,000,000% (+200,000) Luck for the next roll after consumed.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Universe Potion I": {
+    "name": "Universe Potion I",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7e/Universe1Potion.png/revision/latest",
+    "how_to_get": "Unobtainable Former recipe: 10x Lucky Potion 15x Rare 2x COMET",
+    "usage": "Starfall Exclusive Auras are obtainable in any biome for their normal chances. Lasts for 10 minutes (600s).",
+    "description": "Universe Potion I is a potions item in Sol's RNG. Obtainment: Unobtainable Former recipe: 10x Lucky Potion 15x Rare 2x COMET Effect: Starfall Exclusive Auras are obtainable in any biome for their normal chances. Lasts for 10 minutes (600s).",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Huge Fortune Potion I": {
+    "name": "Huge Fortune Potion I",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/22/Fortune1Potion.png/revision/latest",
+    "how_to_get": "Unobtainable Obtained from Daily Quests .",
+    "usage": "+50% (+0.5) Luck Lasts 1 hour (3,600s)",
+    "description": "Huge Fortune Potion I is a potions item in Sol's RNG. Obtainment: Unobtainable Obtained from Daily Quests . Effect: +50% (+0.5) Luck Lasts 1 hour (3,600s)",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Pump King's Blood": {
+    "name": "Pump King's Blood",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fa/Pump_King%27s_Blood.png/revision/latest",
+    "how_to_get": "Bought from Jack the Pumpkin for 800x Pump tokens (Halloween 2024) or 2,000 Bounty Medals from Jack The Pumpkin (Halloween 2025).",
+    "usage": "+70,000,000% (+700,000) Luck for the next roll after consumed.",
+    "description": "Pump King's Blood is a potions item in Sol's RNG. Obtainment: Bought from Jack the Pumpkin for 800x Pump tokens (Halloween 2024) or 2,000 Bounty Medals from Jack The Pumpkin (Halloween 2025). Effect: +70,000,000% (+700,000) Luck for the next roll after consumed.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "???": {
+    "name": "???",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/ab/Axis_Potion.gif/revision/latest",
+    "how_to_get": "Given out by 53 Axis (NPC) during Christmas 2025 event",
+    "usage": "Copies your current Luck and Rollspeed for the next 5 rolls.",
+    "description": "??? is a potions item in Sol's RNG. Obtainment: Given out by 53 Axis (NPC) during Christmas 2025 event Effect: Copies your current Luck and Rollspeed for the next 5 rolls.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Void Coin": {
+    "name": "Void Coin",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3b/Void_Coin_Inv.gif/revision/latest",
+    "how_to_get": "The Void Coin can be obtained through the I give my life... and [10,000,000] Achievements , bought from Mari for $500,000 or be collected with a 0.02% per hour at night. It can be used to buy the Oblivion Potion for 5 Void Coins .",
+    "usage": "Used for purchasing items from the Jester .",
+    "description": "Void Coin is a materials item in Sol's RNG. Obtainment: The Void Coin can be obtained through the I give my life... and [10,000,000] Achievements , bought from Mari for $500,000 or be collected with a 0.02% per hour at night. It can be used to buy the Oblivion Potion for 5 Void Coins . Effect: Used for purchasing items from the Jester .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Lucky Penny": {
+    "name": "Lucky Penny",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ed/Lucky-Penny-INV.jpeg/revision/latest",
+    "how_to_get": "Purchasable from Mari . Every 10 minutes, the penny has a 5% chance to disappear from the user's inventory.",
+    "usage": "It applies a +77% Luck and +7% Roll Speed permanent bonus.",
+    "description": "Lucky Penny is a potions item in Sol's RNG. Obtainment: Purchasable from Mari . Every 10 minutes, the penny has a 5% chance to disappear from the user's inventory. Effect: It applies a +77% Luck and +7% Roll Speed permanent bonus.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Gear A": {
+    "name": "Gear A",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0c/GearA_Inventory.png/revision/latest",
+    "how_to_get": "Obtained from traveling merchant, Mari .",
+    "usage": "Used to upgrade the Bank .",
+    "description": "Gear A is a potions item in Sol's RNG. Obtainment: Obtained from traveling merchant, Mari . Effect: Used to upgrade the Bank .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Gear B": {
+    "name": "Gear B",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/86/Gear_B.png/revision/latest",
+    "how_to_get": "Obtained from traveling merchant, Mari .",
+    "usage": "Used to upgrade the Bank .",
+    "description": "Gear B is a potions item in Sol's RNG. Obtainment: Obtained from traveling merchant, Mari . Effect: Used to upgrade the Bank .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Stella's Star": {
+    "name": "Stella's Star",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/58/Stella%27s_Star.gif/revision/latest",
+    "how_to_get": "During Starfall biome, the item has a chance of spawning at a random location. Can also be purchased from Jester and various event merchants .",
+    "usage": "When given to Stella , she will open a portal that allows the player to fast travel directly to her cave instead of having to do the parkour. It also creates a portal at her cave so that the player can exit immediately.",
+    "description": "Stella's Star is a potions item in Sol's RNG. Obtainment: During Starfall biome, the item has a chance of spawning at a random location. Can also be purchased from Jester and various event merchants . Effect: When given to Stella , she will open a portal that allows the player to fast travel directly to her cave instead of having to do the parkour. It also creates a portal at her cave so that the player can exit immediately.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Stella's Candle": {
+    "name": "Stella's Candle",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/14/Stella%27sCandle.webp/revision/latest",
+    "how_to_get": "Obtained from traveling merchant, Jester .",
+    "usage": "Stella's Candle can be bought from Jester for 50 Dark Points. It provides a 20 minute luck boost. Stella's Candle grants a +20% luck boost to any player nearby. Only 2 candles can be purchased at a time.",
+    "description": "Stella's Candle is a tools item in Sol's RNG. Obtainment: Obtained from traveling merchant, Jester . Effect: Stella's Candle can be bought from Jester for 50 Dark Points. It provides a 20 minute luck boost. Stella's Candle grants a +20% luck boost to any player nearby. Only 2 candles can be purchased at a time.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Random Potion Sack": {
+    "name": "Random Potion Sack",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b2/Random-Potion-Sack.jpeg/revision/latest",
+    "how_to_get": "Obtained from traveling merchant, Jester .",
+    "usage": "Random Potion Sack is an item that can be bought from the Jester for 10 Dark Points, and has a max stock of 10. When used, it randomly selects a type of potion, and grants it to the user.",
+    "description": "Random Potion Sack is a chests item in Sol's RNG. Obtainment: Obtained from traveling merchant, Jester . Effect: Random Potion Sack is an item that can be bought from the Jester for 10 Dark Points, and has a max stock of 10. When used, it randomly selects a type of potion, and grants it to the user.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Strange Controller": {
+    "name": "Strange Controller",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fc/StrangecontrollerINV.png/revision/latest",
+    "how_to_get": "Crafted at Jake's Workshop . 1x NULL? 1x Eternal Flame 1x Piece of Star 1x Curruptaine 1x Rainy Bottle 1x Icicle 1x Wind Essence",
+    "usage": "An item capable of changing the biome with respect to the biome's rarity, unlike it's stronger counterpart. Contrary to popular belief, this device and it's counterpart CAN spawn the Glitched Biome , which stays at its normal rarity of 1 in 30k. This item has a 20 minute cooldown and a server-wide cooldown of 10 minutes.",
+    "description": "Strange Controller is a tools item in Sol's RNG. Obtainment: Crafted at Jake's Workshop . 1x NULL? 1x Eternal Flame 1x Piece of Star 1x Curruptaine 1x Rainy Bottle 1x Icicle 1x Wind Essence Effect: An item capable of changing the biome with respect to the biome's rarity, unlike it's stronger counterpart. Contrary to popular belief, this device and it's counterpart CAN spawn the Glitched Biome , which stays at its normal rarity of 1 in 30k. This item has a 20 minute cooldown and a server-wide cooldown of 10 minutes.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Biome Randomizer": {
+    "name": "Biome Randomizer",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b2/Biome_rando.png/revision/latest",
+    "how_to_get": "Crafted at Jake's Workshop . 1x Undefined 1x HADES 1x Poseidon 1x Galaxy 1x Astral 1x Permafrost 1x Stormal 4x Strange Controller",
+    "usage": "An item capable of changing the biome to a random biome regardless of the biome's rarity (Every biome, excluding Glitched (Which stays at it's normal rarity), will have a 1/7 chance of spawning), thus making it an extremely powerful luxury tool. This item has a cooldown of 35 minutes, more than it's weaker counterpart, and has a server-wide cooldown of 20 minutes.",
+    "description": "Biome Randomizer is a potions item in Sol's RNG. Obtainment: Crafted at Jake's Workshop . 1x Undefined 1x HADES 1x Poseidon 1x Galaxy 1x Astral 1x Permafrost 1x Stormal 4x Strange Controller Effect: An item capable of changing the biome to a random biome regardless of the biome's rarity (Every biome, excluding Glitched (Which stays at it's normal rarity), will have a 1/7 chance of spawning), thus making it an extremely powerful luxury tool. This item has a cooldown of 35 minutes, more than it's weaker counterpart, and has a server-wide cooldown of 20 minutes.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Biome Selector": {
+    "name": "Biome Selector",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fd/BiomeSelectorStatic.png/revision/latest",
+    "how_to_get": "Crafted at Jake's Workshop . 1x Biome Randomizer 1x Cyber Technology",
+    "usage": "A device capable of changing the biome on command (Does not apply to Rare Biomes/Event Biomes) This item has a cooldown of 1 hour.",
+    "description": "Biome Selector is a potions item in Sol's RNG. Obtainment: Crafted at Jake's Workshop . 1x Biome Randomizer 1x Cyber Technology Effect: A device capable of changing the biome on command (Does not apply to Rare Biomes/Event Biomes) This item has a cooldown of 1 hour.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rainbow Syrup": {
+    "name": "Rainbow Syrup",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/70/RainbowSyrup.jpg/revision/latest",
+    "how_to_get": "Purchasable from Mari for $3000.",
+    "usage": "Used in the Summer 2024 quest, \"Lime's Hwachae Recipe\".",
+    "description": "Rainbow Syrup is a potions item in Sol's RNG. Obtainment: Purchasable from Mari for $3000. Effect: Used in the Summer 2024 quest, \"Lime's Hwachae Recipe\".",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Hwachae": {
+    "name": "Hwachae",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/59/RainbowIce.jpg/revision/latest",
+    "how_to_get": "Rewarded from the Summer 2024 quest, \"Lime's Hwachae Recipe\".",
+    "usage": "Grants +100% Luck and +25% Roll Speed for one hour, when used.",
+    "description": "Hwachae is a potions item in Sol's RNG. Obtainment: Rewarded from the Summer 2024 quest, \"Lime's Hwachae Recipe\". Effect: Grants +100% Luck and +25% Roll Speed for one hour, when used.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Merchant Teleporter": {
+    "name": "Merchant Teleporter",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cd/MerchantTeleporter.png/revision/latest",
+    "how_to_get": "Bought for 40 in the Gamepass Store .",
+    "usage": "Teleports you to a merchant once used, if one has already spawned.",
+    "description": "Merchant Teleporter is a tools item in Sol's RNG. Obtainment: Bought for 40 in the Gamepass Store . Effect: Teleports you to a merchant once used, if one has already spawned.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Merchant Tracker": {
+    "name": "Merchant Tracker",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6e/Merchant_tracker.png/revision/latest",
+    "how_to_get": "Bought for 1000P from the Jester .",
+    "usage": "Indicates where a merchant is, if one has already spawned.",
+    "description": "Merchant Tracker is a tools item in Sol's RNG. Obtainment: Bought for 1000P from the Jester . Effect: Indicates where a merchant is, if one has already spawned.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Pumpkin": {
+    "name": "Pumpkin",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/9f/Pumpkin_In_Game.png/revision/latest",
+    "how_to_get": "Can be found around the map.",
+    "usage": "Can be used to exchange with Jack The Pumpkin for Pump Token , however, now that the halloween event is over, you are able to use 1 pumpkin to get 150% luck for 10 rolls each.",
+    "description": "Pumpkin is a potions item in Sol's RNG. Obtainment: Can be found around the map. Effect: Can be used to exchange with Jack The Pumpkin for Pump Token , however, now that the halloween event is over, you are able to use 1 pumpkin to get 150% luck for 10 rolls each.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Pump King's Head": {
+    "name": "Pump King's Head",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7c/Pumpkingsheadinvgif.gif/revision/latest",
+    "how_to_get": "Has a rare chance to spawn on the map.",
+    "usage": "Can be used to exchange with Jack The Pumpkin for 100 Pump Token .",
+    "description": "Pump King's Head is a potions item in Sol's RNG. Obtainment: Has a rare chance to spawn on the map. Effect: Can be used to exchange with Jack The Pumpkin for 100 Pump Token .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Empty Bottle": {
+    "name": "Empty Bottle",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e4/Empty_Bottle.png/revision/latest",
+    "how_to_get": "The Empty Bottle is an item obtained from an achievement known as “The Sommelier”.",
+    "usage": "N/A",
+    "description": "Empty Bottle is a potions item in Sol's RNG. Obtainment: The Empty Bottle is an item obtained from an achievement known as “The Sommelier”. Effect: N/A",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Wind Essence": {
+    "name": "Wind Essence",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/47/WindEssenceRender.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of WINDY weather.",
+    "usage": "None",
+    "description": "Wind Essence is a materials item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of WINDY weather. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Icicle": {
+    "name": "Icicle",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c2/Iciclerender.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of the SNOWY weather.",
+    "usage": "None",
+    "description": "Icicle is a potions item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of the SNOWY weather. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rainy Bottle": {
+    "name": "Rainy Bottle",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a2/RainyBottleRender.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of the RAINY weather.",
+    "usage": "None",
+    "description": "Rainy Bottle is a potions item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of the RAINY weather. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Hour Glass": {
+    "name": "Hour Glass",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b3/Hour_Glass.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of the SANDSTORM biome.",
+    "usage": "None",
+    "description": "Hour Glass is a potions item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of the SANDSTORM biome. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Eternal Flame": {
+    "name": "Eternal Flame",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d1/Endless_fire.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of the HELL biome.",
+    "usage": "None",
+    "description": "Eternal Flame is a materials item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of the HELL biome. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Piece of Star": {
+    "name": "Piece of Star",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e6/PieceofStarRender.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of the STARFALL biome.",
+    "usage": "None",
+    "description": "Piece of Star is a potions item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of the STARFALL biome. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Feather Vial": {
+    "name": "Feather Vial",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c4/FeatherVialRender.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of the HEAVEN biome.",
+    "usage": "None",
+    "description": "Feather Vial is a materials item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of the HEAVEN biome. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Curruptaine": {
+    "name": "Curruptaine",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8a/CurruptaineRender.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of the CORRUPTION biome.",
+    "usage": "None",
+    "description": "Curruptaine is a potions item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of the CORRUPTION biome. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "NULL?": {
+    "name": "NULL?",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e8/NULL%3F%3F.png/revision/latest",
+    "how_to_get": "Spawns in one of the spawning locations at the start of the NULL biome.",
+    "usage": "None",
+    "description": "NULL? is a potions item in Sol's RNG. Obtainment: Spawns in one of the spawning locations at the start of the NULL biome. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Wind": {
+    "name": "Rune of Wind",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c3/Rune_of_Wind_%28Eon_1-4.5%29.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 50 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Wind is used, it allows a player to roll WINDY auras in their native rarity, even if the current biome isn't WINDY .",
+    "description": "Rune of Wind is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 50 Dark Points or Random Rune Chests Effect: When Rune of Wind is used, it allows a player to roll WINDY auras in their native rarity, even if the current biome isn't WINDY .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Frost": {
+    "name": "Rune of Frost",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4e/Rune_of_Frost_%28Eon_1-4.5%29.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 50 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Frost is used, it allows a player to roll SNOWY auras in their native rarity, even if the current biome isn't SNOWY .",
+    "description": "Rune of Frost is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 50 Dark Points or Random Rune Chests Effect: When Rune of Frost is used, it allows a player to roll SNOWY auras in their native rarity, even if the current biome isn't SNOWY .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Rainstorm": {
+    "name": "Rune of Rainstorm",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bd/Rune_of_Rainstorm_%28Eon_1-4.5%29.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 50 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Rainstorm is used, it allows a player to roll RAINY auras in their native rarity, even if the current biome isn't RAINY .",
+    "description": "Rune of Rainstorm is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 50 Dark Points or Random Rune Chests Effect: When Rune of Rainstorm is used, it allows a player to roll RAINY auras in their native rarity, even if the current biome isn't RAINY .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Dust": {
+    "name": "Rune of Dust",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8f/Rune_of_Dust_%28Eon_1-4.5%29.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 50 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Dust is used, it allows a player to roll SANDSTORM auras in their native rarity, even if the current biome isn't SANDSTORM .",
+    "description": "Rune of Dust is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 50 Dark Points or Random Rune Chests Effect: When Rune of Dust is used, it allows a player to roll SANDSTORM auras in their native rarity, even if the current biome isn't SANDSTORM .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Hell": {
+    "name": "Rune of Hell",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c4/Rune_of_Hell_%28Eon_1-4.5%29.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 300 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Hell is used, it allows a player to roll HELL auras in their native rarity, even if the current biome isn't HELL .",
+    "description": "Rune of Hell is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 300 Dark Points or Random Rune Chests Effect: When Rune of Hell is used, it allows a player to roll HELL auras in their native rarity, even if the current biome isn't HELL .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Galaxy": {
+    "name": "Rune of Galaxy",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bc/Rune_of_Galaxy_%28Eon_1-4.5%29.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 300 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Galaxy is used, it allows a player to roll STARFALL auras in their native rarity, even if the current biome isn't STARFALL .",
+    "description": "Rune of Galaxy is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 300 Dark Points or Random Rune Chests Effect: When Rune of Galaxy is used, it allows a player to roll STARFALL auras in their native rarity, even if the current biome isn't STARFALL .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Heaven": {
+    "name": "Rune of Heaven",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d8/Rune_of_heaven_inventory.gif/revision/latest",
+    "how_to_get": "Random Rune Chests",
+    "usage": "When Rune of Heaven is used, it allows a player to roll HEAVEN auras in their native rarity, even if the current biome isn't HEAVEN .",
+    "description": "Rune of Heaven is a runes item in Sol's RNG. Obtainment: Random Rune Chests Effect: When Rune of Heaven is used, it allows a player to roll HEAVEN auras in their native rarity, even if the current biome isn't HEAVEN .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Corruption": {
+    "name": "Rune of Corruption",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8e/RuneOfCorruptionEon1-6fixed.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 300 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Corruption is used, it allows a player to roll CORRUPTION auras in their native rarity, even if the current biome isn't CORRUPTION .",
+    "description": "Rune of Corruption is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 300 Dark Points or Random Rune Chests Effect: When Rune of Corruption is used, it allows a player to roll CORRUPTION auras in their native rarity, even if the current biome isn't CORRUPTION .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Nothing": {
+    "name": "Rune of Nothing",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/84/Rune_of_Nothing_%28Eon_1-4.5%29.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 650 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Nothing is used, it allows a player to roll NULL auras in their native rarity, even if the current biome isn't NULL .",
+    "description": "Rune of Nothing is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 650 Dark Points or Random Rune Chests Effect: When Rune of Nothing is used, it allows a player to roll NULL auras in their native rarity, even if the current biome isn't NULL .",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Eclipse": {
+    "name": "Rune of Eclipse",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bd/EclipseRune.gif/revision/latest",
+    "how_to_get": "Purchased from Fischl for 2,000 coins or 20 Dark Points or 《 Crawler 》 rewards.",
+    "usage": "When Rune of Eclipse is used, it allows a player to roll DAYTIME / NIGHTTIME auras in their native rarity.",
+    "description": "Rune of Eclipse is a runes item in Sol's RNG. Obtainment: Purchased from Fischl for 2,000 coins or 20 Dark Points or 《 Crawler 》 rewards. Effect: When Rune of Eclipse is used, it allows a player to roll DAYTIME / NIGHTTIME auras in their native rarity.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rune of Everything": {
+    "name": "Rune of Everything",
+    "category": "Runes",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fc/Rune_of_Everything_%28Eon_1-4.5%29.gif/revision/latest",
+    "how_to_get": "Purchased from Jester for 3000 Dark Points or Random Rune Chests",
+    "usage": "When Rune of Everything is used, it allows a player to roll every aura in its native rarity, except for auras that are obtainable in the DREAMSPACE and GLITCHED biome. The Rune of Everything does not allow CYBERSPACE auras to be rolled with their native rarities.",
+    "description": "Rune of Everything is a runes item in Sol's RNG. Obtainment: Purchased from Jester for 3000 Dark Points or Random Rune Chests Effect: When Rune of Everything is used, it allows a player to roll every aura in its native rarity, except for auras that are obtainable in the DREAMSPACE and GLITCHED biome. The Rune of Everything does not allow CYBERSPACE auras to be rolled with their native rarities.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Word's hat": {
+    "name": "Word's hat",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5f/Word%27s_Hat.png/revision/latest",
+    "how_to_get": "... Crafted at Jake's Workshop . 5x Gear Basing",
+    "usage": "None",
+    "description": "Word's hat is a potions item in Sol's RNG. Obtainment: ... Crafted at Jake's Workshop . 5x Gear Basing Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "test item": {
+    "name": "test item",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5d/Test_item.png/revision/latest",
+    "how_to_get": "I love sun, moon, and star.",
+    "usage": "None",
+    "description": "test item is a potions item in Sol's RNG. Obtainment: I love sun, moon, and star. Effect: None",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "dwjk pillow": {
+    "name": "dwjk pillow",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a6/Dwjk_pillow.png/revision/latest",
+    "how_to_get": "A body pillow of dwjk fanart.",
+    "usage": "Developers Blessing? -99.99x Luck",
+    "description": "dwjk pillow is a potions item in Sol's RNG. Obtainment: A body pillow of dwjk fanart. Effect: Developers Blessing? -99.99x Luck",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Shoney pillow": {
+    "name": "Shoney pillow",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/38/Shoney_pillow.png/revision/latest",
+    "how_to_get": "The end of a Samsung engineer, This might give you some luck...",
+    "usage": "???",
+    "description": "Shoney pillow is a potions item in Sol's RNG. Obtainment: The end of a Samsung engineer, This might give you some luck... Effect: ???",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Subspace Tripmine": {
+    "name": "Subspace Tripmine",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d9/Subspace_Tripmine.png/revision/latest",
+    "how_to_get": "Powerful.",
+    "usage": "Boom!",
+    "description": "Subspace Tripmine is a potions item in Sol's RNG. Obtainment: Powerful. Effect: Boom!",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Hollow Purple": {
+    "name": "Hollow Purple",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/13/Hollow_Purple_Ingame.gif/revision/latest",
+    "how_to_get": "Did you disagree with me? Taste this Hollow Purple! Reference to Jujutsu Kaisen",
+    "usage": "Instantly kills any player who touches hollow purple when item is activated.",
+    "description": "Hollow Purple is a potions item in Sol's RNG. Obtainment: Did you disagree with me? Taste this Hollow Purple! Reference to Jujutsu Kaisen Effect: Instantly kills any player who touches hollow purple when item is activated.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Mind Control Minion": {
+    "name": "Mind Control Minion",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8a/Mind_Control_Minion.gif/revision/latest",
+    "how_to_get": "???",
+    "usage": "Consistently zaps players, damaging them. A picture of the minion can be seen when you get zapped and says \"You Mind Controlled\" at the bottom left of the image",
+    "description": "Mind Control Minion is a potions item in Sol's RNG. Obtainment: ??? Effect: Consistently zaps players, damaging them. A picture of the minion can be seen when you get zapped and says \"You Mind Controlled\" at the bottom left of the image",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Adele Doll": {
+    "name": "Adele Doll",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/95/Adele_Doll.png/revision/latest",
+    "how_to_get": "...",
+    "usage": "???",
+    "description": "Adele Doll is a potions item in Sol's RNG. Obtainment: ... Effect: ???",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Mandoo Mon Doll": {
+    "name": "Mandoo Mon Doll",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/68/MandooMan_Doll.png/revision/latest",
+    "how_to_get": "...",
+    "usage": "???",
+    "description": "Mandoo Mon Doll is a potions item in Sol's RNG. Obtainment: ... Effect: ???",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "XC' Signature": {
+    "name": "XC' Signature",
+    "category": "Special / Misc",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4d/XC_Signiture.png/revision/latest",
+    "how_to_get": "???",
+    "usage": "???",
+    "description": "XC' Signature is a potions item in Sol's RNG. Obtainment: ??? Effect: ???",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Gear Basing": {
+    "name": "Gear Basing",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/02/Gear_Basing.gif/revision/latest",
+    "how_to_get": "Gives you 20 Lucky Potion Crafted at Jake's Workshop . 1x Good 1x Rare 1x Uncommon 1x Common",
+    "usage": "Crafting ingredient for devices & gauntlets",
+    "description": "Gear Basing is a potions item in Sol's RNG. Obtainment: Gives you 20 Lucky Potion Crafted at Jake's Workshop . 1x Good 1x Rare 1x Uncommon 1x Common Effect: Crafting ingredient for devices & gauntlets",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Coin": {
+    "name": "Coin",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/20/Coin.gif/revision/latest",
+    "how_to_get": "The player can find these around the map at different spawn locations, every 20 seconds with an unknown spawn chance.",
+    "usage": "Grants 50$",
+    "description": "Coin is a materials item in Sol's RNG. Obtainment: The player can find these around the map at different spawn locations, every 20 seconds with an unknown spawn chance. Effect: Grants 50$",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Gilded Coin": {
+    "name": "Gilded Coin",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cf/Gilded_Coin.gif/revision/latest",
+    "how_to_get": "The player can find these around the map at different spawn locations, every 20 seconds with an unknown spawn chance.",
+    "usage": "Grants 100$",
+    "description": "Gilded Coin is a materials item in Sol's RNG. Obtainment: The player can find these around the map at different spawn locations, every 20 seconds with an unknown spawn chance. Effect: Grants 100$",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Potion": {
+    "name": "Potion",
+    "category": "Potions",
+    "thumbnail_url": "",
+    "how_to_get": "54_xyz",
+    "usage": "???",
+    "description": "Potion is a potions item in Sol's RNG. Obtainment: 54_xyz Effect: ???",
+    "flags": [
+      "fandom"
+    ]
+  }
+}
