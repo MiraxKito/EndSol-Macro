@@ -369,6 +369,10 @@ class Api:
         self._biome_confirm_result = None
         self.emergency_port = None
 
+        # Sol's Book items/gauntlets: per-kind throttle state for the
+        # background wiki refresh (items / gauntlets).
+        self._sol_book_refresh_state = {}
+
         # Trim the Fandom media cache once at startup: purge leftover .part
         # files and delete oldest entries above the 300 MB cap, so the
         # folder cannot grow unbounded between sessions.
@@ -789,48 +793,136 @@ class Api:
         return {"ok": True}
 
     def get_full_item_data(self):
-        import json
-        import sys
-        data = {}
-        try:
-            base = sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.path.dirname(os.path.abspath(__file__))
-            bundled = os.path.join(base, "biome_tracker", "items_fandom.json")
-            if os.path.isfile(bundled):
-                with open(bundled, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-        except Exception:
-            pass
-        if not data:
-            try:
-                cached = os.path.join(APPDATA_BASE, "cache", "items_fandom.json")
-                if os.path.isfile(cached):
-                    with open(cached, "r", encoding="utf-8") as f:
-                        data = json.load(f)
-            except Exception:
-                pass
-        return data if isinstance(data, dict) else {}
+        """Items dataset for Sol's Book: verified offline snapshot first,
+        then the live-refreshed cache; triggers a background wiki refresh
+        when the auto-update setting is on and the cache is stale."""
+        data = self._sol_book_cached("items") or self._sol_book_bundled("items")
+        self._maybe_refresh_sol_book("items")
+        return data
 
     def get_full_gauntlet_data(self):
-        import json
-        import sys
-        data = {}
+        """Gauntlets dataset for Sol's Book (same rules as items)."""
+        data = self._sol_book_cached("gauntlets") or self._sol_book_bundled("gauntlets")
+        self._maybe_refresh_sol_book("gauntlets")
+        return data
+
+    # ── Sol's Book items/gauntlets: offline snapshot + live refresh ─────
+    # The offline snapshots (biome_tracker/items_fandom.json,
+    # biome_tracker/gauntlets_fandom.json) are the verified source of truth.
+    # The wiki pipeline (biome_tracker/sol_book_data.py) refreshes a cache
+    # copy in the background; a failed or rejected refresh NEVER touches the
+    # offline files, and error responses are never cached.
+    _SOL_BOOK_REFRESH_INTERVAL = 12 * 3600  # s between wiki refreshes
+
+    def _sol_book_bundled(self, kind):
+        import sys as _sys
+        base = _sys._MEIPASS if hasattr(_sys, "_MEIPASS") else os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(base, "biome_tracker", f"{kind}_fandom.json")
         try:
-            base = sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.path.dirname(os.path.abspath(__file__))
-            bundled = os.path.join(base, "biome_tracker", "gauntlets_fandom.json")
-            if os.path.isfile(bundled):
-                with open(bundled, "r", encoding="utf-8") as f:
-                    data = json.load(f)
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, dict) and data:
+                return data
         except Exception:
             pass
-        if not data:
+        return {}
+
+    def _sol_book_cached(self, kind):
+        try:
+            path = APPDATA_BASE / "cache" / f"{kind}_fandom.json"
+            if path.is_file():
+                data = json.loads(path.read_text(encoding="utf-8"))
+                if isinstance(data, dict) and data and self._sol_book_records_valid(data, kind):
+                    return data
+        except Exception:
+            pass
+        return {}
+
+    def _sol_book_records_valid(self, data, kind):
+        try:
+            from biome_tracker import sol_book_data as _sbd
+        except Exception:
+            return False
+        try:
+            ok, _reason = _sbd.validate_records(data, kind)
+        except Exception:
+            return False
+        return ok
+
+    def _maybe_refresh_sol_book(self, kind):
+        try:
+            cfg = self.get_config()
+            if isinstance(cfg, dict) and cfg.get("auto_update_biome_aura_data") is False:
+                return
+            now = time.time()
+            if now - self._sol_book_refresh_state.get(kind, 0.0) < self._SOL_BOOK_REFRESH_INTERVAL:
+                return
+            cache_path = APPDATA_BASE / "cache" / f"{kind}_fandom.json"
             try:
-                cached = os.path.join(APPDATA_BASE, "cache", "gauntlets_fandom.json")
-                if os.path.isfile(cached):
-                    with open(cached, "r", encoding="utf-8") as f:
-                        data = json.load(f)
+                mtime = cache_path.stat().st_mtime if cache_path.is_file() else 0
+            except Exception:
+                mtime = 0
+            if now - mtime < self._SOL_BOOK_REFRESH_INTERVAL:
+                return
+            self._sol_book_refresh_state[kind] = now
+            threading.Thread(target=self._refresh_sol_book_task, args=(kind,), daemon=True).start()
+        except Exception:
+            pass
+
+    def _refresh_sol_book_task(self, kind):
+        try:
+            from biome_tracker import sol_book_data as _sbd
+
+            def _log(msg):
+                try:
+                    print(msg, flush=True)
+                except Exception:
+                    pass
+
+            current = self._sol_book_cached(kind) or self._sol_book_bundled(kind)
+            if kind == "items":
+                fresh, dropped = _sbd.refresh_items(current=current, progress=_log)
+            else:
+                fresh = _sbd.refresh_gauntlets(current=current, progress=_log)
+                dropped = []
+            if fresh is None:
+                _log(f"[SolBook] {kind}: wiki unavailable or refresh rejected — offline dataset kept")
+                return
+            cache_dir = APPDATA_BASE / "cache"
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            tmp = cache_dir / f"{kind}_fandom.json.tmp"
+            tmp.write_text(json.dumps(fresh, ensure_ascii=False, indent=2), encoding="utf-8")
+            os.replace(str(tmp), str(cache_dir / f"{kind}_fandom.json"))
+            _log(
+                f"[SolBook] {kind}: refreshed from Fandom ({len(fresh)} records"
+                + (f", dropped: {', '.join(dropped)}" if dropped else "")
+                + ")"
+            )
+        except Exception as e:
+            # allow a retry on the next Sol's Book open
+            try:
+                self._sol_book_refresh_state[kind] = 0.0
             except Exception:
                 pass
-        return data if isinstance(data, dict) else {}
+            print(f"[SolBook] {kind} refresh failed: {e}", flush=True)
+
+    def get_item_detail(self, item_name):
+        """Live wiki detail for one item (analog of get_aura_detail)."""
+        try:
+            from biome_tracker import sol_book_data as _sbd
+        except Exception:
+            return {"error": "sol_book_data unavailable"}
+        current = (self.get_full_item_data() or {}).get(str(item_name)) or {}
+        return _sbd.load_item_detail(item_name, current=current)
+
+    def get_gauntlet_detail(self, gauntlet_name):
+        """Live wiki detail for one gauntlet/lantern/talisman."""
+        try:
+            from biome_tracker import sol_book_data as _sbd
+        except Exception:
+            return {"error": "sol_book_data unavailable"}
+        current = (self.get_full_gauntlet_data() or {}).get(str(gauntlet_name)) or {}
+        return _sbd.load_gauntlet_detail(gauntlet_name, current=current)
 
     def get_full_aura_data(self):
         if self._tracker:

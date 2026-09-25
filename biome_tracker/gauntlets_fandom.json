@@ -1,89 +1,35 @@
 {
-  "Luck Glove": {
-    "name": "Luck Glove",
-    "slot": "Right Hand",
-    "category": "Right Hand",
+  "Abyssal Lantern": {
+    "name": "Abyssal Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
     "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b1/Luck_Glove_Inventory.gif/revision/latest",
-    "usage": "+25% Luck Boost",
-    "how_to_get": "Jake's Workshop | Recipe: 3x Rare, 2x Divinus, 1x Crystallized",
-    "description": "The Luck Glove is a Tier 1 right-handed gear, being the first craftable gear in Jake's Workshop.",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ed/AbyssalLanternInventory.gif/revision/latest",
+    "usage": "2x chance to get Rainy biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x Rainy Bottle, 1x Sailor, 1x Lantern",
+    "description": "The abyssal energy inside the lantern emits an ominous presence, as if it is watching you While equipped, the spawn chance of the Rainy Biome is increased by 2×.",
     "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+25% Luck Boost",
-      "recipe": "3x Rare, 2x Divinus, 1x Crystallized"
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Rainy biome.",
+      "recipe": "20x Rainy Bottle, 1x Sailor, 1x Lantern"
     },
     "flags": [
       "craftable"
     ]
   },
-  "Desire Glove": {
-    "name": "Desire Glove",
-    "slot": "Right Hand",
-    "category": "Right Hand",
+  "Angel's Feather Lantern": {
+    "name": "Angel's Feather Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
     "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2d/DesireGloveIngame.gif/revision/latest",
-    "usage": "+40% Luck Boost",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Rage, 1x Ruby, 1x Diaboli, 1x Bleeding",
-    "description": "The Desire Glove is a Tier 1 right-handed gear that increases luck by +40%.",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5f/Angel%27sFeatherLanternInventory.gif/revision/latest",
+    "usage": "2x chance to get Heaven biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x Feather Vial, 1x Icarus, 1x Lantern",
+    "description": "The angel's wing inside the lantern burns with fire, yet it never fades thanks to the healing power of its holy flame, maintaining its form. While equipped, the spawn chance of the Heaven Biome is incrased by 2×.",
     "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+40% Luck Boost",
-      "recipe": "1x Rage, 1x Ruby, 1x Diaboli, 1x Bleeding"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Lunar Device": {
-    "name": "Lunar Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a3/Lunar_Device_Inventory.gif/revision/latest",
-    "usage": "+15% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Rare, 1x Divinus, 1x Lunar",
-    "description": "The Lunar Device is a Tier 1 right-handed gear granting +15% roll speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+15% Roll Speed",
-      "recipe": "1x Rare, 1x Divinus, 1x Lunar"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Solar Device": {
-    "name": "Solar Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6e/Solar_Device_Inventory.gif/revision/latest",
-    "usage": "+50% Luck Boost",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Rare, 1x Divinus, 1x Solar",
-    "description": "The Solar Device is a Tier 1 right-handed gear granting +50% luck boost.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+50% Luck Boost",
-      "recipe": "1x Rare, 1x Divinus, 1x Solar"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Frozen Gauntlet": {
-    "name": "Frozen Gauntlet",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/92/FrozenGauntletNew.gif/revision/latest",
-    "usage": "+150% Luck Boost, -20% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Glacier, 1x Permafrost",
-    "description": "The Frozen Gauntlet increases luck by +150% at the cost of 20% roll speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+150% Luck Boost, -20% Roll Speed",
-      "recipe": "1x Glacier, 1x Permafrost"
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Heaven biome.",
+      "recipe": "20x Feather Vial, 1x Icarus, 1x Lantern"
     },
     "flags": [
       "craftable"
@@ -95,427 +41,52 @@
     "category": "Right Hand",
     "limited": false,
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/aa/AquaDeviceInventory.gif/revision/latest",
-    "usage": "+25% Roll Speed, +10% Luck Boost",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Aquamarine, 1x Aquatic, 1x Nautilus",
-    "description": "The Aqua Device grants roll speed and minor luck boost.",
+    "usage": "+10% Roll Speed. Or +100% During Rainy",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Aquamarine, 1x Aquatic, 1x Nautilus",
+    "description": "This device Slowly produces Pure Water. +10% Roll Speed or +100% Roll Speed during Rainy",
     "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+25% Roll Speed, +10% Luck Boost",
+      "source": "Jake’s Workshop",
+      "boost(s)": "+10% Roll Speed. Or +100% During Rainy",
+      "effect(s)": "75px|link=EffectsAqua",
       "recipe": "1x Aquamarine, 1x Aquatic, 1x Nautilus"
     },
     "flags": [
       "craftable"
     ]
   },
-  "Shining Star": {
-    "name": "Shining Star",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e5/ShiningStarInGame.gif/revision/latest",
-    "usage": "+40% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Star Rider, 1x STARLIGHT",
-    "description": "The Shining Star increases roll speed significantly by +40%.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+40% Roll Speed",
-      "recipe": "1x Star Rider, 1x STARLIGHT"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Eclipse Device": {
-    "name": "Eclipse Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/39/Eclipse_Device_Inventory.gif/revision/latest",
-    "usage": "+50% Luck Boost, +15% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Eclipse, 1x Solar Device, 1x Lunar Device",
-    "description": "The Eclipse Device combines solar and lunar power for balanced luck and speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+50% Luck Boost, +15% Roll Speed",
-      "recipe": "1x Eclipse, 1x Solar Device, 1x Lunar Device"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Jackpot Gauntlet": {
-    "name": "Jackpot Gauntlet",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Jackpot_Device_Inventory.gif/revision/latest",
-    "usage": "+77% Luck Boost, +77 Coins per roll (7% chance)",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Jackpot, 77x Gilded, 777x Rare",
-    "description": "The Jackpot Gauntlet grants extra coins on roll alongside +77% luck.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+77% Luck Boost, +77 Coins per roll (7% chance)",
-      "recipe": "1x Jackpot, 77x Gilded, 777x Rare"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Exo Gauntlet": {
-    "name": "Exo Gauntlet",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b4/Exo_Gauntlet_Inventory.gif/revision/latest",
-    "usage": "+105% Luck Boost, -5% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 3x Gilded, 2x Precious, 2x Magnetic, 1x Sidereum, 1x Undead, 1x Exotic",
-    "description": "The Exo Gauntlet is a popular mid-game gear providing +105% luck.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+105% Luck Boost, -5% Roll Speed",
-      "recipe": "3x Gilded, 2x Precious, 2x Magnetic, 1x Sidereum, 1x Undead, 1x Exotic"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Windstorm Device": {
-    "name": "Windstorm Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/92/Windstorm_Device_Inventory.gif/revision/latest",
-    "usage": "+35% Roll Speed, +15% Luck Boost",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Wind, 1x Stormal, 1x Aquatic, 1x Sidereum, 1x Precious",
-    "description": "The Windstorm Device boosts roll speed by +35% with minor luck.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+35% Roll Speed, +15% Luck Boost",
-      "recipe": "1x Wind, 1x Stormal, 1x Aquatic, 1x Sidereum, 1x Precious"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Flesh Device": {
-    "name": "Flesh Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/Flesh_Device_Inventory.gif/revision/latest",
-    "usage": "+120% Luck Boost, -10% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Astral, 1x HAZARD, 1x Corrosive, 1x Undead, 1x Crystallized, 1x Ink, 1x Bleeding",
-    "description": "The Flesh Device provides +120% luck boost.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+120% Luck Boost, -10% Roll Speed",
-      "recipe": "1x Astral, 1x HAZARD, 1x Corrosive, 1x Undead, 1x Crystallized, 1x Ink, 1x Bleeding"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Subzero Device": {
-    "name": "Subzero Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/86/Subzero_Device_Inventory.gif/revision/latest",
-    "usage": "+150% Luck Boost, -30% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Permafrost, 2x Crystallized, 1x Aquatic, 1x Glacier, 2x Sidereum, 2x Magnetic, 2x Precious",
-    "description": "The Subzero Device is an upgraded cold gear offering +150% luck.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+150% Luck Boost, -30% Roll Speed",
-      "recipe": "1x Permafrost, 2x Crystallized, 1x Aquatic, 1x Glacier, 2x Sidereum, 2x Magnetic, 2x Precious"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Galactic Device": {
-    "name": "Galactic Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/14/Galactic_Device_Inventory_%28gif%29.gif/revision/latest",
-    "usage": "+250% Luck Boost, -15% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Galaxy, 2x Sapphire, 2x Solar, 2x Magnetic, 1x COMET, 1x Diaboli, 1x Eclipse Device, 1x Lunar",
-    "description": "The Galactic Device harnesses cosmic power to grant +250% luck.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+250% Luck Boost, -15% Roll Speed",
-      "recipe": "1x Galaxy, 2x Sapphire, 2x Solar, 2x Magnetic, 1x COMET, 1x Diaboli, 1x Eclipse Device, 1x Lunar"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Volcanic Device": {
-    "name": "Volcanic Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4d/Volcanic_Device_Inventory.gif/revision/latest",
-    "usage": "+180% Luck Boost, +25% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x HADES, 1x Rage : Heated, 1x Diaboli, 1x Rage, 1x Bleeding, 1x Solar Device, 1x Windstorm Device",
-    "description": "The Volcanic Device offers high luck boost with extra speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+180% Luck Boost, +25% Roll Speed",
-      "recipe": "1x HADES, 1x Rage : Heated, 1x Diaboli, 1x Rage, 1x Bleeding, 1x Solar Device, 1x Windstorm Device"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Exoflex Device": {
-    "name": "Exoflex Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/9e/Exoflex_Device_Inventory.gif/revision/latest",
-    "usage": "+140% Luck Boost, -8% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Arcane, 1x Jade, 1x Exotic, 1x Undead, 1x Sidereum, 1x STARLIGHT, 1x Aquamarine, 1x Forbidden, 5x Rare, 1x Exo Gauntlet",
-    "description": "The Exoflex Device is the advanced evolution of the Exo Gauntlet.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+140% Luck Boost, -8% Roll Speed",
-      "recipe": "1x Arcane, 1x Jade, 1x Exotic, 1x Undead, 1x Sidereum, 1x STARLIGHT, 1x Aquamarine, 1x Forbidden, 5x Rare, 1x Exo Gauntlet"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Hologrammer": {
-    "name": "Hologrammer",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8c/Hologrammer_Inventory.gif/revision/latest",
-    "usage": "+135% Luck Boost, +35% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Virtual, 1x Magnetic : Reverse Polarity, 1x Twilight, 1x Kyawthuite, 1x COMET, 1x STARLIGHT, 1x Rage : Heated, 1x PLAYER, 1x Magnetic, 1x Diaboli, 1x Forbidden",
-    "description": "The Hologrammer projects virtual fields granting high speed and luck.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+135% Luck Boost, +35% Roll Speed",
-      "recipe": "1x Virtual, 1x Magnetic : Reverse Polarity, 1x Twilight, 1x Kyawthuite, 1x COMET, 1x STARLIGHT, 1x Rage : Heated, 1x PLAYER, 1x Magnetic, 1x Diaboli, 1x Forbidden"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Ragnaröker": {
-    "name": "Ragnaröker",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c8/Ragnaroker_Inventory.gif/revision/latest?cb=20250710162830",
-    "usage": "+330% Luck Boost, -35% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Zeus, 1x HADES, 1x Poseidon, 1x Star Rider, 1x Solar, 1x Lunar, 1x Rage : Heated, 1x Lost Soul, 1x Sidereum, 1x Ash, 1x Diaboli, 1x Rage",
-    "description": "The Ragnaröker wields mythological fury granting +330% luck boost.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+330% Luck Boost, -35% Roll Speed",
-      "recipe": "1x Zeus, 1x HADES, 1x Poseidon, 1x Star Rider, 1x Solar, 1x Lunar, 1x Rage : Heated, 1x Lost Soul, 1x Sidereum, 1x Ash, 1x Diaboli, 1x Rage"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Gravitational Device": {
-    "name": "Gravitational Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/99/Gravitational_Device_Inventory.gif/revision/latest",
-    "usage": "+6x Luck on every 6th roll",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Gravitational, 1x BOUNDED, 1x Exotic, 1x Magnetic, 1x Diaboli, 1x Sidereum, 1x Nautilus, 1x Precious",
-    "description": "The Gravitational Device concentrates gravity to multiply luck by 6x on every 6th roll.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+6x Luck on every 6th roll",
-      "recipe": "1x Gravitational, 1x BOUNDED, 1x Exotic, 1x Magnetic, 1x Diaboli, 1x Sidereum, 1x Nautilus, 1x Precious"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Darkshader": {
-    "name": "Darkshader",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6e/Darkshader_Inventory.gif/revision/latest",
-    "usage": "+220% Luck Boost, +20% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x ARCANE : DARK, 1x Twilight, 1x Undefined, 1x Ink : Leak, 1x Lunar, 1x HAZARD, 1x Bleeding, 1x Diaboli, 1x Ink, 1x Forbidden",
-    "description": "The Darkshader shrouds rolls in darkness granting +220% luck and +20% speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+220% Luck Boost, +20% Roll Speed",
-      "recipe": "1x ARCANE : DARK, 1x Twilight, 1x Undefined, 1x Ink : Leak, 1x Lunar, 1x HAZARD, 1x Bleeding, 1x Diaboli, 1x Ink, 1x Forbidden"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Starshaper": {
-    "name": "Starshaper",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/Starshaper_Inventory.gif/revision/latest",
-    "usage": "+350% Luck Boost, +35% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Galactic Device, 1x Gravitational Device, 1x Solar Device, 1x Lunar Device, 1x STARSCOURGE, 1x Hyper-Volt, 1x Galaxy, 1x Gravitational, 1x COMET, 1x Star Rider, 1x Solar, 1x Lunar, 1x Sidereum, 1x Magnetic",
-    "description": "The Starshaper sculpts constellations to grant +350% luck and +35% speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+350% Luck Boost, +35% Roll Speed",
-      "recipe": "1x Galactic Device, 1x Gravitational Device, 1x Solar Device, 1x Lunar Device, 1x STARSCOURGE, 1x Hyper-Volt, 1x Galaxy, 1x Gravitational, 1x COMET, 1x Star Rider, 1x Solar, 1x Lunar, 1x Sidereum, 1x Magnetic"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Neuralyzer": {
-    "name": "Neuralyzer",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/64/Neuralyzer_Inventory.gif/revision/latest",
-    "usage": "+300% Luck Boost, +40% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Hologrammer, 1x CHROMATIC, 1x Origin, 1x Virtual, 1x Twilight, 1x Bounded : Unbound, 1x Exotic, 1x STARLIGHT, 1x Flushed:, 1x Lost Soul",
-    "description": "The Neuralyzer accelerates brain impulses granting +300% luck and +40% roll speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+300% Luck Boost, +40% Roll Speed",
-      "recipe": "1x Hologrammer, 1x CHROMATIC, 1x Origin, 1x Virtual, 1x Twilight, 1x Bounded : Unbound, 1x Exotic, 1x STARLIGHT, 1x Flushed:, 1x Lost Soul"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Pole Light Core Device": {
-    "name": "Pole Light Core Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f4/Pole_Light_Core_Device_Inventory.gif/revision/latest",
-    "usage": "+280% Luck Boost, +28% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Sirius, 1x Blizzard, 1x Hyper-Volt, 1x Origin, 1x Magnetic : Reverse Polarity, 1x Jade, 1x Permafrost, 1x Solar, 1x Sidereum, 1x Magnetic",
-    "description": "The Pole Light Core Device channels polar energies for +280% luck and +28% roll speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+280% Luck Boost, +28% Roll Speed",
-      "recipe": "1x Sirius, 1x Blizzard, 1x Hyper-Volt, 1x Origin, 1x Magnetic : Reverse Polarity, 1x Jade, 1x Permafrost, 1x Solar, 1x Sidereum, 1x Magnetic"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Genesis Drive": {
-    "name": "Genesis Drive",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/df/Genesis_drive_inventory.gif/revision/latest",
-    "usage": "+450% Luck Boost, +45% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Neuralyzer, 1x CHROMATIC : GENESIS, 1x Matrix, 1x CHROMATIC, 1x Hyper-Volt, 1x Origin, 1x Virtual, 1x BOUNDED, 1x Aether, 1x Exotic, 1x WATT, 1x Powered",
-    "description": "The Genesis Drive is an elite high-tier device offering massive +450% luck and +45% speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+450% Luck Boost, +45% Roll Speed",
-      "recipe": "1x Neuralyzer, 1x CHROMATIC : GENESIS, 1x Matrix, 1x CHROMATIC, 1x Hyper-Volt, 1x Origin, 1x Virtual, 1x BOUNDED, 1x Aether, 1x Exotic, 1x WATT, 1x Powered"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "The Thing": {
-    "name": "The Thing",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/52/TheThingInv.gif/revision/latest",
-    "usage": "+380% Luck Boost, +25% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Flesh Device, 1x Parasite, 1x Symbiosis, 1x HAZARD : RAYS, 1x Ink : Leak, 1x HAZARD, 1x Bleeding",
-    "description": "The Thing is an organic horror device pulsing with biological energy granting +380% luck.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+380% Luck Boost, +25% Roll Speed",
-      "recipe": "1x Flesh Device, 1x Parasite, 1x Symbiosis, 1x HAZARD : RAYS, 1x Ink : Leak, 1x HAZARD, 1x Bleeding"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Heavenly Device": {
-    "name": "Heavenly Device",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f7/HeavenlyDeviceInv.gif/revision/latest",
-    "usage": "+550% Luck Boost, +50% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Genesis Drive, 1x ARCHANGEL, 1x PROPHECY, 1x ICARUS, 1x Faith, 1x HOPE, 1x Divinus : Angel",
-    "description": "The Heavenly Device channels angelic divinity to grant +550% luck and +50% roll speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+550% Luck Boost, +50% Roll Speed",
-      "recipe": "1x Genesis Drive, 1x ARCHANGEL, 1x PROPHECY, 1x ICARUS, 1x Faith, 1x HOPE, 1x Divinus : Angel"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Unfathomable Ruins": {
-    "name": "Unfathomable Ruins",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cd/UnfathomableRuinsInv.gif/revision/latest",
-    "usage": "+400% Luck Boost, +35% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x RUINS, 3x Runic, 4x Ethereal, 10x ⌊ HARNESSED ⌉, 15x Origin, 50x Twilight, 50x Kyawthuite, 50x Jade, 2000x Flow, 10000x Flora",
-    "description": "The Unfathomable Ruins is a Tier-11 gauntlet built from ancient temple ruins, granting +400% luck and +35% roll speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+400% Luck Boost, +35% Roll Speed",
-      "recipe": "1x RUINS, 3x Runic, 4x Ethereal, 10x ⌊ HARNESSED ⌉, 15x Origin, 50x Twilight, 50x Kyawthuite, 50x Jade, 2000x Flow, 10000x Flora"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Singularity Gauntlet": {
-    "name": "Singularity Gauntlet",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/04/SingularityGauntletInv.gif/revision/latest",
-    "usage": "+700% Luck Boost, +70% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Singularity Catalyst, 1x Starshaper, 1x Galactic Device, 1x Gravitational Device, 1x Solar Device, 1x Lunar Device, 1x CENTURION, 1x Astronaut, 1x Vega, 1x Constella, 1x Pulsar, 1x Pleiades, 1x Starscourge : Radiant, 1x STARSCOURGE, 1x Galaxy, 1x Orion, 1x STARLIGHT, 1x Powered, 1x Solar, 1x Lunar",
-    "description": "The ultimate cosmic gauntlet in Sol's RNG, granting unmatched +700% luck and +70% roll speed.",
-    "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+700% Luck Boost, +70% Roll Speed",
-      "recipe": "1x Singularity Catalyst, 1x Starshaper, 1x Galactic Device, 1x Gravitational Device, 1x Solar Device, 1x Lunar Device, 1x CENTURION, 1x Astronaut, 1x Vega, 1x Constella, 1x Pulsar, 1x Pleiades, 1x Starscourge : Radiant, 1x STARSCOURGE, 1x Galaxy, 1x Orion, 1x STARLIGHT, 1x Powered, 1x Solar, 1x Lunar"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Gemstone Gauntlet": {
-    "name": "Gemstone Gauntlet",
+  "Blessed Tide Gauntlet": {
+    "name": "Blessed Tide Gauntlet",
     "slot": "Left Hand",
     "category": "Left Hand",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/GemstoneGauntletInventory.gif/revision/latest",
-    "usage": "+115% Luck Boost, +15% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Topaz, 1x Ruby, 1x Emerald, 1x Sapphire, 1x Aquamarine, 1x Quartz",
-    "description": "The Gemstone Gauntlet is a Tier 1 left-handed gear combining gems for balanced buffs.",
+    "limited": true,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/11/Blessed-Tide-Gauntlet.png/revision/latest",
+    "usage": "[Sea Blessing+]:Bonus Roll Countdown is moved from 10 rolls -> 6 rolls, Bonus RollMultiplier isupgraded from 2x -> 3x.; [Tide]: The Bonus Roll allows you to roll Rainy Auras with Native Rarity regardless ofcurrent Biome.",
+    "how_to_get": "Hidden Quest | Recipe: 1x Poseidon (from Tide Gauntlet), 300,000 Rolls",
+    "description": "Gauntlet with the true Glory of the Sea[Tide]: Bonus Roll allows you to roll Rainy Auras with Native Rarity Regardless of Current Biome2 -> 3 Bonus Roll Multiply10 -> 6 Bonus Roll Countdown",
     "raw_info": {
-      "source": "Jake's Workshop",
-      "boost(s)": "+115% Luck Boost, +15% Roll Speed",
-      "recipe": "1x Topaz, 1x Ruby, 1x Emerald, 1x Sapphire, 1x Aquamarine, 1x Quartz"
+      "source": "Hidden Quest",
+      "boost(s)": "[Sea Blessing+]:Bonus Roll Countdown is moved from 10 rolls -> 6 rolls, Bonus RollMultiplier isupgraded from 2x -> 3x.; [Tide]: The Bonus Roll allows you to roll Rainy Auras with Native Rarity regardless ofcurrent Biome.",
+      "effect(s)": "75px|link=EffectsSea Blessing+ 75px|link=EffectsTide Power",
+      "recipe": "1x Poseidon (from Tide Gauntlet), 300,000 Rolls"
+    },
+    "flags": [
+      "craftable",
+      "limited"
+    ]
+  },
+  "Corruption Cell Lantern": {
+    "name": "Corruption Cell Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c5/CorruptionLantern.gif/revision/latest",
+    "usage": "2x chance to get Corruption biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x Curruptaine, 1x Parasite, 1x Lantern",
+    "description": "The Corrupted flame inside the lantern reaches out toward you, threatening you. While equipped, the spawn chance of the Corruption Biome is increased by 2×.",
+    "raw_info": {
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Corruption biome.",
+      "recipe": "20x Curruptaine, 1x Parasite, 1x Lantern"
     },
     "flags": [
       "craftable"
@@ -527,13 +98,430 @@
     "category": "Left Hand",
     "limited": false,
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d5/DarkmatterDeviceInventory.gif/revision/latest",
-    "usage": "+130% Luck Boost, +20% Roll Speed",
-    "how_to_get": "Jake's Workshop | Recipe: 1x Ink, 1x Glock, 1x Ash",
-    "description": "The Dark Matter Device is a left-handed device granting +130% luck and +20% roll speed.",
+    "usage": "Each bonus roll gives you a 0.1% chance to earn 1 Dark Point.",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Ink, 1x Glock, 1x Ash",
+    "description": "This device Absorbs nearby LightsEach Bonus roll gives you a 0.1% chance to earn 1 Point.",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "Each bonus roll gives you a 0.1% chance to earn 1 Dark Point.",
+      "effect(s)": "75px|link=EffectsDark Matter",
+      "recipe": "1x Ink, 1x Glock, 1x Ash"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Darklight Lantern": {
+    "name": "Darklight Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e2/Gif.gif/revision/latest",
+    "usage": "2x chance to get Null biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x NULL?, 1x Nihility, 1x Lantern",
+    "description": "At first, it was believed that the lantern absorbs light, but that was not the case - the black light it emits overwhelms and darkens the surronding light. While equipped, the spawn chance of the Null Biome is increased by 2×.",
+    "raw_info": {
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Null biome.",
+      "recipe": "20x NULL?, 1x Nihility, 1x Lantern"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Darkshader": {
+    "name": "Darkshader",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6e/Darkshader_Inventory.gif/revision/latest",
+    "usage": "10 -> 5 Bonus Roll Cooldown; Next 10 Rolls grant x2.5 Luck (Every 20th Roll)",
+    "how_to_get": "Jake's Workshop",
+    "description": "The darkness of the device attempts to swallow you up.",
     "raw_info": {
       "source": "Jake's Workshop",
-      "boost(s)": "+130% Luck Boost, +20% Roll Speed",
-      "recipe": "1x Ink, 1x Glock, 1x Ash"
+      "boost(s)": "10 -> 5 Bonus Roll Cooldown; Next 10 Rolls grant x2.5 Luck (Every 20th Roll)",
+      "effect(s)": "40px|link=EffectsDarkshade 40px|link=EffectsEncroached"
+    },
+    "flags": []
+  },
+  "Day and Night Talisman": {
+    "name": "Day and Night Talisman",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e0/DayandNightTalismanInventory.gif/revision/latest",
+    "usage": "125% Basic Luck",
+    "how_to_get": "Rin",
+    "description": "When the sun sets, the moon remains;when the moon sets, the sun remains..125% Basic Luck during Daytime]125% Basic Luck during Nighttime]",
+    "raw_info": {
+      "source": "Rin",
+      "boost(s)": "125% Basic Luck"
+    },
+    "flags": []
+  },
+  "Desire Glove": {
+    "name": "Desire Glove",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2d/DesireGloveIngame.gif/revision/latest",
+    "usage": "+40% Luck Boost",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Rage, 1x Ruby, 1x Diaboli, 1x Bleeding",
+    "description": "Desire makes you stronger+40% Base Luck",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+40% Luck Boost",
+      "effect(s)": "75px|link=EffectsDesireGlove",
+      "recipe": "1x Rage, 1x Ruby, 1x Diaboli, 1x Bleeding"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Eclipse Device": {
+    "name": "Eclipse Device",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/39/Eclipse_Device_Inventory.gif/revision/latest",
+    "usage": "+50% Luck+15% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Lunar Device, 1x Solar Device, 1x Eclipse",
+    "description": "The faint Light of the Eclipse surrounds you.+50% Base Luck ! +15% Roll Speed",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+50% Luck+15% Roll Speed",
+      "effect(s)": "75px|link=EffectsLunar Shift; 75px|link=EffectsSolar Ignite",
+      "recipe": "1x Lunar Device, 1x Solar Device, 1x Eclipse"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Eternal Flaming Lantern": {
+    "name": "Eternal Flaming Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/72/HellLanternInCauldron.gif/revision/latest",
+    "usage": "2x chance to get Hell biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x Eternal Flame, 1x Hades, 1x Lantern",
+    "description": "As its name suggests, the eternal flame inside the lantern never goes out and burns forever. While equipped, the spawn chance of the Hell Biome is increased by 2×.",
+    "raw_info": {
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Hell biome.",
+      "recipe": "20x Eternal Flame, 1x Hades, 1x Lantern"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Exo Gauntlet": {
+    "name": "Exo Gauntlet",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b4/Exo_Gauntlet_Inventory.gif/revision/latest",
+    "usage": "+100% Luck Boost +20% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 3x Gilded, 2x Precious, 2x Magnetic, 1x Sidereum, 1x Undead, 1x Exotic",
+    "description": "Exotic Power enhances you.+100% Base Luck ! +20% Roll Speed",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+100% Luck Boost +20% Roll Speed",
+      "effect(s)": "75px|link=EffectsExo Enhancement",
+      "recipe": "3x Gilded, 2x Precious, 2x Magnetic, 1x Sidereum, 1x Undead, 1x Exotic"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Exoflex Device": {
+    "name": "Exoflex Device",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/9e/Exoflex_Device_Inventory.gif/revision/latest",
+    "usage": "+340% Luck Boost+35% Roll Speed",
+    "how_to_get": "Jake’s Workshop | Recipe: 3x Arcane, 5x Jade, 50x Exotic, 37x Undead, 350x Sidereum, 80x Starlight, 1,000x Aquamarine, 2,000x Forbidden, 30,000x Rare, 1x Exo Gauntlet",
+    "description": "A device that will make your Exotic Destiny even more Brilliant..+340% Base Luck ! +35% Roll Speed",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+340% Luck Boost+35% Roll Speed",
+      "effect(s)": "75px|link=EffectsExoflex Blessing",
+      "recipe": "3x Arcane, 5x Jade, 50x Exotic, 37x Undead, 350x Sidereum, 80x Starlight, 1,000x Aquamarine, 2,000x Forbidden, 30,000x Rare, 1x Exo Gauntlet"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Flesh Device": {
+    "name": "Flesh Device",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/Flesh_Device_Inventory.gif/revision/latest",
+    "usage": "x1.3 Bonus Roll Multiplier on Every Roll",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Astral, 30x Hazard, 15x Corrosive, 10x Undead, 6,000x Crystallized, 190x Ink, 30x Bleeding",
+    "description": "A device that Came to Life due to a Curse.This device makes the Bonus Roll apply to Every Rolls.However, this also Reduces the Bonus Roll Multiplier to 1.3",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "x1.3 Bonus Roll Multiplier on Every Roll",
+      "effect(s)": "75px|link=EffectsFierce Spirit",
+      "recipe": "1x Astral, 30x Hazard, 15x Corrosive, 10x Undead, 6,000x Crystallized, 190x Ink, 30x Bleeding"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Frozen Gauntlet": {
+    "name": "Frozen Gauntlet",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/92/FrozenGauntletNew.gif/revision/latest",
+    "usage": "+150% Luck Boost -25% Roll Speed.",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Glacier, 1x Permafrost",
+    "description": "This gauntlet is really cold... +150% Base Luck ! -25% Roll Speed",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+150% Luck Boost -25% Roll Speed.",
+      "effect(s)": "75px|link=EffectsFrozen",
+      "recipe": "1x Glacier, 1x Permafrost"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Frozen Lantern": {
+    "name": "Frozen Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/ce/FrozenLanternInventory.gif/revision/latest",
+    "usage": "2x chance to get Snowy biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x Icicle, 1x Blizzard, 1x Lantern",
+    "description": "The flame inside the lantern is frozen and completely motionless, yet it still emits a faint light. While equipped, the spawn chance of the Snowy biome is increased by 2×.",
+    "raw_info": {
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Snowy biome.",
+      "recipe": "20x Icicle, 1x Blizzard, 1x Lantern"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Galactic Device": {
+    "name": "Galactic Device",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/14/Galactic_Device_Inventory_%28gif%29.gif/revision/latest",
+    "usage": "+250% Luck +30% Roll speed",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Galaxy, 1x Eclipse Device, 100x Sapphire, 15x Solar, 62x Magnetic, 80x Diaboli, 3x Comet, 15x Lunar",
+    "description": "This device is composed with the Power of Galaxy.+250% Base Luck ! +30% Roll Speed",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+250% Luck +30% Roll speed",
+      "effect(s)": "75px|link=Effects Cosmic Enhancement",
+      "recipe": "1x Galaxy, 1x Eclipse Device, 100x Sapphire, 15x Solar, 62x Magnetic, 80x Diaboli, 3x Comet, 15x Lunar"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Gemstone Gauntlet": {
+    "name": "Gemstone Gauntlet",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/GemstoneGauntletInventory.gif/revision/latest",
+    "usage": "Granting 0-30% Luck/Roll Speed (randomized per 10 rolls)",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Topaz, 1x Ruby, 1x Emerald, 1x Sapphire, 1x Aquamarine, 1x Quartz",
+    "description": "Controls the Power of the Six Gemstones. Per 10 rolls, a random gem will glow, granting 0-30% Luck or Roll Speed for 10 rolls.",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "Granting 0-30% Luck/Roll Speed (randomized per 10 rolls)",
+      "effect(s)": "75px|link=EffectsGems",
+      "recipe": "1x Topaz, 1x Ruby, 1x Emerald, 1x Sapphire, 1x Aquamarine, 1x Quartz"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Genesis Drive": {
+    "name": "Genesis Drive",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/df/Genesis_drive_inventory.gif/revision/latest",
+    "usage": "+1200% Luck+100% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Neuralyzer, 1x Chromatic: Genesis, 2x Matrix, 2x Chromatic, 10x Hyper-Volt, 10x Origin, 30x Virtual, 200x Bounded, 200x Aether, 400x Exotic, 2,400x Watt, 4,000x Powered",
+    "description": "An arcanic drive that records the Divine Sanctity of GENESIS.+1200% Base Luck ! +100% Roll Speed",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+1200% Luck+100% Roll Speed",
+      "effect(s)": "75px|link=EffectsGenesis Buff",
+      "recipe": "1x Neuralyzer, 1x Chromatic: Genesis, 2x Matrix, 2x Chromatic, 10x Hyper-Volt, 10x Origin, 30x Virtual, 200x Bounded, 200x Aether, 400x Exotic, 2,400x Watt, 4,000x Powered"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Gilded Dust Lantern": {
+    "name": "Gilded Dust Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fe/SandstormLanternInventory.gif/revision/latest",
+    "usage": "2x chance to get Sandstorm biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x Hour Glass, 1x Anubis, 1x Lantern",
+    "description": "The shining gem inside the lantern was believed by people of old to symbolize immense wealth. While equipped, the spawn chance of the Sandstorm Biome is increased by 2×.",
+    "raw_info": {
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Sandstorm biome.",
+      "recipe": "20x Hour Glass, 1x Anubis, 1x Lantern"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Gravitational Device": {
+    "name": "Gravitational Device",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/99/Gravitational_Device_Inventory.gif/revision/latest",
+    "usage": "2 -> 6 Bonus Roll Multiply (Every 10th roll)",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Gravitational, 3x Bounded, 5x Exotic, 75x Magnetic, 152x Diaboli, 31x Sidereum, 5x Nautilus, 152x Precious",
+    "description": "The device provides you with Unstable Gravity.2 -> 6 Bonus Roll Multiply",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "2 -> 6 Bonus Roll Multiply (Every 10th roll)",
+      "effect(s)": "75px|link=EffectsUnstable Gravity",
+      "recipe": "1x Gravitational, 3x Bounded, 5x Exotic, 75x Magnetic, 152x Diaboli, 31x Sidereum, 5x Nautilus, 152x Precious"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Heavenly Device": {
+    "name": "Heavenly Device",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f7/HeavenlyDeviceInv.gif/revision/latest",
+    "usage": "+1,500% Base Luck+120% Roll Speed",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Genesis Drive, 1x Archangel (1 in 70,000,000 in Heaven), 1x Prophecy (1 in 55,129,886 in Heaven), 10x Icarus (1 in 3,132,000 in Heaven), 15x Faith (1 in 1,450,000 in Heaven), 175x Hope (1 in 97,745 in Heaven), 500x Divinus: Angel (1 in 24,000 in Heaven)",
+    "description": "A sacred relic that is given by an ANGEL. The angel will always be watching over you.+1,500% Base Luck+120% Roll Speed",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+1,500% Base Luck+120% Roll Speed",
+      "effect(s)": "frameless|50x50pxAngel's Grace",
+      "recipe": "1x Genesis Drive, 1x Archangel (1 in 70,000,000 in Heaven), 1x Prophecy (1 in 55,129,886 in Heaven), 10x Icarus (1 in 3,132,000 in Heaven), 15x Faith (1 in 1,450,000 in Heaven), 175x Hope (1 in 97,745 in Heaven), 500x Divinus: Angel (1 in 24,000 in Heaven)"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Hologrammer": {
+    "name": "Hologrammer",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8c/Hologrammer_Inventory.gif/revision/latest",
+    "usage": "+395% Base Luck+35% Roll Speed; Duplicate: 15% chance to Duplicate an item when grabbing it.",
+    "how_to_get": "Jake’s Workshop",
+    "description": "High-spec Virtual Digital Output Device whose principles are unknown.+395% Base Luck ! +35% Roll Speed[Duplicate]: 15% chance to Duplicate an item when grabbing it[sic]",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+395% Base Luck+35% Roll Speed; Duplicate: 15% chance to Duplicate an item when grabbing it.",
+      "effect(s)": "75px|link=Effects Holographic 75px|link=Effects Duplicate"
+    },
+    "flags": []
+  },
+  "Jackpot Gauntlet": {
+    "name": "Jackpot Gauntlet",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Jackpot_Device_Inventory.gif/revision/latest",
+    "usage": "+77% Luck; +7% Roll Speed; Get 77 Coins every time you roll Jackpot",
+    "how_to_get": "Jake’s Workshop | Recipe: 777x Rare, 77x Gilded, 77x Jackpot",
+    "description": "Always bet on yourself.+77% Base Luck ! +7% Roll Speed[Jackpot]: +77 Cash when you hit the Jackpot.",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+77% Luck; +7% Roll Speed; Get 77 Coins every time you roll Jackpot",
+      "effect(s)": "75px|link=EffectsJackpot",
+      "recipe": "777x Rare, 77x Gilded, 77x Jackpot"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Luck Glove": {
+    "name": "Luck Glove",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b1/Luck_Glove_Inventory.gif/revision/latest",
+    "usage": "+25% Luck Boost",
+    "how_to_get": "Jake's Workshop",
+    "description": "A glove with a really simple structure. +25% Base Luck",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+25% Luck Boost",
+      "effect(s)": "frameless|50x50pxBasic Luck"
+    },
+    "flags": []
+  },
+  "Lunar Device": {
+    "name": "Lunar Device",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a3/Lunar_Device_Inventory.gif/revision/latest",
+    "usage": "+15% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Rare, 1x Divinus, 1x Lunar",
+    "description": "Stillness clears your mind.+15% Roll Speed",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+15% Roll Speed",
+      "effect(s)": "75px|link=EffectsLunar Shift",
+      "recipe": "1x Rare, 1x Divinus, 1x Lunar"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Moonstone Talisman": {
+    "name": "Moonstone Talisman",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f7/MoonstoneTalismanInventory.gif/revision/latest",
+    "usage": "100% Basic Luck during Nighttime.",
+    "how_to_get": "Rin",
+    "description": "It will bring you luck when the moon rises.100% Basic Luck during Nighttime]",
+    "raw_info": {
+      "source": "Rin",
+      "boost(s)": "100% Basic Luck during Nighttime."
+    },
+    "flags": []
+  },
+  "Neuralyzer": {
+    "name": "Neuralyzer",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/64/Neuralyzer_Inventory.gif/revision/latest",
+    "usage": "+850% Luck Boost+70% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Hologrammer, 2x Chromatic, 7x Origin, 18x Virtual, 10x Twilight, 20x Bounded: Unbound, 400x Exotic, 250x Starlight, 2,000x:Flushed:, 2,500x Lost Soul",
+    "description": "A Device that Continuously stimulates the brain nerves.+850% Base Luck ! +70% Roll Speed",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+850% Luck Boost+70% Roll Speed",
+      "effect(s)": "75px|link=EffectsImpulses",
+      "recipe": "1x Hologrammer, 2x Chromatic, 7x Origin, 18x Virtual, 10x Twilight, 20x Bounded: Unbound, 400x Exotic, 250x Starlight, 2,000x:Flushed:, 2,500x Lost Soul"
     },
     "flags": [
       "craftable"
@@ -545,286 +533,68 @@
     "category": "Left Hand",
     "limited": true,
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5c/OminousCoffinPass.gif/revision/latest",
-    "usage": "+200% Luck Boost during Halloween biomes",
-    "how_to_get": "Halloween Event 2024 | Recipe: Graveyard / Pumpkin Moon Drop",
-    "description": "An eerie left-handed relic from the Halloween event granting large luck boosts in spooky biomes.",
+    "usage": "x1.35 Basic Luck; Removes Bonus Roll; +30% Roll Speed during Pumpkin Moon, Graveyard or Blood Rain",
+    "how_to_get": "Reach Level 10 in the Season III Season Pass.",
+    "description": "A coffin where the unholy being rests.x1.35 Basic LuckRemoves Bonus Roll+30% Roll Speed during Pumpkin Moon, Graveyard, Blood Rain",
     "raw_info": {
-      "source": "Halloween Event 2024",
-      "boost(s)": "+200% Luck Boost during Halloween biomes",
-      "recipe": "Graveyard / Pumpkin Moon Drop"
+      "source": "Reach Level 10 in the Season III Season Pass.",
+      "boost(s)": "x1.35 Basic Luck; Removes Bonus Roll; +30% Roll Speed during Pumpkin Moon, Graveyard or Blood Rain",
+      "effect(s)": "75px|link=EffectsLesser Curse"
     },
     "flags": [
       "limited"
     ]
   },
-  "Wind Fairy Lantern": {
-    "name": "Wind Fairy Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ee/WindFairyLanternInventory.gif/revision/latest",
-    "usage": "+50% Luck Boost, +10% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x Wind Essence, 1x Stormal : Hurricane, 1x Lantern",
-    "description": "Pocket lantern crafted with Stella using wind essences.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+50% Luck Boost, +10% Roll Speed",
-      "recipe": "1x Wind Essence, 1x Stormal : Hurricane, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Frozen Lantern": {
-    "name": "Frozen Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/ce/FrozenLanternInventory.gif/revision/latest",
-    "usage": "+60% Luck Boost, +5% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x Icicle, 1x Blizzard, 1x Lantern",
-    "description": "Pocket lantern infused with freezing blizzard winds.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+60% Luck Boost, +5% Roll Speed",
-      "recipe": "1x Icicle, 1x Blizzard, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Abyssal Lantern": {
-    "name": "Abyssal Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ed/AbyssalLanternInventory.gif/revision/latest",
-    "usage": "+75% Luck Boost, +15% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x Rainy Bottle, 1x Sailor, 1x Lantern",
-    "description": "Pocket lantern glowing with deep ocean luminescence.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+75% Luck Boost, +15% Roll Speed",
-      "recipe": "1x Rainy Bottle, 1x Sailor, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Gilded Dust Lantern": {
-    "name": "Gilded Dust Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fe/SandstormLanternInventory.gif/revision/latest",
-    "usage": "+80% Luck Boost, +10% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x Hour Glass, 1x Anubis, 1x Lantern",
-    "description": "Pocket lantern holding the golden sands of time.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+80% Luck Boost, +10% Roll Speed",
-      "recipe": "1x Hour Glass, 1x Anubis, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Eternal Flaming Lantern": {
-    "name": "Eternal Flaming Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/72/HellLanternInCauldron.gif/revision/latest",
-    "usage": "+90% Luck Boost, +20% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x Eternal Flame, 1x HADES, 1x Lantern",
-    "description": "Pocket lantern burning with eternal underworld flames.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+90% Luck Boost, +20% Roll Speed",
-      "recipe": "1x Eternal Flame, 1x HADES, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Starlight Lantern": {
-    "name": "Starlight Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e3/StarlightLanternInventory.gif/revision/latest",
-    "usage": "+100% Luck Boost, +25% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x Piece of Star, 1x Galaxy, 1x Lantern",
-    "description": "Pocket lantern containing captured starlight for +100% luck.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+100% Luck Boost, +25% Roll Speed",
-      "recipe": "1x Piece of Star, 1x Galaxy, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Angel's Feather Lantern": {
-    "name": "Angel's Feather Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5f/Angel%27sFeatherLanternInventory.gif/revision/latest",
-    "usage": "+120% Luck Boost, +30% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x Feather Vial, 1x ICARUS, 1x Lantern",
-    "description": "Pocket lantern blessed with angelic feathers.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+120% Luck Boost, +30% Roll Speed",
-      "recipe": "1x Feather Vial, 1x ICARUS, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Corruption Cell Lantern": {
-    "name": "Corruption Cell Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c5/CorruptionLantern.gif/revision/latest",
-    "usage": "+110% Luck Boost, +20% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x Curruptaine, 1x Parasite, 1x Lantern",
-    "description": "Pocket lantern containing virulent corrupted cells.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+110% Luck Boost, +20% Roll Speed",
-      "recipe": "1x Curruptaine, 1x Parasite, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Darklight Lantern": {
-    "name": "Darklight Lantern",
-    "slot": "Pocket Lantern",
-    "category": "Pocket Lantern",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e2/Gif.gif/revision/latest",
-    "usage": "+150% Luck Boost, +35% Roll Speed",
-    "how_to_get": "Stella's Cauldron | Recipe: 1x NULL?, 1x Nihility, 1x Lantern",
-    "description": "Pocket lantern emitting dark matter rays for +150% luck and +35% speed.",
-    "raw_info": {
-      "source": "Stella's Cauldron",
-      "boost(s)": "+150% Luck Boost, +35% Roll Speed",
-      "recipe": "1x NULL?, 1x Nihility, 1x Lantern"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Sunstone Talisman": {
-    "name": "Sunstone Talisman",
-    "slot": "Talisman",
-    "category": "Talisman",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3a/SunstoneTalismanInventory.gif/revision/latest",
-    "usage": "+50% Luck during Daytime",
-    "how_to_get": "Rin's Quests | Recipe: Rin's Quest 1, 100,000 Coins",
-    "description": "Talisman blessed by Rin that empowers the player during daylight hours.",
-    "raw_info": {
-      "source": "Rin's Quests",
-      "boost(s)": "+50% Luck during Daytime",
-      "recipe": "Rin's Quest 1, 100,000 Coins"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Moonstone Talisman": {
-    "name": "Moonstone Talisman",
-    "slot": "Talisman",
-    "category": "Talisman",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f7/MoonstoneTalismanInventory.gif/revision/latest",
-    "usage": "+50% Luck during Nighttime",
-    "how_to_get": "Rin's Quests | Recipe: Rin's Quest 2, 250,000 Coins",
-    "description": "Talisman blessed by Rin that empowers the player under moonlight.",
-    "raw_info": {
-      "source": "Rin's Quests",
-      "boost(s)": "+50% Luck during Nighttime",
-      "recipe": "Rin's Quest 2, 250,000 Coins"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
-  "Day and Night Talisman": {
-    "name": "Day and Night Talisman",
-    "slot": "Talisman",
-    "category": "Talisman",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e0/DayandNightTalismanInventory.gif/revision/latest",
-    "usage": "+75% Luck Boost at all times",
-    "how_to_get": "Rin's Quests | Recipe: Rin's Quest 3, 500,000 Coins",
-    "description": "Talisman combining the powers of sun and moon for constant +75% luck.",
-    "raw_info": {
-      "source": "Rin's Quests",
-      "boost(s)": "+75% Luck Boost at all times",
-      "recipe": "Rin's Quest 3, 500,000 Coins"
-    },
-    "flags": [
-      "craftable"
-    ]
-  },
   "Overtime Talisman": {
     "name": "Overtime Talisman",
-    "slot": "Talisman",
-    "category": "Talisman",
+    "slot": "Pocket",
+    "category": "Pocket",
     "limited": false,
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/60/OvertimeTalismanInventory.gif/revision/latest",
-    "usage": "+30% Roll Speed Boost",
-    "how_to_get": "Rin's Quests | Recipe: Rin's Quest 4, 1,000,000 Coins",
-    "description": "Talisman granting +30% permanent roll speed bonus.",
+    "usage": "20% Base Luck per stack up to 200% at 10 stacks.",
+    "how_to_get": "Rin",
+    "description": "It's okay, everything will get better with time.Start with 1 stack; gain 1 stack every 10 minutes (Max 10).Stacks reset upon unequipping or leaving the server.",
     "raw_info": {
-      "source": "Rin's Quests",
-      "boost(s)": "+30% Roll Speed Boost",
-      "recipe": "Rin's Quest 4, 1,000,000 Coins"
+      "source": "Rin",
+      "boost(s)": "20% Base Luck per stack up to 200% at 10 stacks."
+    },
+    "flags": []
+  },
+  "Pole Light Core Device": {
+    "name": "Pole Light Core Device",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f4/Pole_Light_Core_Device_Inventory.gif/revision/latest",
+    "usage": "+500% Luck; Every 30th roll gives 5 stacks of Polar Shift.",
+    "how_to_get": "Jake's quest and/or Jake's Workshop | Recipe: 3x Sirius, 3x Blizzard, 4x Hyper-Volt, 5x Origin, 25x Magnetic: Reverse Polarity, 100x Jade, 300x Permafrost, 5000x Solar, 7250x Sidereum, 9000x Magnetic",
+    "description": "This device prevents Fear from growing on you with the mysterious Power of the Polaris[Aurora]: Every 30th Roll gives you 5 stacks of Polar Shift.+500% Base Luck",
+    "raw_info": {
+      "source": "Jake's quest and/or Jake's Workshop",
+      "boost(s)": "+500% Luck; Every 30th roll gives 5 stacks of Polar Shift.",
+      "effect(s)": "75px|link=EffectsAurora 75px|link=EffectsPolar Shift",
+      "recipe": "3x Sirius, 3x Blizzard, 4x Hyper-Volt, 5x Origin, 25x Magnetic: Reverse Polarity, 100x Jade, 300x Permafrost, 5000x Solar, 7250x Sidereum, 9000x Magnetic"
     },
     "flags": [
       "craftable"
     ]
   },
-  "Soul Collector's Talisman": {
-    "name": "Soul Collector's Talisman",
-    "slot": "Talisman",
-    "category": "Talisman",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d8/SoulCollectorsTalismanInventory.gif/revision/latest",
-    "usage": "+100% Luck Boost, +15% Roll Speed",
-    "how_to_get": "Rin's Quests | Recipe: Rin's Quest 5, 2,500,000 Coins",
-    "description": "Talisman that captures wandering spirits for +100% luck.",
+  "Present Giver": {
+    "name": "Present Giver",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": true,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5d/ClearlyPresentGiver.png/revision/latest",
+    "usage": "5x Luck every 11 rolls",
+    "how_to_get": "Roulette",
+    "description": "Here is present for you guys!",
     "raw_info": {
-      "source": "Rin's Quests",
-      "boost(s)": "+100% Luck Boost, +15% Roll Speed",
-      "recipe": "Rin's Quest 5, 2,500,000 Coins"
+      "source": "Roulette",
+      "boost(s)": "5x Luck every 11 rolls",
+      "effect(s)": "75px|link=EffectsPresentGiver"
     },
     "flags": [
-      "craftable"
-    ]
-  },
-  "Soul Master's Talisman": {
-    "name": "Soul Master's Talisman",
-    "slot": "Talisman",
-    "category": "Talisman",
-    "limited": false,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cf/Smtalismaninventory_techtrue.gif/revision/latest",
-    "usage": "+150% Luck Boost, +25% Roll Speed",
-    "how_to_get": "Rin's Quests | Recipe: Rin's Master Quest, 5,000,000 Coins",
-    "description": "The ultimate talisman awarded by Rin for completing all trial quests.",
-    "raw_info": {
-      "source": "Rin's Quests",
-      "boost(s)": "+150% Luck Boost, +25% Roll Speed",
-      "recipe": "Rin's Master Quest, 5,000,000 Coins"
-    },
-    "flags": [
-      "craftable"
+      "limited"
     ]
   },
   "Pump Punch": {
@@ -833,16 +603,72 @@
     "category": "Right Hand",
     "limited": true,
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/14/PumpPunch.png/revision/latest",
-    "usage": "+150% Luck Boost, +25% Roll Speed",
-    "how_to_get": "Halloween Event 2024 | Recipe: 1x Pump King's Soul, 1x Pump King's Head, 1x Lunar : Full Moon, 50x Pump Token, 1x Lunar Device",
-    "description": "Limited Halloween gauntlet forged from the Pump King's soul.",
+    "usage": "+800% Luck; -50% Roll Speed",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Pump King's Soul, 80x Pump King's Head, 2x Lunar: Full Moon, 8,000x Pump Token, 1x Lunar Device",
+    "description": "PUMP PUNCH!! gonna break you.+800% Base Luck ! -50% Roll Speed",
     "raw_info": {
-      "source": "Halloween Event 2024",
-      "boost(s)": "+150% Luck Boost, +25% Roll Speed",
-      "recipe": "1x Pump King's Soul, 1x Pump King's Head, 1x Lunar : Full Moon, 50x Pump Token, 1x Lunar Device"
+      "source": "Jake’s Workshop",
+      "boost(s)": "+800% Luck; -50% Roll Speed",
+      "effect(s)": "75px|link=EffectsPumpking's Blessing 75px|link=EffectsPumpking's Curse",
+      "recipe": "1x Pump King's Soul, 80x Pump King's Head, 2x Lunar: Full Moon, 8,000x Pump Token, 1x Lunar Device"
     },
     "flags": [
+      "craftable",
       "limited"
+    ]
+  },
+  "Ragnaröker": {
+    "name": "Ragnaröker",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c8/Ragnaroker_Inventory.gif/revision/latest?cb=20250710162830",
+    "usage": "+455% Luck and +40% Roll Speed.; +45% Luck and +5% Roll Speed if current biome is Windy, Rainy or Hell.",
+    "how_to_get": "Jake's Workshop",
+    "description": "The once glorious land is losing its light...+455% Base Luck ! +40% Roll Speed[Disaster]: +45% Luck ! +5% Roll Speed when Windy, Rainy, Hell biome.",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+455% Luck and +40% Roll Speed.; +45% Luck and +5% Roll Speed if current biome is Windy, Rainy or Hell.",
+      "effect(s)": "75px|link=EffectsRagnaröke 75px|link=EffectsDisaster"
+    },
+    "flags": []
+  },
+  "Shining Star": {
+    "name": "Shining Star",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e5/ShiningStarInGame.gif/revision/latest",
+    "usage": "+50% Luck Boost. Or +250% during Starfall",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Star Rider, 1x Starlight",
+    "description": "Twinkle twinkle little star.+50% Base Luckor +250% Base Luck during Starfall",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+50% Luck Boost. Or +250% during Starfall",
+      "effect(s)": "75px|link=EffectsWish Upon A Star",
+      "recipe": "1x Star Rider, 1x Starlight"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Singularity Gauntlet": {
+    "name": "Singularity Gauntlet",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/04/SingularityGauntletInv.gif/revision/latest",
+    "usage": "+2,200% Base Luck; +200% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 1 Singularity Catalyst, 1 Starshaper, 1 Galactic Device, 1 Gravitational Device, 1 Solar Device, 1 Lunar Device, 1 Centurion, 1 Astronaut, 1 Vega, 10 Constella, 10 Pulsar, 15 Pleiades, 2 Starscourge: Radiant, 25 Starscourge, 50 Galaxy, 100 Orion, 6,000 Starlight, 12,900 Powered, 20,000 Solar, 20,000 Lunar",
+    "description": "The most unstable and powerful celestial body is stirring within.+2,200% Base Luck ! +200% Roll Speed",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+2,200% Base Luck; +200% Roll Speed",
+      "effect(s)": "75px|link=EffectsG r a v i t a t i o n a l C o l l a p s e",
+      "recipe": "1 Singularity Catalyst, 1 Starshaper, 1 Galactic Device, 1 Gravitational Device, 1 Solar Device, 1 Lunar Device, 1 Centurion, 1 Astronaut, 1 Vega, 10 Constella, 10 Pulsar, 15 Pleiades, 2 Starscourge: Radiant, 25 Starscourge, 50 Galaxy, 100 Orion, 6,000 Starlight, 12,900 Powered, 20,000 Solar, 20,000 Lunar"
+    },
+    "flags": [
+      "craftable"
     ]
   },
   "Snow Rider": {
@@ -851,16 +677,194 @@
     "category": "Right Hand",
     "limited": true,
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/94/Snowrideringame.png/revision/latest",
-    "usage": "+200% Luck Boost, +30% Roll Speed",
-    "how_to_get": "Winter Event 2024 | Recipe: Winter Roulette Wheel / Item Tickets",
-    "description": "Limited Winter gauntlet riding on frosty momentum.",
+    "usage": "+300% Luck +30% Roll Speed",
+    "how_to_get": "Roulette",
+    "description": "Want some ride?",
     "raw_info": {
-      "source": "Winter Event 2024",
-      "boost(s)": "+200% Luck Boost, +30% Roll Speed",
-      "recipe": "Winter Roulette Wheel / Item Tickets"
+      "source": "Roulette",
+      "boost(s)": "+300% Luck +30% Roll Speed",
+      "effect(s)": "75px|link=EffectsSnowRider"
     },
     "flags": [
       "limited"
+    ]
+  },
+  "Solar Device": {
+    "name": "Solar Device",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6e/Solar_Device_Inventory.gif/revision/latest",
+    "usage": "+50% luck",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Rare, 1x Divinus, 1x Solar",
+    "description": "The Heat straightens your spirit.+50% Base Luck",
+    "raw_info": {
+      "source": "Jake’s Workshop",
+      "boost(s)": "+50% luck",
+      "effect(s)": "75px|link=EffectsSolar Ignite",
+      "recipe": "1x Rare, 1x Divinus, 1x Solar"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Soul Collector's Talisman": {
+    "name": "Soul Collector's Talisman",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d8/SoulCollectorsTalismanInventory.gif/revision/latest",
+    "usage": "+0.04% Base Luck per stack up to 400% at 10,000 stacks.",
+    "how_to_get": "Rin",
+    "description": "May the poor, lost souls find peace...+0.04% Base Luck per stack.Gain 1 stack when you roll Lost Soul (Max 10,000).Stacks are permanent and never reset.",
+    "raw_info": {
+      "source": "Rin",
+      "boost(s)": "+0.04% Base Luck per stack up to 400% at 10,000 stacks."
+    },
+    "flags": []
+  },
+  "Soul Master's Talisman": {
+    "name": "Soul Master's Talisman",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cf/Smtalismaninventory_techtrue.gif/revision/latest",
+    "usage": "+500% Basic Luck and +0.05% Basic Luck per stack up to 250% at 5,000 stacks.",
+    "how_to_get": "Rin",
+    "description": "The many souls you have saved will watch over you..+500% Basic Luck and +0.05% Basic Luck per stack.Gain 1 stack when you roll Lost Soul (Max 5,000).Stacks are permanent and never reset.",
+    "raw_info": {
+      "source": "Rin",
+      "boost(s)": "+500% Basic Luck and +0.05% Basic Luck per stack up to 250% at 5,000 stacks."
+    },
+    "flags": []
+  },
+  "Starlight Lantern": {
+    "name": "Starlight Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e3/StarlightLanternInventory.gif/revision/latest",
+    "usage": "2x chance to get Starfall biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x Piece of Star, 1x Galaxy, 1x Lantern",
+    "description": "The fairy inside the lantern is a small being that represents a single ray of starlight. While equipped, the spawn chance of the Starfall Biome is increased by 2×.",
+    "raw_info": {
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Starfall biome.",
+      "recipe": "20x Piece of Star, 1x Galaxy, 1x Lantern"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Starshaper": {
+    "name": "Starshaper",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/Starshaper_Inventory.gif/revision/latest",
+    "usage": "+700% Luck Boost+50% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Galactic Device, 1x Gravitational Device, 15x Solar Device, 15x Lunar Device, 2x Starscourge, 3x Hyper-Volt, 3x Galaxy, 6x Gravitational, 90x Comet, 200x StarRider, 1,500x Solar, 1,500x Lunar, 2,700x Sidereum, 5,600x Magnetic",
+    "description": "This device is powerful enough to crush stars.+700% Base Luck ! +50% Roll Speed",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+700% Luck Boost+50% Roll Speed",
+      "effect(s)": "75px|link=EffectsStar Rush",
+      "recipe": "1x Galactic Device, 1x Gravitational Device, 15x Solar Device, 15x Lunar Device, 2x Starscourge, 3x Hyper-Volt, 3x Galaxy, 6x Gravitational, 90x Comet, 200x StarRider, 1,500x Solar, 1,500x Lunar, 2,700x Sidereum, 5,600x Magnetic"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Subzero Device": {
+    "name": "Subzero Device",
+    "slot": "Right Hand",
+    "category": "Right Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/86/Subzero_Device_Inventory.gif/revision/latest",
+    "usage": "+150% Luck+30% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 2x Permafrost, 600x Crystallized, 2x Aquatic, 80x Glacier, 10x Sidereum, 20x Magnetic, 40x Precious",
+    "description": "The device even Freezes your Spirit.+150% Base Luck ! +30% Roll Speed",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "+150% Luck+30% Roll Speed",
+      "effect(s)": "75px|link=EffectsSubzero",
+      "recipe": "2x Permafrost, 600x Crystallized, 2x Aquatic, 80x Glacier, 10x Sidereum, 20x Magnetic, 40x Precious"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Sunstone Talisman": {
+    "name": "Sunstone Talisman",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3a/SunstoneTalismanInventory.gif/revision/latest",
+    "usage": "100% Basic Luck during Daytime.",
+    "how_to_get": "Rin",
+    "description": "It will bring you luck while the day is bright.100% Basic Luck during Daytime]",
+    "raw_info": {
+      "source": "Rin",
+      "boost(s)": "100% Basic Luck during Daytime."
+    },
+    "flags": []
+  },
+  "The Thing": {
+    "name": "The Thing",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/52/TheThingInv.gif/revision/latest",
+    "usage": "2x -> 11x Bonus Roll Multiplier",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Flesh Device, 20x Parasite, 50x Symbiosis, 600x Hazard: Rays, 4,000x Ink: Leak, 6,000x Hazard, 10,000x Bleeding",
+    "description": "It is burrowing into your skin, creating grotesque screams...Makes the Bonus Roll's luck multiply to 11 without any downsides.",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "2x -> 11x Bonus Roll Multiplier",
+      "effect(s)": "75px|link=EffectsGrotesque Screams",
+      "recipe": "1x Flesh Device, 20x Parasite, 50x Symbiosis, 600x Hazard: Rays, 4,000x Ink: Leak, 6,000x Hazard, 10,000x Bleeding"
+    },
+    "flags": [
+      "craftable"
+    ]
+  },
+  "Tide Gauntlet": {
+    "name": "Tide Gauntlet",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": true,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d7/Tide_inventory.png/revision/latest",
+    "usage": "Tide: The Bonus Roll allows you to roll Rainy Auras with Native Rarity regardless of current Biome; +50% Luck",
+    "how_to_get": "Summer Quest | Recipe: 3x Solar, 1x Rage: Heated",
+    "description": "I can feel the Coolness of the Waves from this gauntlet. [Tide]: Bonus Roll allows you to roll Rainy Auras with Native Rarity Regardless of Current Biome +50% Base Luck",
+    "raw_info": {
+      "source": "Summer Quest",
+      "boost(s)": "Tide: The Bonus Roll allows you to roll Rainy Auras with Native Rarity regardless of current Biome; +50% Luck",
+      "effect(s)": "75px|link=EffectsTide Power 75px|link=EffectsSea Blessing",
+      "recipe": "3x Solar, 1x Rage: Heated"
+    },
+    "flags": [
+      "craftable",
+      "limited"
+    ]
+  },
+  "Unfathomable Ruins": {
+    "name": "Unfathomable Ruins",
+    "slot": "Left Hand",
+    "category": "Left Hand",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cd/UnfathomableRuinsInv.gif/revision/latest",
+    "usage": "Next 100 rolls grant x14 Basic Luck for every 1000th roll; Remove Bonus Roll",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Ruins, 3x Runic, 4x Ethereal, 10x Harnessed, 15x Origin, 50x Twilight, 50x Kyawthuite, 50x Jade, 2,000x Flow, 10,000x Flora",
+    "description": "The ancient relic that is wrapped around your arm may just be a miniature version of a real structure.The ruins will gradually accumulate your magical power and return it to you as great fortune.",
+    "raw_info": {
+      "source": "Jake's Workshop",
+      "boost(s)": "Next 100 rolls grant x14 Basic Luck for every 1000th roll; Remove Bonus Roll",
+      "effect(s)": "40px|link=EffectsMana Accumulation 40px|link=EffectsMana Surge",
+      "recipe": "1x Ruins, 3x Runic, 4x Ethereal, 10x Harnessed, 15x Origin, 50x Twilight, 50x Kyawthuite, 50x Jade, 2,000x Flow, 10,000x Flora"
+    },
+    "flags": [
+      "craftable"
     ]
   },
   "Vampire Hunter": {
@@ -869,85 +873,87 @@
     "category": "Right Hand",
     "limited": true,
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c3/VampHunterPass.gif/revision/latest",
-    "usage": "+250% Luck Boost, +35% Roll Speed",
-    "how_to_get": "Season III Pass | Recipe: Season III Pass Level 50",
-    "description": "Season III Pass exclusive gear granting +250% luck.",
+    "usage": "+240% Luck; +30% Roll Speed; 20% Rarity Decrease on Halloween Auras during Halloween Biomes and Glitched",
+    "how_to_get": "Season III of RNG Pass.",
+    "description": "It's a gauntlet designed to fire stakes for slaying vampires. +240% Base Luck ! +30% Roll Speed Rarity of Halloween Auras are reduced by 20% during Halloween Biomes",
     "raw_info": {
-      "source": "Season III Pass",
-      "boost(s)": "+250% Luck Boost, +35% Roll Speed",
-      "recipe": "Season III Pass Level 50"
+      "source": "Season III of RNG Pass.",
+      "boost(s)": "+240% Luck; +30% Roll Speed; 20% Rarity Decrease on Halloween Auras during Halloween Biomes and Glitched",
+      "effect(s)": "75px|link=EffectsWooden Stake"
     },
     "flags": [
       "limited"
     ]
   },
-  "Tide Gauntlet": {
-    "name": "Tide Gauntlet",
+  "Volcanic Device": {
+    "name": "Volcanic Device",
     "slot": "Right Hand",
     "category": "Right Hand",
-    "limited": true,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d7/Tide_inventory.png/revision/latest",
-    "usage": "+120% Luck Boost, +20% Roll Speed",
-    "how_to_get": "Summer Event 2024 | Recipe: 1x RAINY Biome drop, 1x Solar, 1x Rage : Heated",
-    "description": "Summer event gear channeling the power of tidal waves.",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4d/Volcanic_Device_Inventory.gif/revision/latest",
+    "usage": "+290% Luck and +35% Roll Speed",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Hades, 10x Rage: Heated, 140x Diaboli, 1000x Rage, 55x Bleeding, 1x Solar Device, 1x Windstorm Device",
+    "description": "A device that simulates 100% of Hell's Heats.+290% Base Luck ! +35% Roll Speed",
     "raw_info": {
-      "source": "Summer Event 2024",
-      "boost(s)": "+120% Luck Boost, +20% Roll Speed",
-      "recipe": "1x RAINY Biome drop, 1x Solar, 1x Rage : Heated"
+      "source": "Jake’s Workshop",
+      "boost(s)": "+290% Luck and +35% Roll Speed",
+      "effect(s)": "75px|link=EffectsVolcanic",
+      "recipe": "1x Hades, 10x Rage: Heated, 140x Diaboli, 1000x Rage, 55x Bleeding, 1x Solar Device, 1x Windstorm Device"
     },
     "flags": [
-      "limited"
+      "craftable"
     ]
   },
-  "Blessed Tide Gauntlet": {
-    "name": "Blessed Tide Gauntlet",
-    "slot": "Right Hand",
-    "category": "Right Hand",
-    "limited": true,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/11/Blessed-Tide-Gauntlet.png/revision/latest",
-    "usage": "+300% Luck Boost, +40% Roll Speed",
-    "how_to_get": "Summer Event 2024 | Recipe: 1x Poseidon, 1x Tide Gauntlet, 1x RAINY Biome",
-    "description": "Blessed evolution of the Tide Gauntlet imbued with Poseidon's essence.",
+  "Wind Fairy Lantern": {
+    "name": "Wind Fairy Lantern",
+    "slot": "Pocket",
+    "category": "Pocket",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ee/WindFairyLanternInventory.gif/revision/latest",
+    "usage": "2x chance to get Windy biome.",
+    "how_to_get": "Stella's Cauldron | Recipe: 20x Wind Essence, 1x Stormal: Hurricane, 1x Lantern",
+    "description": "The fairy inside the lantern is a small being that represents a single guest of wind. While equipped, the spawn chance of the Windy Biome is increased by 2×.",
     "raw_info": {
-      "source": "Summer Event 2024",
-      "boost(s)": "+300% Luck Boost, +40% Roll Speed",
-      "recipe": "1x Poseidon, 1x Tide Gauntlet, 1x RAINY Biome"
+      "source": "Stella's Cauldron",
+      "boost(s)": "2x chance to get Windy biome.",
+      "recipe": "20x Wind Essence, 1x Stormal: Hurricane, 1x Lantern"
     },
     "flags": [
-      "limited"
+      "craftable"
     ]
   },
-  "Present Giver": {
-    "name": "Present Giver",
+  "Windstorm Device": {
+    "name": "Windstorm Device",
     "slot": "Right Hand",
     "category": "Right Hand",
-    "limited": true,
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5d/ClearlyPresentGiver.png/revision/latest",
-    "usage": "+180% Luck Boost, gives gifts periodically",
-    "how_to_get": "Winter Event 2024 | Recipe: Winter Roulette Wheel",
-    "description": "Holiday gear spreading seasonal gifts and +180% luck.",
+    "limited": false,
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/92/Windstorm_Device_Inventory.gif/revision/latest",
+    "usage": "+115% Luck+30% Roll Speed",
+    "how_to_get": "Jake's Workshop | Recipe: 25x Wind, 1x Stormal, 1x Aquatic, 4x Sidereum, 12x Precious",
+    "description": "The Storm Winds around you.+115% Base Luck ! +25% Roll Speed",
     "raw_info": {
-      "source": "Winter Event 2024",
-      "boost(s)": "+180% Luck Boost, gives gifts periodically",
-      "recipe": "Winter Roulette Wheel"
+      "source": "Jake's Workshop",
+      "boost(s)": "+115% Luck+30% Roll Speed",
+      "effect(s)": "75px|link=EffectsGalestorm",
+      "recipe": "25x Wind, 1x Stormal, 1x Aquatic, 4x Sidereum, 12x Precious"
     },
     "flags": [
-      "limited"
+      "craftable"
     ]
   },
   "X-mas Champion": {
     "name": "X-mas Champion",
-    "slot": "Right Hand",
-    "category": "Right Hand",
+    "slot": "Left Hand",
+    "category": "Left Hand",
     "limited": true,
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/68/Xmaschampioningame.png/revision/latest",
-    "usage": "+350% Luck Boost, +50% Roll Speed",
-    "how_to_get": "Winter Event 2024 | Recipe: Mega Wheel / Winter Champion Quest",
-    "description": "Champion level holiday gauntlet granting +350% luck and +50% roll speed.",
+    "usage": "4x Luck every 6th roll",
+    "how_to_get": "Roulette",
+    "description": "YOU ARE THE CHAMPION!!!",
     "raw_info": {
-      "source": "Winter Event 2024",
-      "boost(s)": "+350% Luck Boost, +50% Roll Speed",
-      "recipe": "Mega Wheel / Winter Champion Quest"
+      "source": "Roulette",
+      "boost(s)": "4x Luck every 6th roll",
+      "effect(s)": "75px|link=EffectsXmaxChampion"
     },
     "flags": [
       "limited"
