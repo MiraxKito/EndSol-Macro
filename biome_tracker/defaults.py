@@ -385,6 +385,7 @@ DEFAULT_CONFIG: dict = {
     "quest_board_left_arrow": [565, 544],
     "quest_board_right_arrow": [1362, 541],
     "quest_board_quest_preferences": {},
+    "quest_board_variant_prefs": {},
 
     # ── Remote access (Discord bot) ───────────────────────────────────
     "remote_access_enabled": False,

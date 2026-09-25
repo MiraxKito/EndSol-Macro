@@ -343,8 +343,8 @@ export default function OtherFeaturesPage() {
                         <input
                             className="form-input"
                             type="number"
-                            min="5"
-                            max="60"
+                            min="1"
+                            max="1440"
                             style={{ width: "80px", padding: "6px 10px" }}
                             value={config.auto_start_idle_minutes || 15}
                             onChange={(e) => updateConfig("auto_start_idle_minutes", parseInt(e.target.value) || 15)}

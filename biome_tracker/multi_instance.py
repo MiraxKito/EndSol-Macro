@@ -97,13 +97,15 @@ def _focus_and_jump(hwnd: int) -> tuple[bool, str]:
             if win32gui.GetForegroundWindow() != hwnd:
                 return False, "focus_failed"
 
-        # Press space (jump) — twice for reliability on low-end PCs
+        # Press space (jump) — twice for reliability on low-end PCs.
+        # Each keyDown is held ~0.15 s (about 0.1 s longer than before): an
+        # instant tap can be missed entirely on low-FPS (<=30) clients.
         pyautogui.keyDown("space")
-        time.sleep(0.06)
+        time.sleep(0.15)
         pyautogui.keyUp("space")
         time.sleep(0.25)
         pyautogui.keyDown("space")
-        time.sleep(0.06)
+        time.sleep(0.15)
         pyautogui.keyUp("space")
 
         # Wait for the jump to register and the character to land
@@ -126,7 +128,7 @@ def _cooldown_seconds() -> float:
     """Seconds between complete cycles (all windows). Based on anti_afk_interval.
 
     This is the total pause AFTER all windows have been processed, before the
-    next round begins. Minimum 30s, maximum 600s.
+    next round begins. Matches the main Anti-AFK loop's clamp: 1-20 minutes.
     """
     try:
         tracker = _TRACKER
@@ -136,7 +138,7 @@ def _cooldown_seconds() -> float:
             value = 5.0
     except Exception:
         value = 5.0
-    return max(30.0, min(600.0, value * 60.0))
+    return max(60.0, min(1200.0, value * 60.0))
 
 
 def _loop() -> None:

@@ -9,6 +9,7 @@ export default function NoticePage() {
         <li><b>Memory Match:</b> fixed tile matching and tolerance thresholds so matching items are correctly paired and not prematurely discarded.</li>
         <li><b>Donation link:</b> fixed Boosty URL to end in /donate.</li>
         <li><b>Sol's Book media saving:</b> fixed saving cutscene videos (the save button passed a local cache path instead of the wiki URL) and added a 💾 Save button to theme music players — music and media can be downloaded again.</li>
+        <li><b>Auto-Start after inactivity:</b> the idle timeout was silently clamped to a 5-minute minimum, so shorter values (e.g. 2 minutes) never triggered. The configured timeout is now honored (1–1440 minutes).</li>
         <li><b>Sol's Book performance:</b> removed mini GIF icons from all selection lists (Items, Gauntlets, Auras, Biomes) — lists now render instantly as text with rarity color dots; previews remain only in the detail pane and Media tab as static thumbnails.</li>
       </ul></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>

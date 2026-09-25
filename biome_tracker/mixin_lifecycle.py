@@ -349,7 +349,10 @@ class LifecycleMixin:
                     timeout_minutes = float(self.config.get("auto_start_idle_minutes", 15))
                 except (TypeError, ValueError):
                     timeout_minutes = 15.0
-                timeout_seconds = max(300.0, min(timeout_minutes * 60.0, 3600.0))
+                # Honor the configured value: the old 5-minute floor silently
+                # overrode short timeouts like "2 minutes" and made the
+                # feature look broken. Only guard against nonsense values.
+                timeout_seconds = max(60.0, min(timeout_minutes * 60.0, 86400.0))
 
                 if not enabled or idle_seconds is None:
                     self._idle_autostart_latched = False

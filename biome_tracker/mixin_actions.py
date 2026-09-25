@@ -4660,16 +4660,18 @@ class ActionsMixin:
 
                     jump_success = False
                     try:
-                        autoit.send("{SPACE}")
+                        # Hold the key ~0.15 s instead of an instant tap: an
+                        # instant press can be missed on low-FPS (<=30) clients.
+                        pyautogui.keyDown("space")
+                        time.sleep(0.15)
+                        pyautogui.keyUp("space")
                         jump_success = True
                     except Exception:
                         pass
 
                     if not jump_success:
                         try:
-                            pyautogui.keyDown("space")
-                            time.sleep(0.04)
-                            pyautogui.keyUp("space")
+                            autoit.send("{SPACE}")
                             jump_success = True
                         except Exception:
                             pass
