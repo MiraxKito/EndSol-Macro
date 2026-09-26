@@ -736,10 +736,13 @@ class ActionsMixin:
                     return
                 self.activate_roblox_window()
                 time.sleep(0.15)
+            # Extra settle between the reset keys: on low-FPS clients the
+            # Esc menu / reset prompt renders late and a fast R / Enter
+            # lands on nothing.
             keyboard.press_and_release('esc')
-            time.sleep(0.3)
+            time.sleep(0.6)
             keyboard.press_and_release('r')
-            time.sleep(0.3)
+            time.sleep(0.6)
             keyboard.press_and_release('enter')
         except Exception:
             pass
@@ -991,10 +994,10 @@ class ActionsMixin:
             # 2. Reset Character
             print("[Obby] Resetting Character...")
             keyboard.press_and_release('esc')
-            if not self._sleep_with_cancel(0.3):
+            if not self._sleep_with_cancel(0.6):
                 return
             keyboard.press_and_release('r')
-            if not self._sleep_with_cancel(0.3):
+            if not self._sleep_with_cancel(0.6):
                 return
             keyboard.press_and_release('enter')
             if not self._sleep_with_cancel(6):
@@ -3165,10 +3168,25 @@ class ActionsMixin:
                 reconnect_cooldown = 30.0
             if (time.time() - self._last_disconnect_time) < reconnect_cooldown: return False
 
-            with open(log_file, "r", encoding="utf-8", errors="ignore") as f:
+            # Line-safe incremental read (binary): only consume COMPLETE
+            # "\n"-terminated lines so a disconnect line flushed mid-write
+            # can never be split across two polls and silently missed.
+            try:
+                size = os.path.getsize(log_file)
+            except OSError:
+                size = 0
+            if self._last_position_disconnect > size:
+                self._last_position_disconnect = 0
+            new_lines = []
+            with open(log_file, "rb") as f:
                 f.seek(self._last_position_disconnect)
-                new_lines = f.readlines()
-                self._last_position_disconnect = f.tell()
+                data = f.read()
+            if data:
+                cut = data.rfind(b"\n")
+                if cut != -1:
+                    new_lines = data[:cut + 1].decode("utf-8", errors="ignore").splitlines()
+                    self._last_position_disconnect += cut + 1
+                # cut == -1: no complete line yet - offset stays, retry next poll.
 
             try:
                 if hasattr(self, "_consume_log_username_validation") and not self._consume_log_username_validation(log_file):

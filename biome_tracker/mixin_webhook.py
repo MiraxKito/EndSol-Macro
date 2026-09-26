@@ -305,7 +305,14 @@ class WebhookMixin:
             got_429 = False
             for webhook_url in normalized_urls:
                 try:
-                    response = safe_get(webhook_url, timeout=2)
+                    # 2s used to time out on most Discord round-trips; 8s +
+                    # one retry survives slow/unstable networks.
+                    response = safe_get(webhook_url, timeout=8, retries=1)
+                    if response is None:
+                        # Network-level failure (no response at all) - log it
+                        # cleanly instead of crashing on status_code.
+                        print(f"Webhook channel resolve skipped (network unreachable): {webhook_url}")
+                        continue
                     if response.status_code == 429:
                         got_429 = True
                         retry_after = 120

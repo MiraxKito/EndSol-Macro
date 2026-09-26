@@ -370,7 +370,11 @@ def fandom_get(url: str, *, timeout: float = _DEFAULT_TIMEOUT, retries: int = 2,
     last_429 = False
     for attempt in range(attempts):
         _fandom_gate()
-        resp = safe_request("GET", url, timeout=timeout, retries=0, **kwargs)
+        # One inner retry per attempt: transient TLS/SSL handshake kills
+        # (SSLEOFError) and connection resets are common on unstable
+        # networks and previously killed the whole Fandom load after a
+        # single failed attempt.
+        resp = safe_request("GET", url, timeout=timeout, retries=1, **kwargs)
         if resp is None:
             return None  # network-level failure already retried/logged upstream
         if resp.status_code == 429:

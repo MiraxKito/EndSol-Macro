@@ -695,17 +695,19 @@ def _run_sell_fish_sequence(
     for _ in range(max(1, int(fish_sell_count))):
         if not should_continue() or not can_run():
             return False
+        # 0.5s base between shop clicks: on low FPS the tab/rows render
+        # late and a fast next click lands on nothing.
         if sell_tab_x > 0:
             autoit.mouse_click("left", sell_tab_x, sell_tab_y, 1, speed=3)
-        if not sleep_interruptible(0.3 + fishing_actions_delay):
+        if not sleep_interruptible(0.5 + fishing_actions_delay):
             return False
         if first_fish_x > 0:
             autoit.mouse_click("left", first_fish_x, first_fish_y, 1, speed=3)
-        if not sleep_interruptible(0.3 + fishing_actions_delay):
+        if not sleep_interruptible(0.5 + fishing_actions_delay):
             return False
         if sell_x > 0:
             autoit.mouse_click("left", sell_x, sell_y, 1, speed=3)
-        if not sleep_interruptible(0.3 + fishing_actions_delay):
+        if not sleep_interruptible(0.5 + fishing_actions_delay):
             return False
         if confirm_x > 0:
             autoit.mouse_click("left", confirm_x, confirm_y, 1, speed=3)
@@ -1092,10 +1094,12 @@ def run_fishing_loop(
                 ):
                     continue
                 
+                # Settle first: on low FPS the dialog is not up yet.
+                if not _sleep_interruptible(0.5): continue
                 close_x, close_y = cfg["fishing_close_button_pos"]
                 for _ in range(3):
                     autoit.mouse_click("left", close_x, close_y, speed=3)
-                    if not _sleep_interruptible(0.15): break
+                    if not _sleep_interruptible(0.35): break
                 if not _sleep_interruptible(0.3): continue
 
                 click_x, click_y = cfg["fishing_click_position"]
@@ -1189,13 +1193,16 @@ def run_fishing_loop(
             if not _should_continue() or not _can_run():
                 continue
 
-            if not _sleep_interruptible(0.55):
+            # The catch popup renders late on low-FPS clients - give it
+            # extra settle time BEFORE the close clicks, or the clicks hit
+            # nothing and the popup blocks the next cast.
+            if not _sleep_interruptible(1.0):
                 continue
 
             close_x, close_y = cfg["fishing_close_button_pos"]
             for _ in range(5):
                 autoit.mouse_click("left", close_x, close_y, speed=3)
-                if not _sleep_interruptible(0.55):
+                if not _sleep_interruptible(0.7):
                     break
 
             fish_caught_count += 1

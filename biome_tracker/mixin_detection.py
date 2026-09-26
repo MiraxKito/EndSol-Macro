@@ -888,13 +888,36 @@ class DetectionMixin:
             self._last_read_log_file_main = log_file_path
             self.last_position = 0
 
-        with open(log_file_path, 'r', encoding='utf-8', errors='ignore') as file:
-            file.seek(self.last_position)
-            lines = file.readlines()
-            self.last_position = file.tell()
+        # Line-safe incremental read (binary): the offset is only advanced
+        # past COMPLETE "\n"-terminated lines. A text-mode
+        # readlines()+tell() could land mid-line while Roblox is still
+        # flushing, splitting a line across two reads - a split silently
+        # broke the [BloxstrapRPC] biome regex and detection was lost.
+        pos = max(0, int(self.last_position or 0))
+        try:
+            size = os.path.getsize(log_file_path)
+        except OSError:
+            size = 0
+        if pos > size:
+            pos = 0
+
+        with open(log_file_path, 'rb') as file:
+            file.seek(pos)
+            data = file.read()
+
+        cut = data.rfind(b"\n")
+        if cut == -1:
+            # No complete line yet - do not advance the offset.
             if not self._consume_log_username_validation(log_file_path):
                 return []
-            return [line for line in lines if not is_chat_log(line)]
+            return []
+        consumed = data[:cut + 1]
+        self.last_position = pos + cut + 1
+        lines = consumed.decode("utf-8", errors="ignore").splitlines()
+
+        if not self._consume_log_username_validation(log_file_path):
+            return []
+        return [line for line in lines if not is_chat_log(line)]
 
     def read_log_file_for_detector(self, log_file_path, pos_attr='last_position', filter_chat=False):
         if not os.path.exists(log_file_path):
@@ -905,11 +928,33 @@ class DetectionMixin:
                 setattr(self, f"_last_read_log_file_{pos_attr}", log_file_path)
                 setattr(self, pos_attr, 0)
                 
-            pos = getattr(self, pos_attr, 0)
-            with open(log_file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            pos = max(0, int(getattr(self, pos_attr, 0) or 0))
+            try:
+                size = os.path.getsize(log_file_path)
+            except OSError:
+                size = 0
+            if pos > size:
+                pos = 0
+
+            # Line-safe incremental read (binary): only consume COMPLETE
+            # "\n"-terminated lines. readlines()+tell() could land mid-line
+            # while Roblox was still flushing a long line, splitting it
+            # across two reads - a split silently broke the
+            # "state":"Equipped" aura regex and detection was lost until
+            # the next roll. The partial tail stays unconsumed and is read
+            # whole on the next poll.
+            with open(log_file_path, 'rb') as f:
                 f.seek(pos)
-                lines = f.readlines()
-                setattr(self, pos_attr, f.tell())
+                data = f.read()
+
+            cut = data.rfind(b"\n")
+            if cut == -1:
+                # No complete line yet - keep the offset and wait.
+                if not self._consume_log_username_validation(log_file_path):
+                    return []
+                return []
+            setattr(self, pos_attr, pos + cut + 1)
+            lines = data[:cut + 1].decode("utf-8", errors="ignore").splitlines()
 
             if not self._consume_log_username_validation(log_file_path):
                 return []
@@ -2305,7 +2350,22 @@ class DetectionMixin:
                 if hasattr(self, '_auras_data_lower_map'):
                     delattr(self, '_auras_data_lower_map')
 
-            log_lines = self.read_log_file_for_detector(log_file_path, pos_attr='last_position_aura', filter_chat=True)
+            # Self-heal (v1.0.6 behavior, throttled to once per 60s): a full
+            # reverse scan of the log guarantees that no equip line can be
+            # permanently missed. Announcing is idempotent - it only fires
+            # when the latest equipped aura differs from last_aura_found -
+            # so the rescan cannot double-announce what the incremental
+            # read already saw.
+            log_lines = None
+            now_ts = time.time()
+            if now_ts - float(getattr(self, "_aura_last_full_rescan_ts", 0.0) or 0.0) >= 60.0:
+                self._aura_last_full_rescan_ts = now_ts
+                try:
+                    log_lines = self.read_full_log_file(log_file_path)
+                except Exception:
+                    log_lines = None
+            if log_lines is None:
+                log_lines = self.read_log_file_for_detector(log_file_path, pos_attr='last_position_aura', filter_chat=True)
 
             for line in reversed(log_lines):
                 try:

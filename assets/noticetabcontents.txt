@@ -1,6 +1,7 @@
 # v1.0.7 (What's new?)
 
-* Memory Match: Fixed tile matching logic (reworked tolerance checks, prevented valid pairs from being discarded)
+* Memory Match: Reworked tile matching (item + quantity detected as images, no OCR) - FEATURE IN ACTIVE TESTING
+* Timing: Longer delays before closing the fishing catch popup and between character-reset keys (Esc/R/Enter) - helps on low-FPS PCs
 * Sol's Book: Added comprehensive Items and Gauntlets databases loaded straight from Fandom Wiki
 * Performance: PSUtil process scanning throttled and cached to prevent FPS drops on low-end systems
 * Donations: Corrected Boosty donation URL to end with /donate

@@ -25,7 +25,7 @@ Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest B
 - **Aura webhooks** — rarity-aware announcements with configurable ping thresholds.
 
 **Automation**
-- **Memory Match** — auto-plays the Memory Match minigame: reveals tiles, remembers items and quantities, prioritizes high-value rewards, and verifies every pair.
+- **Memory Match** — auto-plays the Memory Match minigame: reveals tiles, remembers items and quantities, prioritizes high-value rewards, and verifies every pair. *(feature in active testing)*
 - **Quest Board** — accepts or dismisses quests according to your preferences, tolerant to OCR noise.
 - **Fishing** — fully automatic fishing with selling and failsafes.
 - **Custom paths** — record your own walk routes (fishing spot, obby, egg routes, Memory Match) with VIP / non-VIP speed handling.
