@@ -444,9 +444,12 @@ class Api:
         # toggle until every Roblox window is closed.
         if not enabled:
             try:
-                import psutil as _psutil
-                running = [p.pid for p in _psutil.process_iter(["name"])
-                           if (p.info.get("name") or "").lower().startswith("robloxplayerbeta")]
+                # v43: use the launcher's shared PID scan (contains-match on
+                # the exe name) — the old startswith() check could miss
+                # renamed/Bloxstrap clients and let the toggle through while
+                # clients were running (user log 2026-09-29, 15:43).
+                from biome_tracker import instance_launcher as _il
+                running = _il._roblox_pids()
                 if running:
                     return {"success": False, "blocked": True,
                             "error": ("Cannot turn Multiple-Instances off while Roblox clients are "

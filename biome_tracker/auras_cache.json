@@ -2,7 +2,7 @@
   "Nothing": {
     "rarity": 1,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -10,13 +10,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Basic",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NothingCollection.png",
-    "obtainment_type": "exclusive"
+    "obtainment_type": "standard"
   },
   "Common": {
     "rarity": 2,
@@ -342,7 +342,7 @@
     "is_exclusive": false,
     "obtainment_type": "native",
     "_fandom_title": "Jackpot Gauntlet",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Jackpot"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Jackpot_Gauntlet"
   },
   "Sapphire": {
     "rarity": 800,
@@ -1000,7 +1000,7 @@
     "rarity": 100,
     "exclusive_biome": [
       "DREAMSPACE",
-      1
+      100
     ],
     "native_biome": [
       "None",
@@ -1411,7 +1411,7 @@
     "rarity": 65358,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      65358
     ],
     "native_biome": [
       "None",
@@ -1544,7 +1544,7 @@
     "rarity": 83345,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      83345
     ],
     "native_biome": [
       "None",
@@ -1571,7 +1571,7 @@
     "rarity": 86988,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      86988
     ],
     "native_biome": [
       "None",
@@ -1656,7 +1656,7 @@
     "rarity": 1000,
     "exclusive_biome": [
       "DREAMSPACE",
-      1
+      1000
     ],
     "native_biome": [
       "None",
@@ -1685,7 +1685,7 @@
     "rarity": 3000,
     "exclusive_biome": [
       "GLITCHED",
-      1
+      3000
     ],
     "native_biome": [
       "None",
@@ -2078,7 +2078,7 @@
   "Raven": {
     "rarity": 500000,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -2086,13 +2086,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Legendary",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RavenCollection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/6/62/RavenOpening.mp4/revision/latest?cb=20250619011232",
     "video_file": "RavenOpening.mp4",
     "video_kind": "opening",
@@ -2182,7 +2182,7 @@
     "rarity": 10000,
     "exclusive_biome": [
       "DREAMSPACE",
-      1
+      10000
     ],
     "native_biome": [
       "None",
@@ -2267,7 +2267,7 @@
   "Gothic": {
     "rarity": 1000001,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -2275,13 +2275,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Mythic",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/GothCollection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c6/Gothcutscene.mp4/revision/latest?cb=20260314090916",
     "video_file": "Gothcutscene.mp4",
     "video_kind": "opening",
@@ -2679,7 +2679,7 @@
     "rarity": 2580000,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      2580000
     ],
     "native_biome": [
       "None",
@@ -2945,7 +2945,7 @@
     "video_kind": "opening",
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a drop beat noise plays, extending the entirety of the cutscene. A light blue star forms in the center, revolving while slowly expanding. The edges then glow light blue, revealing .",
     "_fandom_title": "Aquatic",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Aquatic_:_Flame"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Aquatic"
   },
   "Poseidon": {
     "rarity": 4000000,
@@ -3090,7 +3090,7 @@
     "video_kind": "opening",
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a light orangish-yellow, revealing . Its breakthrough variant, instead of the glow from the edges, includes an orange and yellow star that will slowly expand before revealing .",
     "_fandom_title": "Solar",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Solar_:_Solstice"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Solar"
   },
   "Galaxy": {
     "rarity": 5000000,
@@ -3150,12 +3150,12 @@
     "video_kind": "opening",
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a light purple, revealing . Its breakthrough variant, instead of the glow from the edges, includes a light purple star that will slowly expand before revealing .",
     "_fandom_title": "Lunar",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Lunar_:_Full_Moon"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Lunar"
   },
   "Anima": {
     "rarity": 5730000,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -3163,13 +3163,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Mythic",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AnimaCollection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d8/AnimaCutscene.mp4/revision/latest?cb=20250724213442",
     "video_file": "AnimaCutscene.mp4",
     "video_kind": "opening",
@@ -3209,7 +3209,7 @@
     "rarity": 6117186,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      6117196
     ],
     "native_biome": [
       "None",
@@ -3836,15 +3836,15 @@
   "Empty": {
     "rarity": 11111111,
     "exclusive_biome": [
-      "NULL OR THE LIMBO",
-      1
+      "NULL",
+      11111111
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to NULL OR THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to NULL (cannot be rolled through breakthrough)",
     "rarity_name": "Exalted",
     "description": "",
     "flags": [],
@@ -3945,7 +3945,7 @@
   "Imaginary": {
     "rarity": 12200200,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -3953,13 +3953,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Exalted",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Imaginary_collection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e2/Imaginaryopening.mp4/revision/latest?cb=20260613133740",
     "video_file": "Imaginaryopening.mp4",
     "video_kind": "opening",
@@ -4280,7 +4280,7 @@
     "rarity": 25000000,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      25000000
     ],
     "native_biome": [
       "None",
@@ -4449,7 +4449,7 @@
   "Juxtaposition": {
     "rarity": 40440400,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -4457,13 +4457,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Exalted",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/JuxtapColl.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e4/JuxtapositionOpening.mp4/revision/latest?cb=20250621130725",
     "video_file": "JuxtapositionOpening.mp4",
     "video_kind": "opening",
@@ -4521,7 +4521,7 @@
     "music_file": "ExoticTheme Harvest.mp3",
     "cutscene_note": "===Opening Cutscene=== The screen becomes black and a dropbeat plays, extending the entirety of the cutscene. In the center, there is a greenish blue star that slowly expands before the edges glow rainbow revealing after a white cracking screen sequence.",
     "_fandom_title": "Exotic",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Exotic_:_Apex"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Exotic"
   },
   "Matrix": {
     "rarity": 50000000,
@@ -4633,7 +4633,7 @@
     "music_file": "TwilightWitheringGraceTheme.mp3",
     "cutscene_note": "=== Opening Cutscene === The screen turns black as a jingle plays, and the sound of fog is heard. A number/counter is shown on the screen which increases very fast as the cutscene moves. None is shown until seconds pass, and a white star with small pulsing rings appears. 2 trees (only showing their branches) are seen o",
     "_fandom_title": "Twilight : Withering Grace",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Twilight_:_Iridescent_Memory"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Twilight_:_Withering_Grace"
   },
   "Antivirus": {
     "rarity": 62500000,
@@ -4923,7 +4923,7 @@
     "video_kind": "opening",
     "cutscene_note": "=== Opening Cutscene === The cutscene is very similar to , but now both the star and the background are a deep, dark brown. The background actually has color this time, since is an aura.",
     "_fandom_title": "Good",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Harnessed_:_Elements"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Good"
   },
   "Hellbound": {
     "rarity": 85000000,
@@ -5347,7 +5347,7 @@
   "Raven_Plague": {
     "rarity": 200000000,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -5355,13 +5355,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RavenPlagueCollection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/a/ab/RavenPlagOpening.mp4/revision/latest?cb=20260303125301",
     "video_file": "RavenPlagOpening.mp4",
     "video_kind": "opening",
@@ -6038,7 +6038,7 @@
   "Unknown": {
     "rarity": 444444444,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -6046,13 +6046,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Unknown_rework_collect.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/5/51/UnkownCutsceneShort.mp4/revision/latest?cb=20250617050340",
     "video_file": "UnkownCutsceneShort.mp4",
     "video_kind": "opening",
@@ -6203,7 +6203,7 @@
   "Elude": {
     "rarity": 555555555,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -6211,13 +6211,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/EludeCollection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/EludeCutscene.mp4",
     "video_file": "EludeCutscene.mp4",
     "video_kind": "opening",
@@ -6310,7 +6310,7 @@
   "Prologue": {
     "rarity": 666616111,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -6318,13 +6318,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/PrologueCollection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Roblox-2025-07-01T12_54_29.262Z.mp4",
     "video_file": "Roblox-2025-07-01T12_54_29.262Z.mp4",
     "video_kind": "opening",
@@ -6477,7 +6477,7 @@
   "Dreamscape": {
     "rarity": 850000000,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -6485,13 +6485,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Dreamscape_rework_collection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a1/DreamscapeCutscene.mp4/revision/latest?cb=20250623104140",
     "video_file": "DreamscapeCutscene.mp4",
     "video_kind": "opening",
@@ -6564,7 +6564,7 @@
   "Nyctophobia": {
     "rarity": 1011111010,
     "exclusive_biome": [
-      "THE LIMBO",
+      "None",
       1
     ],
     "native_biome": [
@@ -6572,13 +6572,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE LIMBO (cannot be rolled through breakthrough)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Transcendent",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NyctoReworkCollection.gif",
-    "obtainment_type": "exclusive",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/9/90/Nyctophobiacutscene.mp4/revision/latest?cb=20260806013840",
     "video_file": "Nyctophobiacutscene.mp4",
     "video_kind": "opening",
@@ -6653,7 +6653,7 @@
     "video_kind": "opening",
     "cutscene_note": "=== Opening Cutscene === The player's screen slowly fades to black as the soundtrack of the aura plays. Then, the screen progressively switches 4 times between views of different monoliths with a bright crack around them, with each having different point of perspective and with text appearing. The texts appear in the f",
     "_fandom_title": "Breakthrough (Aura)",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Breakthrough_(Aura)"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Breakthrough"
   },
   "Equinox": {
     "rarity": 2500000000,
@@ -6872,7 +6872,7 @@
     "rarity": 12210110,
     "exclusive_biome": [
       "GLITCHED",
-      1
+      12210110
     ],
     "native_biome": [
       "None",
@@ -6901,7 +6901,7 @@
     "rarity": 13333333,
     "exclusive_biome": [
       "DREAMSPACE",
-      1
+      13333333
     ],
     "native_biome": [
       "None",
@@ -6930,7 +6930,7 @@
     "rarity": 197000000,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      197000000
     ],
     "native_biome": [
       "None",
@@ -6959,7 +6959,7 @@
     "rarity": 521121900,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      521121900
     ],
     "native_biome": [
       "None",
@@ -6989,15 +6989,15 @@
   "Leviathan": {
     "rarity": 1730400000,
     "exclusive_biome": [
-      "RAINY OR GLITCHED",
-      1
+      "RAINY",
+      1730400000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to RAINY OR GLITCHED (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to RAINY (cannot be rolled through breakthrough)",
     "rarity_name": "Challenged",
     "description": "",
     "flags": [],
@@ -7018,15 +7018,15 @@
   "Dream_Catcher": {
     "rarity": 2222222222,
     "exclusive_biome": [
-      "NIGHTTIME",
-      1
+      "TIME",
+      2222222222
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to NIGHTTIME (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to TIME (cannot be rolled through breakthrough)",
     "rarity_name": "Challenged",
     "description": "",
     "flags": [],
@@ -7055,13 +7055,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "From Oblivion Potion (1 in 100)",
+    "obtainment": "1 in 100",
     "rarity_name": "Challenged",
     "description": "",
-    "flags": [],
+    "flags": [
+      "craftable"
+    ],
     "_metadata_source": "fandom",
-    "obtainment_type": "potion",
-    "rarity_is_potion": true,
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MemoryCollection.gif",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NewMemoryCutscene.mp4",
     "video_file": "NewMemoryCutscene.mp4",
@@ -7081,13 +7081,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "From Potion of the Dune (1 in 1,000)",
+    "obtainment": "1 in 1,000",
     "rarity_name": "Challenged",
     "description": "",
-    "flags": [],
+    "flags": [
+      "craftable"
+    ],
     "_metadata_source": "fandom",
-    "obtainment_type": "potion",
-    "rarity_is_potion": true,
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NeferkhafCollection.gif",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/2025-08-30_04-03-44.mp4",
     "video_file": "2025-08-30 04-03-44.mp4",
@@ -7107,13 +7107,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "From Red Moon Potion (1 in 1,000) · From Red Moon Potion (1 in 100)",
+    "obtainment": "1 in 1,000",
     "rarity_name": "Challenged",
     "description": "",
-    "flags": [],
+    "flags": [
+      "craftable"
+    ],
     "_metadata_source": "fandom",
-    "obtainment_type": "potion",
-    "rarity_is_potion": true,
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Crimson_moon_collect.gif",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Fragments_Of_The_Crimson_Moon_cutscene.mp4",
     "video_file": "Fragments_Of_The_Crimson_Moon_cutscene.mp4",
@@ -7123,15 +7123,15 @@
   "Meta": {
     "rarity": 10000,
     "exclusive_biome": [
-      "CYBERSPACE UNAFFECTED BY LUCK",
-      1
+      "CYBERSPACE",
+      10000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to CYBERSPACE UNAFFECTED BY LUCK (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to CYBERSPACE (cannot be rolled through breakthrough)",
     "rarity_name": "Challenged",
     "description": "",
     "flags": [],
@@ -7150,7 +7150,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Eden": {
-    "rarity": null,
+    "rarity": 50000,
     "exclusive_biome": [
       "None",
       1
@@ -7160,13 +7160,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Obtainable through Eden (NPC) (quest reward, not rolled)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Challenged+",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
-    "obtainment_type": "quest_reward",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/EdenCollection.gif",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5e/Eden_taunt.mp4/revision/latest?cb=20251211204058",
     "video_file": "Eden taunt.mp4",
     "video_kind": "other",
@@ -7177,7 +7177,7 @@
     "rarity": 220000000,
     "exclusive_biome": [
       "GLITCHED",
-      1
+      220000000
     ],
     "native_biome": [
       "None",
@@ -7206,7 +7206,7 @@
     "rarity": 320000000,
     "exclusive_biome": [
       "DREAMSPACE",
-      1
+      320000000
     ],
     "native_biome": [
       "None",
@@ -7235,7 +7235,7 @@
     "rarity": 1750000000,
     "exclusive_biome": [
       "SINGULARITY",
-      1
+      1750000000
     ],
     "native_biome": [
       "None",
@@ -7263,15 +7263,15 @@
   "Hellborn": {
     "rarity": 2644600640,
     "exclusive_biome": [
-      "HELL OR GLITCHED",
-      1
+      "HELL",
+      2644600640
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to HELL OR GLITCHED (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to HELL (cannot be rolled through breakthrough)",
     "rarity_name": "Challenged+",
     "description": "",
     "flags": [],
@@ -7286,7 +7286,7 @@
   "Monarch": {
     "rarity": 3000000000,
     "exclusive_biome": [
-      "CORRUPTION OR GLITCHED",
+      "None",
       1
     ],
     "native_biome": [
@@ -7304,7 +7304,7 @@
     "native_from_biomes": [
       "CORRUPTION"
     ],
-    "is_exclusive": true,
+    "is_exclusive": false,
     "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/monarchcutscene.mp4",
     "video_file": "monarchcutscene.mp4",
@@ -7324,13 +7324,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "From Oblivion Potion (1 in 2,000)",
+    "obtainment": "1 in 2,000",
     "rarity_name": "Challenged+",
     "description": "",
-    "flags": [],
+    "flags": [
+      "craftable"
+    ],
     "_metadata_source": "fandom",
-    "obtainment_type": "potion",
-    "rarity_is_potion": true,
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Oblivion_rework_collect.gif",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/OblivionCutsceneNew.mp4",
     "video_file": "OblivionCutsceneNew.mp4",
@@ -7342,15 +7342,15 @@
   "Illusionary": {
     "rarity": 10000000,
     "exclusive_biome": [
-      "CYBERSPACE UNAFFECTED BY LUCK",
-      1
+      "CYBERSPACE",
+      10000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to CYBERSPACE UNAFFECTED BY LUCK (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to CYBERSPACE (cannot be rolled through breakthrough)",
     "rarity_name": "Challenged+",
     "description": "",
     "flags": [],
@@ -7379,7 +7379,7 @@
       1
     ],
     "limited": true,
-    "obtainment": "Limited ((Limited) Valentines 2024)",
+    "obtainment": "Limited (Limited Valentines 2024)",
     "rarity_name": "Event",
     "description": "",
     "flags": [
@@ -7401,7 +7401,7 @@
       1
     ],
     "limited": true,
-    "obtainment": "Limited ((Limited) Valentines 2024)",
+    "obtainment": "Limited (Limited Valentines 2024)",
     "rarity_name": "Event",
     "description": "",
     "flags": [
@@ -7423,7 +7423,7 @@
       1
     ],
     "limited": true,
-    "obtainment": "Limited ((Limited) Valentines 2024)",
+    "obtainment": "Limited (Limited Valentines 2024)",
     "rarity_name": "Event",
     "description": "",
     "flags": [
@@ -7447,7 +7447,7 @@
       1
     ],
     "limited": true,
-    "obtainment": "Limited ((Limited) Valentines 2024)",
+    "obtainment": "Limited (Limited Valentines 2024)",
     "rarity_name": "Event",
     "description": "",
     "flags": [
@@ -7472,12 +7472,10 @@
       2222
     ],
     "limited": true,
-    "obtainment": "Limited (1/2,222,000(1/2,222 in Null) (Limited) April Fools 2024)",
+    "obtainment": "Native to NULL (1/2,222)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Defined_Collection.gif",
     "native_rarity": 2222,
@@ -7485,6 +7483,7 @@
       "NULL"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0d/UndefinedDefinedCutsceneBetterQuality.mp4/revision/latest?cb=20250827122426",
     "video_file": "UndefinedDefinedCutsceneBetterQuality.mp4",
     "video_kind": "opening",
@@ -7542,7 +7541,7 @@
     "music_file": "Terraria Calamity Mod Scrap - Threats of The Ocean Floor .ogg",
     "cutscene_note": "===Opening Cutscene=== A quick jingle plays as a purple star appears in the middle accompanied by a hoarse wind noise that plays throughout the cutscene, a purple swirl effect appears behind the star along with patterns moving from the left to the right of the screen. Multiple small black squares with purple outlines f",
     "_fandom_title": "Impeached",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Impeached_:_i'm_peach"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Impeached"
   },
   "Watermelon": {
     "rarity": 320000,
@@ -7581,12 +7580,10 @@
       25000
     ],
     "limited": true,
-    "obtainment": "Limited (1/250,000(1/25,000 in Starfall) (Limited) Summer 2024)",
+    "obtainment": "Native to STARFALL (1/25,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Starfish_Rider_Collection.gif",
     "native_rarity": 25000,
@@ -7594,6 +7591,7 @@
       "STARFALL"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/2/27/StarfishRiderOpening.mp4/revision/latest?cb=20240802195313",
     "video_file": "StarfishRiderOpening.mp4",
     "video_kind": "opening",
@@ -7612,12 +7610,10 @@
       75000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/225,000,000(1/75,000,000 in Snowy) (Limited) Summer 2024)",
+    "obtainment": "Native to SNOWY (1/75,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ShardSurferReworkCollection.gif",
     "native_rarity": 75000000,
@@ -7625,6 +7621,7 @@
       "SNOWY"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f2/Shardsurfer_rework_openingv2.mp4/revision/latest?cb=20250217183527",
     "video_file": "Shardsurfer rework openingv2.mp4",
     "video_kind": "opening",
@@ -7684,25 +7681,24 @@
     "rarity": 200000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      200000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/200,000 (Only in Pumpkin Moon) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Pump_Collection.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c0/Untitled_video_%283%29.mp4/revision/latest?cb=20241207092529",
     "video_file": "Untitled video (3).mp4",
     "video_kind": "opening",
@@ -7711,20 +7707,18 @@
   "Lunar_Nightfall": {
     "rarity": 3000000,
     "exclusive_biome": [
-      "GRAVEYARD",
-      1
+      "TIME",
+      3000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/3,000,000 (Only in Graveyard) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to TIME (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Lunarnightfallposereworkcollection.gif",
     "exclusive_biomes": [
@@ -7732,6 +7726,7 @@
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c1/Lunar_nightfall_opening.mp4/revision/latest?cb=20241130231651",
     "video_file": "Lunar nightfall opening.mp4",
     "video_kind": "opening",
@@ -7745,25 +7740,24 @@
     "rarity": 6000000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      6000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/6,000,000 (Only in Pumpkin Moon) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Vital.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/VitalOpening.mp4",
     "video_file": "VitalOpening.mp4",
     "video_kind": "opening",
@@ -7775,25 +7769,24 @@
     "rarity": 10000000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      10000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/10,000,000 (Only in Pumpkin Moon) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MoonflowerCollection1.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/2/25/MoonflowerOpening.mp4/revision/latest?cb=20241210193228",
     "video_file": "MoonflowerOpening.mp4",
     "video_kind": "opening",
@@ -7805,25 +7798,24 @@
     "rarity": 21000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      21000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/21,000,000 (Only in Graveyard) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Cryptfire_collection_.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/3/36/Cryptfire_Opening.mp4/revision/latest?cb=20241228093011",
     "video_file": "Cryptfire Opening.mp4",
     "video_kind": "opening",
@@ -7835,25 +7827,24 @@
     "rarity": 40000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      40000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/40,000,000 (Only in Graveyard) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Soulhunter_Collection.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b5/SoulHunterOpening1.mp4/revision/latest?cb=20241201081036",
     "video_file": "SoulHunterOpening1.mp4",
     "video_kind": "opening",
@@ -7865,25 +7856,24 @@
     "rarity": 72000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      72000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/72,000,000 (Only in Graveyard) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Dullahancollectiongif.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Dullahan_cutscene.mp4",
     "video_file": "Dullahan_cutscene.mp4",
     "video_kind": "opening",
@@ -7895,25 +7885,24 @@
     "rarity": 190000000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      190000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/190,000,000 (Only in Pumpkin Moon) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NightmareSkyCollection.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6a/NIGHTMAR-SKY_%28No_music%29.mp4/revision/latest?cb=20241211163746",
     "video_file": "NIGHTMAR-SKY (No music).mp4",
     "video_kind": "opening",
@@ -7925,25 +7914,24 @@
     "rarity": 666000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      666000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/666,000,000 (Only in Graveyard) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Harvester_collection_2.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/harvester_openin.mp4",
     "video_file": "harvester openin.mp4",
     "video_kind": "opening",
@@ -7954,20 +7942,18 @@
   "Apostolos_Veil": {
     "rarity": 800000000,
     "exclusive_biome": [
-      "PUMPKIN MOON OR GRAVEYARD",
-      1
+      "GRAVEYARD",
+      800000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/800,000,000 (Only in Pumpkin Moon OR Graveyard) (Limited) Halloween 2024)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/VeilCol.gif",
     "exclusive_biomes": [
@@ -7975,6 +7961,7 @@
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Veil_Cutscene.mp4",
     "video_file": "Veil_Cutscene.mp4",
     "video_kind": "opening",
@@ -7995,12 +7982,10 @@
       4000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/12,000,000(1/4,000,000 in Snowy)(Limited) Winter 2025)",
+    "obtainment": "Native to SNOWY (1/4,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WonderlandCollection.gif",
     "native_rarity": 4000000,
@@ -8008,6 +7993,7 @@
       "SNOWY"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/1/18/Wonderland_Opening.mp4/revision/latest?cb=20250208230547",
     "video_file": "Wonderland Opening.mp4",
     "video_kind": "opening",
@@ -8026,12 +8012,10 @@
       15000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/45,000,000(1/15,000,000 in Snowy) (Limited) Winter 2025)",
+    "obtainment": "Native to SNOWY (1/15,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FrostCollection.gif",
     "native_rarity": 15000000,
@@ -8039,6 +8023,7 @@
       "SNOWY"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/7/79/Santa_Frost_Opening.mp4/revision/latest?cb=20250208225535",
     "video_file": "Santa Frost Opening.mp4",
     "video_kind": "opening",
@@ -8057,12 +8042,10 @@
       24000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/72,000,000(1/24,000,000 in Snowy) (Limited) Winter 2025)",
+    "obtainment": "Native to SNOWY (1/24,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Winter_Fantasy(Collection).gif",
     "native_rarity": 24000000,
@@ -8070,6 +8053,7 @@
       "SNOWY"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/1/1d/Winter_Fantasy_Opening.mp4/revision/latest?cb=20250208221600",
     "video_file": "Winter Fantasy Opening.mp4",
     "video_kind": "opening",
@@ -8088,12 +8072,10 @@
       30000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/90,000,000(1/30,000,000 in Snowy) (Limited) Winter 2025)",
+    "obtainment": "Native to SNOWY (1/30,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ExpressCollectionGIf.gif",
     "native_rarity": 30000000,
@@ -8101,6 +8083,7 @@
       "SNOWY"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/Express_Opening.mp4/revision/latest?cb=20250208180845",
     "video_file": "Express Opening.mp4",
     "video_kind": "opening",
@@ -8119,12 +8102,10 @@
       40000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/120,000,000(1/40,000,000 in Snowy) (Limited) Winter 2025)",
+    "obtainment": "Native to SNOWY (1/40,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AbomiNableReworkCollection.gif",
     "native_rarity": 40000000,
@@ -8132,6 +8113,7 @@
       "SNOWY"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/7/76/ABOMITABLE_Cutscene.mp4/revision/latest?cb=20250208183739",
     "video_file": "ABOMITABLE Cutscene.mp4",
     "video_kind": "opening",
@@ -8150,12 +8132,10 @@
       170000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/510,000,000(1/170,000,000 in Snowy) (Limited) Winter 2025)",
+    "obtainment": "Native to SNOWY (1/170,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FixedYuletideColl.gif",
     "native_rarity": 170000000,
@@ -8163,6 +8143,7 @@
       "SNOWY"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AtlasYuletide_Cutscene.mp4",
     "video_file": "AtlasYuletide_Cutscene.mp4",
     "video_kind": "opening",
@@ -8531,12 +8512,10 @@
       150000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/300,000,000(1/150,000,000 in Blazing Sun) (Limited) Summer 2025)",
+    "obtainment": "Native to BLAZING SUN (1/150,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Manta_In-Collection.gif",
     "native_rarity": 150000000,
@@ -8544,6 +8523,7 @@
       "BLAZING SUN"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/4/43/Manta%27s_cutscene_new.mp4/revision/latest?cb=20250802173812",
     "video_file": "Manta's cutscene new.mp4",
     "video_kind": "opening",
@@ -8562,12 +8542,10 @@
       412500000
     ],
     "limited": true,
-    "obtainment": "Limited (1/825,000,000(1/412,500,000 in Blazing Sun) (Limited) Summer 2025)",
+    "obtainment": "Native to BLAZING SUN (1/412,500,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Aegis_Watergun_in_collection.gif",
     "native_rarity": 412500000,
@@ -8575,6 +8553,7 @@
       "BLAZING SUN"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AegisWatergunOpening.mp4",
     "video_file": "AegisWatergunOpening.mp4",
     "video_kind": "opening",
@@ -8763,25 +8742,24 @@
     "rarity": 600000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      600000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/600,000 (Only in Pumpkin Moon) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Pumptrickstercollection.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8c/PumpTricksterCutscene.mp4/revision/latest?cb=20251025124020",
     "video_file": "PumpTricksterCutscene.mp4",
     "video_kind": "opening",
@@ -8795,25 +8773,24 @@
     "rarity": 1500000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      1500000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/1,500,000 (Only in Pumpkin Moon) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Celestial_-_Wicked_collection.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4a/Celestial_-_Wicked%27s_Cutscene.mp4/revision/latest?cb=20251113085833",
     "video_file": "Celestial - Wicked's Cutscene.mp4",
     "video_kind": "opening",
@@ -8826,20 +8803,18 @@
   "Lunar_Cultist": {
     "rarity": 2000000,
     "exclusive_biome": [
-      "GRAVEYARD",
-      1
+      "TIME",
+      2000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/2,000,000 (Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to TIME (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Lunar_-_Cultist_collection.gif",
     "exclusive_biomes": [
@@ -8847,6 +8822,7 @@
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3f/Lunar_cultist_cutscene.mp4/revision/latest?cb=20251102155007",
     "video_file": "Lunar cultist cutscene.mp4",
     "video_kind": "opening",
@@ -8860,25 +8836,24 @@
     "rarity": 3200000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      3200000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/3,200,000 (Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/HeadlessCollection.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Headless_cutscene.mp4",
     "video_file": "Headless_cutscene.mp4",
     "video_kind": "opening",
@@ -8890,25 +8865,24 @@
     "rarity": 3600000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      3600000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/3,600,000(Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Werewolf_collection.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/4/48/VID-Warewolf_cutscene.mp4/revision/latest?cb=20251108010657",
     "video_file": "VID-Warewolf cutscene.mp4",
     "video_kind": "opening",
@@ -8920,25 +8894,24 @@
     "rarity": 4460000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      4460000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/4,460,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Shucks_collection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8e/Awwh_shucks.mp4/revision/latest?cb=20251101143846",
     "video_file": "Awwh shucks.mp4",
     "video_kind": "opening",
@@ -8950,25 +8923,24 @@
     "rarity": 6666666,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      6666666
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/6,666,666 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/OniCollection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/b/be/Oni_Cutscene.mp4/revision/latest?cb=20251019013703",
     "video_file": "Oni Cutscene.mp4",
     "video_kind": "opening",
@@ -8980,25 +8952,24 @@
     "rarity": 15000000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      15000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/15,000,000 (Only in Pumpkin Moon) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Sinister_in_Collection.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b9/Sinister_cutscene.mp4/revision/latest?cb=20251029231457",
     "video_file": "Sinister cutscene.mp4",
     "video_kind": "opening",
@@ -9010,25 +8981,24 @@
     "rarity": 32000000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      32000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/32,000,000 (Only in Pumpkin Moon) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/OrangeDullahanCollection.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Headless_Horseman_cutscene.mp4",
     "video_file": "Headless_Horseman_cutscene.mp4",
     "video_kind": "opening",
@@ -9042,25 +9012,24 @@
     "rarity": 66000000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      66000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/66,000,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Reaper_collection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d0/ReaperCutsene.mp4/revision/latest?cb=20251103002747",
     "video_file": "ReaperCutsene.mp4",
     "video_kind": "opening",
@@ -9072,25 +9041,24 @@
     "rarity": 82000000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      82000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/82,000,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Accursed_in_Collection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Accursed_cutscene.mp4",
     "video_file": "Accursed_cutscene.mp4",
     "video_kind": "opening",
@@ -9102,25 +9070,24 @@
     "rarity": 88000000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      88000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/88,000,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BloodgardenCollection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f8/BloodgardenCutsene.mp4/revision/latest?cb=20251103002818",
     "video_file": "BloodgardenCutsene.mp4",
     "video_kind": "opening",
@@ -9132,25 +9099,24 @@
     "rarity": 88250000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      88250000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/88,250,000 (Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CollectionGriefFIX.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/3/35/GriefCutseneOpeningFIX.mp4/revision/latest?cb=20251102030129",
     "video_file": "GriefCutseneOpeningFIX.mp4",
     "video_kind": "opening",
@@ -9162,25 +9128,24 @@
     "rarity": 120000000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      120000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/120,000,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Crimson_collection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/6/68/CRIMSON.mp4/revision/latest?cb=20251101190024",
     "video_file": "CRIMSON.mp4",
     "video_kind": "opening",
@@ -9192,25 +9157,24 @@
     "rarity": 290000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      290000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/290,000,000 (Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Graveborn_Collection.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/1/14/Graveborncutscene.mp4/revision/latest?cb=20251104114955",
     "video_file": "Graveborncutscene.mp4",
     "video_kind": "opening",
@@ -9220,25 +9184,24 @@
     "rarity": 440000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      440000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/440,000,000 (Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AfterpartyInGame.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/2/26/AfterpartyOpening.mp4/revision/latest?cb=20251101095222",
     "video_file": "AfterpartyOpening.mp4",
     "video_kind": "opening",
@@ -9250,25 +9213,24 @@
     "rarity": 462000000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      462000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/462,000,000 (Only in Pumpkin Moon) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/PhantasmaCollectionGif.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Phantasma_Cutscene.mp4",
     "video_file": "Phantasma_Cutscene.mp4",
     "video_kind": "opening",
@@ -9280,25 +9242,24 @@
     "rarity": 624000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      624000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/624,000,000 (Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Apocalyptic.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5f/Roblox_2568-10-18_23-39-39.mp4/revision/latest?cb=20251018165412",
     "video_file": "Roblox 2568-10-18 23-39-39.mp4",
     "video_kind": "opening",
@@ -9310,25 +9271,24 @@
     "rarity": 695000000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      695000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/695,000,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CollectionWraithlight.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Wraithlight_cutscene.mp4",
     "video_file": "Wraithlight_cutscene.mp4",
     "video_kind": "opening",
@@ -9338,25 +9298,24 @@
     "rarity": 730000000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      730000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/730,000,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Malediction_in_Collection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Malediction_Cutscene.mp4",
     "video_file": "Malediction_Cutscene.mp4",
     "video_kind": "opening",
@@ -9366,25 +9325,24 @@
     "rarity": 730000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      730000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/730,000,000 (Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BansheeCollection.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2c/BansheeCutscene.mp4/revision/latest?cb=20251019224953",
     "video_file": "BansheeCutscene.mp4",
     "video_kind": "opening",
@@ -9396,25 +9354,24 @@
     "rarity": 930000000,
     "exclusive_biome": [
       "GRAVEYARD",
-      1
+      930000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/930,000,000 (Only in Graveyard) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to GRAVEYARD (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RavageCollection.gif",
     "exclusive_biomes": [
       "GRAVEYARD"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/6/61/Ravage_cutscene.mp4/revision/latest?cb=20251101114349",
     "video_file": "Ravage cutscene.mp4",
     "video_kind": "opening",
@@ -9426,25 +9383,24 @@
     "rarity": 940000000,
     "exclusive_biome": [
       "PUMPKIN MOON",
-      1
+      940000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/940,000,000 (Only in Pumpkin Moon) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to PUMPKIN MOON (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ArachnophobiaCol.gif",
     "exclusive_biomes": [
       "PUMPKIN MOON"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BetterArachnafobiaOpening.mov",
     "video_file": "BetterArachnafobiaOpening.mov",
     "video_kind": "opening",
@@ -9456,25 +9412,24 @@
     "rarity": 1000000000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      1000000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/1,000,000,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/LamenthyrCollection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f9/Lamenthyr_Cutscene.mp4/revision/latest?cb=20251018163336",
     "video_file": "Lamenthyr Cutscene.mp4",
     "video_kind": "opening",
@@ -9486,25 +9441,24 @@
     "rarity": 1200000000,
     "exclusive_biome": [
       "BLOOD RAIN",
-      1
+      1200000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/1,200,000,000 (Only in Blood Rain) (Limited) Halloween 2025)",
+    "obtainment": "Exclusive to BLOOD RAIN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ErebusCollection.gif",
     "exclusive_biomes": [
       "BLOOD RAIN"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/3/30/Erebus_frfr.mp4/revision/latest?cb=20251019000222",
     "video_file": "Erebus frfr.mp4",
     "video_kind": "opening",
@@ -9662,12 +9616,10 @@
       5000
     ],
     "limited": true,
-    "obtainment": "Limited (1/10,000 (1/5,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/5,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SnowballInCollection.gif",
     "native_rarity": 5000,
@@ -9675,6 +9627,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6b/Snowball_Cutscene.mp4/revision/latest?cb=20260103082204",
     "video_file": "Snowball Cutscene.mp4",
     "video_kind": "opening",
@@ -9693,12 +9646,10 @@
       120000
     ],
     "limited": true,
-    "obtainment": "Limited (1/240,000 (1/120,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/120,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SnowflakeCollection.gif",
     "native_rarity": 120000,
@@ -9706,6 +9657,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e5/Starrider.mp4/revision/latest?cb=20251220112802",
     "video_file": "Starrider.mp4",
     "video_kind": "opening",
@@ -9718,26 +9670,25 @@
   "Cryogenic": {
     "rarity": 250000,
     "exclusive_biome": [
-      "AURORA UNAFFECTED BY LUCK",
-      1
+      "AURORA",
+      250000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/250,000 (only in Aurora unaffected by luck) (Limited) Christmas 2025)",
+    "obtainment": "Exclusive to AURORA (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Cryogenic_Collection.gif",
     "exclusive_biomes": [
       "AURORA"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Cryogenic_Cutscene.mp4",
     "video_file": "Cryogenic Cutscene.mp4",
     "video_kind": "opening",
@@ -9756,12 +9707,10 @@
       1875000
     ],
     "limited": true,
-    "obtainment": "Limited (1/3,750,000 (1/1,875,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/1,875,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/GingerbreadCollection.gif",
     "native_rarity": 1875000,
@@ -9769,6 +9718,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Gingerbread_Cutsence_InCollection.mp4",
     "video_file": "Gingerbread_Cutsence_InCollection.mp4",
     "video_kind": "opening",
@@ -9787,12 +9737,10 @@
       2350000
     ],
     "limited": true,
-    "obtainment": "Limited (1/4,700,000 (1/2,350,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/2,350,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/JackFrost_InCollection.gif",
     "native_rarity": 2350000,
@@ -9800,6 +9748,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7e/Jackfrost_cutscene.mp4/revision/latest?cb=20251220134040",
     "video_file": "Jackfrost cutscene.mp4",
     "video_kind": "opening",
@@ -9818,12 +9767,10 @@
       4700000
     ],
     "limited": true,
-    "obtainment": "Limited (1/9,400,000 (1/4,700,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/4,700,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WanderCollection.gif",
     "native_rarity": 4700000,
@@ -9831,6 +9778,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c2/LSWanderCutsene.mp4/revision/latest?cb=20251221103721",
     "video_file": "LSWanderCutsene.mp4",
     "video_kind": "opening",
@@ -9851,12 +9799,10 @@
       12250000
     ],
     "limited": true,
-    "obtainment": "Limited (1/24,500,000 (1/12,250,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/12,250,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Frostwoodcollection.gif",
     "native_rarity": 12250000,
@@ -9864,6 +9810,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7e/FrostwoodOpening.mp4/revision/latest?cb=20251220082132",
     "video_file": "FrostwoodOpening.mp4",
     "video_kind": "opening",
@@ -9882,12 +9829,10 @@
       22500000
     ],
     "limited": true,
-    "obtainment": "Limited (1/45,000,000 (1/22,500,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/22,500,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NPCollection.gif",
     "native_rarity": 22500000,
@@ -9895,6 +9840,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/9/90/North_pole_cutscene.mp4/revision/latest?cb=20251220134107",
     "video_file": "North pole cutscene.mp4",
     "video_kind": "opening",
@@ -9913,12 +9859,10 @@
       30000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/60,000,000 (1/30,000,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/30,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SkyburstCollection.gif",
     "native_rarity": 30000000,
@@ -9926,6 +9870,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/9/91/SkyburstCutscene.mp4/revision/latest?cb=20251230061722",
     "video_file": "SkyburstCutscene.mp4",
     "video_kind": "opening",
@@ -9944,12 +9889,10 @@
       115000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/230,000,000 (1/115,000,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/115,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Encase_Collection.gif",
     "native_rarity": 115000000,
@@ -9957,6 +9900,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "music_url": "https://static.wikia.nocookie.net/sol-rng/images/1/1e/BlizzardApproaching.mp3/revision/latest?cb=20260219035553",
     "music_file": "BlizzardApproaching.mp3",
     "cutscene_note": "The screen turns black as a quick jingle noise plays, accompanied by wind noises that continue through the cutscene. In the middle of the screen, dark cyan and black diagonally striped fog appears, whilst dark cyan particles rise from the bottom. In the center of the screen, a dark cyan star with the same gradient slowly revolves while progressively expanding and revolving faster. As the fog in th"
@@ -9972,12 +9916,10 @@
       190000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/380,000,000 (1/190,000,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/190,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Cryofang_collection.gif",
     "native_rarity": 190000000,
@@ -9985,6 +9927,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6c/CryoFangWithGlobalEffect.mp4/revision/latest?cb=20260128210048",
     "video_file": "CryoFangWithGlobalEffect.mp4",
     "video_kind": "opening",
@@ -10003,12 +9946,10 @@
       202500000
     ],
     "limited": true,
-    "obtainment": "Limited (1/405,000,000 (1/202,500,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/202,500,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NorthernCollection.gif",
     "native_rarity": 202500000,
@@ -10016,6 +9957,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d9/NorthernOpening.mp4/revision/latest?cb=20251223175138",
     "video_file": "NorthernOpening.mp4",
     "video_kind": "opening",
@@ -10034,12 +9976,10 @@
       212000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/424,000,000 (1/212,000,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/212,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/EveNightCollection.gif",
     "native_rarity": 212000000,
@@ -10047,6 +9987,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0d/EveNightOpening.mp4/revision/latest?cb=20260103223837",
     "video_file": "EveNightOpening.mp4",
     "video_kind": "opening",
@@ -10065,12 +10006,10 @@
       350000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/700,000,000 (1/350,000,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/350,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Workshop_coll.gif",
     "native_rarity": 350000000,
@@ -10078,6 +10017,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/0/04/WorkshopCutscene.mp4/revision/latest?cb=20260103100743",
     "video_file": "WorkshopCutscene.mp4",
     "video_kind": "opening",
@@ -10096,12 +10036,10 @@
       380000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/760,000,000 (1/380,000,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/380,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Parol_collection.gif",
     "native_rarity": 380000000,
@@ -10109,6 +10047,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6c/ParolCutscene.mp4/revision/latest?cb=20260103124812",
     "video_file": "ParolCutscene.mp4",
     "video_kind": "opening",
@@ -10127,12 +10066,10 @@
       500000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/1,000,000,000 (1/500,000,000 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/500,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Frostveil_coll.gif",
     "native_rarity": 500000000,
@@ -10140,6 +10077,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/9/9d/FrostveilCutsceneRework.mp4/revision/latest?cb=20251224081257",
     "video_file": "FrostveilCutsceneRework.mp4",
     "video_kind": "opening",
@@ -10160,12 +10098,10 @@
       725006013
     ],
     "limited": true,
-    "obtainment": "Limited (1/1,450,012,025 (1/725,006,013 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/725,006,013)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WinterGardenCollection.gif",
     "native_rarity": 725006013,
@@ -10173,6 +10109,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/8/89/WinterGardenCutscene.mp4/revision/latest?cb=20260103230051",
     "video_file": "WinterGardenCutscene.mp4",
     "video_kind": "opening",
@@ -10191,12 +10128,10 @@
       1012506013
     ],
     "limited": true,
-    "obtainment": "Limited (1/2,025,012,025 (1/1,012,506,013 in Aurora) (Limited) Christmas 2025)",
+    "obtainment": "Native to AURORA (1/1,012,506,013)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DreamTravelerCollection.gif",
     "native_rarity": 1012506013,
@@ -10204,6 +10139,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a8/DreamTraveler_Cutscene.mp4/revision/latest?cb=20260605023741",
     "video_file": "DreamTraveler Cutscene.mp4",
     "video_kind": "opening",
@@ -10728,7 +10664,7 @@
     "music_file": "stickerbush symphony.mp3",
     "cutscene_note": "===Opening Cutscene===",
     "_fandom_title": "Hatchwarden",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Scavenger"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Hatchwarden"
   },
   "Burger": {
     "rarity": 676767,
@@ -10783,7 +10719,7 @@
     "video_kind": "opening",
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a light orange-ish yellow gradient going into the middle, revealing . Its breakthrough variant, includes a yellowish star spinning clockwise that will slowly expand before revealing .",
     "_fandom_title": "StarRider",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/StarRider_:_yourdidit"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/StarRider"
   },
   "Bounded_Kidnapped": {
     "rarity": 2000000,
@@ -10811,7 +10747,7 @@
     "music_file": "Sakupen - Hell Yes.mp3",
     "cutscene_note": "===Opening Cutscene===",
     "_fandom_title": "Bounded : Aichmalotos",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Bounded_:_Kidnapped"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Bounded_:_Aichmalotos"
   },
   "Very_Small_Sewage_Rat_That's_About_3.082_Studs_Long": {
     "rarity": 20070629,
@@ -10863,7 +10799,7 @@
     "video_kind": "opening",
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow white, before eventually revealing .",
     "_fandom_title": "Pukeko",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Pukeko_:_Jumping"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Pukeko"
   },
   "Aether_Disappointment": {
     "rarity": 33333330,
@@ -10876,12 +10812,10 @@
       6666666
     ],
     "limited": true,
-    "obtainment": "Limited (1/33,333,330 (1/6,666,666 in Heaven) (Limited) April Fools 2026)",
+    "obtainment": "Native to HEAVEN (1/6,666,666)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DisappointmentColl.gif",
     "native_rarity": 6666666,
@@ -10889,6 +10823,7 @@
       "HEAVEN"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Aether_-_Disappointment_%28cutscene.mp4",
     "video_file": "Aether - Disappointment (cutscene.mp4",
     "video_kind": "opening",
@@ -10896,7 +10831,7 @@
     "music_file": "Camellia_-_crystallized_(from_album_crystallized)_-TubeRippercom-.mp3",
     "cutscene_note": "===Opening Cutscene===",
     "_fandom_title": "Aether",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/Aether_:_Disappointment"
+    "fandom_page": "https://sol-rng.fandom.com/wiki/Aether"
   },
   "Bloated.exe": {
     "rarity": 67676767,
@@ -10933,12 +10868,10 @@
       50000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/250,000,000(1/50,000,000 in Corruption) (Limited)April Fools 2026)",
+    "obtainment": "Native to CORRUPTION (1/50,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ImcrineCollection.gif",
     "native_rarity": 50000000,
@@ -10946,6 +10879,7 @@
       "CORRUPTION"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Impeached_imcrine_cutscene.mp4",
     "video_file": "Impeached imcrine cutscene.mp4",
     "video_kind": "opening",
@@ -11006,12 +10940,10 @@
       157500000
     ],
     "limited": true,
-    "obtainment": "Limited (1/630,000,000 (1/157,500,000 in Rainy) (Limited)April Fools 2026)",
+    "obtainment": "Native to RAINY (1/157,500,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RamenpoolColl.gif",
     "native_rarity": 157500000,
@@ -11019,6 +10951,7 @@
       "RAINY"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Ramen.mp4",
     "video_file": "Ramen.mp4",
     "video_kind": "opening",
@@ -11035,12 +10968,10 @@
       325000000
     ],
     "limited": true,
-    "obtainment": "Limited (1/650,000,000 (1/325,000,000 in Aurora)(Limited) April Fools 2026)",
+    "obtainment": "Native to AURORA (1/325,000,000)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SystemColl.gif",
     "native_rarity": 325000000,
@@ -11048,6 +10979,7 @@
       "AURORA"
     ],
     "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Workshop_system_cutscene.mp4",
     "video_file": "Workshop system cutscene.mp4",
     "video_kind": "opening",
@@ -11173,19 +11105,17 @@
     "rarity": 8000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      8000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/8,000 (Only in Blazing Sun)1/4,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RaftCollection.gif",
     "exclusive_biomes": [
@@ -11193,6 +11123,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e1/RaftOpening.mp4/revision/latest?cb=20260905095938",
     "video_file": "RaftOpening.mp4",
     "video_kind": "opening",
@@ -11202,19 +11133,17 @@
     "rarity": 32000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      32000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/32,000 (Only in Blazing Sun)1/16,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BuoyantCollection.gif",
     "exclusive_biomes": [
@@ -11222,6 +11151,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b0/BouyantCutscene.mp4/revision/latest?cb=20260905220012",
     "video_file": "BouyantCutscene.mp4",
     "video_kind": "opening",
@@ -11231,19 +11161,17 @@
     "rarity": 80000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      80000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/80,000 (Only in Blazing Sun)1/40,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BreezeCollection.gif",
     "exclusive_biomes": [
@@ -11251,6 +11179,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BreezeCutscene.mp4",
     "video_file": "BreezeCutscene.mp4",
     "video_kind": "opening",
@@ -11260,19 +11189,17 @@
     "rarity": 83430,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      83430
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/83,430 (Only in Blazing Sun)1/41,715 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/HeatstrokeCollection.gif",
     "exclusive_biomes": [
@@ -11280,6 +11207,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Heatwave_cutscene.mp4",
     "video_file": "Heatwave cutscene.mp4",
     "video_kind": "opening",
@@ -11289,19 +11217,17 @@
     "rarity": 600000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      600000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/600,000 (Only in Blazing Sun)1/300,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Floaty_collect.gif",
     "exclusive_biomes": [
@@ -11309,6 +11235,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FloatyCutscene.mp4",
     "video_file": "FloatyCutscene.mp4",
     "video_kind": "opening",
@@ -11318,19 +11245,17 @@
     "rarity": 1938000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      1938000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/1,938,000 (Only in Blazing Sun)1/969,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Beachball_collect.gif",
     "exclusive_biomes": [
@@ -11338,6 +11263,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3a/BeachBallCutscene.mp4/revision/latest?cb=20260801171822",
     "video_file": "BeachBallCutscene.mp4",
     "video_kind": "opening",
@@ -11349,19 +11275,17 @@
     "rarity": 3200000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      3200000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/3,200,000 (Only in Blazing Sun)1/1,600,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Watermelon_summersnack_collect.gif",
     "exclusive_biomes": [
@@ -11369,6 +11293,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "cutscene_note": "TBA",
     "_fandom_title": "Watermelon : Summersnack",
     "fandom_page": "https://sol-rng.fandom.com/wiki/Watermelon_:_Summersnack"
@@ -11377,19 +11302,17 @@
     "rarity": 17500000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      17500000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/17,500,000 (Only in Blazing Sun)1/8,750,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/VendorCollection.gif",
     "exclusive_biomes": [
@@ -11397,6 +11320,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/VendorCutscene.mp4",
     "video_file": "VendorCutscene.mp4",
     "video_kind": "opening",
@@ -11406,19 +11330,17 @@
     "rarity": 20270000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      20270000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/20,270,000 (Only in Blazing Sun)1/10,135,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Nostalgia_collect.gif",
     "exclusive_biomes": [
@@ -11426,6 +11348,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Nostalgia.mp4",
     "video_file": "Nostalgia.mp4",
     "video_kind": "opening",
@@ -11435,19 +11358,17 @@
     "rarity": 34720000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      34720000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/34,720,000 (Only in Blazing Sun)1/17,360,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CoconutCollection.gif",
     "exclusive_biomes": [
@@ -11455,6 +11376,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c4/CoconutCutscene.mp4/revision/latest?cb=20260911112652",
     "video_file": "CoconutCutscene.mp4",
     "video_kind": "opening",
@@ -11464,19 +11386,17 @@
     "rarity": 45000000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      45000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/45,000,000 (Only in Blazing Sun)1/22,500,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FruitpunchCollection.gif",
     "exclusive_biomes": [
@@ -11484,6 +11404,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FruitpunchCutscene.mp4",
     "video_file": "FruitpunchCutscene.mp4",
     "video_kind": "opening",
@@ -11493,19 +11414,17 @@
     "rarity": 50000000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      50000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/50,000,000 (Only in Blazing Sun)1/25,000,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/GooseRaveCollection.gif",
     "exclusive_biomes": [
@@ -11513,6 +11432,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Goose_Rave_Opening.mp4",
     "video_file": "Goose Rave Opening.mp4",
     "video_kind": "opening",
@@ -11522,19 +11442,17 @@
     "rarity": 58620000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      58620000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/58,620,000 (Only in Blazing Sun)1/29,310,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Vacation_collect.gif",
     "exclusive_biomes": [
@@ -11542,6 +11460,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Vacation.mp4",
     "video_file": "Vacation.mp4",
     "video_kind": "opening",
@@ -11551,19 +11470,17 @@
     "rarity": 60000000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      60000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/60,000,000 (Only in Blazing Sun)1/30,000,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Bayview_collect.gif",
     "exclusive_biomes": [
@@ -11571,6 +11488,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Bayview_cutscene.mp4",
     "video_file": "Bayview cutscene.mp4",
     "video_kind": "opening",
@@ -11580,19 +11498,17 @@
     "rarity": 110000000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      110000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/110,000,000 (Only in Blazing Sun)1/55,000,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BubbleCascadeCollection.gif",
     "exclusive_biomes": [
@@ -11600,6 +11516,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BubbleCascadeCutscene.mp4",
     "video_file": "BubbleCascadeCutscene.mp4",
     "video_kind": "opening",
@@ -11609,44 +11526,41 @@
     "rarity": 600000000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      600000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/600,000,000 (Only in Blazing Sun)1/300,000,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/LifeGuardOnDutyCollection.gif",
     "exclusive_biomes": [
       "BLAZING SUN",
       "INCINERATOR"
     ],
-    "is_exclusive": true
+    "is_exclusive": true,
+    "obtainment_type": "exclusive"
   },
   "Tropical_Isles": {
     "rarity": 730000000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      730000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/730,000,000 (Only in Blazing Sun)1/365,000,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TropicalIslesCollection.gif",
     "exclusive_biomes": [
@@ -11654,6 +11568,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WealzY_-_Summer.mp3",
     "music_file": "WealzY - Summer.mp3",
     "cutscene_note": "TBA"
@@ -11662,19 +11577,17 @@
     "rarity": 972000000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      972000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/972,000,000 (Only in Blazing Sun)1/486,000,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/PoolPartyColl.gif",
     "exclusive_biomes": [
@@ -11682,6 +11595,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/PoolPartyCutscene.mp4",
     "video_file": "PoolPartyCutscene.mp4",
     "video_kind": "opening",
@@ -11691,64 +11605,60 @@
     "rarity": 1334221000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      1334221000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/1,334,221,000 (Only in Blazing Sun)1/667,110,500 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CrabTropicaCollectionlist.gif",
     "exclusive_biomes": [
       "BLAZING SUN",
       "INCINERATOR"
     ],
-    "is_exclusive": true
+    "is_exclusive": true,
+    "obtainment_type": "exclusive"
   },
   "Taverna|OSTERIA": {
     "rarity": 1444444444,
     "exclusive_biome": [
-      "BLAZING SUN",
+      "None",
       1
     ],
     "native_biome": [
       "None",
       1
     ],
-    "limited": true,
-    "obtainment": "Limited (1/1,444,444,444 (Only in Blazing Sun)1/722,222,222 (Only in Incinerator) (Limited)Summer 2026)",
+    "limited": false,
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
-    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/OsteriaCollection.gif"
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/OsteriaCollection.gif",
+    "obtainment_type": "standard"
   },
   "Centaurus": {
     "rarity": 3000000000,
     "exclusive_biome": [
       "BLAZING SUN",
-      1
+      3000000000
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": true,
-    "obtainment": "Limited (1/3,000,000,000 (Only in Blazing Sun)1/1,500,000,000 (Only in Incinerator) (Limited)Summer 2026)",
+    "obtainment": "Exclusive to BLAZING SUN (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
-    "flags": [
-      "limited"
-    ],
+    "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CentaurusAura1.gif",
     "exclusive_biomes": [
@@ -11756,6 +11666,7 @@
       "INCINERATOR"
     ],
     "is_exclusive": true,
+    "obtainment_type": "exclusive",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/1/11/CentaurusCutscene.mp4/revision/latest?cb=20260815163100",
     "video_file": "CentaurusCutscene.mp4",
     "video_kind": "opening",
@@ -11789,7 +11700,7 @@
     "rarity": 540000,
     "exclusive_biome": [
       "THE HYPERSPACE REALM",
-      1
+      540000
     ],
     "native_biome": [
       "None",
@@ -11818,7 +11729,7 @@
     "rarity": 530000,
     "exclusive_biome": [
       "THE NULL'S EXISTENCE",
-      1
+      530000
     ],
     "native_biome": [
       "None",
@@ -11847,7 +11758,7 @@
     "rarity": 270000,
     "exclusive_biome": [
       "THE CITADEL OF ORDERS",
-      1
+      270000
     ],
     "native_biome": [
       "None",
@@ -11876,7 +11787,7 @@
     "rarity": 700000,
     "exclusive_biome": [
       "THE CITADEL OF ORDERS",
-      1
+      700000
     ],
     "native_biome": [
       "None",
@@ -11904,15 +11815,15 @@
   "Observer_of_the_Crimson_Moon": {
     "rarity": 444444,
     "exclusive_biome": [
-      "赤い満月|THE RED FULL MOON",
-      1
+      "赤い満月",
+      444444
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to 赤い満月|THE RED FULL MOON (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to 赤い満月 (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
     "flags": [],
@@ -11933,15 +11844,15 @@
   "Seeker_of_the_Crimson_Moon": {
     "rarity": 666666,
     "exclusive_biome": [
-      "赤い満月|THE RED FULL MOON",
-      1
+      "赤い満月",
+      666666
     ],
     "native_biome": [
       "None",
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to 赤い満月|THE RED FULL MOON (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to 赤い満月 (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
     "flags": [],
@@ -11970,13 +11881,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Only rolls while the YG Blessing effect is active",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Event",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
-    "obtainment_type": "standard",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MegaphoneCollection.gif",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/8/86/Megaphone_Cutscene.mp4/revision/latest?cb=20250719084029",
     "video_file": "Megaphone Cutscene.mp4",
     "video_kind": "opening",
@@ -11995,13 +11906,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Only rolls while the Astrald Luck! effect is active",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Event",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
-    "obtainment_type": "standard",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AstraldColl.gif",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7a/AstralAstraldCutscene.mp4/revision/latest?cb=20260419141508",
     "video_file": "AstralAstraldCutscene.mp4",
     "video_kind": "opening",
@@ -12320,7 +12231,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Dev Exclusive",
     "description": "",
     "flags": [
@@ -12330,7 +12241,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Sapphirepeacesubmission.gif",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "cutscene_note": "TBA",
     "_fandom_title": "Sapphire : Peace",
     "fandom_page": "https://sol-rng.fandom.com/wiki/Sapphire_:_Peace"
@@ -12346,7 +12257,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Dev Exclusive",
     "description": "",
     "flags": [
@@ -12356,7 +12267,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Godslayercollection.jpg",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Devel_Sullivan_-_Dream_Pursuer.mp3",
     "music_file": "Devel Sullivan - Dream Pursuer.mp3"
   },
@@ -12371,7 +12282,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Dev Exclusive",
     "description": "",
     "flags": [
@@ -12381,7 +12292,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Contentdeletedcollection.jpg",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "cutscene_note": "TBA"
   },
   "Chromatic_Exotic": {
@@ -12395,7 +12306,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12403,7 +12314,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Chromatic_Exotic_Removed.gif",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CHROMATIC_EXOTIC.mp4",
     "video_file": "CHROMATIC_EXOTIC.mp4",
     "video_kind": "opening",
@@ -12420,7 +12331,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": "Transcendent",
     "description": "",
     "flags": [
@@ -12428,7 +12339,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Astral_-_Legendarium_Collection.gif",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d3/AstralLegendariumCutsceneReworked.mp4/revision/latest?cb=20250804220815",
     "video_file": "AstralLegendariumCutsceneReworked.mp4",
     "video_kind": "opening",
@@ -12449,7 +12360,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12457,7 +12368,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/The_Rock.png",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "ConstraintTest": {
     "rarity": null,
@@ -12470,7 +12381,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12478,7 +12389,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ConstraintTest.png",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Layers": {
     "rarity": null,
@@ -12491,7 +12402,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12499,7 +12410,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Layersgif.gif",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "music_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a2/KoraiiLayersCut.mp3/revision/latest?cb=20250725082026",
     "music_file": "KoraiiLayersCut.mp3"
   },
@@ -12514,7 +12425,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12522,7 +12433,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Iridescentmemory.gif",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Twilight_Viridescent_Memory": {
     "rarity": null,
@@ -12535,7 +12446,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12543,7 +12454,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TwilightViridescentMemoryPreview.jpg",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Stardust": {
     "rarity": null,
@@ -12556,7 +12467,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12564,7 +12475,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Stardust.gif",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Therma": {
     "rarity": null,
@@ -12577,7 +12488,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12585,7 +12496,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Therma_Collection_Gif.gif",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Sol-s-RNG-New-THERMA-Cutscene-vidiget-dot-com-141121.mp4",
     "video_file": "Sol-s-RNG-New-THERMA-Cutscene-vidiget-dot-com-141121.mp4",
     "video_kind": "opening",
@@ -12602,7 +12513,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12610,7 +12521,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SiriusInGame.jpg",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Lunatic": {
     "rarity": null,
@@ -12623,7 +12534,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12631,7 +12542,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Lunatic_In-Game.png",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Hallucination": {
     "rarity": null,
@@ -12644,7 +12555,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12652,7 +12563,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/HALLUCINATION_bad_GIF.gif",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Duke": {
     "rarity": null,
@@ -12665,7 +12576,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12673,7 +12584,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Duke_GIF.gif",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Galaxy_Contact": {
     "rarity": null,
@@ -12686,7 +12597,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12694,7 +12605,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Galaxycontactingame.gif",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Stella": {
     "rarity": null,
@@ -12707,7 +12618,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12715,7 +12626,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Stellaaura.jpg",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "_fandom_title": "Stella (Aura)",
     "fandom_page": "https://sol-rng.fandom.com/wiki/Stella_(Aura)"
   },
@@ -12730,7 +12641,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12738,7 +12649,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Deepwoken-ingame.jpeg",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   ":smiro:": {
     "rarity": null,
@@ -12751,7 +12662,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12759,7 +12670,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Smiro_ingame.jpeg",
-    "obtainment_type": "unobtainable"
+    "obtainment_type": "standard"
   },
   "Road_Trip": {
     "rarity": null,
@@ -12772,7 +12683,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12780,7 +12691,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Road_Trip_Submission.png",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Peepee_song.mp3",
     "music_file": "Peepee song.mp3"
   },
@@ -12795,7 +12706,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Any biome (standard roll)",
     "rarity_name": null,
     "description": "",
     "flags": [
@@ -12803,7 +12714,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Stellarincollection.gif",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "standard",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Spade_-_Starborn.mp3",
     "music_file": "Spade - Starborn.mp3"
   }

@@ -49,6 +49,13 @@ _KERNEL32: Any = None
 _LAUNCH_LOCK_TTL = 120.0  # a client takes ~10-20 s to appear and log in
 _RUNNING_LOCK: dict[str, float] = {}   # username -> time of the last successful launch
 _RUN_SCAN: dict[str, Any] = {"at": 0.0, "map": None}  # window->username scan cache
+_LAUNCHED_ACCOUNTS: dict[str, float] = {}  # v43: usernames launched via the panel this app session
+# v44: launch-slot bookkeeping. _LAUNCH_CONFIRMED[username] = last time the
+# launch watcher SAW the account's client alive; _LAUNCH_GEN[username]
+# increments on every launch so a stale watcher can never release a newer
+# launch's slot.
+_LAUNCH_CONFIRMED: dict[str, float] = {}
+_LAUNCH_GEN: dict[str, int] = {}
 _NTDLL: Any = None
 _AUTH_SESSION: Any = None
 _LOGIN_PROC: Any = None
@@ -861,12 +868,12 @@ def _resolve_private_access_code(token: str, place_id: str, link_code: str,
     try:
         result = _resolve_private_full(token, place_id, link_code, debug)
         _record_ps_debug(debug)
-        _log_ps(debug, ok=bool(result))
+        _log_ps(debug, ok=bool(result), soft=True)
         return result
     except Exception as exc:
         debug.append(f"exception: {exc}")
         _record_ps_debug(debug)
-        _log_ps(debug, ok=False)
+        _log_ps(debug, ok=False, soft=True)
         return ""
 
 
@@ -929,16 +936,23 @@ def _record_ps_debug(debug: list[str] | str) -> None:
         _STATE["ps_debug"] = text
 
 
-def _log_ps(debug: list[str], ok: bool = True) -> None:
+def _log_ps(debug: list[str], ok: bool = True, soft: bool = False) -> None:
     """One combined tracker-log line, FAILURES ONLY (v38: the success line
     fired on every launch and drowned the log; diagnostics stay in
-    _STATE["ps_debug"] for the UI either way)."""
+    _STATE["ps_debug"] for the UI either way).
+
+    soft=True (v43): a best-effort miss that does NOT abort the launch —
+    PlaceLauncher resolves the linkCode server-side (v37), so wording it as
+    "FAILED" scared users whose client joined fine (user log 2026-09-29)."""
     try:
         if ok or not debug:
             return
+        prefix = ("[Launcher] Private server: no explicit accessCode matched — joining "
+                  "via linkCode (this is normal): " if soft else
+                  "[Launcher] Private server resolve FAILED: ")
         log = getattr(_TRACKER, "append_log", None)
         if callable(log):
-            log("[Launcher] Private server resolve FAILED: " + "; ".join(debug))
+            log(prefix + "; ".join(debug))
     except Exception:
         pass
 
@@ -983,9 +997,75 @@ def _running_accounts() -> dict[str, list[int]]:
     return found
 
 
+def launcher_launched_accounts() -> set[str]:
+    """v43: usernames launched through the built-in launcher this app session.
+
+    terminate_roblox_processes uses this to recognize panel-launched clients
+    that must survive a reconnect / failsafe kill even when the
+    Multiple-Instances preference is OFF (the launcher intentionally opens an
+    extra window in that case — it strips the Roblox singleton handles on
+    every launch regardless of the mode)."""
+    with _LOCK:
+        return set(_LAUNCHED_ACCOUNTS)
+
+
 # v42: remember HOW each account was last launched, so the multi-instance
 # webhook can offer a human "Join Server" link for the same private server.
 _JOIN_INFO: dict[str, dict[str, str]] = {}   # username -> {"kind", "place_id", "link_code"}
+
+
+def _launch_fail(username: str, payload: dict[str, Any]) -> dict[str, Any]:
+    """v44: release the early launch slot after a failed launch attempt so
+    the user can retry immediately (the slot is claimed at click time,
+    before the slow private-server resolve)."""
+    with _LOCK:
+        _RUNNING_LOCK.pop(username, None)
+        _LAUNCH_CONFIRMED.pop(username, None)
+    return payload
+
+
+def _start_launch_watch(username: str, gen: int) -> None:
+    """v44: watch the launched client and release the launch slot as soon as
+    the client window is gone.
+
+    While the client runs, the watcher refreshes _LAUNCH_CONFIRMED, which
+    makes the live scan the single source of truth for the UI's Running
+    state — closing the client clears it within one UI poll instead of
+    sticking for the rest of the TTL lock."""
+    def _work() -> None:
+        seen_live = False
+        # Never-seen deadline: the client takes ~10-20 s to appear and log
+        # in; give it the full TTL plus margin before declaring a dead launch.
+        deadline = time.time() + _LAUNCH_LOCK_TTL + 30.0
+        while True:
+            time.sleep(2.0)
+            with _LOCK:
+                if int(_LAUNCH_GEN.get(username, 0)) != gen:
+                    return  # a newer launch owns this slot now
+            live = username in _running_accounts()
+            if live:
+                seen_live = True
+                with _LOCK:
+                    _LAUNCH_CONFIRMED[username] = time.time()
+                continue
+            if seen_live:
+                with _LOCK:
+                    _RUNNING_LOCK.pop(username, None)
+                    _LAUNCH_CONFIRMED.pop(username, None)
+                try:
+                    log = getattr(_TRACKER, "append_log", None)
+                    if callable(log):
+                        log(f"[Launcher] @{username}'s client closed — Launch is available again.")
+                except Exception:
+                    pass
+                return
+            if time.time() > deadline:
+                # The client never showed up (launch died silently) — release.
+                with _LOCK:
+                    if int(_LAUNCH_GEN.get(username, 0)) == gen:
+                        _RUNNING_LOCK.pop(username, None)
+                return
+    threading.Thread(target=_work, name=f"EndSol launch watch {username}", daemon=True).start()
 
 
 def launch_account(username: str, ps_link: str = "", own_server: bool | None = None,
@@ -1009,13 +1089,38 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
             now_ts = time.time()
             for key in [k for k, t in _RUNNING_LOCK.items() if now_ts - t > _LAUNCH_LOCK_TTL * 2]:
                 _RUNNING_LOCK.pop(key, None)
+                _LAUNCH_CONFIRMED.pop(key, None)
             last_launch = float(_RUNNING_LOCK.get(username, 0.0))
-        if last_launch and now_ts - last_launch < _LAUNCH_LOCK_TTL:
-            wait_left = int(_LAUNCH_LOCK_TTL - (now_ts - last_launch)) + 1
-            return {"success": False, "locked": True,
-                    "error": (f"@{username} was launched {int(now_ts - last_launch)} s ago and its client "
-                              f"is still starting up — try again in ~{wait_left} s. The lock clears "
-                              "by itself once the client is detected running or the wait expires.")}
+            confirmed_at = float(_LAUNCH_CONFIRMED.get(username, 0.0))
+        if last_launch and confirmed_at > last_launch:
+            # v44: the client was already seen ALIVE after that launch and no
+            # live window maps to the account now — it was closed (or it
+            # crashed). Release the slot immediately instead of keeping the
+            # Launch button stuck on "Running" for the rest of the TTL
+            # (user report 2026-09-29: both clients closed, the button stayed
+            # Running and Launch was refused although Roblox was closed).
+            with _LOCK:
+                _RUNNING_LOCK.pop(username, None)
+                _LAUNCH_CONFIRMED.pop(username, None)
+        else:
+            last_launch = float(_RUNNING_LOCK.get(username, 0.0))
+            if last_launch and now_ts - last_launch < _LAUNCH_LOCK_TTL:
+                wait_left = int(_LAUNCH_LOCK_TTL - (now_ts - last_launch)) + 1
+                return {"success": False, "locked": True,
+                        "error": (f"@{username} was launched {int(now_ts - last_launch)} s ago and its client "
+                                  f"is still starting up — try again in ~{wait_left} s. The lock clears "
+                                  "by itself once the client is detected running or the wait expires.")}
+    # v44: claim the launch slot IMMEDIATELY — before the private-server
+    # resolve, which can spend tens of seconds on HTTP round-trips. The UI
+    # polls the launcher state every 2 s, so the button flips to "Running"
+    # from the fresh lock long before the slow resolve answers, and a second
+    # click during the resolve is refused instead of firing a duplicate
+    # client. Every failure path below releases the slot again.
+    with _LOCK:
+        _RUNNING_LOCK[username] = time.time()
+        _LAUNCH_CONFIRMED.pop(username, None)
+        _LAUNCH_GEN[username] = int(_LAUNCH_GEN.get(username, 0)) + 1
+        _launch_gen = int(_LAUNCH_GEN[username])
     # v38 "Own Server": the per-account preference wins over the Webhook
     # link — the account joins its OWN private server for the game.
     if own_server is None:
@@ -1043,26 +1148,26 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
                     log(f"[Launcher] {msg}")
             except Exception:
                 pass
-            return {"success": False, "error": msg}
+            return _launch_fail(username, {"success": False, "error": msg})
     token = _dpapi_unprotect(str(account.get("token_enc", "")))
     if not token:
-        return {"success": False,
-                "error": f"No stored session for @{username} — press Add Account and log into this account again."}
+        return _launch_fail(username, {"success": False,
+                                        "error": f"No stored session for @{username} — press Add Account and log into this account again."})
     ticket = _mint_ticket(token)
     if not ticket:
         # v29: distinguish a dead session from a transient Roblox/network
         # problem instead of always blaming the session.
         _uid, name = _validate_token(token)
         if not name:
-            return {"success": False,
-                    "error": (f"The stored session for @{username} is no longer valid "
-                              "(Roblox rejects it) — press Add Account and log into this account again.")}
+            return _launch_fail(username, {"success": False,
+                            "error": (f"The stored session for @{username} is no longer valid "
+                                      "(Roblox rejects it) — press Add Account and log into this account again.")})
         with _LOCK:
             detail = str(_STATE.get("mint_debug", "") or "")
-        return {"success": False,
-                "error": (f"Roblox refused to mint a launch ticket for @{username} "
-                          f"({detail or 'unknown reason'}) — the session itself is alive; "
-                          "try again in a minute.")}
+        return _launch_fail(username, {"success": False,
+                        "error": (f"Roblox refused to mint a launch ticket for @{username} "
+                                  f"({detail or 'unknown reason'}) — the session itself is alive; "
+                                  "try again in a minute.")})
     join_url = ""
     if own_server:
         # v38: join the account's OWN private server — resolve its
@@ -1078,9 +1183,9 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
         _log_ps(debug, ok=bool(access_code))
         if not access_code:
             detail = "; ".join(debug) or "unknown"
-            return {"success": False,
-                    "error": (f"Could not find @{username}'s own private server ({detail}) — "
-                              "create a VIP server for this account or turn Own Server off.")}
+            return _launch_fail(username, {"success": False,
+                            "error": (f"Could not find @{username}'s own private server ({detail}) — "
+                                      "create a VIP server for this account or turn Own Server off.")})
         join_url = (f"https://assetgame.roblox.com/game/PlaceLauncher.ashx"
                     f"?request=RequestPrivateGame&placeId={DEFAULT_PLACE_ID}"
                     f"&accessCode={access_code}")
@@ -1109,10 +1214,10 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
                 hint = (" Tip: open the share link in a browser once — when the address turns into "
                         "https://www.roblox.com/games/15532962292/...?privateServerLinkCode=..., "
                         "paste THAT link into the Webhook page — it resolves reliably.")
-                return {"success": False,
-                        "error": (f"Could not resolve the share link for @{username} "
-                                  f"({detail or 'unknown'}) — a share link cannot be joined "
-                                  "directly." + hint)}
+                return _launch_fail(username, {"success": False,
+                                "error": (f"Could not resolve the share link for @{username} "
+                                          f"({detail or 'unknown'}) — a share link cannot be joined "
+                                          "directly." + hint)})
             place_id = resolved["place_id"] or place_id
             link_code = resolved["link_code"]
         # v36.1/v37: a privateServerLinkCode goes to PlaceLauncher AS IS —
@@ -1143,15 +1248,17 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
     try:
         os.startfile(_build_launch_link(ticket, join_url))  # type: ignore[attr-defined]
     except Exception as exc:
-        return {"success": False, "error": f"Failed to open the launch link: {exc}"}
+        return _launch_fail(username, {"success": False, "error": f"Failed to open the launch link: {exc}"})
     with _LOCK:
         _RUNNING_LOCK[username] = time.time()  # v39 one-client-per-account lock
+        _LAUNCHED_ACCOUNTS[username] = time.time()  # v43: remember panel launches
         if own_server:
             _STATE["last_launched"] = f"@{username} -> own private server (place {DEFAULT_PLACE_ID})"
         elif ps:
             _STATE["last_launched"] = f"@{username} -> private server (place {final_place})"
         else:
             _STATE["last_launched"] = f"@{username} -> home (no private server link set)"
+    _start_launch_watch(username, _launch_gen)  # v44: release the slot when the client closes
     return {"success": True}
 
 
@@ -1541,7 +1648,13 @@ def get_state() -> dict[str, Any]:
     # the UI disables their Launch buttons.
     running_now = _running_accounts()
     with _LOCK:
-        recent = [u for u, t in _RUNNING_LOCK.items() if time.time() - t < _LAUNCH_LOCK_TTL]
+        now_ts = time.time()
+        # v44: a fresh lock means "client starting up" only until the launch
+        # watcher CONFIRMS the client alive. After that the live scan above
+        # is the source of truth, so a closed client clears the Running
+        # state within one UI poll instead of sticking for the whole TTL.
+        recent = [u for u, t in _RUNNING_LOCK.items()
+                  if now_ts - t < _LAUNCH_LOCK_TTL and _LAUNCH_CONFIRMED.get(u, 0.0) <= t]
     snapshot["running_accounts"] = sorted(set(running_now) | set(recent))
     snapshot["mutex_exists"] = bool(_STATE.get("mutex_exists", False))
     if not snapshot["mutex_note"]:

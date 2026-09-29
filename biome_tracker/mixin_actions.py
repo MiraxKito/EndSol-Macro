@@ -3334,6 +3334,23 @@ class ActionsMixin:
                     self.error_logging(e, "Error terminating main Roblox process.")
                 return
 
+            # v43: the built-in launcher opens an extra client even with the
+            # Multiple-Instances preference OFF (it strips the Roblox
+            # singleton handles on EVERY launch regardless of the mode, so a
+            # panel launch never closes an existing window). User log
+            # 2026-09-29: with the mode OFF the user closed the main window;
+            # the reconnect kill-all below then took the panel-launched
+            # second client down with it. Identify live clients by the
+            # account written in their client log and spare every client that
+            # is clearly NOT the account this macro cycle farms.
+            protected_pids, protect_note = self._foreign_roblox_client_pids()
+            if protect_note:
+                print(f"terminate_roblox_processes: {protect_note}")
+                try:
+                    self.append_log(f"[Roblox kill] {protect_note}")
+                except Exception:
+                    pass
+
             current_user = psutil.Process().username()
             current_user_norm = str(current_user or "").strip().lower()
             target_procs = ['robloxplayerbeta.exe', 'windows10universal.exe',
@@ -3359,6 +3376,10 @@ class ActionsMixin:
                     )
                     if not is_target:
                         continue
+                    if int(info.get('pid') or 0) in protected_pids:
+                        print(f"Sparing protected Roblox client "
+                              f"(PID: {info.get('pid')}) — different account, not the farmed one")
+                        continue
                     proc_user_norm = str(proc.info.get('username') or "").strip().lower()
                     if current_user_norm and proc_user_norm and proc_user_norm != current_user_norm: continue
                     print(f"Terminating process: {proc_name_cf or exe_cf or 'roblox process'} (PID: {proc.info.get('pid')})")
@@ -3372,6 +3393,59 @@ class ActionsMixin:
 
         except Exception as e:
             self.error_logging(e, "Error in terminate_roblox_processes function.")
+
+    def _foreign_roblox_client_pids(self):
+        """v43: PIDs of live Roblox client windows a kill-all must SPARE.
+
+        Used only when the Multiple-Instances preference is OFF (MI mode
+        kills the main PID only and already spares secondary windows).
+        Returns (protected_pids, human_note). A client is spared only when
+        it is clearly NOT the farmed account:
+          * its client log names a DIFFERENT account, AND
+          * either the farmed account's own client is also live right now,
+            or the client was launched by the built-in launcher this session.
+        Anything ambiguous (no usernames readable, no roblox_username
+        configured) returns an empty set — legacy kill-all behavior.
+        """
+        try:
+            if bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                return set(), ""
+            from . import multi_instance as _mi
+            from . import instance_launcher as _il
+            windows = _mi._windows()
+            pids = [int(w["pid"]) for w in windows]
+            if not pids:
+                return set(), ""
+            username_by_pid: dict[int, str] = {}
+            try:
+                for pid, path in (_mi._map_logs_to_pids(pids) or {}).items():
+                    name = str(_mi._log_username(path) or "").strip().lower()
+                    if name:
+                        username_by_pid[int(pid)] = name
+            except Exception:
+                username_by_pid = {}
+            if not username_by_pid:
+                return set(), ""
+            farm = str((getattr(self, "config", {}) or {}).get("roblox_username", "") or "").strip().lower()
+            launched = _il.launcher_launched_accounts()
+            farm_pids = [p for p, u in username_by_pid.items() if farm and u == farm]
+            if farm and farm_pids:
+                # Our own client is identifiable among the live ones: every
+                # other account's window must survive this kill.
+                protected = {p for p, u in username_by_pid.items() if u != farm}
+            else:
+                # The farmed client is already gone (typical reconnect after
+                # the main window was closed) — spare only clients the
+                # built-in launcher itself launched this session.
+                protected = {p for p, u in username_by_pid.items() if u in launched}
+            if not protected:
+                return set(), ""
+            note = ("sparing foreign client window(s) "
+                    + ", ".join(f"PID {p} (@{username_by_pid[p]})" for p in sorted(protected))
+                    + " — only the farmed account's client is closed")
+            return protected, note
+        except Exception:
+            return set(), ""
 
     def perform_periodic_inventory_screenshot_sync(self):
         try:
