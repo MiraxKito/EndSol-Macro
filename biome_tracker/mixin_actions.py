@@ -18,7 +18,7 @@ class ActionsMixin:
 
             from .config import GITHUB_RAW_BASE
             base_url = GITHUB_RAW_BASE + "/paths/"
-            for filename in ["obby.json", "eden.json", "egg_route1.json", "egg_route2.json", "egg_route3.json"]:
+            for filename in ["obby.json", "eden.json"]:
                 file_path = os.path.join(paths_folder, filename)
                 if not os.path.exists(file_path):
                     if source_paths and os.path.exists(os.path.join(source_paths, filename)):
@@ -80,14 +80,20 @@ class ActionsMixin:
                     if result and result.text:
                         raw = result.text.strip()
                         final_text = "".join(c if ord(c) < 128 else "" for c in raw).strip()
-                        self.append_log(f"[WinOCR] Extracted text: '{final_text}'")
+                        # No per-call logging: OCR runs on every chat /
+                        # daily-event / auto-roll check - per-call lines
+                        # flooded the log (owner request 2026-09-28).
                         return final_text
                     else:
-                        self.append_log("[WinOCR] No text detected.")
+                        return ""
                 except ImportError:
-                    self.append_log("[WinOCR] winocr not installed.")
+                    if not getattr(self, "_winocr_missing_logged", False):
+                        self._winocr_missing_logged = True
+                        self.append_log("[WinOCR] winocr not installed.")
                 except Exception as winocr_err:
-                    self.append_log(f"[WinOCR] Failed: {winocr_err}")
+                    if not getattr(self, "_winocr_error_logged", False):
+                        self._winocr_error_logged = True
+                        self.append_log(f"[WinOCR] Failed: {winocr_err}")
 
                 return ""
 
@@ -144,7 +150,7 @@ class ActionsMixin:
                 and not bool(getattr(self, "_remote_running", False))
                 and not bool(getattr(self, "_fishing_br_sc_override", False))
                 and not bool(self.config.get("enable_idle_mode", False))
-            ) or bool((getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)))
+            ) or bool((getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)))
         except Exception:
             return False
 
@@ -164,11 +170,11 @@ class ActionsMixin:
                 and not bool(getattr(self, "auto_pop_state", False)))
 
     def daily_event_check_loop(self):
-        """Claim Sol's Daily Event Check-in at 03:00 MSK daily.
+        """Claim Sol's Daily Event Check-in right after the daily reset.
 
-        Queues the claim action via the action scheduler so it does not
-        interrupt active features (fishing, pathing, etc.). The claim waits
-        for the current action cycle to finish before executing.
+        The reset happens at 00:00 UTC (= 03:00 MSK). All waiting is
+        computed in UTC so the schedule is correct on any PC; user-facing
+        log lines show the local PC time instead of a hardcoded timezone.
         """
         while getattr(self, "detection_running", False):
             try:
@@ -176,16 +182,16 @@ class ActionsMixin:
                     time.sleep(10)
                     continue
 
-                # Wait until 03:00 MSK (UTC+3)
-                now = datetime.now()
-                target = now.replace(hour=3, minute=0, second=0, microsecond=0)
-                if target <= now:
-                    # Already past 03:00 today — check if already claimed
-                    today = now.strftime("%Y-%m-%d")
+                # Wait until 00:00 UTC (the game's daily reset)
+                now_utc = datetime.now(timezone.utc)
+                target = now_utc.replace(hour=0, minute=0, second=0, microsecond=0)
+                if target <= now_utc:
+                    # Already past 00:00 UTC today — check if already claimed
+                    today = now_utc.strftime("%Y-%m-%d")
                     if self.config.get("daily_event_claimed_date", "") == today:
-                        # Already claimed today, wait until tomorrow 03:00
+                        # Already claimed today, wait until tomorrow's reset
                         target = target + timedelta(days=1)
-                    elif (now - target).total_seconds() <= 3600:
+                    elif (now_utc - target).total_seconds() <= 3600:
                         # First hour after 03:00: claim now and retry every
                         # 10 minutes — one OCR miss (Sol's RNG font) must not
                         # lose the day, but retrying must not be endless.
@@ -197,17 +203,19 @@ class ActionsMixin:
                             name="daily_event_checkin",
                             priority=3,
                         )
-                        target = now + timedelta(minutes=10)
+                        target = now_utc + timedelta(minutes=10)
                     else:
                         # More than an hour of retries — give up and wait for
-                        # the next 03:00 MSK.
+                        # the next 00:00 UTC reset.
                         target = target + timedelta(days=1)
 
-                wait_seconds = max(1, (target - now).total_seconds())
+                wait_seconds = max(1, (target - now_utc).total_seconds())
+                # Show the schedule in the PC's local time (no hardcoded MSK).
+                target_local = target.astimezone()
                 if wait_seconds < 3600:
-                    print(f"[DailyEvent] Next check-in at {target.strftime('%H:%M MSK')}. Retrying in {max(1, int(wait_seconds / 60))} min...", flush=True)
+                    print(f"[DailyEvent] Next check-in at {target_local.strftime('%H:%M')} (local PC time; reset at 00:00 UTC). Retrying in {max(1, int(wait_seconds / 60))} min...", flush=True)
                 else:
-                    print(f"[DailyEvent] Next check-in at {target.strftime('%H:%M MSK')}. Waiting {wait_seconds/3600:.1f}h...", flush=True)
+                    print(f"[DailyEvent] Next check-in at {target_local.strftime('%H:%M')} (local PC time; reset at 00:00 UTC). Waiting {wait_seconds/3600:.1f}h...", flush=True)
 
                 # Sleep in small chunks so we can stop quickly
                 while wait_seconds > 0:
@@ -217,8 +225,8 @@ class ActionsMixin:
                     time.sleep(chunk)
                     wait_seconds -= chunk
 
-                # It's 03:00 MSK — check if already claimed
-                today = datetime.now().strftime("%Y-%m-%d")
+                # It's 00:00 UTC (reset time) — check if already claimed
+                today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
                 if self.config.get("daily_event_claimed_date", "") == today:
                     time.sleep(60)
                     continue
@@ -300,7 +308,9 @@ class ActionsMixin:
                     return {"success": False, "reason": "Claim cancelled."}
                 still_visible, verify_text = _popup_visible()
                 if not still_visible:
-                    self.config["daily_event_claimed_date"] = datetime.now().strftime("%Y-%m-%d")
+                    # Store the UTC date so the marker matches the reset
+                    # window (00:00 UTC) used by daily_event_check_loop.
+                    self.config["daily_event_claimed_date"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
                     self.save_config()
                     self.append_log("[Daily Event] Daily Event Check-in claimed and popup closed."
                                     + (" (verified on retry)" if attempt == 2 else ""))
@@ -635,7 +645,7 @@ class ActionsMixin:
                     return
             if not self.check_roblox_procs():
                 return
-            if (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
+            if (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
                 return
             
             for _ in range(4):
@@ -667,7 +677,7 @@ class ActionsMixin:
                         pass
                 time.sleep(0.35)
             try:
-                screenshot_dir = os.path.join(os.getcwd(), "images")
+                screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                 os.makedirs(screenshot_dir, exist_ok=True)
                 filename = os.path.join(screenshot_dir, f"inventory_screenshot_{int(time.time())}.png")
                 img = pyautogui.screenshot()
@@ -709,7 +719,7 @@ class ActionsMixin:
             while True:
                 if not self.detection_running or self.reconnecting_state:
                     return
-                if not getattr(self, "_br_sc_running", False) and not getattr(self, "_mt_running", False) and not getattr(self, "auto_pop_state", False) and not getattr(self, "on_auto_merchant_state", False) and not (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) and not self.config.get("enable_potion_crafting", False):
+                if not getattr(self, "_br_sc_running", False) and not getattr(self, "_mt_running", False) and not getattr(self, "auto_pop_state", False) and not getattr(self, "on_auto_merchant_state", False) and not (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) and not self.config.get("enable_potion_crafting", False):
                     break
                 time.sleep(0.67)
             if menu and menu[0]:
@@ -736,6 +746,13 @@ class ActionsMixin:
                     return
                 self.activate_roblox_window()
                 time.sleep(0.15)
+            # A rare-biome reset MUST land on a properly sized, focused
+            # client: if Roblox restarted small / minimized / in the wrong
+            # window mode, fix it before sending Esc / R / Enter.
+            self.ensure_roblox_window_state(reason="rare biome reset")
+            if not self.is_roblox_focused():
+                self.append_log("[Rare Biome] Roblox lost focus during reset preparation, retrying focus.")
+                self.activate_roblox_window()
             # Extra settle between the reset keys: on low-FPS clients the
             # Esc menu / reset prompt renders late and a fast R / Enter
             # lands on nothing.
@@ -799,7 +816,7 @@ class ActionsMixin:
                 return
             if not getattr(self, "auto_claim_quests_var", None) or not self.auto_claim_quests_var.get():
                 return
-            if (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
+            if (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
                 return
             if getattr(self, "enable_potion_crafting_var", None) and self.enable_potion_crafting_var.get(): return
             if not self.check_roblox_procs():
@@ -830,7 +847,7 @@ class ActionsMixin:
                     return
 
             try:
-                screenshot_dir = os.path.join(os.getcwd(), "images")
+                screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                 os.makedirs(screenshot_dir, exist_ok=True)
                 filename = os.path.join(screenshot_dir, f"quest_screenshot_{int(time.time())}.png")
                 img = pyautogui.screenshot()
@@ -948,7 +965,7 @@ class ActionsMixin:
                     time.sleep(2)
                     continue
 
-                if ((getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
+                if ((getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
                     getattr(self, "_br_sc_running", False) or
                     getattr(self, "_mt_running", False) or
                     getattr(self, "auto_pop_state", False) or
@@ -1165,6 +1182,149 @@ class ActionsMixin:
             self.error_logging(e, "Error in _perform_obby_path_sequence_impl")
         finally:
             self._obby_running = False
+
+    # ---- v44: FREE custom paths with their own triggers --------------------
+    # A free custom path (saved WITHOUT a feature assignment) can replay
+    # itself on its own trigger:
+    #   - interval: every N minutes while the macro runs;
+    #   - biome: once every time the configured biome becomes active.
+    # Runs are serialized through the shared ActionScheduler and never start
+    # while a "full" feature holds the window (the same guard set the obby
+    # loop uses). Rare-biome handling is untouched: whatever the main
+    # detector queues for a rare biome keeps its priority.
+
+    def _custom_paths_triggered(self) -> list[dict]:
+        """Enabled auto-trigger paths (10 s cached directory read)."""
+        now = time.time()
+        cache = getattr(self, "_cp_cache", None)
+        if cache is None or now - float(cache[0]) > 10.0:
+            try:
+                from .custom_path_manager import list_triggered_paths
+                cache = (now, list_triggered_paths())
+            except Exception:
+                cache = (now, [])
+            self._cp_cache = cache
+        return cache[1]
+
+    def _custom_paths_busy(self) -> bool:
+        """Same 'full feature' guard set obby_path_loop uses."""
+        return bool(
+            getattr(self, "_eden_running", False)
+            or getattr(self, "_potion_thread_active", False)
+            or getattr(self, "_br_sc_running", False)
+            or getattr(self, "_mt_running", False)
+            or getattr(self, "auto_pop_state", False)
+            or getattr(self, "on_auto_merchant_state", False)
+            or getattr(self, "_custom_path_running", False)
+            or (getattr(self, "config", {}) or {}).get("enable_potion_crafting", False)
+        )
+
+    def custom_paths_loop(self):
+        """Ticker for free custom paths (v44).
+
+        One tick every ~3 s: for every enabled path, its interval trigger
+        (due every N minutes) and/or its biome trigger (current biome ==
+        configured biome, fired once per biome stay) may enqueue ONE
+        scheduled replay. The run itself goes through the ActionScheduler,
+        so it waits for any current action to finish instead of
+        interrupting it."""
+        ensure_english_layout_silent()
+        self._custom_path_running = False
+        self._cp_biome_fired: dict[str, str] = {}
+        while self.detection_running:
+            try:
+                if self.is_fishing_mode_enabled() or self._custom_paths_busy():
+                    time.sleep(3)
+                    continue
+                now = time.time()
+                cur_biome = str(getattr(self, "current_biome", "") or "").upper()
+                for p in self._custom_paths_triggered():
+                    pid = str(p.get("id") or "")
+                    if not pid:
+                        continue
+                    try:
+                        interval = float(p.get("interval_min") or 0.0)
+                    except Exception:
+                        interval = 0.0
+                    biome = str(p.get("biome") or "").upper()
+                    run = False
+                    if interval > 0:
+                        last = float((getattr(self, "_cp_last_run", {}) or {}).get(pid, 0.0))
+                        if now - last >= interval * 60.0:
+                            run = True
+                    if biome:
+                        if cur_biome == biome:
+                            if self._cp_biome_fired.get(pid) != cur_biome:
+                                run = True
+                        else:
+                            # biome left: re-arm so the next entry fires again
+                            self._cp_biome_fired.pop(pid, None)
+                    if not run:
+                        continue
+                    if not hasattr(self, "_cp_last_run"):
+                        self._cp_last_run = {}
+                    self._cp_last_run[pid] = now
+                    if biome:
+                        self._cp_biome_fired[pid] = cur_biome
+                    from .custom_path_manager import get_custom_path
+                    data = get_custom_path(pid) or {}
+                    events = data.get("events") or []
+                    if not events:
+                        continue
+                    meta = data.get("meta") or {}
+                    label = str(meta.get("label") or pid)
+                    self.append_log(f"[CustomPaths] Triggered path '{label}'"
+                                    + (f" (biome {biome})" if biome and cur_biome == biome else "")
+                                    + ".")
+                    self._action_scheduler.enqueue_action(
+                        lambda ev=events, m=meta, n=pid: self._perform_custom_path_impl(ev, m, n),
+                        name=f"custom_path_{pid}",
+                        priority=0,
+                    )
+            except Exception as e:
+                self.error_logging(e, "Error in custom_paths_loop")
+            time.sleep(3)
+
+    def _perform_custom_path_impl(self, events, meta: dict | None = None, path_id: str = ""):
+        """Replay one free custom path (queued ActionScheduler job)."""
+        events = events or []
+        if not events:
+            return
+        try:
+            if self._is_fishing_blocked():
+                return
+            if not self.check_roblox_procs():
+                return
+            self._custom_path_running = True
+            try:
+                non_vip_now = bool(self.config.get("non_vip_movement_path", False))
+                mult = None
+                try:
+                    from .custom_path_manager import resolve_walk_multiplier
+                    mult = resolve_walk_multiplier(meta or {}, non_vip_now)
+                except Exception:
+                    mult = None
+                if mult is None:
+                    # Legacy paths (no walk-speed stamp): stretch when
+                    # Non-VIP mode is on (same fallback the obby loop uses).
+                    mult = 1.22 if non_vip_now else 1.0
+                from .mixin_memory_match import _replay_walk_path
+                self.activate_roblox_window()
+                self._sleep_with_cancel(0.3)
+                should_continue = lambda: bool(
+                    getattr(self, "detection_running", False)
+                    and not self._is_fishing_blocked()
+                )
+                can_run = lambda: True
+                _replay_walk_path(events, self._sleep_with_cancel, should_continue, can_run, mult)
+                self.append_log(
+                    f"[CustomPaths] Path '{(meta or {}).get('label') or path_id or 'custom'}' "
+                    f"finished ({len(events)} events).")
+            finally:
+                self._custom_path_running = False
+        except Exception as e:
+            self._custom_path_running = False
+            self.error_logging(e, "Error in _perform_custom_path_impl")
 
     def _run_obby_macro(self, json_file_path):
         if self.dry_run_active():
@@ -1478,161 +1638,6 @@ class ActionsMixin:
                         pass
 
     # ── Easter Egg Collection ─────────────────────────────────────────
-    def egg_collect_loop(self):
-        while self.detection_running:
-            try:
-                if self.config.get("enable_idle_mode", False):
-                    time.sleep(2)
-                    continue
-
-                if not self.config.get("collect_easter_egg", False):
-                    time.sleep(2)
-                    continue
-
-                try:
-                    interval_min = float(self.config.get("egg_collect_interval_min", "25"))
-                except Exception:
-                    interval_min = 25.0
-
-                if (datetime.now() - getattr(self, "last_egg_collect_time", datetime.min)) < timedelta(minutes=interval_min):
-                    time.sleep(2)
-                    continue
-
-    
-                if self.dry_run_active():
-                    self.dry_run_log("collect easter eggs (walk the egg route)")
-                    self.last_egg_collect_time = datetime.now()
-                    time.sleep(2)
-                    continue
-                self._egg_collection_pending = True
-                
-                if (getattr(self, "_br_sc_running", False) or
-                    getattr(self, "_mt_running", False) or
-                    getattr(self, "auto_pop_state", False) or
-                    getattr(self, "on_auto_merchant_state", False) or
-                    getattr(self, "_auto_merchant_running", False) or
-                    getattr(self, "_fishing_busy", False) or
-                    self.reconnecting_state or
-                    getattr(self, "_obby_running", False)):
-                    time.sleep(2)
-                    continue
-
-                # Don't collect during rare biomes
-                current_biome = str(getattr(self, "current_biome", "") or "").upper().strip()
-                if current_biome in ("GLITCHED", "DREAMSPACE", "CYBERSPACE"):
-                    time.sleep(2)
-                    continue
-
-                # Don't collect during potion crafting
-                if (getattr(self, "enable_potion_crafting_var", None)
-                    and self.enable_potion_crafting_var.get()):
-                    time.sleep(2)
-                    continue
-
-                self._egg_collection_pending = True
-                try:
-                    self._action_scheduler.enqueue_action(self._scheduled_egg_collect, name="egg_collect", priority=4)
-                    while getattr(self, "_egg_collection_pending", False) and self.detection_running:
-                        time.sleep(1)
-                except Exception as e:
-                    self._egg_collection_pending = False
-                    self._egg_collecting = False
-                    self.error_logging(e, "Error enqueueing egg collect")
-
-            except Exception as e:
-                self.error_logging(e, "Error in egg_collect_loop")
-            time.sleep(1)
-
-    def _scheduled_egg_collect(self):
-        try:
-            self._egg_collecting = True
-            time.sleep(3.5)
-            if self.is_fishing_mode_enabled():
-                close_btn = self.config.get("fishing_close_button_pos", [1113, 342])
-                if close_btn and close_btn[0]:
-                    self.activate_roblox_window()
-                    time.sleep(0.3)
-                    try:
-                        autoit.mouse_click("left", close_btn[0], close_btn[1], 1, speed=3)
-                    except Exception:
-                        self.Global_MouseClick(close_btn[0], close_btn[1])
-                    time.sleep(1.0)
-            self._perform_egg_collect_impl()
-        except Exception as e:
-            self.error_logging(e, "Error in _scheduled_egg_collect execution")
-        finally:
-            self._egg_collecting = False
-            self._egg_collection_pending = False
-            self.last_egg_collect_time = datetime.now()
-
-    def _perform_egg_collect_impl(self):
-        try:
-            if not self.config.get("collect_easter_egg", False):
-                return
-            if not self.check_roblox_procs():
-                return
-
-            print("[EggCollect] Starting egg collection sequence...")
-            self.append_log("[EggCollect] Starting egg collection sequence...")
-
-            from .egg_collect import run_egg_collect_once, load_egg_config
-
-            cfg = load_egg_config(self.config)
-
-            def _should_continue():
-                return (
-                    self.detection_running
-                    and not self.reconnecting_state
-                    and not self.auto_pop_state
-                )
-
-            def _can_run():
-                try:
-                    return (
-                        self.detection_running
-                        and not self.reconnecting_state
-                        and not self.auto_pop_state
-                        and bool(self.config.get("collect_easter_egg", False))
-                    )
-                except Exception:
-                    return False
-
-            def _sleep_interruptible(seconds, poll=0.02):
-                end = time.monotonic() + max(0.0, float(seconds))
-                while time.monotonic() < end:
-                    if not _should_continue() or not _can_run():
-                        return False
-                    remaining = end - time.monotonic()
-                    if remaining <= 0:
-                        break
-                    time.sleep(min(poll, remaining))
-                return _should_continue() and _can_run()
-
-            run_egg_collect_once(
-                cfg=cfg,
-                sleep_interruptible=_sleep_interruptible,
-                should_continue=_should_continue,
-                can_run=_can_run,
-                activate_roblox_cb=self.activate_roblox_window,
-                close_chat_fn=lambda: self.close_chat_if_open(force=False),
-                egg_ocr_check_cb=self._perform_egg_ocr_check,
-            )
-
-        except Exception as e:
-            self.error_logging(e, "Error in _perform_egg_collect_impl")
-
-    # ── Easter Egg OCR Special Detection ──────────────────────────────
-    EGG_SPAWN_MESSAGES: list[tuple[str, str, str]] = [
-        ("Dreamer Egg (Sky Festival)",           "wait. am i still dreaming?", "1 in 2,000,000,000"),
-        ("Egg v2.0 (Y.O.L.K.E.G.G)",            "preparing protocol. do you want to be my friend?", "1 in 1,780,908,090"),
-        ("The Egg of the Sky (Eggis)",           "scanning. egg cannon charging 2000%", "1 in 1,150,000,000"),
-        ("Forest Egg (Eostre)",                  "let's have an egg hunt here!", "1 in 1,000,000,000"),
-        ("Blooming Egg (Eggore)",                "don't forget to water the small plant", "1 in 700,000,000"),
-        ("Angelic Egg (REVIVE)",                 "holy eggsus", "1 in 645,000,000"),
-        ("Andromeda Egg (Eggsistance)",           "am i in spaaaace right now?", "1 in 307,777,777"),
-        ("Either Royal Egg or Hatch Egg",        "a special egg has spawned", "1 in 80,000,000 / 1 in 40,000,000"),
-    ]
-
     def eden_ocr_check_loop(self):
         last_check = time.monotonic()
         while self.detection_running:
@@ -1671,7 +1676,7 @@ class ActionsMixin:
 
                 if (self.reconnecting_state or
                     self.auto_pop_state or
-                    (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
+                    (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
                     getattr(self, "_obby_running", False) or
                     getattr(self, "_br_sc_running", False) or
                     getattr(self, "_mt_running", False) or
@@ -1848,7 +1853,7 @@ class ActionsMixin:
                 if self.is_roblox_focused():
                     x, y, w, h = int(chat_box_region[0]), int(chat_box_region[1]), int(chat_box_region[2]), int(chat_box_region[3])
                     img = pyautogui.screenshot(region=(x, y, w, h))
-                    screenshot_dir = os.path.join(os.getcwd(), "images")
+                    screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                     os.makedirs(screenshot_dir, exist_ok=True)
                     screenshot_path = os.path.join(screenshot_dir, f"eden_ocr_{int(time.time())}.png")
                     img.save(screenshot_path)
@@ -1906,7 +1911,7 @@ class ActionsMixin:
                     pending_high_priority = False
                     for item in list(self._action_scheduler._pq.queue):
                         qname = str(item[2]).lower()
-                        if "br" in qname or "sc" in qname or "merchant" in qname or "portable" in qname or "eden_ocr" in qname or "egg_ocr" in qname:
+                        if "br" in qname or "sc" in qname or "merchant" in qname or "portable" in qname or "eden_ocr" in qname:
                             pending_high_priority = True
                             break
                     if pending_high_priority:
@@ -1917,7 +1922,7 @@ class ActionsMixin:
 
                 if (self.reconnecting_state or
                     self.auto_pop_state or
-                    (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
+                    (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
                     getattr(self, "_obby_running", False) or
                     getattr(self, "_br_sc_running", False) or
                     getattr(self, "_mt_running", False) or
@@ -2071,7 +2076,7 @@ class ActionsMixin:
                 if self.is_roblox_focused():
                     x, y, w, h = int(chat_box_region[0]), int(chat_box_region[1]), int(chat_box_region[2]), int(chat_box_region[3])
                     img = pyautogui.screenshot(region=(x, y, w, h))
-                    screenshot_dir = os.path.join(os.getcwd(), "images")
+                    screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                     os.makedirs(screenshot_dir, exist_ok=True)
                     screenshot_path = os.path.join(screenshot_dir, f"merchant_ocr_{int(time.time())}.png")
                     img.save(screenshot_path)
@@ -2099,228 +2104,6 @@ class ActionsMixin:
             self._merchant_checking = False
             self._merchant_checking_pending = False
 
-
-    def egg_ocr_check_loop(self):
-        last_check = time.monotonic()
-        while self.detection_running:
-            try:
-                if not self.config.get("egg_ocr_detect_special", False):
-                    time.sleep(2)
-                    continue
-
-                # 25-second interval
-                if (time.monotonic() - last_check) < 25.0:
-                    time.sleep(1)
-                    continue
-
-                try:
-                    pending_high_priority = False
-                    for item in list(self._action_scheduler._pq.queue):
-                        qname = str(item[2]).lower()
-                        if "br" in qname or "sc" in qname or "merchant" in qname or "portable" in qname:
-                            pending_high_priority = True
-                            break
-                    if pending_high_priority:
-                        time.sleep(2)
-                        continue
-                except Exception:
-                    pass
-
-                if (self.reconnecting_state or
-                    self.auto_pop_state or
-                    (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
-                    getattr(self, "_obby_running", False) or
-                    getattr(self, "_br_sc_running", False) or
-                    getattr(self, "_mt_running", False) or
-                    getattr(self, "on_auto_merchant_state", False) or
-                    getattr(self, "_auto_merchant_running", False) or
-                    getattr(self, "_fishing_busy", False) or
-                    self._is_fishing_blocked()):
-                    time.sleep(2)
-                    continue
-
-                # Don't check during rare biomes
-                current_biome = str(getattr(self, "current_biome", "") or "").upper().strip()
-                if current_biome in ("GLITCHED", "DREAMSPACE", "CYBERSPACE"):
-                    time.sleep(2)
-                    continue
-
-                # Don't check during potion crafting
-                if (getattr(self, "enable_potion_crafting_var", None)
-                    and self.enable_potion_crafting_var.get()):
-                    time.sleep(2)
-                    continue
-
-                if not self.check_roblox_procs():
-                    time.sleep(2)
-                    continue
-
-                # Perform the OCR check
-                last_check = time.monotonic()
-                self._perform_egg_ocr_check()
-
-            except Exception as e:
-                self.error_logging(e, "Error in egg_ocr_check_loop")
-            time.sleep(1)
-
-    def _perform_egg_ocr_check(self):
-        try:
-            chat_box_region = self.config.get("chat_box_ocr_pos", [0, 0, 0, 0])
-            if not chat_box_region or len(chat_box_region) < 4: return
-            if chat_box_region[2] <= 0 or chat_box_region[3] <= 0: return
-
-            chat_hover = self.config.get("chat_hover_pos", [272, 252])
-            chat_ocr_region = self.config.get("chat_tab_ocr_pos", [341, 83, 210, 40])
-            chat_close = self.config.get("chat_close_button", [174, 40])
-
-            if not (chat_hover and chat_hover[0] and chat_close and chat_close[0]): return
-
-            for _ in range(3):
-                self.activate_roblox_window()
-                time.sleep(0.15)
-
-            sw = pyautogui.size()
-            autoit.mouse_move(sw.width // 2, sw.height // 2, speed=3)
-            time.sleep(0.6)
-            autoit.mouse_move(chat_hover[0], chat_hover[1], speed=3)
-            time.sleep(0.6)
-
-            # Check if chat is already open
-            chat_is_open = False
-            for attempt in range(1, 3):
-                tab_text = self.extract_text_winocr(tuple(chat_ocr_region)).lower()
-                if fuzzy_match_any(tab_text, ["general", "server message"], threshold=0.8):
-                    chat_is_open = True
-                    break
-                if attempt < 2:
-                    time.sleep(0.35)
-
-            if not chat_is_open:
-                autoit.mouse_click("left", chat_close[0], chat_close[1], 1, speed=3)
-                time.sleep(0.8)
-
-                autoit.mouse_move(chat_hover[0], chat_hover[1], speed=3)
-                time.sleep(0.5)
-
-                for attempt in range(1, 3):
-                    tab_text = self.extract_text_winocr(tuple(chat_ocr_region)).lower()
-                    if fuzzy_match_any(tab_text, ["general", "server message"], threshold=0.8):
-                        chat_is_open = True
-                        break
-                    if attempt < 2:
-                        time.sleep(0.35)
-
-            if not chat_is_open:
-                self.append_log("[EggOCR] Could not confirm chat is open. Skipping OCR check.")
-                return
-
-            text = self.extract_text_winocr(tuple(chat_box_region)).lower()
-            if not text: return
-            _PLAYER_TAGS = [
-                "[fan]", "[vip]", "[vip+]", "[donator]", "[contributor]",
-                "[cm]", "[dev]", "[moderator]", "[admin]", "[owner]",
-                "[og]", "[tester]", "[youtuber]", "[rolls]"
-            ]
-            _TAG_LOOKBACK = 100
-
-            def _is_player_message(match_pos: int) -> bool:
-                start = max(0, match_pos - _TAG_LOOKBACK)
-                prefix = text[start:match_pos]
-                return any(tag in prefix for tag in _PLAYER_TAGS)
-
-            egg_spawned_pos = text.find("egg spawned")
-            if egg_spawned_pos == -1: return
-
-            all_trolled = True
-            search_start = 0
-            while True:
-                pos = text.find("egg spawned", search_start)
-                if pos == -1: break
-                if not _is_player_message(pos):
-                    all_trolled = False
-                    break
-                search_start = pos + 1
-            if all_trolled:
-                self.append_log("[EggOCR] 'egg spawned' detected but matched a player message, skipping.")
-                return
-
-            _EGG_FUZZY_THRESHOLD = 0.8
-            found_egg_name = None
-            found_message = None
-            found_rarity = None
-            found_match_pos = -1
-
-            for egg_name, unique_substr, aura_rarity in self.EGG_SPAWN_MESSAGES:
-                exact_pos = text.find(unique_substr)
-                if exact_pos != -1:
-                    if not _is_player_message(exact_pos):
-                        found_egg_name = egg_name
-                        found_message = unique_substr
-                        found_rarity = aura_rarity
-                        found_match_pos = exact_pos
-                        break
-                    continue
-
-                win_len = len(unique_substr)
-                if win_len > len(text): continue
-                for i in range(len(text) - win_len + 1):
-                    window = text[i:i + win_len]
-                    ratio = difflib.SequenceMatcher(None, unique_substr, window).ratio()
-                    if ratio >= _EGG_FUZZY_THRESHOLD:
-                        if not _is_player_message(i):
-                            found_egg_name = egg_name
-                            found_message = unique_substr
-                            found_rarity = aura_rarity
-                            found_match_pos = i
-                        break
-                if found_egg_name: break
-
-            if not found_egg_name:
-                found_egg_name = "Unknown Egg"
-                found_message = "egg spawned"
-                found_rarity = "Unknown"
-
-            # skip if the same egg was detected within 10 minutes (guard check :aga:)
-            _EGG_OCR_COOLDOWN_SEC = 600
-            last_egg = getattr(self, "_last_egg_ocr_found", None)
-            last_egg_time = getattr(self, "_last_egg_ocr_found_time", 0)
-            now = time.monotonic()
-            if last_egg == found_egg_name and (now - last_egg_time) < _EGG_OCR_COOLDOWN_SEC: return
-            self._last_egg_ocr_found = found_egg_name
-            self._last_egg_ocr_found_time = now
-
-            print(f"[EggOCR] Egg spawn detected: {found_egg_name} | Aura rarity: {found_rarity}")
-            self.append_log(f"[EggOCR] Egg spawn detected: {found_egg_name} | Aura rarity: {found_rarity}")
-
-            discord_user_id = str(self.config.get("egg_ocr_discord_userid", "")).strip()
-            screenshot_path = None
-            
-            try:
-                if self.is_roblox_focused():
-                    x, y, w, h = int(chat_box_region[0]), int(chat_box_region[1]), int(chat_box_region[2]), int(chat_box_region[3])
-                    img = pyautogui.screenshot(region=(x, y, w, h))
-                    screenshot_dir = os.path.join(os.getcwd(), "images")
-                    os.makedirs(screenshot_dir, exist_ok=True)
-                    screenshot_path = os.path.join(screenshot_dir, f"egg_ocr_{int(time.time())}.png")
-                    img.save(screenshot_path)
-            except Exception as e:
-                print(f"[EggOCR] Failed to take chat screenshot: {e}")
-                screenshot_path = None
-
-            try:
-                self.send_egg_ocr_webhook(found_egg_name, found_rarity, discord_user_id, screenshot_path=screenshot_path)
-            except Exception as e:
-                print(f"[EggOCR] Failed to send webhook: {e}")
-
-        except Exception as e:
-            self.error_logging(e, "Error in _perform_egg_ocr_check")
-        finally:
-            try:
-                chat_close = self.config.get("chat_close_button", [174, 40])
-                if chat_close and chat_close[0]:
-                    autoit.mouse_click("left", chat_close[0], chat_close[1], 1, speed=3)
-            except Exception:
-                pass
 
     def perform_quest_reroll(self, quest_index):
         ensure_english_layout_silent()
@@ -2582,6 +2365,24 @@ class ActionsMixin:
         try:
             print("[Eden] Performing contract...")
             contract_btn = self.config.get("eden_contract_button", [0, 0])
+            # Optional extra click points (up to 2): the user may not have
+            # calibrated the main point exactly on the contract button, so
+            # every calibrated point is clicked in sequence each round.
+            extra_points = []
+            for _key in ("eden_contract_extra1_button", "eden_contract_extra2_button"):
+                _p = self.config.get(_key, None)
+                try:
+                    if (isinstance(_p, (list, tuple)) and len(_p) == 2
+                            and float(_p[0]) > 0 and float(_p[1]) > 0):
+                        extra_points.append((int(_p[0]), int(_p[1])))
+                except Exception:
+                    pass
+            points = []
+            if contract_btn and contract_btn[0] > 0 and contract_btn[1] > 0:
+                points.append((int(contract_btn[0]), int(contract_btn[1])))
+            points.extend(extra_points)
+            if extra_points:
+                print(f"[Eden] Contract click points: {len(points)} (main + {len(extra_points)} extra).")
 
             for _ in range(4):
                 if not self.detection_running: return
@@ -2590,9 +2391,10 @@ class ActionsMixin:
             
             for _ in range(7):
                 if not self.detection_running: return
-                if contract_btn and contract_btn[0] > 0 and contract_btn[1] > 0:
-                    self.Global_MouseClick(contract_btn[0], contract_btn[1])
-                    print("[Eden] Clicked Eden contract button.")
+                for (px, py) in points:
+                    if not self.detection_running: return
+                    self.Global_MouseClick(px, py)
+                    time.sleep(0.25)
                 time.sleep(0.5)
             
             time.sleep(0.5)
@@ -2617,7 +2419,7 @@ class ActionsMixin:
                     time.sleep(2)
                     continue
 
-                if self.is_fishing_mode_enabled() or getattr(self, "_egg_collecting", False) or getattr(self, "_potion_thread_active", False) or getattr(self, "_obby_running", False):
+                if self.is_fishing_mode_enabled() or getattr(self, "_potion_thread_active", False) or getattr(self, "_obby_running", False):
                     time.sleep(2)
                     continue
 
@@ -2876,7 +2678,7 @@ class ActionsMixin:
                             self.on_auto_merchant_state or
                             self.current_biome in ("GLITCHED", "DREAMSPACE", "CYBERSPACE") or
                             getattr(self, '_mt_running', False) or
-                            (getattr(self, '_egg_collecting', False) or getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False))):
+                            (getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False))):
                             time.sleep(2)
                             continue
 
@@ -3141,6 +2943,54 @@ class ActionsMixin:
         except Exception:
             return []
 
+    def _client_self_rejoined(self) -> bool:
+        """True when the Roblox client is recovering the connection ITSELF.
+
+        Verified against a real disconnect log (2026-09-27): after the loss
+        the client logs "<< AUTO REJOIN >> Rejoin Attempt : 1", then
+        "! Joining game ..." / "Entered play session." within seconds. The
+        macro must NOT terminate the process during that self-rejoin; it
+        should only force-reconnect when the client does NOT recover."""
+        try:
+            log_file = getattr(self, "_disconnect_log_file", None)
+            offset = int(getattr(self, "_disconnect_line_offset", 0) or 0)
+            if not log_file or not os.path.exists(log_file):
+                return False
+            deadline_no_attempt = time.time() + 8.0
+            deadline_attempt = None
+            while self.detection_running:
+                with open(log_file, "rb") as f:
+                    f.seek(offset)
+                    data = f.read()
+                text = data.decode("utf-8", errors="ignore").lower()
+                if deadline_attempt is None and "auto rejoin >> rejoin attempt" in text:
+                    deadline_attempt = time.time() + 20.0
+                    self.append_log("[Disconnect] Roblox client is attempting its own auto-rejoin - waiting for it.")
+                if deadline_attempt is not None:
+                    # Recovery counts ONLY when the client actually ENTERED
+                    # the play session. "! Joining game" alone is NOT enough:
+                    # with broken internet the client can start rejoining and
+                    # then hang on the disconnect screen with no further
+                    # game-side auto-rejoin (user-verified behavior in Sol's
+                    # RNG) - the macro must take over in that case.
+                    if "entered play session" in text:
+                        return True
+                    if time.time() > deadline_attempt:
+                        return False
+                elif time.time() > deadline_no_attempt:
+                    return False
+                time.sleep(2.0)
+            return False
+        except Exception:
+            return False
+
+    def _disconnect_log_patterns(self):
+        try:
+            from .multi_instance import DISCONNECT_LOG_PATTERNS
+            return DISCONNECT_LOG_PATTERNS
+        except Exception:
+            return ("client:disconnect", "connection lost", "connection terminated", "disconnected from server")
+
     def _check_disconnect_in_logs(self):
         try:
             log_file = self.get_latest_log_file()
@@ -3188,11 +3038,14 @@ class ActionsMixin:
                     self._last_position_disconnect += cut + 1
                 # cut == -1: no complete line yet - offset stays, retry next poll.
 
-            try:
-                if hasattr(self, "_consume_log_username_validation") and not self._consume_log_username_validation(log_file):
-                    return False
-            except Exception:
-                pass
+            # NOTE: do NOT gate this scan behind _consume_log_username_validation.
+            # The old code advanced the file offset FIRST and then returned
+            # False while the username validation was pending/rejected - the
+            # disconnect line was consumed and silently lost, so the macro
+            # kept thinking Roblox was connected and auto-reconnect never
+            # fired (2026-09-27 fix). Disconnect detection must be
+            # independent of username validation; this log is already the
+            # MAIN window's own log (get_latest_log_file handles that).
 
             if not new_lines:
                 # No silence-based disconnect detection anymore. The old
@@ -3208,10 +3061,12 @@ class ActionsMixin:
                 return False
 
             for line in reversed(new_lines):
-                if "[FLog::Network] Client:Disconnect" in line:
+                low = (line or "").lower()
+                if any(pat in low for pat in _disconnect_log_patterns()):
                     self.append_log(f"[Disconnect] Detected client disconnect in logs: {line.strip()}")
                     self._last_disconnect_time = time.time()
                     self._disconnect_handled = True
+                    self._disconnect_line_offset = self._last_position_disconnect
                     return True
 
         except Exception as e:
@@ -3233,6 +3088,13 @@ class ActionsMixin:
                     reason = "Roblox instance closed!" if is_process_dead else "Disconnected from server (detected in Roblox logs)"
                     self._pause_timer_for_disconnect(reason)
                     time.sleep(4.5)
+
+                    if log_disconnect and self._client_self_rejoined():
+                        self.append_log("[Disconnect] Roblox client rejoined by itself - macro reconnect not needed.")
+                        self._resume_timer_after_reconnect()
+                        self._disconnect_handled = False
+                        time.sleep(1)
+                        continue
 
                     if self.config.get("auto_reconnect"):
                         private_server_link = self.config.get("private_server_link")
@@ -3338,7 +3200,7 @@ class ActionsMixin:
 
                 time.sleep(click_interval)
 
-            self.append_log("Timed out waiting for in-game state after 4 minutes.")
+            self.append_log("Timed out waiting for in-game state after 10 minutes.")
             return False
 
         except Exception as e:
@@ -3355,7 +3217,16 @@ class ActionsMixin:
             log_lines = self.read_full_log_file(log_file_path)
 
             for line in reversed(log_lines):
+                # Primary marker: BloxstrapRPC rich presence (only written
+                # when fully loaded in-place). NOTE: it requires a
+                # Bloxstrap/Fishstrap-style RPC writer - without one this
+                # line never appears, so the engine-level fallback below is
+                # mandatory for a reliable "we are in the game" signal.
                 if re.search(r'"state":"Equipped', line): return True
+                # Engine-level fallback (present in every client, verified
+                # against the 2026-09-27 real log): the SessionTransitionFSM
+                # announces the play session right after a successful join.
+                if "[FLog::SessionTransitionFSM] Entered play session." in line: return True
 
         except Exception as e:
             self.error_logging(e, "Error in reconnect_logs_state function.")
@@ -3427,56 +3298,70 @@ class ActionsMixin:
         now = time.time()
         if hasattr(self, "_last_roblox_procs") and now - getattr(self, "_last_roblox_procs_time", 0) < 2.0:
             return self._last_roblox_procs
+        # Window-first scan: only the few window PIDs are classified, no
+        # exe/username queries over the whole process table (that lagged
+        # the app). A visible Roblox client window implies a live process.
         try:
-            current_user = psutil.Process().username()
-            current_user_norm = str(current_user or "").strip().lower()
-            running_processes = psutil.process_iter(['pid', 'name', 'username'])
-            roblox_processes = []
-
-            for proc in running_processes:
-                proc_name = str(proc.info.get('name') or "")
-                if proc_name not in ['RobloxPlayerBeta.exe', 'Windows10Universal.exe']:
-                    continue
-
-                proc_user_norm = str(proc.info.get('username') or "").strip().lower()
-                if current_user_norm and proc_user_norm and proc_user_norm != current_user_norm:
-                    continue
-
-                roblox_processes.append(proc.info)
-
-            if roblox_processes:
-                try:
-                    hwnds = self._find_roblox_hwnds()
-                    if not hwnds:
-                        self._last_roblox_procs = False
-                        self._last_roblox_procs_time = time.time()
-                        return False
-                except Exception: pass
-                self._last_roblox_procs = True
-                self._last_roblox_procs_time = time.time()
-                return True
-
-        except Exception as e:
-            self.error_logging(e, "Error in check_roblox_procs function.")
-
-        self._last_roblox_procs = False
-        self._last_roblox_procs_time = time.time()
-        return False  # no Roblox processes are found
+            result = bool(self._find_roblox_hwnds())
+        except Exception:
+            result = False
+        self._last_roblox_procs = result
+        self._last_roblox_procs_time = now
+        return result
 
     def terminate_roblox_processes(self):
         try:
+            # Multi-instance mode: kill ONLY the main window's process so the
+            # secondary windows survive a reconnect / fishing failsafe. After
+            # the main client relaunches, its fresh log makes it the newest
+            # log again and get_main_pid() re-resolves it automatically.
+            main_pid = None
+            try:
+                if bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                    from . import multi_instance
+                    main_pid = multi_instance.get_main_pid()
+            except Exception:
+                main_pid = None
+            if main_pid:
+                try:
+                    proc = psutil.Process(int(main_pid))
+                    print(f"Terminating MAIN Roblox process only (PID: {proc.pid})")
+                    proc.kill()
+                    proc.wait(timeout=3)
+                except psutil.NoSuchProcess:
+                    pass
+                except Exception as e:
+                    self.error_logging(e, "Error terminating main Roblox process.")
+                return
+
             current_user = psutil.Process().username()
             current_user_norm = str(current_user or "").strip().lower()
-            running_processes = psutil.process_iter(['pid', 'name', 'username'])
-            target_procs = ['RobloxPlayerBeta.exe', 'Windows10Universal.exe', 'RobloxPlayerLauncher.exe', 'RobloxCrashHandler.exe']
+            target_procs = ['robloxplayerbeta.exe', 'windows10universal.exe',
+                            'robloxplayerlauncher.exe', 'robloxcrashhandler.exe']
 
-            for proc in running_processes:
+            for proc in psutil.process_iter(['pid', 'name', 'username', 'exe']):
                 try:
-                    proc_name = str(proc.info.get('name') or "")
-                    if proc_name not in target_procs: continue
+                    info = proc.info
+                    proc_name_cf = str(info.get('name') or "").casefold()
+                    exe_cf = str(info.get('exe') or "").casefold()
+                    # Kill every Roblox client/helper, including renamed
+                    # multi-instance copies; Roblox Studio is never touched
+                    # and the third-party multi-instance LAUNCHER (e.g.
+                    # MultipleRobloxInstances.exe) must survive: it is the
+                    # tool the user relaunches clients from.
+                    from .base_support import ROBLOX_NONCLIENT_HINTS
+                    nonclient = any(h in proc_name_cf or h in exe_cf
+                                    for h in ROBLOX_NONCLIENT_HINTS)
+                    is_target = (not nonclient or proc_name_cf == "robloxcrashhandler.exe") and (
+                        proc_name_cf in target_procs
+                        or ("roblox" in proc_name_cf)
+                        or ("roblox" in exe_cf)
+                    )
+                    if not is_target:
+                        continue
                     proc_user_norm = str(proc.info.get('username') or "").strip().lower()
                     if current_user_norm and proc_user_norm and proc_user_norm != current_user_norm: continue
-                    print(f"Terminating process: {proc_name} (PID: {proc.info.get('pid')})")
+                    print(f"Terminating process: {proc_name_cf or exe_cf or 'roblox process'} (PID: {proc.info.get('pid')})")
                     try:
                         proc.kill()
                         proc.wait(timeout=3)
@@ -3503,7 +3388,7 @@ class ActionsMixin:
                 return
             if not self.check_roblox_procs(): return
             for _ in range(4):
-                if not self.detection_running or self._is_fishing_blocked() or self.auto_pop_state or (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
+                if not self.detection_running or self._is_fishing_blocked() or self.auto_pop_state or (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
                     return
                 self.activate_roblox_window()
                 if not self._sleep_with_cancel(0.8):
@@ -3536,7 +3421,7 @@ class ActionsMixin:
                 if not self._sleep_with_cancel(0.35):
                     return
             try:
-                screenshot_dir = os.path.join(os.getcwd(), "images")
+                screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                 os.makedirs(screenshot_dir, exist_ok=True)
                 filename = os.path.join(screenshot_dir, f"inventory_screenshot_{int(time.time())}.png")
                 img = pyautogui.screenshot()
@@ -3560,7 +3445,44 @@ class ActionsMixin:
         except Exception as e:
             self.error_logging(e, "Error in perform_periodic_inventory_screenshot_sync")
 
+    # How often the pre-action window guard may run its probe at all. The
+    # probe is a few cheap win32 calls, but there is no reason to repeat it
+    # on every single click of a long sequence (owner request 2026-09-28).
+    _PREACTION_CHECK_INTERVAL = 10.0
+
+    def _ensure_main_window_before_action(self, force: bool = False):
+        """Guard for the MAIN Roblox window (owner request 2026-09-28):
+        focus + geometry must be correct before actions on the main window -
+        with AND without multiple-instance mode.
+
+        THROTTLED: the full probe (window enum + geometry) runs at most once
+        per _PREACTION_CHECK_INTERVAL seconds; `force=True` (once per
+        feature session, e.g. Memory Match cycle start) bypasses the
+        throttle. The repair path (restore / focus / maximize / fullscreen)
+        only runs when the window is actually wrong. Never raises."""
+        try:
+            now = time.time()
+            if not force and now - getattr(self, "_preaction_last_check", 0.0) < self._PREACTION_CHECK_INTERVAL:
+                return
+            self._preaction_last_check = now
+            hwnds = self._find_roblox_hwnds()
+            if not hwnds:
+                return
+            hwnd = self._preferred_main_hwnd(hwnds)
+            if (hwnd
+                    and win32gui.GetForegroundWindow() == hwnd
+                    and not win32gui.IsIconic(hwnd)
+                    and self._window_geometry_ready(hwnd)):
+                return
+            self.ensure_roblox_window_state(reason="pre-action check")
+        except Exception:
+            pass
+
     def Global_MouseClick(self, x, y, click=1):
+        try:
+            self._ensure_main_window_before_action()
+        except Exception:
+            pass
         time.sleep(0.335)
         autoit.mouse_click("left", x, y, click, speed=3)
 
@@ -3590,7 +3512,7 @@ class ActionsMixin:
                     or self.on_auto_merchant_state
                     or (self.is_fishing_mode_enabled() if ignore_eden else self._is_fishing_blocked())
                     or self.config.get("enable_potion_crafting")
-                    or (getattr(self, "_egg_collecting", False) or (not ignore_eden and getattr(self, "_eden_running", False)) or getattr(self, "_potion_thread_active", False))
+                    or ((not ignore_eden and getattr(self, "_eden_running", False)) or getattr(self, "_potion_thread_active", False))
                     or (getattr(self, "enable_potion_crafting_var", None) and self.enable_potion_crafting_var.get())
                 )
 
@@ -3704,9 +3626,9 @@ class ActionsMixin:
                     return "potion crafting"
                 if getattr(self, "_mt_running", False):
                     return "merchant teleporter running"
-                if (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False)
+                if (getattr(self, "_eden_running", False)
                         or getattr(self, "_potion_thread_active", False)):
-                    return "egg/eden/potion running"
+                    return "eden/potion running"
             return None
         except Exception:
             return None
@@ -3879,7 +3801,7 @@ class ActionsMixin:
                     or self.auto_pop_state
                     or self._is_fishing_blocked()
                     or self.config.get("enable_potion_crafting")
-                    or (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False))
+                    or (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False))
                     or self.current_biome in ("GLITCHED", "DREAMSPACE", "CYBERSPACE")
                 )
 
@@ -4024,7 +3946,7 @@ class ActionsMixin:
                 if not self._sleep_with_cancel(7 + inventory_click_delay):
                     return
 
-                screenshot_dir = os.path.join(os.getcwd(), "images")
+                screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                 os.makedirs(screenshot_dir, exist_ok=True)
 
                 item_screenshot = pyautogui.screenshot()
@@ -4274,7 +4196,8 @@ class ActionsMixin:
             chat_detected = False
             for attempt in range(1, 4):
                 tab_text = self.extract_text_winocr(tuple(chat_ocr_region)).lower()
-                self.append_log(f"[WinOcr] Close Chat OCR Check ({attempt}/3): '{tab_text}'")
+                # No per-attempt logging: three OCR probes per check flooded
+                # the log with identical lines (owner request 2026-09-28).
 
                 if fuzzy_match_any(tab_text, ["general", "server message", "here"], threshold=0.75):
                     chat_detected = True
@@ -4326,6 +4249,93 @@ class ActionsMixin:
             self.error_logging(e, "Roblox reconnect window validation failed")
             return False
 
+    def ensure_roblox_window_state(self, reason: str = "") -> bool:
+        """Full readiness check for calibrated actions: focus + geometry + mode.
+
+        Roblox may restart into a small windowed client, the user may minimize
+        or shrink the window (or accidentally leave fullscreen when the
+        calibration was made windowed). Before important actions — and
+        periodically through activate_roblox_window — this helper verifies the
+        target window is foreground and covers its monitor (the calibrated
+        geometry), restoring/focusing/maximizing as needed. Never raises.
+        """
+        try:
+            hwnds = self._find_roblox_hwnds()
+            if not hwnds:
+                return False
+            hwnd = self._preferred_main_hwnd(hwnds)
+            fixed = []
+            if win32gui.IsIconic(hwnd):
+                win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+                time.sleep(0.3)
+                fixed.append("restored from minimized")
+            if win32gui.GetForegroundWindow() != hwnd:
+                self._focus_window_hwnd(hwnd, max_attempts=5, sleep_between=0.1)
+                if win32gui.GetForegroundWindow() == hwnd:
+                    fixed.append("focused")
+            ready = self._window_geometry_ready(hwnd)
+            if not ready:
+                if self.config.get("auto_roblox_fullscreen", False):
+                    self._force_roblox_fullscreen()
+                    fixed.append("fullscreen re-applied")
+                else:
+                    # Windowed calibration: the client must simply fill its
+                    # monitor again (maximize), F11 would invalidate geometry.
+                    win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+                    time.sleep(0.4)
+                    if not self._window_geometry_ready(hwnd):
+                        monitor = win32api.MonitorFromWindow(hwnd, 2)
+                        left, top, right, bottom = win32api.GetMonitorInfo(monitor)["Monitor"]
+                        win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, left, top, right-left, bottom-top, win32con.SWP_SHOWWINDOW | win32con.SWP_FRAMECHANGED)
+                        time.sleep(0.35)
+                    fixed.append("window maximized")
+                ready = self._window_geometry_ready(hwnd)
+            if fixed:
+                try:
+                    self.append_log(
+                        "[Roblox] Window state fixed"
+                        + (f" for {reason}" if reason else "")
+                        + f": {', '.join(fixed)} -> {'ready' if ready else 'NOT ready'}"
+                    )
+                except Exception:
+                    pass
+            return ready
+        except Exception as e:
+            try:
+                self.error_logging(e, "ensure_roblox_window_state failed")
+            except Exception:
+                pass
+            return False
+
+    def _window_geometry_ready(self, hwnd) -> bool:
+        """True when the window covers >=80% of its monitor in both axes."""
+        try:
+            monitor = win32api.MonitorFromWindow(hwnd, 2)
+            mr = win32api.GetMonitorInfo(monitor)["Monitor"]
+            wl, wt, wr, wb = win32gui.GetWindowRect(hwnd)
+            mw, mh = max(1, mr[2] - mr[0]), max(1, mr[3] - mr[1])
+            return (wr - wl) >= int(mw * 0.80) and (wb - wt) >= int(mh * 0.80)
+        except Exception:
+            return False
+
+    def _preferred_main_hwnd(self, hwnds):
+        """Pick the window all main-window automation should target.
+
+        In multi-instance mode that is the user-selected MAIN window; without
+        multiple instances it stays the first Roblox window (legacy behavior).
+        """
+        if not hwnds:
+            return None
+        try:
+            if bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                from . import multi_instance
+                main_hwnd = multi_instance.get_main_hwnd()
+                if main_hwnd and main_hwnd in hwnds:
+                    return main_hwnd
+        except Exception:
+            pass
+        return hwnds[0]
+
     def activate_roblox_window(self):
         hwnd = None
         try:
@@ -4337,9 +4347,21 @@ class ActionsMixin:
                 # retries only for an actually inactive window; configured game
                 # cooldowns and recorded path timing are untouched.
                 foreground = win32gui.GetForegroundWindow()
-                hwnd = foreground if foreground in hwnds else hwnds[0]
+                hwnd = foreground if foreground in hwnds else self._preferred_main_hwnd(hwnds)
                 if foreground != hwnd:
                     self._focus_window_hwnd(hwnd, max_attempts=3, sleep_between=0.05)
+                # Every action goes through this helper, so this is the place
+                # to catch a wrong window state (minimized / shrunk client /
+                # unexpected window mode) before it breaks calibrated clicks.
+                # The probe itself is a few cheap win32 calls, so it runs on
+                # EVERY call (owner request 2026-09-28: no 20s throttle);
+                # the full check + repair still only runs when the window is
+                # actually wrong.
+                try:
+                    if not self._window_geometry_ready(hwnd) or win32gui.IsIconic(hwnd):
+                        self.ensure_roblox_window_state(reason="routine action check")
+                except Exception:
+                    pass
         except Exception as e:
             print(f"[activate_roblox_window] hwnd path failed: {e}")
 
@@ -4373,7 +4395,7 @@ class ActionsMixin:
                 self._fs_last_verify = now_ts
                 try:
                     hwnds = self._find_roblox_hwnds()
-                    if hwnds and not self._roblox_monitor_filled(hwnds[0]):
+                    if hwnds and not self._roblox_monitor_filled(self._preferred_main_hwnd(hwnds)):
                         self._roblox_fullscreened = False
                         self._force_roblox_fullscreen()
                 except Exception:
@@ -4409,7 +4431,7 @@ class ActionsMixin:
                 return
 
             foreground = win32gui.GetForegroundWindow()
-            hwnd = foreground if foreground in hwnds else hwnds[0]
+            hwnd = foreground if foreground in hwnds else self._preferred_main_hwnd(hwnds)
             if win32gui.IsIconic(hwnd):
                 win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
                 time.sleep(0.2)
@@ -4472,48 +4494,34 @@ class ActionsMixin:
             self._roblox_fullscreened = False
 
     def _find_roblox_hwnds(self):
-        pids = set()
+        """Visible, enabled Roblox client windows (window-first shared scan).
+
+        Only the few unique window PIDs are classified — never a whole-table
+        exe/username sweep, which made the app lag (2026-09-28). Windows of
+        Roblox processes running under a DIFFERENT Windows user are skipped
+        (same rule as before)."""
         try:
-            current_user = psutil.Process().username()
-            current_user_norm = str(current_user or "").strip().lower()
+            from .base_support import roblox_top_windows
+            wins = roblox_top_windows()
         except Exception:
-            current_user = None
+            return []
+        try:
+            current_user_norm = str(psutil.Process().username() or "").strip().lower()
+        except Exception:
             current_user_norm = ""
-        try:
-            for proc in psutil.process_iter(['pid', 'name', 'username']):
-                try:
-                    proc_name = str(proc.info.get('name') or "")
-                    if proc_name not in ['RobloxPlayerBeta.exe', 'Windows10Universal.exe']:
-                        continue
-
-                    proc_user_norm = str(proc.info.get('username') or "").strip().lower()
-                    if current_user is not None and current_user_norm and proc_user_norm and proc_user_norm != current_user_norm:
-                        continue
-
-                    pid = proc.info.get('pid')
-                    if pid is not None:
-                        pids.add(pid)
-                except Exception:
-                    pass
-        except Exception:
-            pass
-
+        user_by_pid: dict[int, str] = {}
         hwnds = []
-        try:
-            def enum_cb(hwnd, lparam):
-                try:
-                    if not win32gui.IsWindowVisible(hwnd) or not win32gui.IsWindowEnabled(hwnd):
-                        return True
-                    tid, pid = win32process.GetWindowThreadProcessId(hwnd)
-                    if pid in pids:
-                        hwnds.append(hwnd)
-                except Exception:
-                    pass
-                return True
-
-            win32gui.EnumWindows(enum_cb, None)
-        except Exception:
-            pass
+        for w in wins:
+            pid = int(w["pid"])
+            if current_user_norm:
+                if pid not in user_by_pid:
+                    try:
+                        user_by_pid[pid] = str(psutil.Process(pid).username() or "").strip().lower()
+                    except Exception:
+                        user_by_pid[pid] = ""
+                if user_by_pid[pid] and user_by_pid[pid] != current_user_norm:
+                    continue
+            hwnds.append(int(w["hwnd"]))
         return hwnds
 
     def _focus_window_hwnd(self, hwnd, max_attempts=20, sleep_between=0.25):
@@ -4589,6 +4597,45 @@ class ActionsMixin:
         return win32gui.GetForegroundWindow() == hwnd
 
     def perform_anti_afk_action(self):
+        """Gate + serialize the MAIN-window Anti-AFK.
+
+        - In multi-instance mode the main window is skipped while its own
+          cycle is busy (fishing bite, SC/BR, merchant...) - the main window
+          must never lose focus mid-action; the round is simply skipped.
+        - The whole focus/jump/restore sequence holds the global
+          multi_instance jump lock, so the main Anti-AFK and the secondary
+          Anti-AFK loop can never fight over focus (this used to leave the
+          focus on a random Roblox window instead of the user's window).
+        """
+        multi = None
+        multi_locked = False
+        try:
+            from . import multi_instance as multi
+        except Exception:
+            multi = None
+        if multi is not None:
+            try:
+                if multi.is_enabled():
+                    if multi.main_busy(self):
+                        try:
+                            self.append_log("[Anti-AFK] Main cycle busy (multi-instance) - skipping this round.")
+                        except Exception:
+                            pass
+                        return
+                    multi.jump_lock().acquire()
+                    multi_locked = True
+            except Exception:
+                multi_locked = False
+        try:
+            self._perform_anti_afk_action_impl()
+        finally:
+            if multi_locked:
+                try:
+                    multi.jump_lock().release()
+                except Exception:
+                    pass
+
+    def _perform_anti_afk_action_impl(self):
         try:
             if not getattr(self, "anti_afk_var", None) or not self.anti_afk_var.get():
                 return
@@ -4619,7 +4666,10 @@ class ActionsMixin:
                                     except Exception:
                                         pass
                     if roblox_hwnds:
-                        target = roblox_hwnds[0]
+                        # Multi-instance mode: the main Anti-AFK always jumps
+                        # the MAIN window, never a secondary one (secondary
+                        # windows are handled by the multi-instance loop).
+                        target = self._preferred_main_hwnd(roblox_hwnds)
                         break
                     time.sleep(1.0)
 
@@ -4651,7 +4701,7 @@ class ActionsMixin:
                         break
                     refreshed_hwnds = self._find_roblox_hwnds()
                     if refreshed_hwnds:
-                        target = refreshed_hwnds[0]
+                        target = self._preferred_main_hwnd(refreshed_hwnds)
                     time.sleep(0.35)
 
                 if not self.detection_running:
@@ -4669,7 +4719,7 @@ class ActionsMixin:
                                 break
                             refreshed_hwnds = self._find_roblox_hwnds()
                             if refreshed_hwnds:
-                                target = refreshed_hwnds[0]
+                                target = self._preferred_main_hwnd(refreshed_hwnds)
                             time.sleep(0.35)
                         if not self.detection_running:
                             return
@@ -4680,12 +4730,26 @@ class ActionsMixin:
                     try:
                         # Hold the key ~0.15 s instead of an instant tap: an
                         # instant press can be missed on low-FPS (<=30) clients.
-                        pyautogui.keyDown("space")
-                        time.sleep(0.15)
-                        pyautogui.keyUp("space")
+                        # SCAN-CODE SendInput (KEYEVENTF_SCANCODE): Roblox can
+                        # drop VK-only pyautogui presses entirely.
+                        from .multi_instance import _send_space_scancode as _space_sc
+                        _sc_ok = _space_sc(0.15)
                         jump_success = True
+                        if not _sc_ok:
+                            # scancode path fell back to pyautogui internally;
+                            # try autoit (scan-code based) for a real press.
+                            try:
+                                autoit.send("{SPACE}")
+                            except Exception:
+                                pass
                     except Exception:
-                        pass
+                        try:
+                            pyautogui.keyDown("space")
+                            time.sleep(0.15)
+                            pyautogui.keyUp("space")
+                            jump_success = True
+                        except Exception:
+                            pass
 
                     if not jump_success:
                         try:
@@ -4741,7 +4805,14 @@ class ActionsMixin:
             try:
                 if self.is_fishing_mode_enabled():
                     continue
-                if (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
+                if (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
+                    continue
+                # Never jump mid-action: these features click inside the main
+                # window and a Space press would break them. Each of them
+                # generates its own input, so the game never goes idle anyway.
+                if (getattr(self, "_obby_running", False) or getattr(self, "_br_sc_running", False)
+                        or getattr(self, "_mm_session_active", False) or getattr(self, "auto_pop_state", False)
+                        or getattr(self, "reconnecting_state", False)):
                     continue
                 self.perform_anti_afk_action()
             except Exception as e:
@@ -4868,7 +4939,7 @@ class ActionsMixin:
                 or bool(getattr(self, "on_auto_merchant_state", False))
                 or bool(getattr(self, "_mt_running", False))
                 or bool(getattr(self, "_br_sc_running", False))
-                or bool((getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)))
+                or bool((getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)))
             ):
                 self.append_log(f"[Auto Pop] Waiting for other actions to finish before popping buffs")
                 wait_deadline = time.monotonic() + 50
@@ -4880,7 +4951,7 @@ class ActionsMixin:
                         or bool(getattr(self, "on_auto_merchant_state", False))
                         or bool(getattr(self, "_mt_running", False))
                         or bool(getattr(self, "_br_sc_running", False))
-                        or bool((getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)))
+                        or bool((getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)))
                     )
                     if not still_busy: break
                     time.sleep(0.55)

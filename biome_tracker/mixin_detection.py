@@ -293,7 +293,7 @@ class DetectionMixin:
                     return
             if not self.check_roblox_procs():
                 return
-            if (getattr(self, "_egg_collecting", False) or getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
+            if (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
                 return
 
             for _ in range(4):
@@ -318,7 +318,7 @@ class DetectionMixin:
                         pass
                 time.sleep(0.67)
                 try:
-                    screenshot_dir = os.path.join(os.getcwd(), "images")
+                    screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                     os.makedirs(screenshot_dir, exist_ok=True)
                     filename = os.path.join(screenshot_dir, f"aura_screenshot_{int(time.time())}.png")
                     sent = False
@@ -505,10 +505,14 @@ class DetectionMixin:
         timestamp = datetime.now().strftime("%d/%m/%y %H:%M:%S")
         stamped = f"[{timestamp}] {message}"
         self.logs.append(stamped)
+        # Single source of truth: the print goes through LoggerWriter, which
+        # persists it into macro_logs.txt. The old _flush_log_save ALSO wrote
+        # the same line into the same file - every message appeared twice
+        # (once with the "[log]" console prefix, once plain).
         try:
-            print(f"[log] {stamped}")
+            print(stamped)
         except (UnicodeEncodeError, UnicodeDecodeError):
-            print(f"[log] {stamped.encode('ascii', 'replace').decode('ascii')}")
+            print(stamped.encode("ascii", "replace").decode("ascii"))
         self._schedule_log_save()
         if hasattr(self, "logs_text"):
             self.display_logs()
@@ -522,12 +526,10 @@ class DetectionMixin:
         self._log_timer.start()
 
     def _flush_log_save(self):
+        # Messages reach macro_logs.txt through the stdout LoggerWriter
+        # (main.py), so this timer only maintains the file size rotation.
         log_file_path = APPDATA_BASE / "logs" / "macro_logs.txt"
         with self._log_lock:
-            log_file_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(log_file_path, "a", encoding="utf-8") as f:
-                if self.logs:
-                    f.write(self.logs[-1] + "\n")
             if log_file_path.exists() and log_file_path.stat().st_size > 10 * 1024 * 1024:
                 backup = log_file_path.with_suffix(".txt.bak")
                 try:
@@ -554,12 +556,11 @@ class DetectionMixin:
             if self.detection_running: return
             now = datetime.now()
             self.detection_running = True
-            # The first aura detected right after startup is the aura the
-            # user was ALREADY wearing before pressing Start — announcing it
-            # would spam Discord with stale info. Ignore that first
-            # detection; every later aura change is detected normally.
-            self.last_aura_found = None
-            self._aura_webhook_skip_first = True
+            # v41: the old "skip the first detected aura" suppression is gone.
+            # It assumed the first detection is the aura already worn, but with
+            # nothing equipped it stayed armed and ATE the first REAL roll of
+            # the session (user log 2026-09-29: a mid-session aura never
+            # reached the webhook). Every detection is announced now.
 
         # ── Auto-switch to an English keyboard layout ──
         # Every macro action that types a literal symbol (chat commands like
@@ -605,7 +606,6 @@ class DetectionMixin:
         self.has_started_once = True
         self._session_window_reset_performed = False
         self.stop_sent = False
-        self.last_egg_collect_time = datetime.min
 
         # reset disconnect tracking so the macro doesnt log old disconnect 
         self._disconnect_log_file = None
@@ -637,7 +637,26 @@ class DetectionMixin:
         self.save_config()
         self.set_title_threadsafe(f"""EndSol Macro {current_ver} (Running)""")
         self.send_webhook_status("Macro started!", color=0x64ff5e)
-
+        # Multi-instance mode: an extra line in the MAIN webhook stream so
+        # the user always sees at cycle start that secondary windows are
+        # being watched, and how many there are right now.
+        try:
+            if bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                from . import multi_instance
+                _mi_count = multi_instance.window_count()
+                _mi_main = multi_instance.get_main_pid()
+                _mi_user = multi_instance.main_username()
+                _mi_secondary = max(0, _mi_count - 1)
+                self.send_webhook_status(
+                    f"Multi-instance enabled — {_mi_count} Roblox window(s) detected"
+                    + (f" (1 main" + (f" ({_mi_user})" if _mi_user else "") + (f" + {_mi_secondary} secondary" if _mi_secondary else "")
+                       if _mi_secondary else " (main only" + (f", account {_mi_user})" if _mi_user else ")"))
+                    + (f", main PID {_mi_main})" if _mi_main else ")")
+                    + ". Secondary windows are monitored for biomes/auras/disconnects.",
+                    color=0x3498db,
+                )
+        except Exception:
+            pass
         # Item usage (Strange Controller, Biome Randomizer, portable crack)
         # is due IMMEDIATELY on every cycle start; the configured intervals
         # apply from this first use onwards.
@@ -676,6 +695,7 @@ class DetectionMixin:
             (self.daily_event_check_loop, "Daily Event Check-in"),
             (self.quest_board_loop, "Quest Board"),
             (self.obby_path_loop, "Obby Path"),
+            (self.custom_paths_loop, "Custom Paths"),
             (self.eden_ocr_check_loop, "Eden OCR Check"),
             (self.merchant_ocr_check_loop, "Merchant OCR Check"),
             (self.eden_contract_loop, "Eden Contract"),
@@ -687,16 +707,34 @@ class DetectionMixin:
             thread = threading.Thread(target=thread_func, name=name, daemon=True)
             thread.start()
 
-        # Fire one anti-AFK cycle immediately in background so users
-        # do not need to wait the first 268s interval.
+        # Multi-instance mode: the full detector above runs on the MAIN
+        # window; secondary windows get ordered Anti-AFK jumps + the log
+        # monitor. The idle loop only starts when the user enabled the mode.
         try:
-            threading.Thread(
-                target=self.perform_anti_afk_action,
-                name="Anti-AFK Initial",
-                daemon=True,
-            ).start()
-        except Exception:
-            pass
+            if bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                from . import multi_instance
+                multi_instance.set_enabled(True, self)
+                multi_instance.start_idle_loop()
+        except Exception as e:
+            try:
+                self.append_log(f"[MultiInstance] Failed to start secondary support: {e}")
+            except Exception:
+                pass
+
+        # Fire one anti-AFK cycle immediately in background so users
+        # do not need to wait the first 268s interval. In multi-instance mode
+        # this is SKIPPED: the multi idle loop runs its own first cycle
+        # immediately, and two concurrent Anti-AFK sequences used to fight
+        # over focus (the secondary jump's restore lost the race).
+        if not bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+            try:
+                threading.Thread(
+                    target=self.perform_anti_afk_action,
+                    name="Anti-AFK Initial",
+                    daemon=True,
+                ).start()
+            except Exception:
+                pass
 
         # Auto-start the remote Discord bot when it is configured.
         try:
@@ -709,13 +747,31 @@ class DetectionMixin:
             except Exception:
                 pass
 
+        # Notify the panel about starts that do NOT go through the UI button
+        # (auto-start after inactivity, remote bot, hotkey before the panel
+        # mounted, ...). Without this the Start(F1)/Stop(F2) button state
+        # goes stale until the user presses something.
+        if hasattr(self, "on_status_change") and callable(self.on_status_change):
+            try:
+                self.on_status_change("RUNNING")
+            except Exception:
+                pass
+
         print("Biome detection started.")
 
     def stop_detection(self):
         with getattr(self, "lock", threading.Lock()):
             if not getattr(self, "detection_running", False): return
             self.detection_running = False
-            
+
+        # Stop the multi-instance secondary support with the macro cycle.
+        try:
+            if bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                from . import multi_instance
+                multi_instance.stop_idle_loop()
+        except Exception:
+            pass
+
         # Reset fullscreen flag so it can be re-attempted on next start
         self._roblox_fullscreened = False
         self._roblox_fullscreen_last_try = 0.0
@@ -767,6 +823,29 @@ class DetectionMixin:
         print("Biome detection stopped.")
 
     def get_latest_log_file(self):
+        # Multi-instance mode: the detector MUST read the MAIN window's own
+        # log. With several Roblox clients running, "newest mtime" can pick
+        # a secondary instance's log and the whole detector would track the
+        # wrong window. The main window's log is resolved by PID mapping in
+        # multi_instance; when it cannot be resolved we fall back to the
+        # legacy newest-mtime behavior.
+        try:
+            if bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                from . import multi_instance
+                main_log = multi_instance.get_main_log_path()
+                if main_log and os.path.exists(main_log):
+                    state_map = getattr(self, "_log_username_state_map", None) or {}
+                    if state_map.get(main_log) == "rejected":
+                        warned = getattr(self, "_mi_rejected_log_warned", None)
+                        if warned != main_log:
+                            self._mi_rejected_log_warned = main_log
+                            self.append_log(
+                                "[Log Guard] The MAIN instance log was rejected (username mismatch) - "
+                                "detection would be blind. Check 'Main window PID' on the "
+                                "Multi-Instances page and the roblox_username setting.")
+                    return main_log
+        except Exception:
+            pass
         files = [os.path.join(self.logs_dir, f) for f in os.listdir(self.logs_dir) if f.endswith('.log')]
         latest_file = None
         latest_mtime = -1
@@ -1117,6 +1196,9 @@ class DetectionMixin:
         data = self._get_default_auras_data()
         for item in data.values():
             if isinstance(item, dict): item.setdefault("_metadata_source", "fandom_snapshot")
+        # The bundled snapshot goes through the same repair pass as live and
+        # cached data (known parser artifacts are fixed everywhere).
+        data = self._repair_known_aura_metadata(data)
         return data
 
     @staticmethod
@@ -1157,6 +1239,35 @@ class DetectionMixin:
         _eggis = data.pop("Eggis", None)
         if isinstance(_eggis, dict) and not isinstance(data.get("Aegis_EGGIS"), dict):
             data["Aegis_EGGIS"] = _eggis
+        # Sol's Book labels (verified against the live wiki 2026-09-27):
+        # "Fragments of the Crimson Moon" is ONLY obtainable from Red Moon
+        # Potion I (1 in 1,000) and Red Moon Potion II (1 in 100) — fixed
+        # chance, not affected by luck, NOT craftable. The craftable recipe
+        # belongs to its separate Challenged+ form 紅月の災厄
+        # (Calamity of the Crimson Moon), keyed
+        # "Fragments_of_the_Crimson_Moon|紅月の災厄" in the dataset. Older
+        # parser passes stamped "craftable" onto the base aura because its
+        # chance field mentions a potion — that made Sol's Book show a
+        # "Crafting" badge on a potion-only aura.
+        _fcm = data.get("Fragments_of_the_Crimson_Moon")
+        if isinstance(_fcm, dict):
+            _flags = _fcm.get("flags")
+            if isinstance(_flags, list) and "craftable" in _flags:
+                _fcm["flags"] = [f for f in _flags if f != "craftable"]
+            if "red moon potion" not in str(_fcm.get("obtainment", "")).lower():
+                _fcm["obtainment"] = ("From Red Moon Potion I (1 in 1,000) · "
+                                      "From Red Moon Potion II (1 in 100) — "
+                                      "fixed chance, not affected by luck")
+            _fcm["obtainment_type"] = "potion"
+            _fcm["rarity_is_potion"] = True
+        _fcm_mut = data.get("Fragments_of_the_Crimson_Moon|紅月の災厄")
+        if isinstance(_fcm_mut, dict):
+            # The raw key is a wiki-link artifact; give the record its real
+            # display name (the craftable mutated form, NOT the base aura).
+            _fcm_mut.setdefault("name", "Calamity of the Crimson Moon (紅月の災厄)")
+            if not str(_fcm_mut.get("obtainment", "")).strip():
+                _fcm_mut["obtainment"] = "Crafted at Jake's Workshop"
+                _fcm_mut["obtainment_type"] = "craftable"
         for item in data.values():
             if not isinstance(item, dict):
                 continue
@@ -1423,7 +1534,10 @@ class DetectionMixin:
                     f"From {s} (1 in {n:,})" if s else f"1 in {n:,}"
                     for n, s in potion_sources
                 )
-            info["obtainment_type"] = "craftable"
+            # A potion chance table on the page means the aura comes FROM a
+            # potion (fixed chance). Only an explicit "Crafted" note means
+            # the aura itself is a Workshop craft.
+            info["obtainment_type"] = "craftable" if "crafted" in aura_note.lower() else "potion"
             if global_r is not None and all(src for _n, src in potion_sources):
                 # The stored number is the potion chance, not a roll chance.
                 info["rarity_is_potion"] = True
@@ -2094,6 +2208,11 @@ class DetectionMixin:
                 elif "craftable" in flags:
                     e["obtainment"] = "Craftable (recipe at the Workshop)"
                     e["obtainment_type"] = "craftable"
+                elif "removed" in flags or "unobtainable" in flags or "dev_exclusive" in flags or "unreleased" in flags:
+                    # Removed / dev / unreleased auras are never "standard
+                    # roll" — the overview table shows them as "[Removed]".
+                    e["obtainment"] = "Removed / unavailable aura (not obtainable by rolling)"
+                    e["obtainment_type"] = "unobtainable"
                 elif "limited" in flags:
                     e["obtainment"] = "Limited event aura (currently unavailable)"
                     e["obtainment_type"] = "limited"
@@ -2105,6 +2224,7 @@ class DetectionMixin:
                     if e["rarity"] <= cap:
                         e["rarity_name"] = label
                         break
+
         return enriched
 
     def _parse_fandom_auras(self, wikitext):
@@ -2143,14 +2263,24 @@ class DetectionMixin:
             return out
 
         def split_top_level(body):
-            parts, current, depth, i = [], [], 0, 0
+            # A "|" inside a wiki link ([[Target|Label]]) is NOT a parameter
+            # separator. Splitting on link pipes used to truncate chance
+            # fields like
+            #   "1/2,000 <br>(From [[Oblivion Potion|{{Items|Oblivion Potion}}]] ...)"
+            # to "1/2,000 <br>(From [[Oblivion Potion" - losing the potion
+            # source entirely.
+            parts, current, depth, link_depth, i = [], [], 0, 0, 0
             while i < len(body):
-                token = body[i:i + 2]
-                if token == "{{":
-                    depth += 1; current.append(token); i += 2; continue
-                if token == "}}":
-                    depth = max(0, depth - 1); current.append(token); i += 2; continue
-                if body[i] == "|" and depth == 0:
+                token2 = body[i:i + 2]
+                if token2 == "[[":
+                    link_depth += 1; current.append(token2); i += 2; continue
+                if token2 == "]]":
+                    link_depth = max(0, link_depth - 1); current.append(token2); i += 2; continue
+                if token2 == "{{":
+                    depth += 1; current.append(token2); i += 2; continue
+                if token2 == "}}":
+                    depth = max(0, depth - 1); current.append(token2); i += 2; continue
+                if body[i] == "|" and depth == 0 and link_depth == 0:
                     parts.append("".join(current)); current = []; i += 1; continue
                 current.append(body[i]); i += 1
             parts.append("".join(current))
@@ -2226,7 +2356,13 @@ class DetectionMixin:
             unreleased = "unreleased" in lowered
             limited = "limited" in lowered
             craftable = bool(re.search(r"\(craftable\)", lowered)) or "crafted" in lowered \
-                or "workshop" in lowered or "potion" in lowered
+                or "workshop" in lowered
+            # Potion-obtained auras (Oblivion, Memory, Neferkhaf, Fragments of
+            # the Crimson Moon, ...) mention a potion in their chance field.
+            # The old rule counted ANY "potion" mention as craftable, which
+            # mislabeled those fixed-chance potion auras as "Crafting" in
+            # Sol's Book. They are potion rolls, not crafts.
+            potion_obtained = (not craftable) and ("potion" in lowered)
             if rarity is None and not (craftable or limited or unobtainable or dev_exclusive or removed or unreleased):
                 continue
 
@@ -2254,6 +2390,33 @@ class DetectionMixin:
 
             biome = biome_raw.upper().replace("SANDSTORM", "SAND STORM") if biome_raw else None
             obtainment = clean(fields.get("obtainment", "")) or None
+            forced_type = None
+            # NOTE: search the RAW template block, not raw_fields["chance"]:
+            # notes like [[Effects|(From "YG Blessing")]] contain a pipe, so
+            # the top-level field split cuts the note off the chance value.
+            raw_chance = str(block)
+            # Effect-gated rolls: the overview table notes them as
+            # '(From "X")' — the aura only rolls while that effect is active
+            # (e.g. Megaphone from "YG Blessing", Astral : Astrald from
+            # "Astrald Luck!"). They stay threshold-gated rolls, but the
+            # obtainment text must carry the real condition instead of the
+            # generic "Any biome (standard roll)".
+            if not obtainment:
+                effect_m = re.search(r'\(\s*From\s+"([^"]+)"\s*\)', raw_chance)
+                if effect_m:
+                    obtainment = f"Only rolls while the {clean(effect_m.group(1))} effect is active"
+                    forced_type = "standard"
+            # NPC/quest acquisition (e.g. Eden: "Obtainable through
+            # [[Eden (NPC)]]"): NOT a roll. The table's 1/N number is the
+            # NPC spawn chance and must never be published as the aura's
+            # rarity, and the location paren must not become a biome lock.
+            if not obtainment:
+                npc_m = re.search(r"[Oo]btainable through\s*\[\[([^\]|]+)", raw_chance)
+                if npc_m:
+                    obtainment = f"Obtainable through {clean(npc_m.group(1))} (quest reward, not rolled)"
+                    forced_type = "quest_reward"
+                    rarity = None
+                    biome = None
             if not obtainment:
                 if unobtainable:
                     obtainment = "Unobtainable (dev/tester only)"
@@ -2261,6 +2424,25 @@ class DetectionMixin:
                     obtainment = "Dev-exclusive"
                 elif limited:
                     obtainment = "Limited (" + clean(chance) + ")"
+                elif potion_obtained and rarity is not None:
+                    # Fixed-chance potion aura: extract "From {{Items|X}} (1 in N)"
+                    # pairs exactly like the craft branch, but classify the
+                    # record as a potion roll — never as craftable.
+                    raw_ch = str(raw_fields.get("chance", ""))
+                    p_names = re.findall(r"\{\{Items\|([^|}]+)", raw_ch)
+                    p_nums = re.findall(r"1/([\d,]+)", raw_ch)
+                    pairs = []
+                    for i2, num in enumerate(p_nums):
+                        name = clean(p_names[i2]) if i2 < len(p_names) else ""
+                        pairs.append((name, int(num.replace(",", ""))))
+                    if pairs:
+                        obtainment = " · ".join(
+                            f"From {n} (1 in {v:,})" if n else f"1 in {v:,}"
+                            for n, v in pairs
+                        )
+                    else:
+                        obtainment = f"From a potion (1 in {rarity:,}) — fixed chance, not affected by luck"
+                    forced_type = "potion"
                 elif craftable and rarity is not None:
                     raw_ch = str(raw_fields.get("chance", ""))
                     p_names = re.findall(r"\{\{Items\|([^|}]+)", raw_ch)
@@ -2299,6 +2481,10 @@ class DetectionMixin:
                 ) if on],
                 "_metadata_source": "fandom",
             }
+            if forced_type:
+                entry["obtainment_type"] = forced_type
+            if potion_obtained:
+                entry["rarity_is_potion"] = True
             # Inherit the wiki rarity class from the section heading.
             if sec_cls and not entry.get("rarity_name"):
                 entry["rarity_name"] = sec_cls
@@ -2421,34 +2607,31 @@ class DetectionMixin:
                             formatted_rarity = None if rarity_is_unknown else f"{int(rarity):,}"
 
                             if parsed_aura_name != self.last_aura_found:
-                                # Ignore the very first detection after the
-                                # macro started: it is the aura the user was
-                                # already wearing, not a fresh roll. Register
-                                # it silently, then detect normally again.
-                                if getattr(self, "_aura_webhook_skip_first", False):
-                                    self._aura_webhook_skip_first = False
-                                    self.last_aura_found = parsed_aura_name
-                                    self.append_log(f"[Aura Webhook] First aura after start ignored: {parsed_aura_name}")
-                                    return
-
                                 screenshot_path = None
                                 try:
                                     if getattr(self, "aura_screenshot_var", None) and self.aura_screenshot_var.get():
-                                        if not self.is_fishing_mode_enabled():
-                                            for _ in range(2):
-                                                self.activate_roblox_window()
-                                                time.sleep(0.75)
-
-                                        screenshot_dir = os.path.join(os.getcwd(), "images")
-                                        os.makedirs(screenshot_dir, exist_ok=True)
-                                        filename = os.path.join(screenshot_dir, f"aura_{int(time.time())}.png")
-                                        if not self.is_roblox_focused():
-                                            self.append_log("[Aura Screenshot] Roblox not focused, skipping screenshot")
+                                        # Focus + screenshot ONLY for auras that
+                                        # will actually be announced: a filtered
+                                        # (below-minimum) aura must never steal
+                                        # focus from the user.
+                                        if self.aura_skipped_by_user_filter(parsed_aura_name, formatted_rarity):
+                                            self.append_log(f"[Aura Screenshot] Skipped: {parsed_aura_name} is filtered out by the webhook rarity settings.")
                                         else:
-                                            img = pyautogui.screenshot()
-                                            img.save(filename)
-                                            screenshot_path = filename
-                                            self.append_log(f"[Aura Screenshot] Saved to: {screenshot_path}, exists: {os.path.exists(screenshot_path)}")
+                                            if not self.is_fishing_mode_enabled():
+                                                for _ in range(2):
+                                                    self.activate_roblox_window()
+                                                    time.sleep(0.75)
+
+                                            screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
+                                            os.makedirs(screenshot_dir, exist_ok=True)
+                                            filename = os.path.join(screenshot_dir, f"aura_{int(time.time())}.png")
+                                            if not self.is_roblox_focused():
+                                                self.append_log("[Aura Screenshot] Roblox not focused, skipping screenshot")
+                                            else:
+                                                img = pyautogui.screenshot()
+                                                img.save(filename)
+                                                screenshot_path = filename
+                                                self.append_log(f"[Aura Screenshot] Saved to: {screenshot_path}, exists: {os.path.exists(screenshot_path)}")
                                 except Exception as e:
                                     self.error_logging(e, "Error taking aura screenshot")
 
@@ -2471,33 +2654,30 @@ class DetectionMixin:
                         else:
                             # Aura not found in auras_data (biomes_data.json)
                             if aura != self.last_aura_found:
-                                # Same startup rule for unknown aura names:
-                                # the first detection is only registering the
-                                # aura the user already wore.
-                                if getattr(self, "_aura_webhook_skip_first", False):
-                                    self._aura_webhook_skip_first = False
-                                    self.last_aura_found = aura
-                                    self.append_log(f"[Aura Webhook] First aura after start ignored: {aura}")
-                                    return
-
                                 screenshot_path = None
                                 try:
                                     if getattr(self, "aura_screenshot_var", None) and self.aura_screenshot_var.get():
-                                        if not self.is_fishing_mode_enabled():
-                                            for _ in range(5):
-                                                self.activate_roblox_window()
-                                                time.sleep(0.75)
-
-                                        screenshot_dir = os.path.join(os.getcwd(), "images")
-                                        os.makedirs(screenshot_dir, exist_ok=True)
-                                        filename = os.path.join(screenshot_dir, f"aura_{int(time.time())}.png")
-                                        if not self.is_roblox_focused():
-                                            self.append_log("[Aura Screenshot] Roblox not focused, skipping screenshot")
+                                        # Unknown aura names are always announced
+                                        # by the webhook, but keep the same
+                                        # guarded flow for consistency.
+                                        if self.aura_skipped_by_user_filter(aura, None):
+                                            self.append_log(f"[Aura Screenshot] Skipped: {aura} is filtered out by the webhook rarity settings.")
                                         else:
-                                            img = pyautogui.screenshot()
-                                            img.save(filename)
-                                            screenshot_path = filename
-                                            self.append_log(f"[Aura Screenshot] Saved to: {screenshot_path}, exists: {os.path.exists(screenshot_path)}")
+                                            if not self.is_fishing_mode_enabled():
+                                                for _ in range(5):
+                                                    self.activate_roblox_window()
+                                                    time.sleep(0.75)
+
+                                            screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
+                                            os.makedirs(screenshot_dir, exist_ok=True)
+                                            filename = os.path.join(screenshot_dir, f"aura_{int(time.time())}.png")
+                                            if not self.is_roblox_focused():
+                                                self.append_log("[Aura Screenshot] Roblox not focused, skipping screenshot")
+                                            else:
+                                                img = pyautogui.screenshot()
+                                                img.save(filename)
+                                                screenshot_path = filename
+                                                self.append_log(f"[Aura Screenshot] Saved to: {screenshot_path}, exists: {os.path.exists(screenshot_path)}")
                                 except Exception as e:
                                     self.error_logging(e, "Error taking aura screenshot")
 
@@ -2561,6 +2741,82 @@ class DetectionMixin:
         except Exception as e:
             self.error_logging(e, "Error in check_biome_in_logs function :skull:")
 
+    def _enforce_auto_roll_biome(self, biome):
+        """Disable Auto-Roll In Biome (owner feature, 2026-09-27).
+
+        When a SELECTED biome is detected, the in-game Auto-Roll toggle must
+        be OFF; in any other biome it must be ON. The current state is read
+        by OCR from the calibrated status region ("Auto-roll: ON/OFF") and
+        the toggle point is clicked only when the state disagrees - never
+        blind. The whole check runs as a queued ActionScheduler job, so it
+        waits for any current action (Memory Match, quest claim, Eden, ...)
+        to finish instead of interrupting it; one pending job is enough,
+        it re-reads the CURRENT biome and fresh OCR when it actually runs.
+        """
+        try:
+            if not bool(self.config.get("auto_roll_biome_enabled", False)):
+                return
+            if getattr(self, "reconnecting_state", False):
+                return
+            region = self.config.get("autoroll_status_region") or []
+            button = self.config.get("autoroll_toggle_button") or []
+            try:
+                region_ok = len(region) == 4 and all(float(v) > 0 for v in region)
+                button_ok = len(button) == 2 and float(button[0]) > 0 and float(button[1]) > 0
+            except Exception:
+                return
+            if not (region_ok and button_ok):
+                return  # not calibrated yet - stay silent
+
+            # Dedup: one queued/running job is enough - it always re-reads
+            # self.current_biome and fresh OCR at execution time, so it
+            # covers later biome changes too. Never spam the queue.
+            if getattr(self, "_autoroll_pending", False):
+                return
+            self._autoroll_pending = True
+
+            def _job():
+                try:
+                    if not self.detection_running:
+                        return
+                    if getattr(self, "reconnecting_state", False):
+                        return
+                    selected = {str(b).strip().upper() for b in (self.config.get("auto_roll_biome_list") or [])}
+                    biome_now = str(getattr(self, "current_biome", "") or "")
+                    should_be_off = biome_now.strip().upper() in selected
+                    text = (self.extract_text_winocr(tuple(int(v) for v in region)) or "")
+                    norm = re.sub(r"[^a-z]", "", (text or "").lower())
+                    if "off" in norm:
+                        status = "off"
+                    elif "on" in norm:
+                        status = "on"
+                    else:
+                        # OCR read nothing usable - never blind-click.
+                        self.append_log(f"[Auto-Roll] {biome_now}: status OCR unreadable - skipped.")
+                        return
+                    bx, by = int(button[0]), int(button[1])
+                    if should_be_off and status == "on":
+                        self.Global_MouseClick(bx, by)
+                        self.append_log(f"[Auto-Roll] {biome_now}: Auto-Roll was ON - disabled.")
+                    elif (not should_be_off) and status == "off":
+                        self.Global_MouseClick(bx, by)
+                        self.append_log(f"[Auto-Roll] {biome_now}: Auto-Roll was OFF - enabled.")
+                except Exception as e:
+                    try:
+                        self.error_logging(e, "auto roll biome enforce")
+                    except Exception:
+                        pass
+                finally:
+                    self._autoroll_pending = False
+
+            scheduler = getattr(self, "_action_scheduler", None)
+            if scheduler is not None:
+                scheduler.enqueue_action(_job, name="autoroll_biome", priority=5)
+            else:
+                _job()
+        except Exception:
+            self._autoroll_pending = False
+
     def handle_biome_detection(self, biome, last_biome=None):
         try:
             if last_biome is None:
@@ -2590,6 +2846,12 @@ class DetectionMixin:
 
             self.current_biome = biome
             self.last_sent[biome] = now
+            # Disable Auto-Roll In Biome: keep the in-game Auto-Roll toggle
+            # OFF in selected biomes, ON everywhere else.
+            try:
+                self._enforce_auto_roll_biome(biome)
+            except Exception:
+                pass
             try:
                 self.biome_history.append((now, biome))
                 if len(self.biome_history) > 300:
@@ -2668,7 +2930,11 @@ class DetectionMixin:
                         for _ in range(5):
                             self.activate_roblox_window()
                             time.sleep(0.75)
-                        screenshot_dir = os.path.join(os.getcwd(), "images")
+                        # The screenshot is useless if the client is small /
+                        # minimized / unfocused — repair the window first.
+                        self.ensure_roblox_window_state(reason="rare biome screenshot")
+                        time.sleep(0.5)
+                        screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                         os.makedirs(screenshot_dir, exist_ok=True)
                         screenshot_path = os.path.join(screenshot_dir, f"rare_biome_{biome.lower()}_{int(time.time())}.png")
                         if not self.is_roblox_focused():
@@ -3023,7 +3289,7 @@ class DetectionMixin:
             if datetime.now() < _startup_gate:
                 return
 
-            if self.config.get("teleport_portable_crack") and datetime.now() - getattr(self, 'last_crack_time', datetime.min) >= crack_cooldown and not getattr(self, '_br_sc_running', False) and not getattr(self, '_portable_crack_running', False) and not getattr(self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not (getattr(self, '_egg_collecting', False) or getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False)) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until', datetime.min) and not (self.config.get("enable_idle_mode", False)):
+            if self.config.get("teleport_portable_crack") and datetime.now() - getattr(self, 'last_crack_time', datetime.min) >= crack_cooldown and not getattr(self, '_br_sc_running', False) and not getattr(self, '_portable_crack_running', False) and not getattr(self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not (getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False)) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until', datetime.min) and not (self.config.get("enable_idle_mode", False)):
                 try:
                     self.use_portable_crack()
                     self.append_log("[Items] Portable Crack fired.")
@@ -3034,7 +3300,7 @@ class DetectionMixin:
                                                                                                         '_br_sc_running',
                                                                                                         False) and not getattr(self, '_portable_crack_running', False) and not getattr(
                             self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not getattr(
-                            self, '_egg_collecting', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
+                            self, '_br_sc_running', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
                                                                                 datetime.min) and not (self.config.get("enable_idle_mode", False)):
                 try:
                     self.use_merchant_teleporter()
@@ -3051,7 +3317,7 @@ class DetectionMixin:
                                                                                                         '_br_sc_running',
                                                                                                         False) and not getattr(self, '_portable_crack_running', False) and not getattr(
                             self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not getattr(
-                            self, '_egg_collecting', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
+                            self, '_br_sc_running', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
                                                                                     datetime.min) and not (self.config.get("enable_idle_mode", False)):
                     # Pre-check the same conditions the implementation will check
                     # when it runs. If blocked (e.g. disabled biome), do NOT
@@ -3076,7 +3342,7 @@ class DetectionMixin:
                                                                                                         '_br_sc_running',
                                                                                                         False) and not getattr(self, '_portable_crack_running', False) and not getattr(
                             self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not getattr(
-                            self, '_egg_collecting', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
+                            self, '_br_sc_running', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
                                                                                     datetime.min) and not (self.config.get("enable_idle_mode", False)):
                     _br_blocked = self.br_sc_blocked_reason()
                     if _br_blocked:
@@ -3135,7 +3401,7 @@ class DetectionMixin:
                         pass
                 time.sleep(0.67)
                 try:
-                    screenshot_dir = os.path.join(os.getcwd(), "images")
+                    screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                     os.makedirs(screenshot_dir, exist_ok=True)
                     filename = os.path.join(screenshot_dir, f"aura_screenshot_{int(time.time())}.png")
                     if not self.is_roblox_focused():
@@ -3168,7 +3434,7 @@ class DetectionMixin:
 
     def _merchant_teleporter_impl(self):
         if getattr(self, '_br_sc_running', False): return
-        if (getattr(self, '_egg_collecting', False) or getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False)): return
+        if (getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False)): return
         if getattr(self, "enable_potion_crafting_var", None) and self.enable_potion_crafting_var.get(): return
         self._last_merchant_sequence_ran = False
         self._last_merchant_sequence_requires_reset = False

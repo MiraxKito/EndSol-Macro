@@ -180,6 +180,7 @@ export default function PotionCraftPage() {
                     onChange={(v) => { setEnableSwitching(v); saveConfig("enable_potion_switching", v); }}
                 />
 
+                {enableSwitching && <>
                 <div className="form-group" style={{ marginTop: "15px" }}>
                     <label className="form-label">Switch interval (seconds)</label>
                     <input
@@ -216,6 +217,7 @@ export default function PotionCraftPage() {
                         placeholder="— None —"
                     />
                 </div>
+                </>}
 
             </div>
         </div>

@@ -913,21 +913,10 @@ class WebhookMixin:
         except requests.exceptions.RequestException as e:
             self.append_log(f"Failed to send merchant webhook: {e}")
 
-    def send_aura_webhook(self, aura_name, rarity, biome_message, screenshot_path=None):
-        urls = self.get_webhook_list()
-        if not urls:
-            self.append_log("Webhook URL is missing/not included in the config")
-            return
-        icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
-        ping_minimum = int(self.config.get("ping_minimum", "100000"))
-        
-        force_ping_auras = str(self.config.get("force_ping_auras", "") or "").lower()
-        force_ping_list = [x.strip() for x in force_ping_auras.split(",") if x.strip()]
-        aura_name_norm = _normalize_aura_lookup(aura_name)
-        is_force_ping = bool(force_ping_list) and any(aura_name_norm.startswith(x.replace("_", "").replace(" ", "")) or x.replace("_", "").replace(" ", "") in aura_name_norm for x in force_ping_list)
-        
-        color = 0xffffff
-        aura_info = {}
+    def _resolve_aura_info_for_webhook(self, aura_name):
+        """Normalized aura lookup + Fandom hydration, shared by
+        send_aura_webhook and the pre-send screenshot filter so both make
+        decisions from the SAME data. Returns (real_key, aura_info)."""
         if not hasattr(self, "auras_data") or not self.auras_data:
             self.auras_data = self.load_auras_json()
             if hasattr(self, "_webhook_aura_map"):
@@ -939,6 +928,7 @@ class WebhookMixin:
                 if _normalize_aura_lookup(key)
             }
         real_key = self._webhook_aura_map.get(_normalize_aura_lookup(aura_name))
+        aura_info = {}
         if real_key:
             aura_info = self.auras_data.get(real_key, {}) or {}
             # Legacy index data is not authoritative for native/exclusive or
@@ -958,8 +948,14 @@ class WebhookMixin:
                         self.auras_data[real_key] = aura_info
                 except Exception as detail_error:
                     self.append_log(f"[Aura metadata] Could not hydrate {real_key} from Fandom: {detail_error}")
+        return real_key, aura_info
 
-        obtainment_field = aura_info.get("obtainment") if isinstance(aura_info, dict) else None
+    def aura_skipped_by_user_filter(self, aura_name, rarity) -> bool:
+        """True when send_aura_webhook would SKIP this aura (user's webhook
+        settings filter it out). Mirrors the webhook's skip decision exactly
+        so the detector can avoid focusing/screenshotting auras that will
+        never be announced. Logs the skip reason."""
+        real_key, aura_info = self._resolve_aura_info_for_webhook(aura_name)
         data_rarity = aura_info.get("rarity") if isinstance(aura_info, dict) else None
         rarity_value = _parse_rarity_value(rarity) if rarity is not None else _parse_rarity_value(data_rarity)
         minimum_value = _parse_rarity_value(self.config.get("aura_webhook_minimum_rarity", "0"))
@@ -976,11 +972,61 @@ class WebhookMixin:
         # blurb for EVERY standard roll (e.g. "Any biome (standard roll)"),
         # so the old "obtainment text exists" test wrongly bypassed the
         # user's minimum-rarity threshold for common auras such as Good
-        # (1 in 5). Bypass only crafted/potion/shop/quest/limbo types.
-        _non_rolling_types = ("crafted", "potion_required", "shop", "quest_reward", "limbo")
+        # (1 in 5). Bypass only crafted/potion/shop/quest types.
+        # Limbo auras ARE rolled (in The Limbo dimension) — they respect
+        # the user's rarity threshold like every other rollable aura.
+        _non_rolling_types = ("crafted", "potion_required", "shop", "quest_reward")
         _obtainment_type = str(aura_info.get("obtainment_type", "") or "").strip().lower() if isinstance(aura_info, dict) else ""
         is_non_rolling = _classification.get("type") in _non_rolling_types and _obtainment_type != "standard"
-        # v1.0.4 ping policy:
+        # v1.0.4 ping policy: Transcendent / Challenged / Challenged+ bypass
+        # the user's minimum-rarity threshold (announced WITHOUT a ping).
+        aura_class_name = str(aura_info.get("rarity_name", "") or "").strip().lower() if isinstance(aura_info, dict) else ""
+        bypass_class = aura_class_name in ("transcendent", "challenged", "challenged+")
+        if rarity_value is not None and not is_non_rolling and not always_send and not bypass_class and rarity_value < minimum_value:
+            self.append_log(f"[Aura Webhook] Skipped {aura_name}: rarity 1 in {rarity_value} is below configured minimum 1 in {minimum_value}.")
+            return True
+        if minimum_value and rarity_value is not None and rarity_value < minimum_value:
+            _why = ("non-rolling obtainment" if is_non_rolling
+                    else (f"special class '{aura_class_name}'" if bypass_class else "special condition"))
+            self.append_log(f"[Aura Webhook] {aura_name} announced despite configured minimum 1 in {minimum_value} ({_why}).")
+        return False
+
+    def send_aura_webhook(self, aura_name, rarity, biome_message, screenshot_path=None):
+        urls = self.get_webhook_list()
+        if not urls:
+            self.append_log("Webhook URL is missing/not included in the config")
+            return
+        icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
+        ping_minimum = int(self.config.get("ping_minimum", "100000"))
+
+        force_ping_auras = str(self.config.get("force_ping_auras", "") or "").lower()
+        force_ping_list = [x.strip() for x in force_ping_auras.split(",") if x.strip()]
+        aura_name_norm = _normalize_aura_lookup(aura_name)
+        is_force_ping = bool(force_ping_list) and any(aura_name_norm.startswith(x.replace("_", "").replace(" ", "")) or x.replace("_", "").replace(" ", "") in aura_name_norm for x in force_ping_list)
+
+        color = 0xffffff
+        real_key, aura_info = self._resolve_aura_info_for_webhook(aura_name)
+
+        obtainment_field = aura_info.get("obtainment") if isinstance(aura_info, dict) else None
+        data_rarity = aura_info.get("rarity") if isinstance(aura_info, dict) else None
+        rarity_value = _parse_rarity_value(rarity) if rarity is not None else _parse_rarity_value(data_rarity)
+        minimum_value = _parse_rarity_value(self.config.get("aura_webhook_minimum_rarity", "0"))
+        if minimum_value is None:
+            minimum_value = 0
+
+        # Check if this aura has special conditions that always warrant a webhook
+        from .aura_classification import classify_aura
+        _classification = classify_aura(aura_name, aura_info)
+        always_send = bool(_classification.get("always_webhook"))
+
+        # Skip decision — shared with the pre-send screenshot filter
+        # (aura_skipped_by_user_filter) so screenshots never fire for auras
+        # that will not be announced. See that method for the full rules.
+        if self.aura_skipped_by_user_filter(aura_name, rarity):
+            return
+
+        # Ping policy context (the skip decision itself lives in
+        # aura_skipped_by_user_filter, shared with the screenshot filter):
         #   - event/limited auras are announced but NEVER pinged;
         #   - Transcendent / Challenged / Challenged+ bypass the user's
         #     minimum-rarity threshold, but are sent WITHOUT a ping;
@@ -989,13 +1035,6 @@ class WebhookMixin:
         aura_flags = [str(f).lower() for f in (aura_info.get("flags") or [])] if isinstance(aura_info, dict) else []
         is_event_aura = aura_class_name == "event" or bool(aura_info.get("limited")) or "limited" in aura_flags or "event" in aura_flags
         bypass_class = aura_class_name in ("transcendent", "challenged", "challenged+")
-        if rarity_value is not None and not is_non_rolling and not always_send and not bypass_class and rarity_value < minimum_value:
-            self.append_log(f"[Aura Webhook] Skipped {aura_name}: rarity 1 in {rarity_value} is below configured minimum 1 in {minimum_value}.")
-            return
-        elif minimum_value and rarity_value is not None and rarity_value < minimum_value:
-            _why = ("non-rolling obtainment" if is_non_rolling
-                    else (f"special class '{aura_class_name}'" if bypass_class else "special condition"))
-            self.append_log(f"[Aura Webhook] {aura_name} announced despite configured minimum 1 in {minimum_value} ({_why}).")
 
         rarity_line = ""
         source_line = ""
@@ -1193,48 +1232,6 @@ class WebhookMixin:
                     pass
         except Exception as e:
             self.error_logging(e, "Error in send_macro_summary")
-
-    def send_egg_ocr_webhook(self, egg_name, aura_rarity, discord_user_id="", screenshot_path=None):
-        try:
-            urls = self.get_webhook_list()
-            if not urls: return
-            icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
-            current_utc_time = discord_timestamp()
-
-            content = f"<@{discord_user_id}>" if discord_user_id else ""
-
-            embed = {
-                "title": "🥚 Special Easter Egg Found 🥚",
-                "description": f"> ## {egg_name}\n> Possible respective egg aura rarity: **{aura_rarity}**",
-                "color": 0xffd700,
-                "timestamp": current_utc_time,
-                "thumbnail": {"url": "https://i.postimg.cc/FzRsHF7y/eggdoggo.png"},
-                "footer": {
-                    "text": f"EndSol Macro {current_ver}",
-                    "icon_url": icon_url
-                }
-            }
-
-            if screenshot_path and os.path.isfile(screenshot_path):
-                embed["image"] = {"url": f"attachment://{os.path.basename(screenshot_path)}"}
-
-            for webhook_url in urls:
-                try:
-                    embed_copy = dict(embed)
-                    if screenshot_path and os.path.isfile(screenshot_path):
-                        with open(screenshot_path, "rb") as img_file:
-                            files = {"file": (os.path.basename(screenshot_path), img_file, "image/png")}
-                            data = {"payload_json": json.dumps({"content": content, "embeds": [embed_copy]})}
-                            response = safe_post(webhook_url, data=data, files=files, timeout=15)
-                    else:
-                        payload = {"content": content, "embeds": [embed_copy]}
-                        response = safe_post(webhook_url, json=payload, timeout=10)
-                    response.raise_for_status()
-                    self.append_log(f"Egg OCR webhook sent for {egg_name}")
-                except requests.exceptions.RequestException as e:
-                    self.append_log(f"Failed to send egg OCR webhook: {e}")
-        except Exception as e:
-            self.error_logging(e, "Error in send_egg_ocr_webhook")
 
     def send_eden_ocr_webhook(self, discord_user_id="", screenshot_path=None):
         try:

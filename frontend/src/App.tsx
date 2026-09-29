@@ -501,7 +501,7 @@ function App() {
             isGlitching={isGlitching}
             setActiveTab={setActiveTab}
           />
-          {updateInfo && (
+          {(activeTab === "notice" && updateInfo && !(config as any)?.update_notifications_disabled) && (
             <UpdateBanner
               version={updateInfo.version}
               downloadUrl={updateInfo.url}
@@ -509,7 +509,7 @@ function App() {
               onDismiss={() => setUpdateInfo(null)}
               onDontAskAgain={async () => {
                 if (config) {
-                  await saveConfig({ ...config, dont_ask_for_update: true });
+                  await saveConfig({ ...config, update_notifications_disabled: true });
                 }
                 setUpdateInfo(null);
               }}

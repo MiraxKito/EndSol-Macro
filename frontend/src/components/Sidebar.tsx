@@ -174,7 +174,7 @@ export default function Sidebar({
       </div>
 
       <div className="sidebar-footer">
-        <div className="by-line">EndSol Macro — fork of CoteabMacro</div>
+        <div className="by-line">EndSol Macro Project 2026</div>
       </div>
     </div>
   );

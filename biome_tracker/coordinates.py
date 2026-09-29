@@ -32,26 +32,9 @@ def enable_dpi_awareness() -> None:
 
 def _roblox_hwnds() -> list[int]:
     try:
-        import psutil
         import win32gui
-        import win32process
-        names = {"robloxplayerbeta.exe", "windows10universal.exe"}
-        pids = {
-            int(p.info["pid"])
-            for p in psutil.process_iter(["pid", "name"])
-            if str(p.info.get("name") or "").lower() in names
-        }
-        result: list[int] = []
-        def visit(hwnd: int, _param: Any) -> bool:
-            try:
-                if win32gui.IsWindowVisible(hwnd):
-                    _tid, pid = win32process.GetWindowThreadProcessId(hwnd)
-                    if pid in pids:
-                        result.append(int(hwnd))
-            except Exception:
-                pass
-            return True
-        win32gui.EnumWindows(visit, None)
+        from .base_support import roblox_top_windows
+        result = [int(w["hwnd"]) for w in roblox_top_windows()]
         # In multi-instance mode the first enumerated window is not stable.
         # Prefer the foreground Roblox client, then keep the remaining windows
         # as fallback candidates for legacy single-client flows.

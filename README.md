@@ -6,7 +6,7 @@
 
 **All-in-one automation panel for Sol's RNG (Roblox)**
 
-Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest Board · Fishing · Multi-instance
+Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest Board · Fishing · Multi-instance main/secondary windows
 
 [Download](https://github.com/MiraxKito/EndSol-Macro/releases/latest) · [Report an issue](https://github.com/MiraxKito/EndSol-Macro/issues) · [Discussions](https://github.com/MiraxKito/EndSol-Macro/discussions)
 
@@ -23,13 +23,19 @@ Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest B
 **Tracking & alerts**
 - **Biome detection** — reads Roblox logs in real time and announces every biome with rich, fully customizable Discord webhooks: titles, colors, thumbnails, pings.
 - **Aura webhooks** — rarity-aware announcements with configurable ping thresholds.
+- **Daily stats webhook** — statistics are kept per day (auras, biomes, Memory Match pairs, fish, macro runtime) in a local JSON file, so they survive restarts, and one Discord summary is sent after each daily reset (00:00 UTC).
 
 **Automation**
-- **Memory Match** — auto-plays the Memory Match minigame: reveals tiles, remembers items and quantities, prioritizes high-value rewards, and verifies every pair. *(feature in active testing)*
+- **Memory Match** — auto-plays the Memory Match minigame: reveals tiles, remembers items and quantities as images (no OCR for tiles), prioritizes high-value rewards, and verifies every pair.
 - **Quest Board** — accepts or dismisses quests according to your preferences, tolerant to OCR noise.
-- **Fishing** — fully automatic fishing with selling and failsafes.
-- **Custom paths** — record your own walk routes (fishing spot, obby, egg routes, Memory Match) with VIP / non-VIP speed handling.
-- **Multi-instance support** — run several Roblox windows under one panel.
+- **Fishing** — fully automatic fishing with selling, merchant runs and failsafes.
+- **Daily Rewards** — claims the Sol's RNG daily check-in automatically right after the reset (00:00 UTC).
+- **Custom paths** — record your own walk routes (fishing spot, obby, egg routes, Memory Match, Quest Board) with VIP / non-VIP speed handling.
+- **Multiple-Instances** — one panel, many Roblox windows:
+  - **built-in launcher** — add your accounts once (sessions are stored encrypted with Windows DPAPI, this PC only), then launch each client with one click: it signs into its own account automatically and joins the private server link from the Webhook page — no external multi-instance tools needed, works alongside Bloxstrap;
+  - pick a **main window** — the full macro (detector, fishing, quests, Memory Match, merchant, actions) runs on it, and the detector reads the main window's *own* log;
+  - **secondary windows** receive ordered Anti-AFK jumps plus per-window biome/aura/disconnect alerts from their own logs;
+  - reconnect/failsafe closes only the main window's process — secondary windows always survive.
 
 **Sol's Book — built-in wiki 📖**
 - Browse **Auras, Biomes, Items and Gauntlets** databases synced from the Sol's RNG Fandom Wiki: rarity, obtainment, crafting recipes, effects, descriptions.
@@ -40,6 +46,9 @@ Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest B
 **Panel**
 - Desktop app built with **pywebview + React**: EN/RU localization, theming, panel customization, live logs and diagnostics.
 - **Remote control** — Discord bot integration: check status and control the macro from your phone.
+- **Status page** — session summary (version, mode, multi-instance main window), feature schedule, per-module states and runtime diagnostics.
+
+- **Window state auto-repair** — the macro keeps the Roblox window focused and sized per the calibration: minimized / shrunk / wrong-mode windows are fixed before important actions and periodically during any action.
 
 <p align="center"><img width="1920" height="1018" alt="biome tab endsol" src="https://github.com/user-attachments/assets/d693b23d-1b2a-4608-a9c1-9d098bfa444c" /></p>
 
@@ -87,7 +96,7 @@ Running a non-standard setup (different resolution, scaling, or window mode)? Sh
 
 ## 💜 Support
 
-EndSol Macro is free and will stay free. If you want to support development: [Boosty](https://boosty.to/eds_mirax/donation).
+EndSol Macro is free and will stay free. If you want to support development: [Boosty](https://boosty.to/eds_mirax/donate).
 
 ## 📄 License
 

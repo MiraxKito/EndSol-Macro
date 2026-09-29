@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+# MUST stay above every `biome_tracker` import: base_support reads
+# ENDSOL_MACRO_VERSION at import time for all Discord webhook footers.
+current_version = "v1.0.8"
+import os as _os
+_os.environ["ENDSOL_MACRO_VERSION"] = current_version
+
 import traceback
 import json
 import threading
@@ -30,7 +36,33 @@ enable_dpi_awareness()
 import keyboard
 
 ORIGINAL_ABS_FILE = os.path.abspath(__file__)
-os.environ['WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS'] = '--disable-gpu'
+def _gpu_acceleration_enabled() -> bool:
+    """Whether the panel WebView may use GPU compositing.
+
+    The panel historically forced WebView2 into software rendering
+    (--disable-gpu) for stability on odd GPU drivers. Software compositing of
+    a large DOM (Sol's Book lists, media) is a major FPS cost, so this is now
+    opt-in via config `webview_gpu_acceleration` (default OFF = old behavior).
+    Read the raw config files directly: this runs before the tracker exists
+    and the value must be known before the first window is created.
+    """
+    try:
+        from biome_tracker.config import APPDATA_CONFIG, DEV_CONFIG
+        for _path in (APPDATA_CONFIG, DEV_CONFIG):
+            try:
+                with open(_path, "r", encoding="utf-8") as _f:
+                    _data = json.load(_f)
+                if isinstance(_data, dict) and "webview_gpu_acceleration" in _data:
+                    return bool(_data.get("webview_gpu_acceleration"))
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return False
+
+
+if not _gpu_acceleration_enabled():
+    os.environ['WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS'] = '--disable-gpu'
 
 # paths crafting_files_do_not_open and macoroni logs go into appdata/local instead of next to the EXE (maybe)
 APPDATA_BASE.mkdir(parents=True, exist_ok=True)
@@ -92,8 +124,8 @@ except Exception as e:
 
 # i added this so we can easily change macro version upon releases without having to change multiple back-end & front-end behaviours
 # for future people that is reading the open source code, hello :p
-current_version = "v1.0.7"
-os.environ["ENDSOL_MACRO_VERSION"] = current_version
+# (current_version / ENDSOL_MACRO_VERSION are set at the very top of this
+# file, before any biome_tracker import — do not move them back down)
 from biome_tracker.config import GITHUB_RELEASES_API, GITHUB_RAW_BASE
 UPDATE_LATEST_RELEASE_API_URL = GITHUB_RELEASES_API
 os.environ["ENDSOL_UPDATE_API_URL"] = UPDATE_LATEST_RELEASE_API_URL
@@ -395,22 +427,158 @@ class Api:
 
     # ---- External MultipleRobloxInstances integration -------------------
     def get_multi_instance_state(self):
-        return multi_instance.state()
+        try:
+            return multi_instance.state()
+        except Exception as exc:
+            import traceback
+            traceback.print_exc()
+            return {"enabled": False, "windows": [], "instances": [],
+                    "window_count": 0, "error": str(exc)}
 
     def set_multi_instance_enabled(self, enabled):
         enabled = bool(enabled)
         print(f"[MultiInstance] set_multi_instance_enabled({enabled})", flush=True)
-        cfg = self.get_config()
-        if isinstance(cfg, dict):
-            cfg["multiple_instances_enabled"] = enabled
-            save_config(cfg)
-        if self._tracker and isinstance(getattr(self._tracker, "config", None), dict):
-            self._tracker.config["multiple_instances_enabled"] = enabled
-            multi_instance.attach_tracker(self._tracker)
-        # Just save the preference — do NOT start/stop the idle loop here.
-        # The loop starts/stops with the macro cycle (set_biome_detection).
-        multi_instance.set_enabled(enabled, self._tracker)
-        return {"success": True, "enabled": enabled}
+        # v38 safety: turning the mode OFF while Roblox clients are still
+        # running drops the cookie lock + singleton watcher — with several
+        # clients open that can close instances unexpectedly. Block the
+        # toggle until every Roblox window is closed.
+        if not enabled:
+            try:
+                import psutil as _psutil
+                running = [p.pid for p in _psutil.process_iter(["name"])
+                           if (p.info.get("name") or "").lower().startswith("robloxplayerbeta")]
+                if running:
+                    return {"success": False, "blocked": True,
+                            "error": ("Cannot turn Multiple-Instances off while Roblox clients are "
+                                      f"running ({len(running)} client(s)). Close every Roblox "
+                                      "window first — turning the mode off now could close your "
+                                      "instances unexpectedly.")}
+            except Exception:
+                pass
+        try:
+            cfg = self.get_config()
+            if isinstance(cfg, dict):
+                cfg["multiple_instances_enabled"] = enabled
+                save_config(cfg)
+            if self._tracker and isinstance(getattr(self._tracker, "config", None), dict):
+                self._tracker.config["multiple_instances_enabled"] = enabled
+                multi_instance.attach_tracker(self._tracker)
+            # Just save the preference — the loops themselves start/stop with the
+            # macro cycle (set_biome_detection / start_detection / stop_detection).
+            multi_instance.set_enabled(enabled, self._tracker)
+            try:
+                log = getattr(self._tracker, "append_log", None)
+                if callable(log):
+                    log(f"[MultiInstance] Mode {'ENABLED' if enabled else 'DISABLED'} via UI toggle.")
+            except Exception:
+                pass
+            # Live toggle while the macro is already running: start or stop the
+            # secondary support immediately instead of waiting for a restart.
+            try:
+                if enabled and getattr(self._tracker, "detection_running", False):
+                    multi_instance.start_idle_loop()
+                elif not enabled:
+                    multi_instance.stop_idle_loop()
+            except Exception:
+                pass
+            return {"success": True, "enabled": enabled}
+        except Exception as exc:
+            import traceback
+            traceback.print_exc()
+            try:
+                log = getattr(self._tracker, "append_log", None)
+                if callable(log):
+                    log(f"[MultiInstance] Toggle failed: {exc}")
+            except Exception:
+                pass
+            return {"success": False, "error": str(exc)}
+
+    def set_multi_instance_main(self, pid):
+        """Select the MAIN Roblox window (0 = automatic). All full macro
+        features (detector, fishing, actions) target this window; the other
+        windows only get Anti-AFK jumps and log-based alerts."""
+        try:
+            if not self._tracker:
+                return {"success": False, "error": "Tracker not available"}
+            try:
+                result = multi_instance.set_main_pid(pid, self._tracker)
+            except Exception as exc:
+                return {"success": False, "error": str(exc)}
+            if result.get("success"):
+                cfg = self.get_config()
+                if isinstance(cfg, dict):
+                    cfg["multi_instance_main_pid"] = int(result.get("main_pid", 0) or 0)
+                    save_config(cfg)
+            return result
+        except Exception as exc:
+            import traceback
+            traceback.print_exc()
+            return {"success": False, "error": str(exc)}
+
+    # ---- Built-in instance launcher ------------------------------------
+    def launcher_get_state(self):
+        try:
+            from biome_tracker import instance_launcher
+            instance_launcher.attach_tracker(self._tracker)
+            # v34 belt-and-braces: when the Multiple-Instances preference is
+            # ON but the locks were never armed this session (a failed or
+            # not-yet-run startup restore left the Locks line on "watcher
+            # not running yet"), arm them here. Opening the MI tab is exactly
+            # when the Locks line is visible; ensure_locks() is idempotent.
+            try:
+                if bool((getattr(self._tracker, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                    instance_launcher.ensure_locks()
+            except Exception:
+                pass
+            return instance_launcher.get_state()
+        except Exception as exc:
+            return {"success": False, "error": str(exc), "accounts": []}
+
+    def launcher_start_login(self):
+        try:
+            from biome_tracker import instance_launcher
+            instance_launcher.attach_tracker(self._tracker)
+            return instance_launcher.start_login()
+        except Exception as exc:
+            return {"success": False, "error": str(exc)}
+
+    def launcher_cancel_login(self):
+        try:
+            from biome_tracker import instance_launcher
+            return instance_launcher.cancel_login()
+        except Exception as exc:
+            return {"success": False, "error": str(exc)}
+
+    def launcher_remove_account(self, username):
+        try:
+            from biome_tracker import instance_launcher
+            return instance_launcher.remove_account(username)
+        except Exception as exc:
+            return {"success": False, "error": str(exc)}
+
+    def launcher_set_own_server(self, username, enabled):
+        # v38 "Own Server": per-account toggle — when ON, launching this
+        # account joins its OWN private server instead of the Webhook link.
+        try:
+            from biome_tracker import instance_launcher
+            instance_launcher.attach_tracker(self._tracker)
+            return instance_launcher.set_own_server(username, bool(enabled))
+        except Exception as exc:
+            return {"success": False, "error": str(exc)}
+
+    def launcher_launch_account(self, username):
+        try:
+            from biome_tracker import instance_launcher
+            instance_launcher.attach_tracker(self._tracker)
+            cfg = self.get_config()
+            # Join the private server link configured on the Webhook page.
+            # Without it the client opens at the home screen.
+            ps_link = str((cfg or {}).get("private_server_link", "") or "")
+            return instance_launcher.launch_account(username, ps_link)
+        except Exception as exc:
+            import traceback
+            traceback.print_exc()
+            return {"success": False, "error": str(exc)}
 
     def reset_stats(self):
         """Reset user statistics: biomes, merchants, auras, session time."""
@@ -829,7 +997,24 @@ class Api:
 
     def _sol_book_cached(self, kind):
         try:
-            path = APPDATA_BASE / "cache" / f"{kind}_fandom.json"
+            cache_dir = APPDATA_BASE / "cache"
+            # Dataset format gate: a cache written by an older parser build
+            # (no chest drop tables, pre-fix aura fields) must never shadow
+            # the verified bundled snapshot. The marker file records the
+            # SOL_BOOK_DATA_VERSION that produced the cache.
+            marker = cache_dir / f"{kind}_fandom.json.ver"
+            try:
+                from biome_tracker import sol_book_data as _sbd_ver
+                expected_ver = str(_sbd_ver.SOL_BOOK_DATA_VERSION)
+            except Exception:
+                expected_ver = ""
+            if expected_ver:
+                try:
+                    if marker.read_text(encoding="utf-8").strip() != expected_ver:
+                        return {}
+                except Exception:
+                    return {}  # no marker -> unknown provenance -> bundled data
+            path = cache_dir / f"{kind}_fandom.json"
             if path.is_file():
                 data = json.loads(path.read_text(encoding="utf-8"))
                 if isinstance(data, dict) and data and self._sol_book_records_valid(data, kind):
@@ -893,6 +1078,14 @@ class Api:
             tmp = cache_dir / f"{kind}_fandom.json.tmp"
             tmp.write_text(json.dumps(fresh, ensure_ascii=False, indent=2), encoding="utf-8")
             os.replace(str(tmp), str(cache_dir / f"{kind}_fandom.json"))
+            # Stamp the dataset version so _sol_book_cached accepts this cache.
+            try:
+                from biome_tracker import sol_book_data as _sbd
+                (cache_dir / f"{kind}_fandom.json.ver").write_text(
+                    str(_sbd.SOL_BOOK_DATA_VERSION), encoding="utf-8"
+                )
+            except Exception:
+                pass
             _log(
                 f"[SolBook] {kind}: refreshed from Fandom ({len(fresh)} records"
                 + (f", dropped: {', '.join(dropped)}" if dropped else "")
@@ -940,7 +1133,7 @@ class Api:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    # ── Extras (v1.0.7): schedule, profiles, logs ──────────────────────
+    # ── Extras (v1.0.8): schedule, profiles, logs ──────────────────────
     def get_feature_schedule(self):
         try:
             if not self._tracker:
@@ -948,6 +1141,37 @@ class Api:
             return {"success": True, **self._tracker.feature_schedule()}
         except Exception as e:
             return {"success": False, "error": str(e)}
+
+    def _merge_config_with_defaults(self, cfg):
+        """Fill keys missing from an imported/profile config with defaults.
+
+        Old config files predate newer keys; those keys must fall back to
+        their default values instead of being absent at runtime.
+        """
+        if not isinstance(cfg, dict):
+            return {}
+        try:
+            from biome_tracker.defaults import get_default_config
+            defaults = get_default_config()
+        except Exception:
+            defaults = {}
+        # Remember which webhook keys the source file actually carried so
+        # an old singular webhook_url is not clobbered by the empty default
+        # webhook_urls (and vice versa) during the defaults merge.
+        had_url = "webhook_url" in cfg
+        had_urls = "webhook_urls" in cfg
+        merged = dict(defaults) if isinstance(defaults, dict) else {}
+        merged.update(cfg)
+        if had_url and not had_urls:
+            merged["webhook_urls"] = merged.get("webhook_url")
+        if had_urls and not had_url:
+            merged["webhook_url"] = merged.get("webhook_urls")
+        try:
+            from biome_tracker.config import _backfill_and_normalize
+            merged = _backfill_and_normalize(merged)
+        except Exception:
+            pass
+        return merged
 
     def _profiles_dir(self):
         d = APPDATA_BASE / "profiles"
@@ -1002,6 +1226,10 @@ class Api:
             cfg = payload.get("config") if isinstance(payload, dict) else None
             if not isinstance(cfg, dict):
                 return {"success": False, "error": "This is not an EndSol profile file."}
+            # Merge over defaults so profiles saved by older versions still
+            # contain every key added since then (missing keys take the
+            # default values instead of disappearing from the config).
+            cfg = self._merge_config_with_defaults(cfg)
             if self._tracker and isinstance(getattr(self._tracker, "config", None), dict):
                 self._tracker.config.update(cfg)
             save_config(cfg)
@@ -1105,6 +1333,10 @@ class Api:
                 imported = json.loads(f.read())
             if not isinstance(imported, dict):
                 return {"success": False, "error": "Invalid config file: must be a JSON object"}
+
+            # Merge over defaults so configs exported by older versions
+            # still get every new key (missing keys take default values).
+            imported = self._merge_config_with_defaults(imported)
 
             save_config(imported)
 
@@ -1321,22 +1553,38 @@ class Api:
                 "Player Logger": {"active": det and _cfg_bool(cfg, "player_logger", True), "enabled": _cfg_bool(cfg, "player_logger", True)},
                 "Discord Webhooks": {"active": det and bool(getattr(t, "webhook_urls", [])), "enabled": bool(getattr(t, "webhook_urls", []))},
                 "Auto Start on Idle": {"active": det and _cfg_bool(cfg, "auto_start_on_idle"), "enabled": _cfg_bool(cfg, "auto_start_on_idle")},
+                "Auto Roll In Biome": {"active": det and _cfg_bool(cfg, "auto_roll_biome_enabled"), "enabled": _cfg_bool(cfg, "auto_roll_biome_enabled")},
                 "Rare Biome Confirmation Popup": {"active": det and _cfg_bool(cfg, "rare_biome_confirmation_popup"), "enabled": _cfg_bool(cfg, "rare_biome_confirmation_popup")},
             },
             "Fishing": {
                 "Fishing Mode": {"active": det and self._is_fishing_mode_enabled(), "enabled": _cfg_bool(cfg, "fishing_mode")},
                 "Fishing Selling": {"active": _cfg_bool(cfg, "fishing_enable_selling") and _cfg_bool(cfg, "fishing_mode"), "enabled": _cfg_bool(cfg, "fishing_enable_selling")},
                 "Fishing Failsafe (rejoin)": {"active": _cfg_bool(cfg, "fishing_failsafe_rejoin") and _cfg_bool(cfg, "fishing_mode"), "enabled": _cfg_bool(cfg, "fishing_failsafe_rejoin")},
-                "Fishing UI Nav Close": {"active": _cfg_bool(cfg, "fishing_ui_nav_close") and _cfg_bool(cfg, "fishing_mode"), "enabled": _cfg_bool(cfg, "fishing_ui_nav_close")},
-                "Fishing Aura Equip": {"active": _cfg_bool(cfg, "fishing_equip_aura_before_movement") and _cfg_bool(cfg, "fishing_mode"), "enabled": _cfg_bool(cfg, "fishing_equip_aura_before_movement")},
-                "Fishing Merchant Every X": {"active": _cfg_bool(cfg, "fishing_use_merchant_every_x_fish") and _cfg_bool(cfg, "fishing_mode"), "enabled": _cfg_bool(cfg, "fishing_use_merchant_every_x_fish")},
-                "Fishing BR/SC Every X": {"active": _cfg_bool(cfg, "fishing_use_br_sc_every_x_fish") and _cfg_bool(cfg, "fishing_mode"), "enabled": _cfg_bool(cfg, "fishing_use_br_sc_every_x_fish")},
+                # Consolidated: merchant runs (plain + OCR) and BR/SC biome-item
+                # sequences are sub-options of the fishing loop, not standalone
+                # modules - they previously flooded the module list.
+                "Fishing Merchant / Biome Items": {
+                    "active": det and _cfg_bool(cfg, "fishing_mode") and (
+                        _cfg_bool(cfg, "fishing_use_merchant_every_x_fish")
+                        or _cfg_bool(cfg, "fishing_use_merchant_ocr_every_x_fish")
+                        or _cfg_bool(cfg, "fishing_use_br_sc_every_x_fish")
+                    ),
+                    "enabled": _cfg_bool(cfg, "fishing_mode") and (
+                        _cfg_bool(cfg, "fishing_use_merchant_every_x_fish")
+                        or _cfg_bool(cfg, "fishing_use_merchant_ocr_every_x_fish")
+                        or _cfg_bool(cfg, "fishing_use_br_sc_every_x_fish")
+                    ),
+                },
+            },
+            "Multi-Instances": {
+                "Multi-Instances Mode": {"active": det and _cfg_bool(cfg, "multiple_instances_enabled"), "enabled": _cfg_bool(cfg, "multiple_instances_enabled")},
+                "Secondary Anti-AFK": {"active": det and _cfg_bool(cfg, "multiple_instances_enabled"), "enabled": _cfg_bool(cfg, "multiple_instances_enabled")},
+                "Instance Alerts": {"active": det and _cfg_bool(cfg, "multiple_instances_enabled") and _cfg_bool(cfg, "multi_instance_alerts"), "enabled": _cfg_bool(cfg, "multi_instance_alerts")},
+                "Main Window Pin": {"active": _cfg_bool(cfg, "multiple_instances_enabled") and bool(cfg.get("multi_instance_main_pid", 0)), "enabled": _cfg_bool(cfg, "multiple_instances_enabled")},
             },
             "Mini-Games & Quests": {
                 "Memory Match": {"active": det and _cfg_bool(cfg, "memory_match_enabled"), "enabled": _cfg_bool(cfg, "memory_match_enabled")},
-                "Memory Match with Fishing": {"active": det and _cfg_bool(cfg, "memory_match_enabled") and _cfg_bool(cfg, "memory_match_play_on_fishing", True) and _cfg_bool(cfg, "fishing_mode"), "enabled": _cfg_bool(cfg, "memory_match_play_on_fishing", True)},
                 "Quest Board": {"active": det and _cfg_bool(cfg, "quest_board_enabled"), "enabled": _cfg_bool(cfg, "quest_board_enabled")},
-                "Quest Board Auto Accept": {"active": det and _cfg_bool(cfg, "quest_board_enabled") and _cfg_bool(cfg, "quest_board_auto_accept", True), "enabled": _cfg_bool(cfg, "quest_board_auto_accept", True)},
                 "Daily Event Check-in": {"active": det and _cfg_bool(cfg, "collect_daily_event_checkin"), "enabled": _cfg_bool(cfg, "collect_daily_event_checkin")},
             },
             "Pathing & Movement": {
@@ -1344,7 +1592,6 @@ class Api:
                 "Eden Detection": {"active": det and _cfg_bool(cfg, "eden_detection"), "enabled": _cfg_bool(cfg, "eden_detection")},
                 "Auto Eden Contract": {"active": bool(getattr(t, "_eden_running", False)) and _cfg_bool(cfg, "auto_eden_contract"), "enabled": _cfg_bool(cfg, "auto_eden_contract")},
                 "Basic Obby": {"active": bool(getattr(t, "_obby_running", False)), "enabled": _cfg_bool(cfg, "enable_obby_path") or _cfg_bool(cfg, "enable_auto_obby")},
-                "Easter Egg Path": {"active": bool(getattr(t, "_egg_running", False)), "enabled": _cfg_bool(cfg, "collect_easter_egg")},
                 "Reset on Rare Biomes": {"active": det and _cfg_bool(cfg, "reset_on_rare"), "enabled": _cfg_bool(cfg, "reset_on_rare")},
                 "Teleport Back to Limbo": {"active": det and _cfg_bool(cfg, "teleport_back_to_limbo"), "enabled": _cfg_bool(cfg, "teleport_back_to_limbo")},
                 "Auto Roblox Fullscreen": {"active": det and _cfg_bool(cfg, "auto_roblox_fullscreen"), "enabled": _cfg_bool(cfg, "auto_roblox_fullscreen")},
@@ -1355,7 +1602,6 @@ class Api:
                 "Auto Pop Glitched": {"active": det and _cfg_bool(cfg, "auto_pop_glitched"), "enabled": _cfg_bool(cfg, "auto_pop_glitched")},
                 "Auto Pop Dreamspace": {"active": det and _cfg_bool(cfg, "auto_pop_dreamspace"), "enabled": _cfg_bool(cfg, "auto_pop_dreamspace")},
                 "Auto Pop Cyberspace": {"active": det and _cfg_bool(cfg, "auto_pop_cyberspace"), "enabled": _cfg_bool(cfg, "auto_pop_cyberspace")},
-                "Cyberspace Only Warp": {"active": det and _cfg_bool(cfg, "cyberspace_only_warp"), "enabled": _cfg_bool(cfg, "cyberspace_only_warp")},
                 "Glitched Buff Enable": {"active": det and _cfg_bool(cfg, "enable_buff_glitched"), "enabled": _cfg_bool(cfg, "enable_buff_glitched")},
                 "Biome Randomizer": {"active": bool(getattr(t, "_br_sc_running", False)) and _cfg_bool(cfg, "biome_randomizer"), "enabled": _cfg_bool(cfg, "biome_randomizer")},
                 "Strange Controller": {"active": bool(getattr(t, "_br_sc_running", False)) and _cfg_bool(cfg, "strange_controller"), "enabled": _cfg_bool(cfg, "strange_controller")},
@@ -1366,7 +1612,6 @@ class Api:
                 "Merchant OCR": {"active": det and _cfg_bool(cfg, "merchant_ocr"), "enabled": _cfg_bool(cfg, "merchant_ocr")},
                 "Auto Merchant in Limbo": {"active": det and _cfg_bool(cfg, "auto_merchant_in_limbo"), "enabled": _cfg_bool(cfg, "auto_merchant_in_limbo")},
                 "Jester Exchange": {"active": bool(getattr(t, "_jester_exchange_running", False)), "enabled": _cfg_bool(cfg, "enable_jester_exchange")},
-                "Merchant Pings (Discord)": {"active": det and (_cfg_bool(cfg, "ping_jester") or _cfg_bool(cfg, "ping_mari") or _cfg_bool(cfg, "ping_eden")), "enabled": _cfg_bool(cfg, "ping_jester") or _cfg_bool(cfg, "ping_mari") or _cfg_bool(cfg, "ping_eden")},
                 "Daily Quests": {"active": det and _cfg_bool(cfg, "auto_claim_daily_quests"), "enabled": _cfg_bool(cfg, "auto_claim_daily_quests")},
             },
             "Crafting": {
@@ -1380,7 +1625,6 @@ class Api:
                 "Rare Biome Screenshot": {"active": det and _cfg_bool(cfg, "rare_biome_screenshot"), "enabled": _cfg_bool(cfg, "rare_biome_screenshot")},
                 "Periodic Aura Screenshot": {"active": det and _cfg_bool(cfg, "periodical_aura_screenshot"), "enabled": _cfg_bool(cfg, "periodical_aura_screenshot")},
                 "Periodic Inventory Screenshot": {"active": det and _cfg_bool(cfg, "periodical_inventory_screenshot"), "enabled": _cfg_bool(cfg, "periodical_inventory_screenshot")},
-                "Glitch Effect UI": {"active": det and _cfg_bool(cfg, "enable_glitch_effect"), "enabled": _cfg_bool(cfg, "enable_glitch_effect")},
             }
         }
         
@@ -1394,9 +1638,8 @@ class Api:
 
         if _cfg_bool(cfg, "multiple_instances_enabled"):
             incompatibilities.extend([
-                "Multiple-Instances mode is observation/Anti-AFK only; statistics are disabled.",
-                "Mouse actions, OCR, pathing, fishing, merchant, potion crafting, and foreground automation are disabled.",
-                "A primary/main window is not supported because focus and pause/resume cannot be proven safe across Roblox windows.",
+                "Multiple-Instances mode: all full features (detector, fishing, actions) run on the selected MAIN window only.",
+                "Secondary windows receive Anti-AFK jumps (only in free windows of the main cycle) and log-based alerts.",
             ])
         
         if _cfg_bool(cfg, "go_to_eden_spawn") and _cfg_bool(cfg, "fishing_mode"):
@@ -1416,10 +1659,10 @@ class Api:
         cfg = getattr(t, "config", {}) if t else {}
         roblox_processes = []
         try:
-            for proc in psutil.process_iter(["pid", "name"]):
-                name = str(proc.info.get("name") or "")
-                if name.lower() in {"robloxplayerbeta.exe", "windows10universal.exe"}:
-                    roblox_processes.append({"pid": int(proc.info["pid"]), "name": name})
+            from biome_tracker.base_support import is_roblox_process
+            for proc in psutil.process_iter(["pid", "name", "exe"]):
+                if is_roblox_process(proc.info):
+                    roblox_processes.append({"pid": int(proc.info["pid"]), "name": str(proc.info.get("name") or "")})
         except Exception:
             pass
         log_file = None
@@ -1529,7 +1772,7 @@ class Api:
             return {"success": False, "reason": f"Restart failed: {exc}"}
 
     def reset_daily_event_claim(self):
-        """Clear the stored claim date so the next 03:00 MSK window re-collects."""
+        """Clear the stored claim date so the next 00:00 UTC reset re-collects."""
         tracker = getattr(self, "_tracker", None)
         if tracker is None or not isinstance(getattr(tracker, "config", None), dict):
             return {"success": False, "reason": "Macro core is not running yet."}
@@ -1539,7 +1782,7 @@ class Api:
             return {
                 "success": True,
                 "claimed_date": "",
-                "message": "Claim date reset — the macro will collect again at the next 03:00 MSK window.",
+                "message": "Claim date reset — the macro will collect again at the next daily reset (00:00 UTC).",
             }
         except Exception as exc:
             return {"success": False, "reason": f"Reset failed: {exc}"}
@@ -1703,6 +1946,10 @@ class Api:
         t = self._tracker
         old_override = getattr(t, "_fishing_br_sc_override", False)
         t._fishing_br_sc_override = True
+        # Multi-instance: mark the main cycle busy so secondary Anti-AFK
+        # waits for this sequence instead of stealing the focus mid-run.
+        old_busy = getattr(t, "_fishing_busy", False)
+        t._fishing_busy = True
         ran = False
         try:
             try: t.activate_roblox_window()
@@ -1724,6 +1971,7 @@ class Api:
             print(f"Fishing BR/SC sequence failed: {e}")
         finally:
             t._fishing_br_sc_override = old_override
+            t._fishing_busy = old_busy
         return ran
 
     def _run_fishing_merchant_sequence(self):
@@ -1732,6 +1980,10 @@ class Api:
         self._fishing_runtime_state["merchant_requires_reset"] = False
         old_override = getattr(t, "_fishing_br_sc_override", False)
         t._fishing_br_sc_override = True
+        # Multi-instance: mark the main cycle busy so secondary Anti-AFK
+        # waits for the whole merchant run (teleport, buy, limbo return).
+        old_busy = getattr(t, "_fishing_busy", False)
+        t._fishing_busy = True
         ran = False
         try:
             try: t.activate_roblox_window()
@@ -1753,6 +2005,7 @@ class Api:
             print(f"Fishing merchant sequence failed: {e}")
         finally:
             t._fishing_br_sc_override = old_override
+            t._fishing_busy = old_busy
         return ran
 
     def _start_fishing_worker(self) -> None:
@@ -1801,18 +2054,25 @@ class Api:
         if not self._tracker: return
         multi_enabled = bool(self._tracker.config.get("multiple_instances_enabled", False))
         if multi_enabled:
+            # Multi-instance mode: the FULL detector runs on the selected main
+            # window (fishing, quests, memory match, merchant...); secondary
+            # windows get ordered Anti-AFK + the log-based alert monitor.
             print(f"[MultiInstance] set_biome_detection({enabled}) - multi-instance mode active", flush=True)
             if enabled:
+                if not self._tracker.detection_running:
+                    threading.Thread(target=self._tracker.start_detection, daemon=True).start()
                 multi_instance.set_enabled(True, self._tracker)
-                self._tracker.detection_running = True
-                # Same first-aura rule as start_detection: the aura the user
-                # was already wearing must not be announced on launch.
-                self._tracker.last_aura_found = None
-                self._tracker._aura_webhook_skip_first = True
+                # start_detection also starts the secondary loop; call it here
+                # too for the hot-toggle path when detection was already running.
                 multi_instance.start_idle_loop()
+                if self._is_fishing_mode_enabled():
+                    self._start_fishing_worker()
+                else:
+                    self._stop_fishing_worker()
             else:
                 multi_instance.stop_idle_loop()
-                self._tracker.detection_running = False
+                self._stop_fishing_worker()
+                self._tracker.stop_detection()
             self._emit_macro_status()
             return
         if enabled:
@@ -1960,12 +2220,26 @@ class Api:
         return False
 
     def check_for_updates(self):
-        if not self._tracker:
-            return False
+        # Both the frontend (on pywebviewready) and the backend init thread
+        # request a startup check - only one GitHub query per 10s window.
+        now = time.time()
+        if now - getattr(self, "_last_update_check_ts", 0.0) < 10.0:
+            return True
+        self._last_update_check_ts = now
 
         def _do_check():
+            # The tracker is created by the background-init thread, which can
+            # still be running when the frontend asks for an update check.
+            # Wait for it instead of silently returning False — the old race
+            # swallowed the whole startup update notification.
+            deadline = time.time() + 90.0
+            while self._tracker is None and time.time() < deadline:
+                time.sleep(0.5)
+            tracker = self._tracker
+            if not tracker:
+                return
             try:
-                self._tracker.check_for_updates()
+                tracker.check_for_updates()
             except Exception as e:
                 print(f"Update check failed: {e}")
 
@@ -2532,6 +2806,40 @@ class Api:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
+    def custom_paths_set_trigger(self, path_id: str, enabled: bool = False,
+                                 interval_min: float = 0.0, biome: str = ""):
+        """v44: configure the auto trigger of a free (unassigned) custom path."""
+        try:
+            from biome_tracker.custom_path_manager import set_path_trigger
+            res = set_path_trigger(path_id, enabled=enabled,
+                                   interval_min=interval_min, biome=biome)
+            return res
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def custom_paths_run_now(self, path_id: str):
+        """v44: queue a manual replay of one custom path (Run now button)."""
+        try:
+            from biome_tracker.custom_path_manager import get_custom_path
+            data = get_custom_path(path_id)
+            if not data:
+                return {"success": False, "error": "Path not found"}
+            events = data.get("events") or []
+            if not events:
+                return {"success": False, "error": "Path has no events"}
+            tracker = getattr(self, "_tracker", None)
+            sched = getattr(tracker, "_action_scheduler", None)
+            impl = getattr(tracker, "_perform_custom_path_impl", None)
+            if sched is None or impl is None:
+                return {"success": False,
+                        "error": "Macro is not running yet — start the macro first."}
+            sched.enqueue_action(
+                lambda: impl(events, data.get("meta") or {}, path_id),
+                name=f"custom_path_{path_id}", priority=0)
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
     def save_recording_as_custom_path(self, name: str, feature: str = "", include_mouse: bool = False):
         try:
             from biome_tracker.custom_path_manager import save_recording_as_custom
@@ -2600,15 +2908,17 @@ class Api:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def export_calibration_file(self):
+    def export_calibration_file(self, name: str = ""):
         try:
             if not self._window: return {"success": False, "error": "Window not available"}
-            result = self._window.create_file_dialog(webview.FileDialog.SAVE, directory=str(self._calibrations_dir()), save_filename="EndSol-calibration.json", file_types=("Calibration JSON (*.json)",))
+            clean = re.sub(r"[^A-Za-z0-9 _.-]+", "_", str(name or "")).strip(" .")[:80]
+            save_filename = f"{clean}.json" if clean else "EndSol-calibration.json"
+            result = self._window.create_file_dialog(webview.FileDialog.SAVE, directory=str(self._calibrations_dir()), save_filename=save_filename, file_types=("Calibration JSON (*.json)",))
             if not result: return {"success": False, "error": "Export cancelled"}
             path = result[0] if isinstance(result, (list, tuple)) else result
-            payload = {"format": "EndSolMacroCalibration", "version": 1, "saved_at": datetime.now(timezone.utc).isoformat(), "calibrations": self._calibration_payload()}
-            Path(path).write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-            return {"success": True, "path": str(path)}
+            payload = self._calibration_payload()
+            Path(path).write_text(json.dumps({"format": "EndSolMacroCalibration", "version": 1, "saved_at": datetime.now(timezone.utc).isoformat(), "calibrations": payload}, indent=2, ensure_ascii=False), encoding="utf-8")
+            return {"success": True, "path": str(path), "count": len(payload)}
         except Exception as e: return {"success": False, "error": str(e)}
 
     def import_calibration_file(self):
@@ -2676,6 +2986,19 @@ def launch_app(api_class, tracker=None):
     tracker.on_biome_confirm_request = api._request_biome_confirm
     tracker.on_status_change = lambda status: api._emit_macro_status()
 
+    # v33: apply the persisted Multiple-Instances mode at startup. The
+    # launcher locks (cookie lock + singleton watcher) follow the MODE, not
+    # the macro cycle — but set_enabled(True) only ran on the UI toggle or
+    # on F1/detection start, so a fresh app run with the toggle already ON
+    # showed "singleton watcher not running yet" and the cookie lock was not
+    # held until the first Launch (user report 2026-09-30).
+    try:
+        if bool((getattr(tracker, "config", {}) or {}).get("multiple_instances_enabled", False)):
+            multi_instance.attach_tracker(tracker)
+            multi_instance.set_enabled(True, tracker)
+    except Exception:
+        pass
+
     fe = get_frontend_entry()
     win_args = {
         "title": f"EndSol Macro {current_version}",
@@ -2693,6 +3016,36 @@ def launch_app(api_class, tracker=None):
     window = webview.create_window(**win_args)
     threading.Thread(target=_apply_native_window_icon_when_ready, args=(win_args["title"],), daemon=True).start()
     api.set_window(window)
+
+    # v38 safety: warn before the panel closes while Roblox instances run —
+    # closing the panel stops the singleton watcher, and running clients
+    # could then close each other. Cancelable via the pywebview closing
+    # event; silently skipped on builds without it.
+    try:
+        def _guard_panel_close():
+            try:
+                import psutil as _psutil
+                running = sum(1 for p in _psutil.process_iter(["name"])
+                              if (p.info.get("name") or "").lower().startswith("robloxplayerbeta"))
+            except Exception:
+                return None
+            if not running:
+                return None
+            try:
+                import ctypes
+                answer = ctypes.windll.user32.MessageBoxW(
+                    0,
+                    f"{running} Roblox client(s) are still running.\n\n"
+                    "Closing the EndSol panel stops the singleton watcher — "
+                    "running instances may close each other unexpectedly.\n\n"
+                    "Close the panel anyway?",
+                    "EndSol Macro", 0x04 | 0x30)  # MB_YESNO | MB_ICONWARNING
+                return None if answer == 6 else False  # 6 = IDYES; else cancel
+            except Exception:
+                return False  # no dialog available — stay on the safe side
+        window.events.closing += _guard_panel_close
+    except Exception:
+        pass
 
     # F1 = start, F2 = stop
     _VK_F1 = 0x70
@@ -2804,6 +3157,22 @@ def main():
                         return
 
                 api._tracker = tracker
+                # Restore multi-instance preference at startup so the UI
+                # toggle reflects the persisted config (not the in-memory
+                # flag, which resets to False on every app relaunch).
+                try:
+                    if bool((getattr(tracker, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                        import biome_tracker.multi_instance as _mi
+                        _mi.attach_tracker(tracker)
+                        _mi.set_enabled(True, tracker)
+                        # v38: the success line was diagnostic noise — failures
+                        # still print with a traceback below.
+                except Exception as _mi_exc:
+                    # v34: this used to fail silently, which left the Locks
+                    # line stuck on "watcher not running yet" with the toggle
+                    # ON (user report 2026-09-30).
+                    print(f"[MultiInstance] Startup restore failed: {_mi_exc}", flush=True)
+                    traceback.print_exc()
                 tracker.on_stats_update = api._emit_stats_update
                 tracker.on_biome_update = api._emit_biome_update
                 tracker.on_update_available = api._emit_update_available
@@ -2813,6 +3182,28 @@ def main():
                 tracker.on_remote_start = lambda: api.set_biome_detection(True)
                 tracker.on_remote_stop = lambda: api.set_biome_detection(False)
                 api.set_window(window)
+
+                # Panel version customization must never go stale: when the
+                # app version changes (auto-update), reset the sidebar version
+                # override so it follows the live version again.
+                try:
+                    custom = tracker.config.get("custom_theme_data")
+                    if isinstance(custom, dict):
+                        saved_v = str(custom.get("custom_macro_version") or "").strip()
+                        if saved_v and saved_v.lstrip("vV") != str(current_version).lstrip("vV"):
+                            custom["custom_macro_version"] = ""
+                            tracker.config["custom_theme_data"] = custom
+                            save_config(tracker.config)
+                            api._emit_config_update()
+                            print(f"[Panel] Custom version '{saved_v}' reset to default (app is {current_version})")
+                except Exception as _ver_exc:
+                    print(f"Custom version reset failed: {_ver_exc}")
+
+                # Always check GitHub releases once the tracker is up: with
+                # Auto-Update OFF the user still gets the update notice on the
+                # Notice page (with Auto-Update ON the startup updater already
+                # handled or failed above, and the notice is the fallback).
+                api.check_for_updates()
 
             except Exception as exc:
                 print(f"Background init error: {exc}")

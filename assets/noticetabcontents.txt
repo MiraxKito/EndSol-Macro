@@ -1,6 +1,20 @@
+# v1.0.8 (What's new?)
+
+* Multiple windows: pick your main Roblox window — the macro plays fully on it (fishing, quests, Memory Match, merchant), while your other windows stay logged in and send biome, aura and disconnect alerts to Discord
+* Smart Anti-AFK for other windows: they only jump when the main window isn't busy, your current window gets its focus back right after, and jumps got more reliable on slower PCs
+
+* Self-fixing Roblox window: if Roblox got minimized, shrunk or restarted in a small window, the macro fixes it automatically
+* Optional separate Discord webhook for multi-windows: know when the mode is running and how many windows it's watching
+* Cleaner settings: options for disabled features are now hidden until you turn the feature on
+* New Status page: see at a glance what's running, your session time and the main window
+* Less interruptions: auras you filtered out no longer steal focus or take screenshots; aura info from the wiki got more accurate
+* Auto-start after inactivity: if the macro stops on its own while you're away, it starts again
+* Reliability: reconnects no longer close your other Roblox windows; background tasks recover from errors on their own
+
 # v1.0.7 (What's new?)
 
 * Memory Match: Reworked tile matching (item + quantity detected as images, no OCR) - FEATURE IN ACTIVE TESTING
+* Multi-Instances: Main window + secondary windows - the full macro (fishing, quests, detector) runs on the main window; secondaries get Anti-AFK (only in free windows of the main cycle) and biome/aura/disconnect alerts
 * Timing: Longer delays before closing the fishing catch popup and between character-reset keys (Esc/R/Enter) - helps on low-FPS PCs
 * Sol's Book: Added comprehensive Items and Gauntlets databases loaded straight from Fandom Wiki
 * Performance: PSUtil process scanning throttled and cached to prevent FPS drops on low-end systems

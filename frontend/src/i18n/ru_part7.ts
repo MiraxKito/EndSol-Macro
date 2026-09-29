@@ -120,15 +120,15 @@ export const RU_P7: Record<string, string> = {
     "handles teleporter, OCR, exchange, and purchase actions.": "отвечает за телепортёр, OCR, обмен и покупки.",
     "contains quests, reconnect, screenshots, biome randomizer, strange controller, and recovery options.":
         "содержит квесты, реконнект, скриншоты, рандомизатор биомов, strange controller и опции восстановления.",
-    "controls saved routes such as Obby, Eden, and egg collection. Paths replay their recorded timestamps and key events; they are not recalculated from a generic speed formula.":
-        "управляет сохранёнными маршрутами: Obby, Eden и сбор яиц. Пути воспроизводят записанные тайминги и клавиши; они не пересчитываются по общей формуле скорости.",
+    "controls saved routes such as Obby and Eden. Paths replay their recorded timestamps and key events; they are not recalculated from a generic speed formula.":
+        "управляет сохранёнными маршрутами: Obby и Eden. Пути воспроизводят записанные тайминги и клавиши; они не пересчитываются по общей формуле скорости.",
     "Use the correct VIP/Non-VIP path option for the account.": "Выбирайте правильный вариант пути VIP/Non-VIP для аккаунта.",
     "Keep Roblox focused and use the same camera alignment as when the route was recorded.":
         "Держите Roblox в фокусе и используйте то же положение камеры, что при записи маршрута.",
     "Do not edit path JSON timestamps unless you intentionally want different timing.":
         "Не правьте тайминги JSON пути без намерения изменить тайминг.",
-    "lets you record your own walk routes and assign them to features (Obby, Eden, Memory Match, Quest Board, egg routes). A custom path always overrides the built-in default route for that feature.":
-        "позволяет записать свои маршруты и назначить их функциям (Obby, Eden, Memory Match, Quest Board, маршруты яиц). Свой путь всегда переопределяет встроенный маршрут функции.",
+    "lets you record your own walk routes and assign them to features (Obby, Eden, Memory Match, Quest Board). A custom path always overrides the built-in default route for that feature.":
+        "позволяет записать свои маршруты и назначить их функциям (Obby, Eden, Memory Match, Quest Board). Свой путь всегда переопределяет встроенный маршрут функции.",
     "on the Custom Paths page and perform the route in Roblox.": "на странице Custom Paths и пройдите маршрут в Roblox.",
     "Stop the recording in the Recorder window, then save it on this page with a name and an optional feature.":
         "Остановите запись в окне рекордера, затем сохраните её на этой странице с именем и опциональной функцией.",
@@ -159,8 +159,8 @@ export const RU_P7: Record<string, string> = {
     "Biome and aura statistics used by webhooks come from the same dataset.": "Статистика биомов и аур для вебхуков берётся из того же набора данных.",
     "With": "Когда",
     "enabled in": "включены в",
-    ", the macro claims the daily check-in automatically at 03:00 MSK. To verify the flow at any time, use the buttons under the toggle:":
-        ", макрос забирает ежедневный вход автоматически в 03:00 МСК. Чтобы проверить процесс в любой момент, используйте кнопки под переключателем:",
+    ", the macro claims the daily check-in automatically right after the daily reset at 00:00 UTC. To verify the flow at any time, use the buttons under the toggle:":
+        ", макрос забирает ежедневный вход автоматически сразу после сброса в 00:00 UTC. Чтобы проверить процесс в любой момент, используйте кнопки под переключателем:",
     "— runs one claim attempt immediately and reports the OCR result (requires the macro to be started and Roblox focused).":
         "— сразу выполняет одну попытку забора и показывает результат OCR (нужен запущенный макрос и Roblox в фокусе).",
     "— clears the stored date so the next window collects again.": "— сбрасывает сохранённую дату, чтобы следующее окно собралось снова.",
@@ -431,8 +431,8 @@ export const RU_P7: Record<string, string> = {
         "Аккаунты без VIP: включите «Non-VIP movement path» в настройках рыбалки, чтобы маршруты растягивались автоматически.",
     "OCR box region calibration in Movements Calibration tab!": "Калибровка OCR-области во вкладке калибровок Movements!",
     "OCR Calibration": "OCR-калибровка",
-    "Only works if fishing mode, potion crafting, auto obby, auto egg": "Работает только если режим рыбалки, крафт зелий, авто-обби, авто-яйца",
-    "Only works if fishing, potion crafting, auto obby, auto egg": "Работает только если рыбалка, крафт зелий, авто-обби, авто-яйца",
+    "Only works if fishing mode, potion crafting, auto obby": "Работает только если режим рыбалки, крафт зелий, авто-обби",
+    "Only works if fishing, potion crafting, auto obby": "Работает только если рыбалка, крафт зелий, авто-обби",
     "pathing is OFF!": "маршруты ВЫКЛ!",
     "Ping if Eden found?": "Пинговать, если найден Eden?",
     "Play one Memory Match session right now (ignores the 12h cooldown, for testing)":

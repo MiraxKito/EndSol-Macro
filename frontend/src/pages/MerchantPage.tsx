@@ -261,6 +261,7 @@ export default function MerchantPage() {
                     onChange={(val) => updateConfig("auto_merchant_in_limbo", val)}
                 />
 
+                {(config.merchant_teleporter || config.merchant_ocr || config.auto_merchant_in_limbo) && (
                 <div className="form-row" style={{ marginTop: "10px" }}>
                     <div className="form-group">
                         <label className="form-label">Merchant item extra slot</label>
@@ -273,6 +274,7 @@ export default function MerchantPage() {
                         />
                     </div>
                 </div>
+                )}
             </div>
 
             {/* Jester Exchange Settings */}

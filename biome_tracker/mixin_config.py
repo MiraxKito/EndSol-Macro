@@ -40,7 +40,7 @@ class ConfigMixin:
             "session_window_start": session_window_start_val,
             "macro_last_start": macro_last_start_val,
             "selected_theme": self.root.style.theme.name if hasattr(self, "root") and self.root is not None and hasattr(self.root, "style") else self.config.get("selected_theme", "solar"),
-            "dont_ask_for_update": self.config.get("dont_ask_for_update", False),
+            "update_notifications_disabled": self.config.get("update_notifications_disabled", False),
             "auto_update_enabled": self.auto_update_enabled_var.get() if hasattr(self, "auto_update_enabled_var") else self.config.get("auto_update_enabled", True),
             "auto_update_biome_data": self.config.get("auto_update_biome_data", True),
             "auto_update_biome_aura_data": self.config.get("auto_update_biome_aura_data", True),
@@ -213,13 +213,6 @@ class ConfigMixin:
             "fishing_br_sc_every_x_fish": self.config.get("fishing_br_sc_every_x_fish", "30"),
             "fishing_actions_delay_ms": self.config.get("fishing_actions_delay_ms", "200"),
             "fishing_playback_multiplier": self.config.get("fishing_playback_multiplier", 1.0),
-
-            # ── Easter Egg Path  ──
-            "collect_easter_egg": self.config.get("collect_easter_egg", False),
-            "egg_collect_interval_min": self.config.get("egg_collect_interval_min", "30"),
-            "egg_playback_multiplier": self.config.get("egg_playback_multiplier", 1.0),
-            "egg_ocr_detect_special": self.config.get("egg_ocr_detect_special", False),
-            "egg_ocr_discord_userid": self.config.get("egg_ocr_discord_userid", ""),
             
             # ── Remote Bot ──
             "remote_access_enabled": self.remote_access_var.get() if hasattr(self, "remote_access_var") else self.config.get("remote_access_enabled", False),
@@ -235,6 +228,14 @@ class ConfigMixin:
             "go_to_eden_spawn": self.config.get("go_to_eden_spawn", False),
             "auto_eden_contract": self.config.get("auto_eden_contract", False),
             "eden_contract_button": self.config.get("eden_contract_button", [708, 895]),
+            "eden_contract_extra1_button": self.config.get("eden_contract_extra1_button", [0, 0]),
+            "eden_contract_extra2_button": self.config.get("eden_contract_extra2_button", [0, 0]),
+            "eden_contract_extra1_button": self.config.get("eden_contract_extra1_button", [0, 0]),
+            "eden_contract_extra2_button": self.config.get("eden_contract_extra2_button", [0, 0]),
+            "auto_roll_biome_enabled": self.config.get("auto_roll_biome_enabled", False),
+            "auto_roll_biome_list": self.config.get("auto_roll_biome_list", []),
+            "autoroll_status_region": self.config.get("autoroll_status_region", [0, 0, 0, 0]),
+            "autoroll_toggle_button": self.config.get("autoroll_toggle_button", [0, 0]),
             "eden_contract_interval": self.config.get("eden_contract_interval", "2"),
 
             # ── Memory Match (Eon 1-2+; Summer 2026 active) ─────────
@@ -246,6 +247,7 @@ class ConfigMixin:
             "memory_match_close_button": self.config.get("memory_match_close_button", [0, 0]),
             "memory_match_playback_multiplier": self.config.get("memory_match_playback_multiplier", 1.0),
             "memory_match_last_played": self.config.get("memory_match_last_played", ""),
+            "memory_match_attempt_gap": self.config.get("memory_match_attempt_gap", 0.8),
 
             # ── Quest Board (passive self-sufficient quests) ─────────
             "quest_board_enabled": self.config.get("quest_board_enabled", False),
@@ -407,7 +409,7 @@ class ConfigMixin:
                     "THE CITADEL OF ORDERS": { "color": "0xc0a030", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/the%20citadel%20of%20orders.png" }
                 },
                 "cyberspace_only_warp": False,
-                "dont_ask_for_update": False,
+                "update_notifications_disabled": False,
                 "auto_update_enabled": False,
                 "auto_update_biome_data": True,
                 "auto_update_biome_aura_data": True,
@@ -421,6 +423,7 @@ class ConfigMixin:
                 "memory_match_close_button": [0, 0],
                 "memory_match_playback_multiplier": 1.0,
                 "memory_match_last_played": "",
+                "memory_match_attempt_gap": 0.8,
                 "quest_board_enabled": False,
                 "quest_board_check_interval_minutes": 15,
                 "quest_board_auto_accept": True,
@@ -474,11 +477,6 @@ class ConfigMixin:
                 "fishing_br_sc_every_x_fish": "30",
                 "fishing_actions_delay_ms": "200",
                 "fishing_playback_multiplier": 1.0,
-                "collect_easter_egg": False,
-                "egg_collect_interval_min": "30",
-                "egg_playback_multiplier": 1.0,
-                "egg_ocr_detect_special": False,
-                "egg_ocr_discord_userid": "",
                 "float_aura_name": "",
                 "glitched_buff_enable_button": [0, 0],
                 "glitched_menu_button": [0, 0],
@@ -558,11 +556,6 @@ class ConfigMixin:
                 "auto_chat_close": False,
                 "enable_obby_path": False,
                 "obby_claim_interval": "15",
-                "collect_easter_egg": False,
-                "egg_collect_interval_sec": "60",
-                "egg_collect_interval_min": "30",
-                "egg_playback_multiplier": 1.0,
-                "egg_ocr_detect_special": False,
                 "merchant_close_button": [1809, 346],
                 "player_logger": True,  
                 "webhook_url": [],
@@ -577,7 +570,13 @@ class ConfigMixin:
                 "go_to_eden_spawn": False,
                 "auto_eden_contract": False,
                 "eden_contract_button": [708, 895],
-                "eden_contract_interval": "3"
+                "eden_contract_extra1_button": [0, 0],
+                "eden_contract_extra2_button": [0, 0],
+                "eden_contract_interval": "3",
+                "auto_roll_biome_enabled": False,
+                "auto_roll_biome_list": [],
+                "autoroll_status_region": [0, 0, 0, 0],
+                "autoroll_toggle_button": [0, 0],
             }
 
             if getattr(self, "biome_data", None):
@@ -706,6 +705,22 @@ class ConfigMixin:
             if not file_path: return
             with open(file_path, "r") as file:
                 config = json.load(file)
+            # Merge over defaults so configs saved by older versions still
+            # get every key added later (missing keys take default values).
+            try:
+                from .defaults import get_default_config
+                merged = dict(get_default_config())
+            except Exception:
+                merged = {}
+            if isinstance(config, dict):
+                merged.update(config)
+            # Keep the legacy singular webhook key from being clobbered by
+            # the empty default list (and vice versa).
+            if "webhook_url" in config and "webhook_urls" not in config:
+                merged["webhook_urls"] = merged.get("webhook_url")
+            if "webhook_urls" in config and "webhook_url" not in config:
+                merged["webhook_url"] = merged.get("webhook_urls")
+            config = merged
             self.config.clear()
             self.config.update(config)
 

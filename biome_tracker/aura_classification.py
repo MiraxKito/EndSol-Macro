@@ -12,7 +12,8 @@ Aura types:
   - crafted: made at Jake's Workshop — always webhook
   - potion_required: requires specific potion to roll — always webhook
   - event_exclusive: only during limited events — always webhook
-  - limbo: only in Limbo area — always webhook
+  - limbo: rolled in The Limbo dimension — respects the rarity threshold
+    (it IS a roll, just from a different dimension)
 """
 
 from __future__ import annotations
@@ -49,6 +50,16 @@ def classify_aura(aura_name: str, aura_info: dict[str, Any]) -> dict[str, Any]:
     if isinstance(exclusive_biome_list, list) and len(exclusive_biome_list) >= 1:
         biome = exclusive_biome_list[0] if exclusive_biome_list[0] != "None" else ""
         if biome:
+            # The Limbo is a separate DIMENSION, not one of the tracked
+            # biomes. Limbo auras ARE rolls, so they must respect the user's
+            # rarity threshold like every other rollable aura instead of
+            # bypassing it as "biome_exclusive / always webhook".
+            if str(biome).strip().upper() == "THE LIMBO":
+                result["type"] = "limbo"
+                result["always_webhook"] = False
+                result["condition"] = "Only in The Limbo"
+                result["biome"] = "THE LIMBO"
+                return result
             result["type"] = "biome_exclusive"
             result["always_webhook"] = True
             result["condition"] = f"Only in {biome}"

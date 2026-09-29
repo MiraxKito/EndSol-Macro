@@ -10,6 +10,7 @@ RemoteCommandType = Literal[
     "__rejoin__",
     "__check_merchant__",
     "__screenshot__",
+    "__screenshot_all__",
     "__reroll__",
     "use_item",
 ]

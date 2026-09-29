@@ -10,6 +10,7 @@ export default function OtherFeaturesPage() {
     const [pendingLang, setPendingLang] = useState<Lang | null>(null);
     const [profileName, setProfileName] = useState("");
     const [profiles, setProfiles] = useState<string[]>([]);
+    const [selectedProfile, setSelectedProfile] = useState("");
     const [profileMsg, setProfileMsg] = useState("");
     const [resetArmed, setResetArmed] = useState(false);
     const [resetMsg, setResetMsg] = useState("");
@@ -29,9 +30,27 @@ export default function OtherFeaturesPage() {
     };
 
     const refreshProfiles = () => {
-        window.pywebview?.api?.list_config_profiles?.().then((r: any) => {
-            if (r?.success) setProfiles(r.profiles || []);
-        });
+        // Every page stays mounted for the whole app lifetime, so this effect
+        // runs ONCE at startup - often before the pywebview bridge exists.
+        // Retry until the backend is reachable instead of failing silently
+        // (saved profiles looked "lost" after every panel restart).
+        let attempts = 0;
+        const tryFetch = () => {
+            const api = (window as any).pywebview?.api;
+            if (!api || typeof api.list_config_profiles !== "function") {
+                if (attempts++ < 60) window.setTimeout(tryFetch, 500);
+                return;
+            }
+            api.list_config_profiles().then((r: any) => {
+                if (r?.success) {
+                    setProfiles(r.profiles || []);
+                    setSelectedProfile((prev) => (prev && (r.profiles || []).includes(prev) ? prev : ""));
+                } else if (r?.error) {
+                    setProfileMsg(r.error);
+                }
+            }).catch(() => { /* retried on the next save/load/delete */ });
+        };
+        tryFetch();
     };
     useEffect(() => { refreshProfiles(); }, []);
 
@@ -47,15 +66,27 @@ export default function OtherFeaturesPage() {
         if (!name) { setProfileMsg(t("Enter a profile name first")); return; }
         const res = await window.pywebview?.api?.save_config_profile?.(name);
         setProfileMsg(res?.success ? t("Profile saved") + ": " + res.name : (res?.error || t("Failed to save profile")));
-        if (res?.success) { setProfileName(""); refreshProfiles(); }
+        if (res?.success) {
+            setProfileName("");
+            setSelectedProfile(res.name);
+            refreshProfiles();
+        }
     };
     const handleLoadProfile = async (name: string) => {
+        if (!name) return;
         const res = await window.pywebview?.api?.load_config_profile?.(name);
         setProfileMsg(res?.success ? t("Profile loaded") + ": " + res.name : (res?.error || t("Failed to load profile")));
     };
     const handleDeleteProfile = async (name: string) => {
+        if (!name) return;
         const res = await window.pywebview?.api?.delete_config_profile?.(name);
-        if (res?.success) { setProfileMsg(t("Profile deleted") + ": " + name); refreshProfiles(); }
+        if (res?.success) {
+            setProfileMsg(t("Profile deleted") + ": " + name);
+            setSelectedProfile("");
+            refreshProfiles();
+        } else {
+            setProfileMsg(res?.error || t("Failed to delete profile"));
+        }
     };
     const handleClearLogs = async () => {
         const res = await window.pywebview?.api?.clear_logs?.();
@@ -199,8 +230,15 @@ export default function OtherFeaturesPage() {
                     onChange={(val) => updateConfig("key_release_failsafe", val)}
                 />
                 <ToggleSwitch
-                    label={t("Daily stats webhook (once per day at 00:05)")}
-                    description={t("Sends one Discord message per day with the session counters (auras, biomes, Memory Match pairs, fish).")}
+                    label={t("Panel GPU acceleration")}
+                    description={t("Lets the panel use your graphics card for rendering instead of the CPU. Can noticeably improve FPS in Sol's Book and heavy pages. If the panel shows glitches or a black screen, turn this off again. Takes effect after a restart.")}
+                    checked={config.webview_gpu_acceleration === true}
+                    onChange={(val) => updateConfig("webview_gpu_acceleration", val)}
+                />
+
+                <ToggleSwitch
+                    label={t("Daily stats webhook (totals for the day, resets at 00:00 UTC)")}
+                    description={t("Sends one Discord message per day right after the 00:00 UTC reset with that day's totals (auras, biomes, Memory Match pairs, fish, macro runtime). Data is kept in %LOCALAPPDATA%\\EndSolMacro\\daily_stats.json and survives restarts.")}
                     checked={config.daily_stats_webhook || false}
                     onChange={(val) => updateConfig("daily_stats_webhook", val)}
                 />
@@ -214,7 +252,7 @@ export default function OtherFeaturesPage() {
                 <div className="setting-row" style={{ padding: '15px 20px', borderBottom: '1px solid var(--border)' }}>
                     <div style={{ marginBottom: 10 }}>
                         <div style={{ fontWeight: 600, color: 'var(--text-bright)' }}>{t("Config Profiles")}</div>
-                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t("Save the current settings under a name and switch between sets (e.g. Biome farming / Egg run)")}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t("Save the current settings under a name and switch between sets (e.g. Biome farming / Eden run)")}</div>
                     </div>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                         <input
@@ -229,14 +267,36 @@ export default function OtherFeaturesPage() {
                         </button>
                     </div>
                     {profiles.length > 0 && (
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-                            {profiles.map((name) => (
-                                <span key={name} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid var(--border)', padding: '4px 8px', fontSize: '0.85rem' }}>
-                                    {name}
-                                    <button onClick={() => handleLoadProfile(name)} style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'var(--accent)', fontWeight: 600 }}>{t("Load")}</button>
-                                    <button onClick={() => handleDeleteProfile(name)} style={{ cursor: 'pointer', background: 'none', border: 'none', color: '#f87171' }}>✕</button>
-                                </span>
-                            ))}
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10, alignItems: 'center' }}>
+                            <select
+                                value={selectedProfile}
+                                onChange={(e) => setSelectedProfile(e.target.value)}
+                                style={{
+                                    width: 200, padding: '7px 10px', cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.9rem',
+                                    backgroundColor: 'var(--bg-card)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: 0,
+                                }}
+                            >
+                                <option value="">{t("Select a profile…")}</option>
+                                {profiles.map((name) => (
+                                    <option key={name} value={name}>{name}</option>
+                                ))}
+                            </select>
+                            <button
+                                className="btn"
+                                disabled={!selectedProfile}
+                                onClick={() => handleLoadProfile(selectedProfile)}
+                                style={{ padding: '8px 16px', cursor: selectedProfile ? 'pointer' : 'default', opacity: selectedProfile ? 1 : 0.5 }}
+                            >
+                                {t("Load")}
+                            </button>
+                            <button
+                                className="btn"
+                                disabled={!selectedProfile}
+                                onClick={() => handleDeleteProfile(selectedProfile)}
+                                style={{ padding: '8px 16px', cursor: selectedProfile ? 'pointer' : 'default', opacity: selectedProfile ? 1 : 0.5, color: '#f87171' }}
+                            >
+                                {t("Delete")}
+                            </button>
                         </div>
                     )}
                     {profileMsg && <div style={{ marginTop: 8, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{profileMsg}</div>}
@@ -250,7 +310,7 @@ export default function OtherFeaturesPage() {
                     <button
                         className="btn primary"
                         onClick={handleClearLogs}
-                        style={{ padding: '8px 18px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600 }}
+                        style={{ padding: '8px 18px', cursor: 'pointer', fontWeight: 600 }}
                     >
                         {t("Clear")}
                     </button>
@@ -266,7 +326,7 @@ export default function OtherFeaturesPage() {
                             className="btn"
                             onClick={handleResetSettings}
                             style={{
-                                padding: '8px 18px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600,
+                                padding: '8px 18px', cursor: 'pointer', fontWeight: 600,
                                 backgroundColor: resetArmed ? 'rgba(239, 68, 68, 0.2)' : 'transparent',
                                 color: '#f87171',
                                 border: '1px solid var(--border)',
@@ -292,11 +352,12 @@ export default function OtherFeaturesPage() {
                     onChange={(val) => updateConfig("anti_afk", val)}
                 />
 
+                {config.anti_afk && (
                 <div className="setting-row" style={{ padding: '0 20px 20px 20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
                     <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Usage Duration (minutes):</span>
-                    <input 
-                        type="number" 
-                        className="form-input" 
+                    <input
+                        type="number"
+                        className="form-input"
                         style={{ width: '80px', textAlign: 'center' }}
                         value={config.anti_afk_interval || "5"}
                         min="1"
@@ -304,10 +365,11 @@ export default function OtherFeaturesPage() {
                         onChange={(e) => updateConfig("anti_afk_interval", e.target.value)}
                     />
                 </div>
+                )}
 
                 <ToggleSwitch
                     label="Auto Update (Startup)"
-                    description="Automatically check for, download and install new releases on startup (EXE builds only)"
+                    description="Automatically check for, download and install new releases on startup (EXE builds only). When OFF, the panel still checks on startup and shows an update notice on the Notice page."
                     checked={config.auto_update_enabled === true}
                     onChange={(val) => updateConfig("auto_update_enabled", val)}
                 />

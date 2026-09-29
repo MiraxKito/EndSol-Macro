@@ -25,7 +25,7 @@ const SEARCH_INDEX = [
     { title: "Notice", tab: "notice", keywords: ["news", "updates", "announcements", "changelog"] },
     { title: "Webhook", tab: "webhook", keywords: ["discord", "webhook", "ping", "notification", "role", "server", "glitched", "dreamspace", "cyberspace", "url", "test", "high accuracy", "logs", "username"] },
     { title: "Stats", tab: "stats", keywords: ["statistics", "counters", "biome count", "merchant count", "session time", "reset stats", "reset statistics", "aura count"] },
-    { title: "Status", tab: "status", keywords: ["modules", "active modules", "running", "diagnostics", "macro state", "enabled features"] },
+    { title: "Status", tab: "status", keywords: ["modules", "active modules", "running", "diagnostics", "macro state", "enabled features", "session summary", "feature schedule", "logs"] },
     { title: "Automated Actions", tab: "misc", keywords: ["inventory", "delay", "screenshot", "quest board", "quest", "breakthrough", "daily quests", "claim daily", "biome record", "clip", "medal", "rare biome", "ocr failsafe", "biome randomizer", "br", "strange controller", "sc", "reconnect", "private server", "daily", "eden", "eden detection", "limbo", "item usage", "memory match", "memory", "minigame", "biome hunt", "meditation", "12h cooldown"] },
     { title: "Macro Calibrations", tab: "calibrations", keywords: ["calibrate", "positions", "window", "screen", "resolution", "align", "coordinates", "memory match grid", "grid region"] },
     { title: "Remote Control", tab: "remoteaccess", keywords: ["remote", "access", "control", "api", "discord bot", "token"] },
@@ -37,12 +37,13 @@ const SEARCH_INDEX = [
     { title: "Custom Paths", tab: "custompaths", keywords: ["custom path", "record walk", "replay path", "memory match path", "quest board path", "waypoints"] },
     { title: "Potion Crafting", tab: "potioncraft", keywords: ["craft", "potion", "cauldron", "stella", "brew", "ingredients"] },
     { title: "Other Features", tab: "otherfeatures", keywords: ["anti", "afk", "idle", "reset character", "glitch effect", "player logger", "system settings", "rare biome actions"] },
-    { title: "Multiple-Instances", tab: "multiinstances", keywords: ["multiple instances", "multi instance", "multiaccount", "windows", "avaluate", "multiplerobloxinstances", "anti-afk", "accounts", "second roblox"] },
+    { title: "Multiple-Instances", tab: "multiinstances", keywords: ["multiple instances", "multi instance", "multiaccount", "windows", "avaluate", "multiplerobloxinstances", "anti-afk", "accounts", "second roblox", "main window", "secondary windows", "instance alerts", "biome alerts", "aura alerts", "disconnect alerts", "main pid"] },
     { title: "Discord Webhook Customization", tab: "customization", keywords: ["custom", "background", "image", "theme", "webhook", "discord", "embed", "biome preview", "aura preview", "title", "description", "color"] },
     { title: "Panel Customization", tab: "panelcustomization", keywords: ["panel", "customization", "theme", "colors", "tabs", "font", "background", "gradient", "css", "title", "custom labels"] },
     { title: "Sol's Book", tab: "solbook", keywords: ["sol's book", "sols book", "wiki", "aura list", "items", "index", "gif", "rarities", "chances"] },
     { title: "Instructions", tab: "instructions", keywords: ["guide", "how to", "setup", "help", "start", "tutorial", "getting started"] },
     { title: "Credits", tab: "credits", keywords: ["credits", "contributors", "about"] },
+    { title: "Donations <3", tab: "donations", keywords: ["donate", "donations", "boosty", "support the project"] },
 ];
 
 export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, isGlitching, setActiveTab }: HeaderBarProps) {

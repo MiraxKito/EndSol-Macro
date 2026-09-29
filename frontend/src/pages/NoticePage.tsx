@@ -3,7 +3,31 @@ import { useT } from "../i18n";
 export default function NoticePage() {
   const t = useT();
   return <>
-    <div className="page-header"><h2>{t("Notice")}</h2><p>{t("Current EndSol Macro changes")}</p></div>
+    <div className="page-header">
+      <h2>{t("Notice")}</h2>
+      <p>
+        {t("Current EndSol Macro changes")} ·{" "}
+        <a href="https://github.com/MiraxKito/EndSol-Macro" target="_blank" rel="noreferrer" style={{ color: "var(--accent)" }}>
+          GitHub Repo
+        </a>
+      </p>
+    </div>
+    <div className="card"><div className="card-header"><div className="card-icon">🖥️</div><div><h3>v1.0.8 — Multiple-Instances: Main Window & Secondary Windows</h3><p>Play on several Roblox windows at once, cleaner settings, a new Status page and start/stop sounds</p></div></div>
+      <div className="changelog-item"><h4>✅ New</h4><ul>
+        <li><b>Multiple windows:</b> pick your main Roblox window — the macro plays fully on it (fishing, quests, Memory Match, merchant), while your other windows stay logged in and send biome, aura and disconnect alerts to Discord.</li>
+        <li><b>Smart Anti-AFK for other windows:</b> they only jump when the main window isn't busy, your current window gets its focus back right after, and jumps got more reliable on slower PCs.</li>
+        <li><b>Start/stop sounds:</b> two short pleasant sounds tell you when the macro starts and stops — even if Roblox is in fullscreen.</li>
+        <li><b>Self-fixing Roblox window:</b> if Roblox got minimized, shrunk or restarted in a small window, the macro fixes it automatically so no clicks are missed.</li>
+        <li><b>Separate Discord webhook for multi-windows (optional):</b> get a message when multi-window mode starts or stops and how many windows it's watching.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>✨ Improvements</h4><ul>
+        <li><b>Cleaner settings:</b> options for disabled features are now hidden until you turn the feature on.</li>
+        <li><b>New Status page:</b> see at a glance what's running, your session time and the main window.</li>
+        <li><b>Less interruptions:</b> auras you filtered out no longer steal focus or take screenshots, and aura info from the wiki got more accurate.</li>
+        <li><b>Auto-start after inactivity:</b> more reliable — if the macro stops on its own while you're away, it starts again.</li>
+        <li><b>Reliability:</b> reconnects no longer close your other Roblox windows, and background tasks recover from errors on their own.</li>
+      </ul></div>
+    </div>
     <div className="card"><div className="card-header"><div className="card-icon">📖</div><div><h3>v1.0.7 — Memory Match, Sol's Book (Items & Gauntlets), Optimization & UI Polish</h3><p>Fixed Memory Match tile matching; added Items & Gauntlets tabs to Sol's Book; FPS optimization; UI styling</p></div></div>
       <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
         <li><b>Memory Match:</b> fixed tile matching and tolerance thresholds so matching items are correctly paired and not prematurely discarded.</li>

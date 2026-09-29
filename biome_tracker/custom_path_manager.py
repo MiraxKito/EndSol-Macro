@@ -45,9 +45,6 @@ FEATURE_PATH_MAP = {
     "obby": "obby.json",
     "eden": "eden.json",
     "snowman": "snowman.json",
-    "egg_route1": "egg_route1.json",
-    "egg_route2": "egg_route2.json",
-    "egg_route3": "egg_route3.json",
 }
 
 FEATURE_LABELS = {
@@ -57,9 +54,6 @@ FEATURE_LABELS = {
     "obby": "Obby",
     "eden": "Eden Path",
     "snowman": "Snowman",
-    "egg_route1": "Egg Route 1",
-    "egg_route2": "Egg Route 2",
-    "egg_route3": "Egg Route 3",
     # No bundled default file: fishing.py falls back to its built-in walk when
     # no custom path is assigned. Recorded from the spawn point (right after
     # the respawn sequence) to the player's own fishing spot — the walk to the
@@ -91,6 +85,10 @@ def list_custom_paths() -> list[dict[str, Any]]:
                 "speed_multiplier": meta.get("speed_multiplier", 1.0),
                 # None = recorded before VIP/non-VIP stamping existed (legacy).
                 "recorded_nonvip": meta.get("recorded_nonvip", None),
+                # v44: free-path auto trigger (paths NOT assigned to a
+                # feature): {"enabled": bool, "interval_min": float,
+                # "biome": "GLITCHED" | ""}.
+                "trigger": dict(meta.get("trigger") or {}),
             })
         except Exception:
             continue
@@ -118,6 +116,7 @@ def save_custom_path(
     speed_multiplier: float = 1.0,
     recorded_nonvip: bool | None = None,
     created: str = "",
+    trigger: dict | None = None,
 ) -> bool:
     """Save a custom path with metadata.
 
@@ -125,16 +124,25 @@ def save_custom_path(
     "Non-VIP movement path") was active while the path was recorded, so
     playback can compensate when the mode differs. None keeps the value
     unset (legacy paths); `created` preserves the original timestamp when
-    re-saving an existing path (e.g. on re-assignment).
+    re-saving an existing path (e.g. on re-assignment). `trigger=None`
+    preserves an existing auto-trigger (v44) on re-assignment.
     """
     _ensure_dirs()
     filepath = CUSTOM_PATHS_DIR / f"{path_id}.json"
+    if trigger is None:
+        try:
+            with open(filepath, "r", encoding="utf-8") as fh:
+                trigger = dict((json.load(fh).get("meta", {}) or {}).get("trigger") or {})
+        except Exception:
+            trigger = {}
     meta = {
         "feature": feature,
         "label": label or path_id,
         "created": created or datetime_now_iso(),
         "speed_multiplier": speed_multiplier,
     }
+    if trigger:
+        meta["trigger"] = trigger
     if recorded_nonvip is not None:
         meta["recorded_nonvip"] = bool(recorded_nonvip)
     data = {
@@ -160,6 +168,68 @@ def delete_custom_path(path_id: str) -> bool:
         except Exception:
             return False
     return False
+
+
+def set_path_trigger(path_id: str, enabled: bool = False, interval_min: float = 0.0,
+                     biome: str = "") -> dict[str, Any]:
+    """Configure the AUTO TRIGGER of a free (unassigned) custom path (v44).
+
+    - interval_min > 0: replay the path every N minutes while the macro runs;
+    - biome (e.g. "GLITCHED"): replay the path once every time this biome
+      becomes active;
+    - both can be set at once; enabled=False turns the trigger off.
+
+    The setting lives inside the path file (meta.trigger), so it survives
+    restarts without touching the global config."""
+    _ensure_dirs()
+    filepath = CUSTOM_PATHS_DIR / f"{path_id}.json"
+    data = get_custom_path(path_id)
+    if not data:
+        return {"success": False, "error": "Path not found"}
+    try:
+        interval_min = max(0.0, float(interval_min or 0.0))
+    except Exception:
+        interval_min = 0.0
+    meta = data.get("meta", {}) or {}
+    meta["trigger"] = {
+        "enabled": bool(enabled),
+        "interval_min": interval_min,
+        "biome": str(biome or "").strip().upper(),
+    }
+    data["meta"] = meta
+    try:
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        return {"success": True, "trigger": meta["trigger"]}
+    except Exception as exc:
+        return {"success": False, "error": str(exc)}
+
+
+def list_triggered_paths() -> list[dict[str, Any]]:
+    """All custom paths whose AUTO TRIGGER is ON (v44).
+
+    Used by the tracker's custom_paths_loop ticker; interval and biome
+    triggers are evaluated there. Paths assigned to a feature are skipped —
+    those replay through their own feature instead."""
+    out: list[dict[str, Any]] = []
+    for cp in list_custom_paths():
+        if cp.get("feature"):
+            # Assigned paths replay through their own feature; a leftover
+            # trigger on them must not double-fire.
+            continue
+        trig = cp.get("trigger") or {}
+        if not trig.get("enabled"):
+            continue
+        out.append({
+            "id": cp["id"],
+            "label": cp["label"],
+            "feature": cp.get("feature", ""),
+            "speed_multiplier": cp.get("speed_multiplier", 1.0),
+            "recorded_nonvip": cp.get("recorded_nonvip"),
+            "interval_min": float(trig.get("interval_min") or 0.0),
+            "biome": str(trig.get("biome") or ""),
+        })
+    return out
 
 
 def load_path_for_feature_meta(feature: str) -> tuple[list[dict], dict | None]:

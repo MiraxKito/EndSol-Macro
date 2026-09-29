@@ -9,7 +9,10 @@ type CustomPath = {
   event_count: number;
   speed_multiplier: number;
   recorded_nonvip?: boolean | null;
+  trigger?: { enabled?: boolean; interval_min?: number; biome?: string } | null;
 };
+
+type Trigger = { enabled: boolean; interval_min: number; biome: string };
 
 type FeatureLabels = Record<string, string>;
 
@@ -61,6 +64,37 @@ export default function CustomPathsPage() {
 
   const featureOptions = Object.entries(features);
 
+  // v44: auto-trigger editing for FREE (unassigned) paths.
+  const [trigEdits, setTrigEdits] = useState<Record<string, Trigger>>({});
+  const trigFor = (p: CustomPath): Trigger => trigEdits[p.id] ?? {
+    enabled: !!p.trigger?.enabled,
+    interval_min: Number(p.trigger?.interval_min ?? 0) || 0,
+    biome: String(p.trigger?.biome ?? ""),
+  };
+  const setTrig = (p: CustomPath, patch: Partial<Trigger>) =>
+    setTrigEdits((prev) => ({ ...prev, [p.id]: { ...trigFor(p), ...patch } }));
+
+  const saveTrigger = async (p: CustomPath) => {
+    const t = trigFor(p);
+    if (t.enabled && !(Number(t.interval_min) > 0) && !t.biome.trim()) {
+      setMessage("Set an interval (minutes) or a biome — otherwise the trigger never fires.");
+      return;
+    }
+    try {
+      const res = await api?.custom_paths_set_trigger?.(p.id, t.enabled, Number(t.interval_min) || 0, t.biome.trim());
+      if (res?.success) { setMessage("Trigger saved."); setTrigEdits((prev) => { const n = { ...prev }; delete n[p.id]; return n; }); await refresh(); }
+      else setMessage(res?.error || "Failed to save the trigger");
+    } catch (e) { setMessage(`Could not save the trigger: ${e}`); }
+  };
+
+  const runNow = async (p: CustomPath) => {
+    try {
+      const res = await api?.custom_paths_run_now?.(p.id);
+      if (res?.success) setMessage("Path queued — it will run when the current action finishes.");
+      else setMessage(res?.error || "Failed to queue the path");
+    } catch (e) { setMessage(`Could not queue the path: ${e}`); }
+  };
+
   const openRecorder = async () => {
     try {
       await api?.open_recorder_window_custom?.();
@@ -75,6 +109,7 @@ export default function CustomPathsPage() {
       <h2 style={{ marginBottom: 8 }}>Custom Paths</h2>
       <p style={{ opacity: 0.7, marginBottom: 16, fontSize: 13 }}>
         Record custom walk paths and assign them to features. Custom paths take priority over default paths.
+        A path saved as <b>Unassigned</b> can also run on its own trigger — every N minutes and/or when a chosen biome starts.
       </p>
 
       {/* How the recorder works — step-by-step */}
@@ -151,42 +186,106 @@ export default function CustomPathsPage() {
           <p style={{ opacity: 0.5 }}>No custom paths recorded yet. Use the Recorder to capture a path, then save it above.</p>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {paths.map((p) => (
-              <div key={p.id} style={{
-                display: "flex", alignItems: "center", gap: 12, padding: "12px 16px",
-                background: "var(--surface-hover, rgba(255,255,255,0.04))", borderRadius: "4px",
-                border: p.feature ? "1px solid rgba(34,197,94,0.3)" : "1px solid var(--border)"
-              }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600 }}>{p.label}</div>
-                  <div style={{ fontSize: 12, opacity: 0.6 }}>
-                    {p.event_count} events · {p.speed_multiplier}x speed
-                    {p.recorded_nonvip === true && <> · <span style={{ color: "#f59e0b" }}>recorded on Non-VIP</span></>}
-                    {p.recorded_nonvip === false && <> · <span style={{ color: "#22c55e" }}>recorded on VIP</span></>}
-                    {p.feature && <> · Assigned to <b>{features[p.feature] || p.feature}</b></>}
+            {paths.map((p) => {
+              const t = trigFor(p);
+              const free = !p.feature;
+              return (
+                <div key={p.id} style={{
+                  padding: "12px 16px",
+                  background: "var(--surface-hover, rgba(255,255,255,0.04))", borderRadius: "4px",
+                  border: p.feature ? "1px solid rgba(34,197,94,0.3)" : "1px solid var(--border)"
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600 }}>
+                        {p.label}
+                        {p.trigger?.enabled && <span style={{ marginLeft: 8, fontSize: 11, color: "#22c55e", border: "1px solid rgba(34,197,94,0.4)", padding: "1px 6px" }}>AUTO</span>}
+                      </div>
+                      <div style={{ fontSize: 12, opacity: 0.6 }}>
+                        {p.event_count} events · {p.speed_multiplier}x speed
+                        {p.recorded_nonvip === true && <> · <span style={{ color: "#f59e0b" }}>recorded on Non-VIP</span></>}
+                        {p.recorded_nonvip === false && <> · <span style={{ color: "#22c55e" }}>recorded on VIP</span></>}
+                        {p.feature && <> · Assigned to <b>{features[p.feature] || p.feature}</b></>}
+                      </div>
+                      {p.created && <div style={{ fontSize: 11, opacity: 0.4 }}>{new Date(p.created).toLocaleString()}</div>}
+                    </div>
+                    <select
+                      className="form-input"
+                      value={p.feature}
+                      onChange={(e) => void assignFeature(p.id, e.target.value)}
+                      style={{ padding: "6px 10px", borderRadius: "4px", fontSize: 13 }}
+                    >
+                      <option value="">Unassigned</option>
+                      {featureOptions.map(([key, label]) => (
+                        <option key={key} value={key}>{label}</option>
+                      ))}
+                    </select>
+                    <button
+                      className="btn"
+                      onClick={() => void runNow(p)}
+                      style={{ padding: "6px 12px", borderRadius: "4px", cursor: "pointer", fontSize: 13 }}
+                    >
+                      Run now
+                    </button>
+                    <button
+                      className="btn"
+                      onClick={() => void deletePath(p.id)}
+                      style={{ padding: "6px 12px", borderRadius: "4px", border: "1px solid var(--border)", background: "transparent", color: "#f87171", cursor: "pointer", fontSize: 13 }}
+                    >
+                      Delete
+                    </button>
                   </div>
-                  {p.created && <div style={{ fontSize: 11, opacity: 0.4 }}>{new Date(p.created).toLocaleString()}</div>}
+                  {free && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--border)", fontSize: 13 }}>
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <input
+                          type="checkbox"
+                          checked={t.enabled}
+                          onChange={(e) => setTrig(p, { enabled: e.target.checked })}
+                        />
+                        Auto-trigger
+                      </label>
+                      <label style={{ display: "flex", alignItems: "center", gap: 6, opacity: 0.85 }}>
+                        Every
+                        <input
+                          type="number"
+                          className="form-input"
+                          min={1}
+                          max={720}
+                          step={1}
+                          value={t.interval_min || ""}
+                          placeholder="min"
+                          onChange={(e) => setTrig(p, { interval_min: Number(e.target.value) || 0 })}
+                          style={{ width: 70, padding: "4px 8px", borderRadius: "4px" }}
+                        />
+                        min
+                      </label>
+                      <label style={{ display: "flex", alignItems: "center", gap: 6, opacity: 0.85 }}>
+                        On biome
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={t.biome}
+                          placeholder="e.g. GLITCHED"
+                          onChange={(e) => setTrig(p, { biome: e.target.value.toUpperCase() })}
+                          style={{ width: 150, padding: "4px 8px", borderRadius: "4px" }}
+                        />
+                      </label>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => void saveTrigger(p)}
+                        style={{ padding: "5px 14px", borderRadius: "4px", fontWeight: 600, cursor: "pointer", fontSize: 12.5 }}
+                      >
+                        Save trigger
+                      </button>
+                      <span style={{ fontSize: 11.5, opacity: 0.55 }}>
+                        Runs on its own while the macro is running — waits until fishing, potion, Eden, obby etc. are idle.
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <select
-                  className="form-input"
-                  value={p.feature}
-                  onChange={(e) => void assignFeature(p.id, e.target.value)}
-                  style={{ padding: "6px 10px", borderRadius: "4px", fontSize: 13 }}
-                >
-                  <option value="">Unassigned</option>
-                  {featureOptions.map(([key, label]) => (
-                    <option key={key} value={key}>{label}</option>
-                  ))}
-                </select>
-                <button
-                  className="btn"
-                  onClick={() => void deletePath(p.id)}
-                  style={{ padding: "6px 12px", borderRadius: "4px", border: "1px solid var(--border)", background: "transparent", color: "#f87171", cursor: "pointer", fontSize: 13 }}
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

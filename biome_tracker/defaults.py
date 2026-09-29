@@ -74,7 +74,26 @@ DEFAULT_CONFIG: dict = {
     "go_to_eden_spawn": False,
     "auto_eden_contract": False,
     "eden_contract_button": [746, 931],
+    "eden_contract_extra1_button": [743, 843],
+    "eden_contract_extra2_button": [0, 0],
+    "auto_roll_biome_enabled": False,
+    "auto_roll_biome_list": [],
+    "autoroll_status_region": [689, 976, 133, 29],
+    "autoroll_toggle_button": [761, 986],
+    "eden_contract_extra1_button": [743, 843],
+    "eden_contract_extra2_button": [0, 0],
     "eden_contract_interval": "3",
+
+    # ── Multi-instance monitor (alerts from secondary Roblox windows) ──
+    "multi_instance_main_pid": 0,
+    "multi_instance_busy_max_wait": 300,
+    "multi_instance_webhook_url": "",
+    "multi_instance_jump_focus_wait": 1.0,
+    "multi_instance_jump_settle_wait": 1.0,
+    "multi_instance_alerts": False,
+    "multi_instance_aura_min_rarity": 100000,
+    "multi_instance_alert_rare_biomes_only": True,
+    "multi_instance_rejoin_enabled": True,
 
     # ── Optional extras (all OFF by default) ─────────────────────────
     "dry_run": False,
@@ -112,11 +131,6 @@ DEFAULT_CONFIG: dict = {
     "merchant_teleporter": False,
     "mt_duration": "1",
     # ── Egg collect ──────────────────────────────────────────────────
-    "collect_easter_egg": False,
-    "egg_collect_interval_min": "30",
-    "egg_playback_multiplier": 1.0,
-    "egg_ocr_detect_special": False,
-    "egg_ocr_discord_userid": "",
 
     # ── Potion crafting / switching ─────────────────────────────────
     "enable_potion_crafting": False,
@@ -202,7 +216,7 @@ DEFAULT_CONFIG: dict = {
     "memory_match_cell_padding": 4,
     "memory_match_grid_region": [779, 322, 534, 461],
     "memory_match_start_button": [963, 608],
-    "memory_match_close_button": [946, 817],
+    "memory_match_close_button": [956, 838],
     "memory_match_playback_multiplier": 1.0,
     "memory_match_last_played": "",
 
@@ -306,7 +320,8 @@ DEFAULT_CONFIG: dict = {
     "auto_update_biome_data": True,
     "auto_update_biome_aura_data": True,
     "custom_auto_pop_buffs": [],   # user-added buff item names for auto-pop
-    "dont_ask_for_update": True,
+    "update_notifications_disabled": False,  # "Don't notify again" on the update banner
+    "webview_gpu_acceleration": False,  # opt-in GPU compositing for the panel (restart required)
 
     # ── Memory / tick rate ───────────────────────────────────────────
     "merchant_dialogue_box": [768, 836],
@@ -379,7 +394,8 @@ DEFAULT_CONFIG: dict = {
     "quest2_button": [1104, 595],
     "quest3_button": [1101, 677],
     "quest_reroll_button": [623, 585],
-    "quest_board_ocr_region": [1513, 267, 354, 55],
+    "quest_board_ocr_region": [1515, 259, 362, 59],
+    "quest_board_open_button": [0, 0],
     "quest_board_accept_button": [1587, 822],
     "quest_board_claim_button": [1604, 817],
     "quest_board_left_arrow": [565, 544],
@@ -432,9 +448,6 @@ DEFAULT_CONFIG: dict = {
     "fishing_bar_scan_height": 3,
 
     # ── Egg collection extras ─────────────────────────────────────────
-    "egg_click_failsafe": [],
-    "egg_collect_aura_name": "",
-    "equip_aura_before_egg_collect": False,
 
     # ── OCR / misc internals ──────────────────────────────────────────
     "ocr_failsafe_match_threshold": 0.7,
@@ -456,9 +469,17 @@ def get_default_config() -> dict:
     return copy.deepcopy(DEFAULT_CONFIG)
 
 
-# --- Memory Match 5x4 Defaults ---
-DEFAULT_CONFIG.setdefault("memory_match_start_delay", 1.0)
-DEFAULT_CONFIG.setdefault("memory_match_reveal_delay", 3.0)
+# --- Memory Match 5x4 Defaults (2026-09-27 player rewrite) ---
+# Player timings are FIXED module constants in mixin_memory_match
+# (MM_*_DELAY) - intentionally not configurable.
+# Identity tuning: item art descriptor + quantity strip mask, images only.
+DEFAULT_CONFIG.setdefault("memory_match_icon_tolerance", 0.9)
+DEFAULT_CONFIG.setdefault("memory_match_center_tolerance", 20.0)
+DEFAULT_CONFIG.setdefault("memory_match_qty_tolerance", 0.12)
+DEFAULT_CONFIG.setdefault("memory_match_green_fraction", 0.12)
+DEFAULT_CONFIG.setdefault("memory_match_unreadable_limit", 4)
+DEFAULT_CONFIG.setdefault("memory_match_tile_match_threshold", 0.93)
+DEFAULT_CONFIG.setdefault("memory_match_pixel_floor", 0.55)
 DEFAULT_CONFIG.setdefault("memory_match_cell_width", 76)
 DEFAULT_CONFIG.setdefault("memory_match_cell_height", 76)
 DEFAULT_CONFIG.setdefault("memory_match_close_x", None)
@@ -467,3 +488,4 @@ DEFAULT_CONFIG.setdefault("memory_match_close_y", None)
 # 20 слотов по умолчанию (сетка 5 колонок x 4 ряда)
 if "memory_match_cells" not in DEFAULT_CONFIG or len(DEFAULT_CONFIG["memory_match_cells"]) != 20:
     DEFAULT_CONFIG["memory_match_cells"] = [[0, 0] for _ in range(20)]
+DEFAULT_CONFIG.setdefault("memory_match_min_icon_pixels", 40)

@@ -312,7 +312,7 @@ class RemoteMixin:
                         await _safe_respond(ctx, "Unauthorized", ephemeral=True)
                         return
                         
-                    is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or getattr(self, "_egg_collecting", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
+                    is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
                     if is_blocked:
                         embed = discord.Embed(title="Action Blocked", description=f"Cannot equip **{name}** while the macro is actively running an un-interruptible mode (e.g., Fishing Mode). Please wait for the macro to finish those action.", color=0xFF0000)
                         await ctx.response.send_message(embed=embed, ephemeral=True)
@@ -369,7 +369,7 @@ class RemoteMixin:
                         await _safe_respond(ctx, "Unauthorized", ephemeral=True)
                         return
                         
-                    is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or getattr(self, "_egg_collecting", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
+                    is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
                     if is_blocked:
                         embed = discord.Embed(title="Action Blocked", description=f"Cannot use items while the macro is actively running an un-interruptible mode (e.g., Fishing Mode). Please wait for the macro to finish those action.", color=0xFF0000)
                         await ctx.response.send_message(embed=embed, ephemeral=True)
@@ -417,7 +417,7 @@ class RemoteMixin:
                         t = "full"
                         
                     if t != "full":
-                        is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or getattr(self, "_egg_collecting", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
+                        is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
                         if is_blocked:
                             embed = discord.Embed(title="Action Blocked", description=f"Cannot take an **{t}** screenshot while the macro is actively running an un-interruptible mode (e.g., Fishing Mode). Please wait for the macro to finish those action, or request a **Fullscreen** screenshot instead.", color=0xFF0000)
                             await ctx.response.send_message(embed=embed, ephemeral=True)
@@ -426,6 +426,33 @@ class RemoteMixin:
                     self.remote_command_queue.put(("__screenshot__", t))
                     labels = {"full": "full screen", "inventory": "inventory", "aura": "aura"}
                     embed = discord.Embed(title="Screenshot Requested", description=f"Taking a **{labels.get(t, t)}** screenshot and sending it to your webhooks...", color=0x00AAFF)
+                    await ctx.response.send_message(embed=embed)
+                except Exception:
+                    try:
+                        await _safe_respond(ctx, "Something went wrong.", ephemeral=True)
+                    except Exception:
+                        pass
+
+            @bot.tree.command(name="screenshot_all", description="Fullscreen screenshot of EVERY Roblox window (multi-instance only)")
+            async def screenshot_all(ctx: discord.Interaction):
+                try:
+                    if not _check_auth(ctx):
+                        await _safe_respond(ctx, "Unauthorized", ephemeral=True)
+                        return
+                    if not bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                        embed = discord.Embed(
+                            title="Multi-Instances Disabled",
+                            description="This command requires **Multiple-Instances** mode to be enabled in the macro panel.",
+                            color=0xFF0000,
+                        )
+                        await ctx.response.send_message(embed=embed, ephemeral=True)
+                        return
+                    self.remote_command_queue.put(("__screenshot_all__", ""))
+                    embed = discord.Embed(
+                        title="Screenshot Requested",
+                        description="Taking a **fullscreen** screenshot of every Roblox window and sending it to your webhooks...",
+                        color=0x00AAFF,
+                    )
                     await ctx.response.send_message(embed=embed)
                 except Exception:
                     try:
@@ -536,7 +563,7 @@ class RemoteMixin:
                             pass
                         continue
 
-                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or getattr(self, "_egg_collecting", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
+                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
                         try:
                             time.sleep(0.35)
                             self.remote_command_queue.put((item_name, amount))
@@ -582,7 +609,7 @@ class RemoteMixin:
                             pass
                         continue
 
-                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or getattr(self, "_egg_collecting", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
+                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
                         try:
                             time.sleep(0.35)
                             self.remote_command_queue.put((item_name, uid))
@@ -675,7 +702,7 @@ class RemoteMixin:
                             pass
                         continue
 
-                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or getattr(self, "_egg_collecting", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
+                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
                         try:
                             time.sleep(0.35)
                             self.remote_command_queue.put((item_name, amount))
@@ -728,7 +755,7 @@ class RemoteMixin:
                     if requested not in ("full", "inventory", "aura"):
                         requested = "full"
 
-                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (getattr(self, "_egg_collecting", False) and requested != "full") or ((hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()) and requested != "full"):
+                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or ((hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()) and requested != "full"):
                         try:
                             time.sleep(0.35)
                             self.remote_command_queue.put((item_name, amount))
@@ -822,6 +849,57 @@ class RemoteMixin:
                             except Exception:
                                 pass
                         continue
+                if item_name == "__screenshot_all__":
+                    if not bool((getattr(self, "config", {}) or {}).get("multiple_instances_enabled", False)):
+                        try:
+                            self.send_webhook_status(
+                                "Multi-Instances mode is disabled - /screenshot_all requires it to be enabled.",
+                                color=0xFF0000,
+                            )
+                        except Exception:
+                            pass
+                        continue
+
+                    def _screenshot_all_action():
+                        try:
+                            self._remote_running = True
+                            try:
+                                self.remote_status_label.config(text="Bot: multi-window screenshot")
+                            except Exception:
+                                pass
+                            try:
+                                from . import multi_instance
+                                shots = multi_instance.screenshot_all_window_images()
+                                if not shots:
+                                    self.send_webhook_status(
+                                        "No Roblox windows found for the multi-instance screenshot.",
+                                        color=0xFF0000,
+                                    )
+                                for shot in shots:
+                                    try:
+                                        self.send_screen_screenshot_webhook(shot["path"])
+                                    except Exception:
+                                        pass
+                                    time.sleep(0.4)
+                            except Exception as e:
+                                self.error_logging(e, "Error in multi-instance screenshot")
+                        finally:
+                            self._remote_running = False
+                            try:
+                                self.remote_status_label.config(text="Bot: running")
+                            except Exception:
+                                pass
+
+                    try:
+                        self._action_scheduler.enqueue_action(_screenshot_all_action, name="remote:screenshot:all", priority=1)
+                    except Exception:
+                        try:
+                            time.sleep(0.35)
+                            self.remote_command_queue.put((item_name, amount))
+                        except Exception:
+                            pass
+                    continue
+
                 if item_name == "__equip_aura__":
                     aura_name = str(amount)
                     if not self.detection_running or self.reconnecting_state:
@@ -832,7 +910,7 @@ class RemoteMixin:
                             pass
                         continue
 
-                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or getattr(self, "_egg_collecting", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
+                    if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
                         try:
                             time.sleep(0.35)
                             self.remote_command_queue.put((item_name, amount))
@@ -876,7 +954,7 @@ class RemoteMixin:
                         pass
                     continue
 
-                if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or getattr(self, "_egg_collecting", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
+                if getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked()):
                     try:
                         time.sleep(0.35)
                         self.remote_command_queue.put((item_name, amount))
@@ -1043,7 +1121,7 @@ class RemoteMixin:
                 time.sleep(0.35)
             time.sleep(0.5)
             try:
-                screenshot_dir = os.path.join(os.getcwd(), "images")
+                screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
                 os.makedirs(screenshot_dir, exist_ok=True)
                 filename = os.path.join(screenshot_dir, f"remote_screenshot_{int(time.time())}.png")
                 img = pyautogui.screenshot()

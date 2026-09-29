@@ -2,7 +2,7 @@
   "Adele Doll": {
     "name": "Adele Doll",
     "category": "Special / Misc",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/95/Adele_Doll.png/revision/latest?cb=20241124094533",
     "how_to_get": "",
     "usage": "???",
     "description": "...",
@@ -13,8 +13,8 @@
   "Biome Randomizer": {
     "name": "Biome Randomizer",
     "category": "Tools",
-    "thumbnail_url": "",
-    "how_to_get": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/85/Biome_Randomizer_Inventory.gif/revision/latest?cb=20250711071401",
+    "how_to_get": "Jake’s Workshop",
     "usage": "Allows the player to spawn biomes, regardless of their natural spawnrate.",
     "description": "A Fully Functional Dimension-Manipulating device. Changes the Current Biome Regardless of Natural Spawnrate. *(Except for glitched.) Has a 1/5000 chance to spawn Cyberspace.",
     "flags": [
@@ -24,7 +24,7 @@
   "Biome Selector": {
     "name": "Biome Selector",
     "category": "Tools",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fd/BiomeSelectorStatic.png/revision/latest?cb=20260121143101",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/01/BiomeSelectorView.gif/revision/latest?cb=20260118133756",
     "how_to_get": "To craft the Biome Selector, the player must first unlock its recipe through the achievement: \"Access Granted\" which is obtained by triggering the Cyberspace biome.",
     "usage": "Allows the player to select a Normal Biome to spawn.",
     "description": "A device engineered with [Cyber City]'s advanced technology, it reads the data stored in the Biome Data Drive and recreates the biome in the space around the device.",
@@ -37,8 +37,8 @@
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6d/Coin.png/revision/latest?cb=20240310064145",
     "how_to_get": "",
-    "usage": "None — lasts None",
-    "description": "Coin.",
+    "usage": "",
+    "description": "Upon pickup, the Coin grants the user 50 Coins. It can be found around the map in different locations like potions. The player used to be able to save coins in their inventory and use the item to gain 50 Coins, but this has been changed as of Era 8.",
     "flags": [
       "fandom"
     ],
@@ -48,7 +48,7 @@
     "name": "Curruptaine",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8a/CurruptaineRender.png/revision/latest?cb=20240511013437",
-    "how_to_get": "",
+    "how_to_get": "Spawns at the beginning of the Corruption.",
     "usage": "",
     "description": "A very deeply Contaminated mineral. It is Unknown how it is made.",
     "flags": [
@@ -82,7 +82,7 @@
     "name": "Eternal Flame",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d1/Endless_fire.png/revision/latest?cb=20240511182140",
-    "how_to_get": "",
+    "how_to_get": "Spawns during the Hell.",
     "usage": "",
     "description": "Endless Burning Energy deep in Hell.",
     "flags": [
@@ -93,7 +93,7 @@
     "name": "Feather Vial",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c4/FeatherVialRender.png/revision/latest?cb=20260118083336",
-    "how_to_get": "",
+    "how_to_get": "Spawns at the beginning of Heaven.",
     "usage": "",
     "description": "A feather left behind by an angel, you can feel a holy presence.",
     "flags": [
@@ -106,7 +106,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/24/ForbiddenPotionOne.gif/revision/latest?cb=20250619124938",
     "how_to_get": "",
     "usage": "+70% Luck, +10% Roll Speed",
-    "description": "Gives you 30 minutes of [Forbidden I] [Forbidden I] +70% Luck and +10% Roll Speed",
+    "description": "Gives you 30 minutes of [Forbidden I] +70% Luck and +10% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -118,7 +118,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b7/ForbiddenPotionTwo.gif/revision/latest?cb=20250619125005",
     "how_to_get": "",
     "usage": "+325% Luck, +25% Roll Speed",
-    "description": "Gives you 1 hour of [Forbidden II] [Forbidden II] +325% Luck and +25% Roll Speed",
+    "description": "Gives you 1 hour of [Forbidden II] +325% Luck and +25% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -130,7 +130,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/05/ForbiddenPotionThree.gif/revision/latest?cb=20250619125045",
     "how_to_get": "",
     "usage": "+1350% Luck, +75% Roll Speed",
-    "description": "Gives you 3 hours of [Forbidden III] [Forbidden III] +1350% Luck and +75% Roll Speed",
+    "description": "Gives you 3 hours of [Forbidden III] +1350% Luck and +75% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -142,7 +142,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/22/Fortune1Potion.png/revision/latest?cb=20240310055622",
     "how_to_get": "",
     "usage": "+50% Luck — lasts 300 Seconds",
-    "description": "Gives you 5 minutes of [Fortune I] [Fortune I]: +50% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 5 minutes of [Fortune I]: +50% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -154,7 +154,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3e/Fortune2Potion.png/revision/latest?cb=20240310063822",
     "how_to_get": "",
     "usage": "+75% Luck — lasts 300 Seconds",
-    "description": "Gives you 5 minutes of [Fortune II] [Fortune II]: +75% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 5 minutes of [Fortune II]: +75% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -166,7 +166,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/73/Fortune3Potion.png/revision/latest?cb=20240310063834",
     "how_to_get": "",
     "usage": "+100% Luck — lasts 300 Seconds",
-    "description": "Gives you 5 minutes of [Fortune III] [Fortune III]: +100% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 5 minutes of [Fortune III]: +100% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -178,7 +178,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0c/FortuneSpoid1.png/revision/latest?cb=20240701024617",
     "how_to_get": "",
     "usage": "+50% Luck — lasts 60 Seconds",
-    "description": "Gives you 1 minute of [Fortune I] [Fortune I]: +50% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 1 minute of [Fortune I]: +50% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -190,7 +190,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/77/FortuneSpoid2.png/revision/latest?cb=20240701025107",
     "how_to_get": "",
     "usage": "+75% Luck — lasts 60 Seconds",
-    "description": "Gives you 1 minute of [Fortune II] [Fortune II]: +75% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 1 minute of [Fortune II]: +75% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -199,10 +199,10 @@
   "Fortune Spoid III": {
     "name": "Fortune Spoid III",
     "category": "Potions",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a5/Fortune_spoid_III.GIF/revision/latest?cb=20240808105902",
     "how_to_get": "",
     "usage": "+100% Luck — lasts 60 Seconds",
-    "description": "Gives you 1 minute of [Fortune III] [Fortune III]: +100% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 1 minute of [Fortune III]: +100% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -211,8 +211,8 @@
   "Gear Basing": {
     "name": "Gear Basing",
     "category": "Materials",
-    "thumbnail_url": "",
-    "how_to_get": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0a/Gear_Basing_Inventory.gif/revision/latest?cb=20250711070425",
+    "how_to_get": "Jake’s Workshop",
     "usage": "",
     "description": "[Deprecated] Gear Basing is very important item for base crafting. Gives you 20 Lucky Potions.",
     "flags": [
@@ -237,7 +237,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fa/GladiatorPotion.png/revision/latest?cb=20250517064936",
     "how_to_get": "",
     "usage": "+100% Luck — lasts 15 Minutes",
-    "description": "",
+    "description": "Gladiator Potion is a Potion that can be obtained by a quest from the Quest Board where you need to kill a certain number of players to get a certain amount. It gives you the [Warrior] effect that gives 100% Luck for 15 minutes.",
     "flags": [
       "fandom"
     ],
@@ -247,7 +247,7 @@
     "name": "Godlike Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Godlike_pot.webp/revision/latest?cb=20250403075753",
-    "how_to_get": "The Godlike Potion is obtainable through brewing at Stella's Cauldron. However it can also be bought from FischI's daily shop. 25 Lucky Potion 25 Speed Potion 1 Zeus 1 Stormal 15 Wind 1 Hades 6 Diaboli 6 Bleeding 1 Poseidon 1 Nautilus 1 Aquatic",
+    "how_to_get": "The Godlike Potion is obtainable through brewing at Stella's Cauldron. However it can also be bought from FischI's daily shop.",
     "usage": "+40,000,000% Luck (400,000 Luck) — lasts 1 Roll",
     "description": "Drinking this potion blesses you with the power of 3 LORDS. Gives you [Deification]",
     "flags": [
@@ -297,7 +297,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/60/Haste1Potion.png/revision/latest?cb=20240310063854",
     "how_to_get": "",
     "usage": "+20% Roll Speed — lasts 5 Minutes",
-    "description": "Gives you 5 minutes of [Haste I] [Haste I]: +20% Roll Speed",
+    "description": "Gives you 5 minutes of [Haste I]: +20% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -309,7 +309,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/1b/Haste2Potion.png/revision/latest?cb=20240310063901",
     "how_to_get": "",
     "usage": "+25% Roll Speed — lasts 5 Minutes",
-    "description": "Gives you 5 minutes of [Haste II] [Haste II]: +25% Roll Speed",
+    "description": "Gives you 5 minutes of [Haste II]: +25% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -321,7 +321,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/43/Haste_Potion_III.GIF/revision/latest?cb=20240411074036",
     "how_to_get": "",
     "usage": "+30% Roll Speed — lasts 5 Minutes",
-    "description": "Gives you 5 minutes of [Haste III] [Haste III]: +30% Roll Speed",
+    "description": "Gives you 5 minutes of [Haste III]: +30% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -331,9 +331,9 @@
     "name": "Heavenly Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Heavenly2Potion.png/revision/latest?cb=20240310063930",
-    "how_to_get": "Heavenly Potion can currently be obtained by completing the: \"When is payday??“ Achievement for two, the: \"Perfect Attendance\" Achievement to receive five, #DAY100 Achievement to receive 15, the \"Touch the grass\" Achievement or the \"Eternal time...\" Achievement, or by brewing it in Stella's Cauldron. The cauldron can be found by either entering through a portal to Stella’s cave after finishing her quest, or by entering the cave located inside of the waterfall, and completing the obby, to reach Stella’s hideout. The Heavenly Potion can also be bought from the Jester for 1000P. It can also obtained by completing certain event quests, Previously before the halloween event ended, it can be bought from Jack The Pumpkin costing 500 Pump Tokens It can also be obtained via Potion Gift Boxes, and can also be obtained by collecting it after it spawns in Dreamspace. reason=it was replaced with the Potion of Bound 2 = Description image1=Heavenly1Potion.png",
+    "how_to_get": "Heavenly Potion can currently be obtained by completing the: \"When is payday??“ Achievement for two, the: \"Perfect Attendance\" Achievement to receive five, #DAY100 Achievement to receive 15, the \"Touch the grass\" Achievement or the \"Eternal time...\" Achievement, or by brewing it in Stella's Cauldron. The cauldron can be found by either entering through a portal to Stella’s cave after finishing her quest, or by entering the cave located inside of the waterfall, and completing the obby, to reach Stella’s hideout. The Heavenly Potion can also be bought from the Jester for 1000P. It can also obtained by completing certain event quests, Previously before the halloween event ended, it can be bought from Jack The Pumpkin costing 500 Pump Tokens It can also be obtained via Potion Gift Boxes, and can also be obtained by collecting it after it spawns in Dreamspace.",
     "usage": "+15,000,000% Luck (150,000 luck) — lasts 1 Roll",
-    "description": "Gives you [Heavenly] [Heavenly]: +150,000 Luck for Next 1 Roll",
+    "description": "Gives you [Heavenly]: +150,000 Luck for Next 1 Roll",
     "flags": [
       "fandom"
     ],
@@ -343,9 +343,9 @@
     "name": "Heavenly Potion I",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5a/Heavenly1Potion.png/revision/latest?cb=20240310063921",
-    "how_to_get": "",
+    "how_to_get": "As of Eon 1-3, Heavenly Potion I has been made unobtainable, and cannot be crafted.",
     "usage": "+1,500,000% Luck — lasts 1 Roll",
-    "description": "Gives you [Heavenly I] [Heavenly I]: +15,000 Luck for Next 1 Roll",
+    "description": "Gives you [Heavenly I]: +15,000 Luck for Next 1 Roll",
     "flags": [
       "fandom"
     ],
@@ -366,9 +366,9 @@
     "name": "Hour Glass",
     "category": "Special / Misc",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/36/HourglassInventory.png/revision/latest?cb=20241111160806",
-    "how_to_get": "",
+    "how_to_get": "Spawns at the beginning of the Sandstorm.",
     "usage": "",
-    "description": "Hour Glass.",
+    "description": "The Hour Glass is a biome-exclusive item introduced in the Eon 1 update. It spawns at any available item spawn point at the start of the Sandstorm, with a maximum of 5 spawning per instance.; Sacrificing one Hour Glass at the Grail of Resonance grants or enhances the Resonance of Elements effect, increasing Luck by 3% and Roll Speed by 1.5%. Alternatively, it can be traded to the Jester for 7P each.",
     "flags": [
       "fandom"
     ]
@@ -379,7 +379,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/22/Fortune1Potion.png/revision/latest?cb=20240310055622",
     "how_to_get": "",
     "usage": "+50% Luck — lasts 1 hour",
-    "description": "Gives you 1 hour of [Fortune I] [Fortune I]: +50% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 1 hour of [Fortune I]: +50% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -388,10 +388,10 @@
   "Hwachae": {
     "name": "Hwachae",
     "category": "Materials",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/59/RainbowIce.jpg/revision/latest?cb=20240802191645",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b6/HwachaeInventory.gif/revision/latest?cb=20250403201710",
     "how_to_get": "",
     "usage": "",
-    "description": "[Summer 2024] [Summer 2026] Cool and delicious watermelon dish to eat in Summer Gives you 1 hour of [Rainbow Ice] [Rainbow Ice]: +100% Luck ! +25% Roll Speed",
+    "description": "[Summer 2024] [Summer 2026] Cool and delicious watermelon dish to eat in Summer Gives you 1 hour of [Rainbow Ice]: +100% Luck ! +25% Roll Speed",
     "flags": [
       "fandom"
     ]
@@ -400,7 +400,7 @@
     "name": "Icicle",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c2/Iciclerender.png/revision/latest?cb=20240510205556",
-    "how_to_get": "",
+    "how_to_get": "Spawns randomly in the Snowy.",
     "usage": "",
     "description": "Icicles that appear in very cold places.",
     "flags": [
@@ -436,7 +436,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b2/LuckyPotion.png/revision/latest?cb=20240121132109",
     "how_to_get": "The Lucky Potion is the most common spawnable potion. It can be obtained from the following ways:; Found randomly around the map.; Purchased from Mari for 1,000 Coins each.; Bought from the Jester for 1 Dark Point each.; Purchased from Captain Flarg’s shop for 25 Fish Points each.; Can be purchased from FischI's for 100 Coins each.; Obtained from Quest Board.; Obtained from Achievements.; Obtained from Daily Quests.; As a reward from the Memory Match (from 100 to 200 Lucky Potion).; Included in the Starter Pack.; Can be obtained from Potion Chest, Rare Potion Chest and Mega Potion Chest.; As a reward in both the normal and infinite phases of the Season Pass.; By having RIA Points at the end of the 2024 RIA Event (gives 1 for each RIA Points you have).; By using a Gear Basing (gives 20 per use).; Bought from event NPCs.; Can be obtained from Potion Gift Box, Potion Ice Box, Uncommon Potion Ice Box, Legendary Potion Ice Box.",
     "usage": "+25% Luck — lasts 60 Seconds",
-    "description": "Gives you 1 minute of [Lucky] [Lucky]: +25% Luck Total Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 1 minute of [Lucky]: +25% Luck Total Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -448,7 +448,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a8/Luckypotion-L.png/revision/latest?cb=20240701021833",
     "how_to_get": "The Lucky Potion L can be purchased from Mari for 2,000 Coins or from Fischl for 1,000 Coins per potion.",
     "usage": "+25% Luck — lasts 5 Minutes",
-    "description": "Gives you 5 minutes of [Lucky] [Lucky]: +25% Luck Total Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 5 minutes of [Lucky]: +25% Luck Total Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -460,7 +460,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/33/LuckyPotion-XL.png/revision/latest?cb=20240701102411",
     "how_to_get": "The Lucky Potion XL can be purchased from Mari for 4,000 Coins or from Fischl for 1,250 Coins per potion.",
     "usage": "+25% Luck — lasts 10 Minutes",
-    "description": "Gives you 10 minutes of [Lucky] [Lucky]: +25% Luck Total Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
+    "description": "Gives you 10 minutes of [Lucky]: +25% Luck Total Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
       "fandom"
     ],
@@ -469,7 +469,7 @@
   "Mandoo Mon Doll": {
     "name": "Mandoo Mon Doll",
     "category": "Special / Misc",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/68/MandooMan_Doll.png/revision/latest?cb=20241124094627",
     "how_to_get": "",
     "usage": "???",
     "description": "...",
@@ -486,18 +486,20 @@
     "description": "A Mysterious mechanical device that Teleports you to the location of a Suspicious Merchant wandering the world.",
     "flags": [
       "fandom"
-    ]
+    ],
+    "effects": "Teleports you to a Merchant once used, if one has already spawned."
   },
   "Merchant Tracker": {
     "name": "Merchant Tracker",
     "category": "Tools",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6e/Merchant_tracker.png/revision/latest?cb=20240804093601",
     "how_to_get": "",
     "usage": "",
     "description": "A Mysterious mechanical device that points to the location of Suspicious Merchants wandering the world.",
     "flags": [
       "fandom"
-    ]
+    ],
+    "effects": "Points to the location of a Merchant"
   },
   "Mind Control Minion": {
     "name": "Mind Control Minion",
@@ -526,9 +528,9 @@
     "name": "NULL?",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e8/NULL%3F%3F.png/revision/latest?cb=20240511065047",
-    "how_to_get": "",
+    "how_to_get": "Spawns at the beginning of the Null.",
     "usage": "",
-    "description": "[DESCRIPTION EMPTY]",
+    "description": "NULL? is an item added in the Era 7 Update, and can be found spawning at any of the regular item spawning points whenever the Null biome begins. It can be used to craft the Strange Controller. The item can be spawned two times.",
     "flags": [
       "fandom"
     ]
@@ -549,7 +551,7 @@
     "name": "Piece of Star",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e6/PieceofStarRender.png/revision/latest?cb=20240510220629",
-    "how_to_get": "",
+    "how_to_get": "Spawns randomly in the Starfall.",
     "usage": "",
     "description": "A rare Shooting Star that came down to Earth.",
     "flags": [
@@ -562,7 +564,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a4/Potionofbound.png/revision/latest?cb=20250401162038",
     "how_to_get": "The Potion of Bound can be obtained by either brewing it at Stella's Cauldron, completing the “Play in Null” Daily Quest, completing \"Finding a person\" quest from a Quest Board, completing the \"A Sincere Person\", \"Waste of Time\" and \"Professional Helper\" achievements, progressing in the Season Pass, buying it from Captain Flarg for 2000 Fish Points, buying it from Jester with 500 Void Points, buying it from Fischl for 75000 coins or 350 Void Points or from the Memory Match.",
     "usage": "+5,000,000% Luck (+50,000 Luck) — lasts 1 Roll",
-    "description": "A potion that is so Powerful it got BOUNDED. Gives you [Binding] [Binding]:+50,000 Luck for Next 1 Roll",
+    "description": "A potion that is so Powerful it got BOUNDED. Gives you [Binding]:+50,000 Luck for Next 1 Roll",
     "flags": [
       "fandom"
     ],
@@ -586,7 +588,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fa/Pump_King%27s_Blood.png/revision/latest?cb=20241130222947",
     "how_to_get": "",
     "usage": "70,000,000% (+700,000 Luck) - Makes all other buffs disabled — lasts Next 1 Roll",
-    "description": "Gives you [BLOOD DREAM] [BLOOD DREAM]: +700,000 Luck for the Next 1 Roll",
+    "description": "Gives you [BLOOD DREAM]: +700,000 Luck for the Next 1 Roll",
     "flags": [
       "fandom"
     ],
@@ -595,7 +597,7 @@
   "Pump King's Head": {
     "name": "Pump King's Head",
     "category": "Materials",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7c/Pumpkingsheadinvgif.gif/revision/latest?cb=20241202172740",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/19/Pump_King%27s_Head.png/revision/latest?cb=20241201080739",
     "how_to_get": "",
     "usage": "",
     "description": "Too heavy just for a Pumpkin. But I can't bear to see the contents.",
@@ -607,7 +609,7 @@
     "name": "Pumpkin",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6b/Pumpkin_Inventory.png/revision/latest?cb=20250204110220",
-    "how_to_get": "The Pumpkin spawns at a random location on the map with a rarity of 50% per 30s. Completing a full set of daily quests also rewards 150 Pumpkins. The player can exchange the Pumpkin with Jack The Pumpkin for 1 Pump Token. After the Winter Update 2025 was released, you are able to use one Pumpkin for 150% luck for 10 rolls.",
+    "how_to_get": "The Pumpkin spawns at a random location on the map with a rarity of 50% per 30s. Completing a full set of daily quests also rewards 150 Pumpkins.",
     "usage": "+150% Luck — lasts 10 Rolls per Pumpkin",
     "description": "\"I've always wondered, what does Halloween have to do with pumpkins?\"",
     "flags": [
@@ -633,7 +635,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c8/RaidPotion.gif/revision/latest?cb=20250904123658",
     "how_to_get": "",
     "usage": "+100% Luck — lasts 15 Minutes",
-    "description": "Gives you 15 minutes of [RaidPotionBuff] [RaidPotionBuff]: +100% Luck",
+    "description": "Gives you 15 minutes of [RaidPotionBuff]: +100% Luck",
     "flags": [
       "fandom"
     ],
@@ -642,7 +644,7 @@
   "Rainbow Syrup": {
     "name": "Rainbow Syrup",
     "category": "Materials",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/70/RainbowSyrup.jpg/revision/latest?cb=20240802175647",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/de/RainbowSyrupHighQuality.png/revision/latest?cb=20240804115822",
     "how_to_get": "",
     "usage": "",
     "description": "It literally tastes like a Rainbow!",
@@ -654,7 +656,7 @@
     "name": "Rainy Bottle",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a2/RainyBottleRender.png/revision/latest?cb=20240510211903",
-    "how_to_get": "",
+    "how_to_get": "Spawns randomly during Rainy.",
     "usage": "",
     "description": "A Mysterious bottle filled with Rain.",
     "flags": [
@@ -664,14 +666,15 @@
   "Random Potion Sack": {
     "name": "Random Potion Sack",
     "category": "Chests",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b2/Random-Potion-Sack.jpeg/revision/latest?cb=20240705190854",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cf/Random_Potion_Sack.png/revision/latest?cb=20241227170714",
     "how_to_get": "",
     "usage": "",
-    "description": "Random Potion Sack.",
+    "description": "Random Potion Sack is an item that can be bought from the Jester for ten Dark Points, and has a max stock of ten. When used, it gives a random potion to the player. It could also be bought from Jack The Pumpkin during the Halloween Event for 10 Pump Tokens, with a max stock of 1000, It could also be bought from Lime's Easter Shop during the Easter 2026 event for 100 easter coins, and it could be bought from the Summer 2026 event in Lime's shop for 100 Summer Points.",
     "flags": [
       "fandom"
     ],
-    "effects": "Gives you a random potion upon usage."
+    "effects": "Gives you a random potion upon usage.",
+    "drops": "Lucky Potion — 50%; Speed Potion — 50%; Haste Potion I — 20%; Fortune Potion I — 20%; Haste Potion II — 10%; Fortune Potion II — 10%; Haste Potion III — 6.67%; Fortune Potion III — 6.67%; Strange Potion I — 10%; Strange Potion II — 3.33%; Potion of Bound — 0.5%; Heavenly Potion — 0.1%; Warp Potion — 0.02%; Oblivion Potion — 0.001%"
   },
   "Red Moon Potion I": {
     "name": "Red Moon Potion I",
@@ -701,9 +704,9 @@
     "name": "Rune of Corruption",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7d/Rune_of_Corruption_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503133043",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Corruption] [Rune of Corruption]: Allows you to roll Corruption Auras with Native Rarity Regardless of Current Biome",
+    "description": "Gives you 10 minutes of [Rune of Corruption]: Allows you to roll Corruption Auras with Native Rarity Regardless of Current Biome",
     "flags": [
       "fandom"
     ]
@@ -712,9 +715,9 @@
     "name": "Rune of Dust",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8f/Rune_of_Dust_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503132534",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest The Crawler (Removed) Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Dust] [Rune of Dust]: Allows you to roll Sandstorm Auras with Native Rarity Regardless of Current Biome",
+    "description": "Gives you 10 minutes of [Rune of Dust]: Allows you to roll Sandstorm Auras with Native Rarity Regardless of Current Biome",
     "flags": [
       "fandom"
     ]
@@ -723,9 +726,9 @@
     "name": "Rune of Eclipse",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bd/EclipseRune.gif/revision/latest?cb=20250627141004",
-    "how_to_get": "",
+    "how_to_get": "Fischl Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Eclipse] [Rune of Eclipse]: Allows you to roll Day/Night Auras with Native Rarity Regardless of Current Time",
+    "description": "Gives you 10 minutes of [Rune of Eclipse]: Allows you to roll Day/Night Auras with Native Rarity Regardless of Current Time",
     "flags": [
       "fandom"
     ]
@@ -734,9 +737,9 @@
     "name": "Rune of Everything",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fc/Rune_of_Everything_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503133103",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest Memory Match",
     "usage": "",
-    "description": "A powerful stone containing the magic of all the runes put together. Gives you 5 minutes of [Rune of Everything] [Rune of Everything]: Allows you to roll Every Biome Amplified Auras at Native Rarity. Does Not include Rare Biome(Glitched, Dreamspace, Cyberspace, Singularity) Auras.",
+    "description": "A powerful stone containing the magic of all the runes put together. Gives you 5 minutes of [Rune of Everything]: Allows you to roll Every Biome Amplified Auras at Native Rarity. Does Not include Rare Biome(Glitched, Dreamspace, Cyberspace, Singularity) Auras.",
     "flags": [
       "fandom"
     ]
@@ -745,9 +748,9 @@
     "name": "Rune of Frost",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4e/Rune_of_Frost_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503132258",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Frost] [Rune of Frost]: Allows you to roll Snowy Auras with Native Rarity Regardless of Current Biome",
+    "description": "Gives you 10 minutes of [Rune of Frost]: Allows you to roll Snowy Auras with Native Rarity Regardless of Current Biome",
     "flags": [
       "fandom"
     ]
@@ -756,7 +759,7 @@
     "name": "Rune of Galaxy",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bc/Rune_of_Galaxy_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503132631",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest Memory Match",
     "usage": "",
     "description": "Gives you 10 minutes of [Rune of Galaxy] [Rune of Galaxy ]: Allows you to roll Starfall Auras with Native Rarity Regardless of Current Biome",
     "flags": [
@@ -766,10 +769,10 @@
   "Rune of Heaven": {
     "name": "Rune of Heaven",
     "category": "Runes",
-    "thumbnail_url": "",
-    "how_to_get": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d8/Rune_of_heaven_inventory.gif/revision/latest?cb=20260201092555",
+    "how_to_get": "Random Rune Chest Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Heaven] [Rune of Heaven]: Allows you to roll Heaven Auras with Native Rarity Regardless of Current Biome",
+    "description": "Gives you 10 minutes of [Rune of Heaven]: Allows you to roll Heaven Auras with Native Rarity Regardless of Current Biome",
     "flags": [
       "fandom"
     ]
@@ -778,9 +781,9 @@
     "name": "Rune of Hell",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c4/Rune_of_Hell_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503034551",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Hell] [Rune of Hell]: Allows you to roll Hell Auras with Native Rarity Regardless of Current Biome",
+    "description": "Gives you 10 minutes of [Rune of Hell]: Allows you to roll Hell Auras with Native Rarity Regardless of Current Biome",
     "flags": [
       "fandom"
     ]
@@ -789,9 +792,9 @@
     "name": "Rune of Nothing",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/84/Rune_of_Nothing_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503132821",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Nothing] [Rune of Nothing]: Allows you to roll Null Auras with Native Rarity Regardless of Current Biome",
+    "description": "Gives you 10 minutes of [Rune of Nothing]: Allows you to roll Null Auras with Native Rarity Regardless of Current Biome",
     "flags": [
       "fandom"
     ]
@@ -800,9 +803,9 @@
     "name": "Rune of Rainstorm",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bd/Rune_of_Rainstorm_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503033148",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Rainstorm] [Rune of Rainstorm]: Allows you to roll Rainy Auras with Native Rarity Regardless of Current Biome",
+    "description": "Gives you 10 minutes of [Rune of Rainstorm]: Allows you to roll Rainy Auras with Native Rarity Regardless of Current Biome",
     "flags": [
       "fandom"
     ]
@@ -811,9 +814,9 @@
     "name": "Rune of Wind",
     "category": "Runes",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c3/Rune_of_Wind_%28Eon_1-4.5%29.gif/revision/latest?cb=20250503031714",
-    "how_to_get": "",
+    "how_to_get": "Achievements Jester Random Rune Chest Memory Match",
     "usage": "",
-    "description": "Gives you 10 minutes of [Rune of Wind] [Rune of Wind]: Allows you to roll Windy Auras with Native Rarity Regardless of Current Biome",
+    "description": "Gives you 10 minutes of [Rune of Wind]: Allows you to roll Windy Auras with Native Rarity Regardless of Current Biome",
     "flags": [
       "fandom"
     ]
@@ -824,7 +827,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/06/SantPotion.gif/revision/latest?cb=20250904160702",
     "how_to_get": "Santa Claus Potion can only be obtained from the Potion Gift Box, with a 1 in 15 chance when rolling the Normal Potion Gift Box and a 1 in 1 with the Rare Potion Gift Box. However, it cannot be obtained from the Mega Potion Gift Box.",
     "usage": "+150% Luck, +25% Roll Speed — lasts 10 minutes",
-    "description": "Unobtainable",
+    "description": "The Santa Claus Potion is a potion added during the Winter Event update. When consumed, it grants the player Santa's Blessing effect which provides +150% Luck and +25% Roll Speed for 10 minutes.",
     "flags": [
       "fandom"
     ],
@@ -844,7 +847,7 @@
   "Sizemax Potion": {
     "name": "Sizemax Potion",
     "category": "Potions",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2d/Sizemax_In_Inventory.png/revision/latest?cb=20250405124012",
     "how_to_get": "",
     "usage": "\"Inflates your body like a balloon.\" — lasts 10 Minutes",
     "description": "Inflates your body like a balloon.",
@@ -859,7 +862,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4e/SizeminPotionImage.png/revision/latest?cb=20250404072056",
     "how_to_get": "",
     "usage": "\"Shrinks your body to the size of a tiny fairy.\" — lasts 10 Minutes",
-    "description": "",
+    "description": "The Sizemin Potion is a potion that could have been bought in packs of 5 for 80 Robux. They temporarily decrease the size of players and auras for 10 minutes.",
     "flags": [
       "fandom"
     ],
@@ -869,9 +872,9 @@
     "name": "Speed Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/40/SpeedPotion.png/revision/latest?cb=20240121132434",
-    "how_to_get": "The Speed Potion is used to brew potions with Stella's Cauldron. It can be used to make the following: 2 = Description duration=5 Minutes",
+    "how_to_get": "The Speed Potion is used to brew potions with Stella's Cauldron. It can be used to make the following:",
     "usage": "+10% Roll Speed — lasts 1 minute",
-    "description": "Gives you 1 minute of [Quick Roll] [Quick Roll]: +10% Roll Speed",
+    "description": "Gives you 1 minute of [Quick Roll]: +10% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -883,7 +886,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d3/Speedpotion-L.jpeg/revision/latest?cb=20240630102657",
     "how_to_get": "",
     "usage": "+10% Roll Speed — lasts 5 Minutes",
-    "description": "Gives you 5 minutes of [Quick Roll] [Quick Roll]: +10% Roll Speed",
+    "description": "Gives you 5 minutes of [Quick Roll]: +10% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -895,7 +898,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4a/Speedpotion-XL.jpeg/revision/latest?cb=20240630102614",
     "how_to_get": "",
     "usage": "+10% Roll Speed — lasts 10 Minutes",
-    "description": "Gives you 10 minutes of [Quick Roll] [Quick Roll]: +10% Roll Speed",
+    "description": "Gives you 10 minutes of [Quick Roll]: +10% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -907,16 +910,16 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/14/Stella%27sCandle.webp/revision/latest?cb=20240703032313",
     "how_to_get": "",
     "usage": "+20% Luck — lasts 20 Minutes",
-    "description": "Using this item will install [Stella's Candle] at your current location. Up to Five [Stella's Candle]s can be installed on one server. Standing close to [Stella's Candle] grants you [Warmth?] [Warmth?]: +20% Luck",
+    "description": "Using this item will install [Stella's Candle] at your current location. Up to Five [Stella's Candle]s can be installed on one server. Standing close to [Stella's Candle] grants you [Warmth?]: +20% Luck",
     "flags": [
       "fandom"
     ],
-    "effects": "frameless|50x50px Warmth?"
+    "effects": "Warmth?"
   },
   "Stella's Star": {
     "name": "Stella's Star",
     "category": "Materials",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/58/Stella%27s_Star.gif/revision/latest?cb=20240321083011",
     "how_to_get": "",
     "usage": "",
     "description": "The star Stella lost.",
@@ -927,8 +930,8 @@
   "Strange Controller": {
     "name": "Strange Controller",
     "category": "Tools",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fc/StrangecontrollerINV.png/revision/latest?cb=20240514064450",
-    "how_to_get": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3b/Strange_Controller_Inventory.gif/revision/latest?cb=20250711071103",
+    "how_to_get": "Jake's Workshop",
     "usage": "Allows the player to spawn biomes, with respect to the biome's natural spawnrate.",
     "description": "A Dimension-Manipulating device, that seems somewhat flimsy. Changes the Current Biome according to Natural Spawnrate. Has a 1/5000 chance to spawn Cyberspace.",
     "flags": [
@@ -941,7 +944,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/73/Strange_Potion_I.png/revision/latest?cb=20250122074122",
     "how_to_get": "",
     "usage": "Variable — lasts 10 Minutes",
-    "description": "Gives you 10 minutes of [???] [???]: Gives you a RANDOM BLESSING/CURSE from {The List} [The Chosen]: +150% Luck ! +30% Roll Speed [The Power I]: +150% Luck [The Knowledge I]: +30% Roll Speed [The Wrath I]: -50% Luck [The Sloth I]: -15% Roll Speed",
+    "description": "Gives you 10 minutes of [???]: Gives you a RANDOM BLESSING/CURSE from {The List} [The Chosen]: +150% Luck ! +30% Roll Speed [The Power I]: +150% Luck [The Knowledge I]: +30% Roll Speed [The Wrath I]: -50% Luck [The Sloth I]: -15% Roll Speed",
     "flags": [
       "fandom"
     ],
@@ -953,7 +956,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2b/Strange_Potion_II.png/revision/latest?cb=20240701180903",
     "how_to_get": "",
     "usage": "Variable — lasts 10 Minutes",
-    "description": "Gives you 10 minutes of [!!!] [!!!]: Gives you a RANDOM BLESSING/CURSE from {The List II} [GODLIKE]: +250% Luck ! +40% Roll Speed [The Power II]: +250% Luck [The Knowledge II]: +40% Roll Speed [The Wrath II]: -100% Luck [The Sloth II]: -25% Roll Speed",
+    "description": "Gives you 10 minutes of [!!!]: Gives you a RANDOM BLESSING/CURSE from {The List II} [GODLIKE]: +250% Luck ! +40% Roll Speed [The Power II]: +250% Luck [The Knowledge II]: +40% Roll Speed [The Wrath II]: -100% Luck [The Sloth II]: -25% Roll Speed",
     "flags": [
       "fandom"
     ]
@@ -973,9 +976,9 @@
     "name": "Transcendent Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3a/Better_transcendent_potion_image.png/revision/latest?cb=20250307235746",
-    "how_to_get": "Excluding from events, Transcendent Potion can be obtained through these ways below:; The 20,000,000 and 30,000,000-roll achievements give one Transcendent Potion.; The 50,000,000-roll achievement gives three Transcendent Potions.; The 100,000,000-roll achievement gives five Transcendent Potions.; The #DAY100 achievement gives one Transcendent Potion.; The Innovator Pack Vol-3 gives one Transcendent Potion.; Potion Chests have a 0.05% to give one Transcendent Potion.; The Transcendent Potion appears to be a four-pointed, star-shaped bottle with a square hole in the middle, filled with a bright golden liquid sealed with a cork.",
+    "how_to_get": "Excluding from events, Transcendent Potion can be obtained through these ways below:; The 20,000,000 and 30,000,000-roll achievements give one Transcendent Potion.; The 50,000,000-roll achievement gives three Transcendent Potions.; The 100,000,000-roll achievement gives five Transcendent Potions.; The #DAY100 achievement gives one Transcendent Potion.; The Innovator Pack Vol-3 gives one Transcendent Potion.; Potion Chests have a 0.05% to give one Transcendent Potion.",
     "usage": "No Rolling Cooltime — lasts 20,000 Rolls",
-    "description": "",
+    "description": "The Transcendent Potion is an item added in Eon 1. When consumed, it grants an effect that set the Rolling cooldown time to about 0.07s (1/15 seconds) (labeled as \"instant\") for the next 20,000 rolls. This makes it a highly valuable tool for quickly boosting the total rolls and Rolling stat.",
     "flags": [
       "fandom"
     ],
@@ -996,7 +999,7 @@
   "Void Coin": {
     "name": "Void Coin",
     "category": "Materials",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3b/Void_Coin_Inv.gif/revision/latest?cb=20240630093932",
     "how_to_get": "",
     "usage": "",
     "description": "Magical Currency used to trade Cursed and Dangerous Goods.",
@@ -1008,8 +1011,8 @@
   "Warp Potion": {
     "name": "Warp Potion",
     "category": "Potions",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3c/WarpPotionBetter.png/revision/latest?cb=20250210173909",
-    "how_to_get": "The Warp Potion can be obtained from any of the Potion Chests, bought from Captain Flarg's shop for 4,500 Fish Points, and can be crafted at Stella's Cauldron using the following auras: The Warp Potion gives the player 2,000 stacks of Skip. Skip sets the player Rolling Cooltime to 0s for the next (amount) rolls.",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8b/Warp_Potion.png/revision/latest?cb=20241227171744",
+    "how_to_get": "The Warp Potion can be obtained from any of the Potion Chests, bought from Captain Flarg's shop for 4,500 Fish Points, and can be crafted at Stella's Cauldron using the following auras:",
     "usage": "Sets Rolling Cooltime to INSTANT — lasts Next 2000 Rolls",
     "description": "This potion can accelerate your time.",
     "flags": [
@@ -1021,7 +1024,7 @@
     "name": "Wind Essence",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/47/WindEssenceRender.png/revision/latest?cb=20240510220524",
-    "how_to_get": "",
+    "how_to_get": "Spawns at the beginning of Windy.",
     "usage": "",
     "description": "Energy contained in the Wind.",
     "flags": [
@@ -1042,7 +1045,7 @@
   "XC' Signature": {
     "name": "XC' Signature",
     "category": "Special / Misc",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4d/XC_Signiture.png/revision/latest?cb=20241122144309",
     "how_to_get": "",
     "usage": "???",
     "description": "???",
@@ -1065,12 +1068,855 @@
   "dwjk pillow": {
     "name": "dwjk pillow",
     "category": "Special / Misc",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a6/Dwjk_pillow.png/revision/latest?cb=20240221115704",
     "how_to_get": "",
     "usage": "Developers Blessing? -99.99x Luck",
     "description": "A body pillow of dwjk fanart.",
     "flags": [
       "fandom"
     ]
+  },
+  "Potion Chest": {
+    "name": "Potion Chest",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fe/Potion_Chest_%28Regular%29.gif/revision/latest?cb=20250528003336",
+    "how_to_get": "Update Packages Alpha, Beta, Gamma, & Delta, or Daily Quests",
+    "usage": "",
+    "description": "The Potion Chest is obtainable by buying any of the Four Update Packages. The quantity in which you receive this chest depends on which package is bought. The Alpha Update Package will give you 20, the Beta Update Package will give you 50, and the Gamma Update Package and the Delta Update Package, both will give you 100, while also being obtained through completing all Daily Quests, giving a total of 15.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Speed Potion — 20.00% x50; Lucky Potion — 20.00% x50; Fortune Potion I — 10.00% x10; Haste Potion I — 10.00% x10; Fortune Potion II — 7.00% x4; Haste Potion II — 7.00% x4; Fortune Potion III — 5.00% x2; Haste Potion III — 5.00% x2; Rage Potion — 3.00%; Diver Potion — 3.00%; Zombie Potion — 3.00%; Jewelry Potion — 3.00%; Potion of Bound — 2.00%; Heavenly Potion — 1.00%; Warp Potion — 0.50%; Godly Potion (Zeus) — 0.10%; Godly Potion (Hades) — 0.10%; Godly Potion (Poseidon) — 0.10%; Oblivion Potion — 0.08%; Godlike Potion — 0.08%; Transcendent Potion — 0.05%"
+  },
+  "Rare Potion Chest": {
+    "name": "Rare Potion Chest",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f1/Chest_potiona.gif/revision/latest?cb=20250528002708",
+    "how_to_get": "Update Packages Alpha, Beta, Gamma, & Delta",
+    "usage": "",
+    "description": "The Rare Potion Chest is obtainable by buying any of the four Update Package Gamepasses. The quantity in which you receive this chest depends on which Package you buy. The Alpha Update Package will give you 5, the Beta Update Package will give you 10, the Gamma Update Package will give you 25, and the Delta Update Package will give you 60. The chances of obtaining low rarity potions decrease and the chances of obtaining high rarity potions increase compared to the Potion Chest.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Speed Potion — 10.00% x50; Lucky Potion — 10.00% x50; Fortune Potion I — 10.00% x10; Haste Potion I — 10.00% x10; Fortune Potion II — 9.00% x4; Haste Potion II — 9.00% x4; Fortune Potion III — 7.00% x2; Haste Potion III — 7.00% x2; Rage Potion — 5.00%; Diver Potion — 5.00%; Zombie Potion — 5.00%; Jewelry Potion — 5.00%; Potion of Bound — 3.50%; Heavenly Potion — 2.00%; Warp Potion — 1.00%; Godly Potion (Zeus) — 0.30%; Godly Potion (Hades) — 0.30%; Godly Potion (Poseidon) — 0.30%; Oblivion Potion — 0.25%; Godlike Potion — 0.25%; Transcendent Potion — 0.10%"
+  },
+  "Mega Potion Chest": {
+    "name": "Mega Potion Chest",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/88/Potion_Chest_%28Mega%29.gif/revision/latest?cb=20250528003509",
+    "how_to_get": "Update Packages Beta, Gamma, & Delta",
+    "usage": "",
+    "description": "The Mega Potion Chest is obtainable by buying either the Beta, Gamma or Delta Package Gamepass. This makes it the hardest Potion Chest to obtain, but that also means that it's rewards are better than the Rare Potion Chest. Buying the Beta Update Package will give you 3, the Gamma Update Package gives you 10, and the Delta Update Package will give you 40. The chances for high rarity potions increase while the low rarity potions have their chances decrease further. The most common potions you will get from this Potion Chest are the Fortune Potion II and Haste Potion II.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Fortune Potion II — 10.00% x4; Haste Potion II — 10.00% x4; Fortune Potion III — 9.00% x2; Haste Potion III — 9.00% x2; Rage Potion — 7.00%; Diver Potion — 7.00%; Zombie Potion — 7.00%; Jewelry Potion — 7.00%; Fortune Potion I — 7.00% x10; Haste Potion I — 7.00% x10; Speed Potion — 5.00% x50; Lucky Potion — 5.00% x50; Potion of Bound — 3.50%; Heavenly Potion — 2.50%; Warp Potion — 1.50%; Godly Potion (Zeus) — 0.50%; Godly Potion (Hades) — 0.50%; Godly Potion (Poseidon) — 0.50%; Transcendent Potion — 0.35%; Oblivion Potion — 0.33%; Godlike Potion — 0.33%"
+  },
+  "Video Event Potion Chest": {
+    "name": "Video Event Potion Chest",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/58/Potion_Chest_%28Video_Event%29.gif/revision/latest?cb=20260201135650",
+    "how_to_get": "Winning a video event hosted by the [https://www.youtube.com/channel/UCTXMmzSFsv_oAwETkNuvwTQ official Sol's Rng youtube channel]",
+    "usage": "",
+    "description": "The Video Event Potion Chest is a Developer item that can only be obtained by winning a video event hosted by the [https://www.youtube.com/channel/UCTXMmzSFsv_oAwETkNuvwTQ official Sol's Rng youtube channel]. The Developers decide how many Video Event Potion Chests the winners will receive.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Heavenly Potion — 64.94%; Warp Potion — 25.98%; Oblivion Potion — 6.48%; Transcendent Potion — 2.60%"
+  },
+  "Fisherman Chest I": {
+    "name": "Fisherman Chest I",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6a/FishChest1.png/revision/latest?cb=20251213132345",
+    "how_to_get": "299 or 30,000 Fish Points.",
+    "usage": "",
+    "description": "The Fisherman Chest I was obtainable by buying it with 299 or 30,000 Fish Points. It contains a high chance of getting Potion of Bound, Heavenly Potion and Warp Potion, and a low chance of getting the rest of the potions.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Potion of Bound — 40.50% x8; Heavenly Potion — 40.00% x3; Warp Potion — 10.00% x3; Diver Potion — 2.00% x6; Zombie Potion — 2.00% x6; Rage Potion — 2.00% x6; Jewelry Potion — 2.00% x6; Oblivion Potion — 0.50%; Godlike Potion — 0.50%; Transcendent Potion — 0.50%"
+  },
+  "Fisherman Chest II": {
+    "name": "Fisherman Chest II",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/52/FishChest2.png/revision/latest?cb=20251213131006",
+    "how_to_get": "499 or 50,000 Fish Points.",
+    "usage": "",
+    "description": "The Fisherman Chest II was obtainable by buying it with 499 or 50,000 Fish Points. It contains a high chance of getting even higher amount of Potion of Bound, Heavenly Potion and Warp Potion compared to the Fisherman Chest I, and a low chance of getting the rest of the potions.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Potion of Bound — 40.50% x20; Heavenly Potion — 40.00% x8; Warp Potion — 10.00% x7; Diver Potion — 2.00% x12; Zombie Potion — 2.00% x12; Rage Potion — 2.00% x12; Jewelry Potion — 2.00% x12; Oblivion Potion — 0.50%; Godlike Potion — 0.50%; Transcendent Potion — 0.50%"
+  },
+  "Fisherman Chest III": {
+    "name": "Fisherman Chest III",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/1f/FishChest3.png/revision/latest?cb=20251213131038",
+    "how_to_get": "799 or 80,000 Fish Points.",
+    "usage": "",
+    "description": "The Fisherman Chest III was obtainable by buying it with 799 or 80,000 Fish Points. It removes all of the Uncommon tier potions and increase the chance of getting Potion of Bound, Warp Potion, Godlike Potion, Transcendent Potion and Oblivion Potion.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Potion of Bound — 40.50% x40; Heavenly Potion — 40.00% x15; Warp Potion — 12.00% x15; Oblivion Potion — 1.00%; Godlike Potion — 1.00%; Transcendent Potion — 1.00%"
+  },
+  "Potion Gift Box": {
+    "name": "Potion Gift Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f7/Normal_Potion_Gift_Box.gif/revision/latest?cb=20250210084955",
+    "how_to_get": "",
+    "usage": "",
+    "description": "The Potion Gift Box is the easiest to get out of the 3 and is the one that was obtainable from the Roulette. It will randomly pick a potion from all rarities to give to the player upon use.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Gives a random potion according to a list of chances.",
+    "drops": "Lucky Potion — 26.97%; Speed Potion — 26.97%; Haste Potion I — 13.49%; Fortune Potion I — 13.49%; Haste Potion II — 5.39%; Fortune Potion II — 5.39%; Haste Potion III — 2.70%; Fortune Potion III — 2.70%; Rudolph Potion — 0.7%; Elf Potion — 0.7%; Potion of Bound — 0.54%; Santa Claus Potion — 0.4%; Heavenly Potion — 0.27%; Warp Potion — 0.18%; Oblivion Potion — 0.09%; Transcendent Potion — 0.02%"
+  },
+  "Rare Potion Gift Box": {
+    "name": "Rare Potion Gift Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/84/Rare_Potion_Gift_Box.gif/revision/latest?cb=20250210085513",
+    "how_to_get": "",
+    "usage": "",
+    "description": "The Rare Potion Gift Box was obtainable via the Roulette. Identical function to the Potion Gift Box but only potions from the rare rarity and above are included.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Gives a random potion according to a list of chances.",
+    "drops": "Rudolph Potion — 30%; Elf Potion — 30%; Santa Claus Potion — 24.96%; Potion of Bound — 8.50%; Heavenly Potion — 4.25%; Warp Potion — 1.70%; Oblivion Potion — 0.42%; Transcendent Potion — 0.17%"
+  },
+  "Mega Potion Gift Box": {
+    "name": "Mega Potion Gift Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4e/Mega_Potion_Gift_Box%28gif%29.gif/revision/latest?cb=20250210085816",
+    "how_to_get": "",
+    "usage": "",
+    "description": "The Mega Potion Gift Box was obtainable by rolling it in the Roulette. Identical function to the Potion Gift Box but only the potions with the epic rarity and above are included.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Gives a random potion according to a list of chances.",
+    "drops": "Potion of Bound — 56.5%; Heavenly Potion — 28.25%; Warp Potion — 11.30%; Oblivion Potion — 2.82%; Transcendent Potion — 1.13%"
+  },
+  "Cat Potion Gift Box": {
+    "name": "Cat Potion Gift Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/da/CatPotionGiftBox.png/revision/latest?cb=20260913045647",
+    "how_to_get": "",
+    "usage": "",
+    "description": "Not much is known about the Cat Potion Gift Box other than it being a developer only item.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Gives a random potion."
+  },
+  "Potion Ice Box": {
+    "name": "Potion Ice Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d2/PotionIceBox.png/revision/latest?cb=20250705173307",
+    "how_to_get": "Lime",
+    "usage": "",
+    "description": "The Potion Ice Box is obtainable through Lime's shop, costing 50 White Clams per box and having infinite stock.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Speed Potion — 26.67% x50; Lucky Potion — 26.67% x50; Fortune Potion I — 13.3% x10; Haste Potion I — 13.3% x10; Fortune Potion II — 6.67% x4; Haste Potion II — 6.67% x4; Fortune Potion III — 3.33% x2; Haste Potion III — 3.33% x2"
+  },
+  "Uncommon Potion Ice Box": {
+    "name": "Uncommon Potion Ice Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/97/UncommonPotionIceBox.png/revision/latest?cb=20250705173320",
+    "how_to_get": "Lime",
+    "usage": "",
+    "description": "The Uncommon Potion Ice Box is obtainable through Lime's shop, costing 100 White Clams per box and having infinite stock. This box adds the Potion of Bound, Heavenly Potion, Warp Potion, Transcendent Potion, and Godlike Potion to the loot pool.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Lucky Potion — 26% x50; Speed Potion — 26% x50; Fortune Potion I — 13% x10; Haste Potion I — 13% x10; Fortune Potion II — 6.5% x4; Haste Potion II — 6.5% x4; Fortune Potion III — 3.2% x2; Haste Potion III — 3.2% x2; Potion of Bound — 2%; Heavenly Potion — 1%; Warp Potion — 0.5%; Transcendent Potion — 0.05%; Godlike Potion — 0.05%"
+  },
+  "Rare Potion Ice Box": {
+    "name": "Rare Potion Ice Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/58/RarePotionIceBox.png/revision/latest?cb=20250705173326",
+    "how_to_get": "Lime",
+    "usage": "",
+    "description": "The Rare Potion Ice Box is obtainable through Lime's shop, costing 20 Pearl Blue Clams per box and having infinite stock. This box removes the Lucky Potions and Speed Potions from the loot pool of the Uncommon Potion Ice Box.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Fortune Potion I — 22% x10; Haste Potion I — 22% x10; Fortune Potion II — 14% x4; Haste Potion II — 14% x4; Fortune Potion III — 10.32% x2; Haste Potion III — 10.32% x2; Potion of Bound — 2.5%; Heavenly Potion — 2%; Warp Potion — 1%; Transcendent Potion — 0.25%; Godlike Potion — 0.1%"
+  },
+  "Legendary Potion Ice Box": {
+    "name": "Legendary Potion Ice Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8e/LegendaryPotionIceBox.png/revision/latest?cb=20250705173332",
+    "how_to_get": "Lime",
+    "usage": "",
+    "description": "The Legendary Potion Ice Box is obtainable through Lime's shop, costing 35 Pearl Blue Clams per box and having 10 stock. This box removes every Fortune Potion, Haste Potion and the Godlike Potion from the loot pool of the Uncommon Potion Ice Box. It also adds the Oblivion Potion to the loot pool.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Lucky Potion — 44.5% x200; Speed Potion — 44.5% x200; Potion of Bound — 5%; Heavenly Potion — 3%; Warp Potion — 1.5%; Transcendent Potion — 1%; Oblivion Potion — 0.5%"
+  },
+  "Normal Summer Random Box": {
+    "name": "Normal Summer Random Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e2/NormalSummerRandomBoxView.gif/revision/latest?cb=20260803001554",
+    "how_to_get": "Gamepasses, Lime, and Suikawari Minigame",
+    "usage": "",
+    "description": "The Normal Summer Random Box is obtainable through completing Lime's fourth quest, purchasing the Summer Event Packages, or completing a round of the Suikawari Minigame.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Speed Potion — 18% x50; Lucky Potion — 18% x50; Mixed Potion — 15.5% x50; Hwachae — 9% x10; Haste Potion I — 6.5% x10; Strange Potion I — 6% x10; Haste Potion II — 5.5% x10; Strange Potion II — 5% x10; Haste Potion III — 5% x10; Fortune Potion I — 4% x4; Fortune Potion II — 2.5% x4; Fortune Potion III — 2.5% x4; Godly Potion (Hades) — 0.43%; Godly Potion (Zeus) — 0.43%; Godly Potion (Poseidon) — 0.43%; Heavenly Potion — 0.41%; Tear of the Goddess — 0.39%; Tidal Shifter Potion — 0.28%; Oblivion Potion — 0.13%"
+  },
+  "Rare Summer Random Box": {
+    "name": "Rare Summer Random Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/97/RareSummerRandomBoxView.gif/revision/latest?cb=20260803001613",
+    "how_to_get": "Gamepasses, Lime, and Suikawari Minigame",
+    "usage": "",
+    "description": "The Rare Summer Random Box is obtainable through completing Lime's second and fourth quests, purchasing the Summer Event Packages, or completing a round of the Suikawari Minigame.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Hwachae — 11.5% x10; Speed Potion — 9.5% x50; Lucky Potion — 9.5% x50; Haste Potion I — 9.5% x10; Haste Potion II — 8.5% x10; Mixed Potion — 8.5% x50; Strange Potion I — 8.5% x10; Strange Potion II — 8% x10; Haste Potion III — 8% x10; Fortune Potion I — 5% x4; Fortune Potion II — 4% x4; Fortune Potion III — 3.5% x4; Godly Potion (Hades) — 1.13%; Godly Potion (Zeus) — 1.13%; Godly Potion (Poseidon) — 1.13%; Tear of the Goddess — 1%; Heavenly Potion — 0.73%; Tidal Shifter Potion — 0.5%; Oblivion Potion — 0.38%"
+  },
+  "Mega Summer Random Box": {
+    "name": "Mega Summer Random Box",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/06/MegaSummerRandomBoxView.gif/revision/latest?cb=20260803001632",
+    "how_to_get": "Gamepasses, Lime, and Suikawari Minigame",
+    "usage": "",
+    "description": "The Mega Summer Random Box is obtainable through completing Lime's third and fourth quests, purchasing the Summer Event Packages, or completing a round of the Suikawari Minigame.",
+    "flags": [
+      "fandom"
+    ],
+    "drops": "Hwachae — 12% x10; Haste Potion I — 10.5% x10; Haste Potion II — 10.5% x10; Haste Potion III — 10% x10; Strange Potion II — 10% x10; Strange Potion I — 9.5% x10; Fortune Potion I — 5% x4; Fortune Potion II — 4.5% x4; Fortune Potion III — 4.5% x4; Speed Potion — 4.5% x50; Lucky Potion — 4.5% x50; Mixed Potion — 4% x50; Tear of the Goddess — 1.91%; Godly Potion (Hades) — 1.78%; Godly Potion (Zeus) — 1.78%; Godly Potion (Poseidon) — 1.78%; Heavenly Potion — 1.39%; Tidal Shifter Potion — 1.15%; Oblivion Potion — 0.71%"
+  },
+  "Berry Candy": {
+    "name": "Berry Candy",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/BerryCandyView.gif/revision/latest?cb=20251220124258",
+    "how_to_get": "",
+    "usage": "",
+    "description": "[Christmas 2025] A soft pink spiral candy infused with the sweet essence of wild berries, melting gently with a bright and charming sweetness. Changes your aura color to pink for 5 minutes.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Changes your aura color to pink"
+  },
+  "Mint Candy": {
+    "name": "Mint Candy",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/57/MintCandyView.gif/revision/latest?cb=20251220124321",
+    "how_to_get": "",
+    "usage": "",
+    "description": "[Christmas 2025] A cool sky-blue spiral candy infused with the icy freshness of pure mint, sending a chilling wave of sweetness through every bite. Changes your aura color to sky blue for 5 minutes.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Changes your aura color to sky blue"
+  },
+  "Peppermint Candy": {
+    "name": "Peppermint Candy",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/43/PeppermintCandyView.gif/revision/latest?cb=20251220124347",
+    "how_to_get": "",
+    "usage": "",
+    "description": "[Christmas 2025] A blazing red peppermint candy wrapped in the sharped chill of frozen sugar. Changes your aura color to red for 5 minutes.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Changes your aura color to red"
+  },
+  "Herb Candy": {
+    "name": "Herb Candy",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/4c/HerbCandyView.gif/revision/latest?cb=20251220124411",
+    "how_to_get": "",
+    "usage": "",
+    "description": "[Christmas 2025] A refreshing green spiral candy infused with the pure essence of healing herbs, delivering a crisp and revitalizing sweetness. Changes your aura color to green for 5 minutes.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Changes your aura color to green"
+  },
+  "Rainbow Candy": {
+    "name": "Rainbow Candy",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3a/RainbowCandyViewIMG_7858.gif/revision/latest?cb=20260118122754",
+    "how_to_get": "",
+    "usage": "",
+    "description": "",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Changes your aura color to rainbow"
+  },
+  "Minigame Ticket": {
+    "name": "Minigame Ticket",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/1e/Minigame_ticket.gif/revision/latest?cb=20260908071556",
+    "how_to_get": "Minigame Ticket can be obtained at a fixed rarity of 1/150 per roll.",
+    "usage": "",
+    "description": "With this, you can play Suikawari minigame once. Try talking to Lime",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Normal Item Ticket": {
+    "name": "Normal Item Ticket",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2a/NormalTicket.gif/revision/latest?cb=20250209175549",
+    "how_to_get": "The Normal Item Ticket used to be obtained via three methods:; By Rolling, with a 1 in 10,000 (0.01%) chance to pull it.; Dropped by Santa; Purchased from the Winter Package Vol.1, Vol.2 and Vol.3, each granting 10, 20 and 50 Normal Item Tickets respectively.",
+    "usage": "",
+    "description": "Used for Normal Roulette",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Rare Item Ticket": {
+    "name": "Rare Item Ticket",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/9c/RareTickett.gif/revision/latest?cb=20250209180250",
+    "how_to_get": "Similarly like its common and rarer counterpart, the Rare Item Ticket used to be obtained with the three following methods:; By Rolling, with a 1 in 100,000 (0.001%) to pull one.; As an uncommon drop from Santa.; By purchasing Winter Packages, granting 5, 10 and 25 per volume respectively.",
+    "usage": "",
+    "description": "Used for Rare Roulette",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Mega Item Ticket": {
+    "name": "Mega Item Ticket",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/56/MegaTicket.gif/revision/latest?cb=20250209191921",
+    "how_to_get": "The Mega Item Ticket used to be obtained through the following ways:; Via Rolling, with an insane 1 in 1,000,000 (0.0001%) chance to be rolled.; Very rarely dropped by Santa.; Purchased from the Winter Packages, with each volume granting 1, 2 and 5.",
+    "usage": "",
+    "description": "Used for Mega Roulette",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Lucky Ticket": {
+    "name": "Lucky Ticket",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/eb/LuckyTicketView.gif/revision/latest?cb=20251224140136",
+    "how_to_get": "The Lucky Ticket can be obtained by:; Buying Ticket Package I, II and III; Redeeming certain Codes",
+    "usage": "",
+    "description": "The Lucky Ticket is an item added in the Christmas 2025 Event. It is used to spin the Christmas Roulette.; The Lucky Ticket appears to be a bright yellow colored ticket with razor sharp edges and golden linings.; The Lucky Ticket can be obtained by:; Buying Ticket Package I, II and III; Redeeming certain Codes",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Astrald’s Flask": {
+    "name": "Astrald’s Flask",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f7/Astraldsflask.png/revision/latest?cb=20260602180239",
+    "how_to_get": "",
+    "usage": "1,000,000,000% (+10,000,000 Luck) — lasts Permanent",
+    "description": "Astrald’s special mixture of greatness and agonising pain. Drinking this will give you 10,000,000 luck. Don’t ask about the side effects.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Astrald's Flask"
+  },
+  "Axis Potion?": {
+    "name": "Axis Potion?",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/14/Axis_potion%3F.gif/revision/latest?cb=20251231055547",
+    "how_to_get": "To obtain Axis Potion? you need to complete 53 Axis (NPC)'s 2nd questline and talk to him.",
+    "usage": "-9,999% Luck — lasts 15 seconds",
+    "description": "[2nd Anniversary] With the power from the God of Time, this potion was formed. It provides you...",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Axis Blessing???"
+  },
+  "Bounty Medal": {
+    "name": "Bounty Medal",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/80/Bounty_Medal.gif/revision/latest?cb=20251019145627",
+    "how_to_get": "The Bounty Medal can be obtained though Fischl's Daily Shop, the Memory Match game, Jack The Pumpkin's Aura Hunts, and through Season III of the Season Pass.",
+    "usage": "",
+    "description": "[2025 Halloween] A medal of honor awarded by Jack \"No, no... that's what you'd call a disgraceful medal.\" Gives you 10 of [Trick or Treat]: +150% Luck for Next 1 Roll",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Currency used in Jack The Pumpkin's shop"
+  },
+  "Combinator": {
+    "name": "Combinator",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/16/Combinator.gif/revision/latest?cb=20250419173107",
+    "how_to_get": "Jake's Workshop",
+    "usage": "",
+    "description": "It is a device developed during a time when wizards and technicians worked together. This device has a very potent power but it took a lot of power to be used...",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Cursed Crystal": {
+    "name": "Cursed Crystal",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d9/Cursed_Crystal_inventory.gif/revision/latest?cb=20260612122414",
+    "how_to_get": "The Amalgamation (Hell Mode)",
+    "usage": "",
+    "description": "A crystal imbued with a powerful cursed aura.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Cursed Fragment": {
+    "name": "Cursed Fragment",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/65/Cursed_Fragment_inventory.gif/revision/latest?cb=20260612122001",
+    "how_to_get": "The Amalgamation (Hell Mode)",
+    "usage": "",
+    "description": "A fragmented piece of a crystal imbued with a powerful cursed aura.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Cursed Rune Fragment": {
+    "name": "Cursed Rune Fragment",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cb/CursedRune.gif/revision/latest?cb=20251019160248",
+    "how_to_get": "The Cursed Rune Fragment can be obtained through Fischl's Daily Shop for 10,000 coins/100 Dark Points or by collecting it on the ground when it spawns during Graveyard or Pumpkin Moon.",
+    "usage": "",
+    "description": "A rune imbued with a Dreadful Curse, capable of inviting Horrific Misfortune to the world. Only available during halloween biome...",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Summons the Blood Rain biome."
+  },
+  "Cyber Technology": {
+    "name": "Cyber Technology",
+    "category": "Materials",
+    "thumbnail_url": "",
+    "how_to_get": "Cyber Technology can only be obtained by completing and claiming the Access Granted achievement, which requires the player to spawn a Cyberspace themselves. If another player spawns the biome, the achievement will only go to them and not everyone in the server.",
+    "usage": "",
+    "description": "Cyber Technology is an item added in the Eon 1-14 update. It is required to craft the Biome Selector, which is its only use.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Darklight Core": {
+    "name": "Darklight Core",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/55/Darklight_Core.gif/revision/latest?cb=20250618004049",
+    "how_to_get": "The Darklight Core is an item that has a very small chance to spawn on the ground while inside The Limbo.",
+    "usage": "",
+    "description": "Temporary Description",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Darklight Orb": {
+    "name": "Darklight Orb",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a7/Darklight_Orb.png/revision/latest?cb=20250615214615",
+    "how_to_get": "The Darklight Orb is an item that has a small chance to spawn on the ground while inside The Limbo.",
+    "usage": "",
+    "description": "Temporary Description",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Darklight Shard": {
+    "name": "Darklight Shard",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/29/Darklight_Shard_%28Gif%29.gif/revision/latest?cb=20250618003123",
+    "how_to_get": "The Darklight Shard is an item that has a medium chance of spawning while inside The Limbo.",
+    "usage": "",
+    "description": "Temporary Description",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Easter Eggs": {
+    "name": "Easter Eggs",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2b/Zephyr.gif/revision/latest?cb=20250421081011",
+    "how_to_get": "When the Windy Biome appears, start climbing the mountain on which the chalice is located. Behind the chalice is a tree on a hill. Go to this tree and press E while being near it. This will cause the tree to shake, launching the Zephyr Egg out of the leaves and onto the ground. Head towards the egg and press E to collect it.",
+    "usage": "",
+    "description": "An egg containing the power of a Biome.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Eggstractor": {
+    "name": "Eggstractor",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/2d/Eggstractor.jpg/revision/latest?cb=20250419195733",
+    "how_to_get": "Obtained by talking to Lime during the Egg Hunt 2025.",
+    "usage": "",
+    "description": "An eggstraordinary device, capable of eggstracting powerful eggs!",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Elf Potion": {
+    "name": "Elf Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/58/ElfPotionView.gif/revision/latest?cb=20251220125524",
+    "how_to_get": "The Elf Potion can be obtained in the following ways:; Using Potion Gift Boxes; At level 4, 11, 17 and 47 of both the Normal and Premium tracks in the Season IV Pass.; As a common drop from Santa.",
+    "usage": "+150% luck — lasts 10 minutes",
+    "description": "[Christmas 2025] Gives you 10 minutes of [Rudolph's Blessing]: +150% Luck, A special effect",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Elf's Blessing"
+  },
+  "Glass Candle": {
+    "name": "Glass Candle",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3d/GlassCandleInGame.gif/revision/latest?cb=20250615115529",
+    "how_to_get": "[You can only craft this item once]",
+    "usage": "",
+    "description": "Not to be confused with , an item with a similar name.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Allows you to see the [ Hidden Things ]."
+  },
+  "Glowing Snow Globe": {
+    "name": "Glowing Snow Globe",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7d/SnowglobeInGame.gif/revision/latest?cb=20251229153756",
+    "how_to_get": "The Glowing Snow Globe can be obtained through two ways; The [https://sol-rng.fandom.com/wiki/Roulette#Christmas_2025 Christmas Roulette], with a 0.2% chance of getting it every spin, and also through [https://sol-rng.fandom.com/wiki/Memory_Match Memory Match], where it has a low chance of spawning.",
+    "usage": "",
+    "description": "[Christmas 2025] When used in a Snowy biome, it triggers a special effect that transforms the biome into the Aurora biome.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Summons the Aurora biome."
+  },
+  "Incense Burner": {
+    "name": "Incense Burner",
+    "category": "Tools",
+    "thumbnail_url": "",
+    "how_to_get": "",
+    "usage": "",
+    "description": "Using this item will install [Incense Burner] at your current location. Up to Five [Incense Burner]s can be installed on one server. Standing close to [Incense Burner] grants you [Incense]: +20% Luck",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Item Collector": {
+    "name": "Item Collector",
+    "category": "Tools",
+    "thumbnail_url": "",
+    "how_to_get": "",
+    "usage": "",
+    "description": "\"Powerful Magnet!\" Automatically collects items dropped on the map",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Lucky Clover": {
+    "name": "Lucky Clover",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/15/LuckyClover.png/revision/latest?cb=20241110111914",
+    "how_to_get": "",
+    "usage": "",
+    "description": "The Lucky Clover is an Item that was added in Eon 1. Upon walking over a clover, you will be granted the Clover Effect for 4 minutes, which grants +40% Luck. This Item cannot be stored in the Inventory, so henceforth cannot be bought or sold. This Item can spawn randomly throughout the world near the player, but cannot spawn in caves or on water.; Clovers will spawn every 1-3 minutes, and will despawn after a few minutes of not being picked up. There can be up to 3 clovers per player spawned at a time.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "+40% Luck"
+  },
+  "Marine Amulet": {
+    "name": "Marine Amulet",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a2/Marine_Amulet.gif/revision/latest?cb=20240803101053",
+    "how_to_get": "From the Summer 2024 \"Hot Summer\" quest, and a Summer 2025 Season I Season Pass reward.",
+    "usage": "+30% Base Luck (During the Summer 2024 and Summer 2025 events)",
+    "description": "It protects you from the sun and heat. Summer Event.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Natita's Flask": {
+    "name": "Natita's Flask",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/de/Natitasflask.jpg/revision/latest?cb=20260602224651",
+    "how_to_get": "",
+    "usage": "1,000,000,000% (+10,000,000 Luck) — lasts Permanent",
+    "description": "A flask of pure guilt and sadness, with a lot of gain! Drinking this will give you 10,000,000 luck. Is Natita luck real?.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Natita's Flask"
+  },
+  "NPC Potion": {
+    "name": "NPC Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8b/NPC_potion.gif/revision/latest?cb=20260131103929",
+    "how_to_get": "To obtain the NPC Potion you must use code \"transform\".",
+    "usage": "Transforms you into random NPC — lasts 2 minutes",
+    "description": "[Video Event] [Cooldown]: 30 minutes This potion allows you to turn into one of the random NPCs for 2 minutes. Your character will be reset if you use this item. This item will no longer be usable after February 28th, 2026, at 5:00PM (GMT+9/KST).",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Transform"
+  },
+  "One-time Biome Randomizer": {
+    "name": "One-time Biome Randomizer",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/64/OnetimeBiomeRandomizerInventory.gif/revision/latest?cb=20260806101134",
+    "how_to_get": "Season pass season VIII",
+    "usage": "Allows the player to spawn biomes, regardless of their natural spawnrate. Ignores cooldowns except for server cooldowns.",
+    "description": "Biome Randomizer, but only server cooldown is affected and will disappear once used.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Popping Potion": {
+    "name": "Popping Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/88/Popping_Potion_New.gif/revision/latest?cb=20260228110101",
+    "how_to_get": "The Popping Potion is obtainable by purchasing the Starter Pack inside the Shop, or a 3% chance of dropping when The Crawler or 《 The Amalgamation 》is defeated in Boss Raids.",
+    "usage": "+10,000 luck — lasts 1 Roll",
+    "description": "Gives you [Popping Blessing]: +10,000 Luck for Next 1 Roll",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Popping Blessing"
+  },
+  "Portable Crack": {
+    "name": "Portable Crack",
+    "category": "Tools",
+    "thumbnail_url": "",
+    "how_to_get": "",
+    "usage": "",
+    "description": "Not to be confused with , an item with a similar name.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Portable Device": {
+    "name": "Portable Device",
+    "category": "Tools",
+    "thumbnail_url": "",
+    "how_to_get": "",
+    "usage": "",
+    "description": "Using this item will install [Portable Device] at your current location. Up to Five [Portable Device]s can be installed on one server. Standing close to [Portable Device] grants you [Tracking the location...]: +50% Luck",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Power Battery": {
+    "name": "Power Battery",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0a/PowerBatteryInventory.gif/revision/latest?cb=20260802093248",
+    "how_to_get": "Brought from Lime for 100 Summer Points (Max 20).; Obtained from Lime quest reward.; Obtained from Tier 20 of the season pass (normal and premium).; Use code \"BLAZINGSUN\" (Power Battery x1).; Obtained from Memory Match.",
+    "usage": "+500 Weapon Power",
+    "description": "[Summer 2026]+ 500 Weapon Power",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Pump King's Soul": {
+    "name": "Pump King's Soul",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b6/Pump_king.webp/revision/latest?cb=20241202032922",
+    "how_to_get": "Purchasable from Jack The Pumpkin for 500 Pumpkin Tokens.",
+    "usage": "",
+    "description": "\"Just having it gives me the Creeps.'",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Pump Token": {
+    "name": "Pump Token",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cf/Token.png.png/revision/latest?cb=20241201080413",
+    "how_to_get": "Exchanging items and auras with Jack The Pumpkin.",
+    "usage": "",
+    "description": "\"A horrible chill goes down your spine...\"",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Random Candy Giver": {
+    "name": "Random Candy Giver",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/19/RandomCandyGiverView.gif/revision/latest?cb=20251222225440",
+    "how_to_get": "The Random Candy Giver can be obtained through the Christmas Roulette, and through the Season IV Pass at level 6, 16, 22, 31, 42 and 48 of both the Normal and Premium tracks.",
+    "usage": "",
+    "description": "[Christmas 2025] gives you one of the candy items randomly",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Gives a random Candy"
+  },
+  "Random Egg": {
+    "name": "Random Egg",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3b/RandomEgginv.jpg/revision/latest?cb=20260330230525",
+    "how_to_get": "",
+    "usage": "",
+    "description": "A strange egg that is nothing, yet everything.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Gives the player a random Egg upon usage.",
+    "drops": "Point Egg I — 15.00% Total; (All Unknown); Point Egg V — 10.00%; Point Egg VI — 5.00%; ? Potion Egg — 3.00%; ??? Potion Egg — 2.00%; Hatch Egg — 34.81%; Royal Egg — 17.41%; Andromeda Egg — 4.53%; Angelic Egg — 2.16%; Blooming Egg — 1.98%; Forest Egg — 1.39%; The Egg of the Sky — 1.22%; Egg V2.0 — 0.80%; Dreamer Egg — 0.70%"
+  },
+  "Random Rune Chest": {
+    "name": "Random Rune Chest",
+    "category": "Chests",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/49/Random_Rune_Chest.png/revision/latest?cb=20241110140506",
+    "how_to_get": "",
+    "usage": "",
+    "description": "The is an item that can be obtained from achievements that are completed for obtaining auras without native rarity. This can also be found in the quest board from the breakthrough quests or from directly collecting them from the water around Sol's Island..",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Gives the player a random Rune upon usage.",
+    "drops": "Rune of Wind — 10%; Rune of Frost — 10%; Rune of Rainstorm — 10%; Rune of Corruption — 10%; Rune of Hell — 10%; Rune of Galaxy — 10%; Rune of Dust — 10%; Rune of Heaven — 10%; Rune of Nothing — 10%; Rune of Everything — 10%"
+  },
+  "Rudolph Potion": {
+    "name": "Rudolph Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/50/RudolphPotionView.gif/revision/latest?cb=20251220125507",
+    "how_to_get": "The Rudolph Potion can be obtained in the following ways:; Using Potion Gift Boxes.; At level 3, 12, 18 and 46 of both the Normal and Premium tracks in the Season IV Pass.",
+    "usage": "+20% roll speed — lasts 10 minutes",
+    "description": "[Christmas 2025] Gives you 10 minutes of [Rudolph's Blessing]: +20% Roll Speed, A special effect",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Rudolph`s Blessing"
+  },
+  "Shovel": {
+    "name": "Shovel",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/49/ShovelGif.gif/revision/latest?cb=20250705085644",
+    "how_to_get": "",
+    "usage": "",
+    "description": "An item used to dig sands. One time use.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Used to dig sand tiles in the summer Sandbox."
+  },
+  "Singularity Catalyst": {
+    "name": "Singularity Catalyst",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bb/SingularityCatalyst_ITEM.png/revision/latest?cb=20260426005253",
+    "how_to_get": "Jake’s Workshop",
+    "usage": "Allows the player to spawn Singularity during Starfall once.",
+    "description": "If placed above a sky full of stars, it will devour them all and continue to grow in size. ※Can only be used during Starfall biome",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Snowflake": {
+    "name": "Snowflake",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d8/Snowflakeitem2.gif/revision/latest?cb=20251220114407",
+    "how_to_get": "The Snowflake can be obtained by:; Playing the Memory Match (Can be 50, 150, 300, 600 and 900 Snowflakes per card).; Santa's bags (Small Bag = 50 Snowflakes, Large Bag = 250 Snowflakes).; The Snowman every 2 hours. (Gives 250 Snowflakes).; In level 0, 5, 9, 15, 19, 25, 29, 35, 39, 45 and 49 of both the Normal and Premium tracks of the Season IV Pass.; Item spawning on the ground. When collected, it will give 5 Snowflake. If the biome is Snowy or Aurora, a special Snowflake that will give 15 when collected. This item does not spawn when the biome is Hell. Can be automatically picked up with Item Collector/VIP+.; Tickets from the previous christmas event. (Normal Item Ticket = 25 Snowflakes, Rare Item Ticket = 75 Snowflakes, Mega Item Ticket = 150 Snowflakes).",
+    "usage": "+100% Luck — lasts 5 Rolls per Snowflake",
+    "description": "[Christmas 2025] A magical crystal filled with the chilling spirit of Christmas Gives you 5 of [Snowflake]: +100% Luck for Next 1 Roll.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Snowflake"
+  },
+  "Summer Medal 2025": {
+    "name": "Summer Medal 2025",
+    "category": "Materials",
+    "thumbnail_url": "",
+    "how_to_get": "Obtained from reaching tier 100 in the Summer 2025 RNG Pass.",
+    "usage": "",
+    "description": "A certificate awarded to those who have reached level 100 in the Summer Season Pass of 2025.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Tear of the Goddess": {
+    "name": "Tear of the Goddess",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a4/TearoftheGoddessInventory.gif/revision/latest?cb=20260802085015",
+    "how_to_get": "Brought from Lime for 28,000 Summer Points.; Obtained from Lime's quest reward.; Obtained from Tier 30 of the season pass (normal and premium).; Obtained with a chance of 0.39% from the Normal Summer Random Box, 1% from the Rare Summer Random Box and 1.91% from the Mega Summer Random Box.; Obtained from Memory Match.",
+    "usage": "+150,000 Event Aura Luck, +150,000 Luck — lasts 1 Roll",
+    "description": "[Summer 2026] As you drink the Tears imbued with Faith, you feel yourself becoming much lighter. Gives you [Tear of the Goddess]: +150,000 Event Aura Luck, +150,000 Luck for Next 1 Roll",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Tear of the Goddess"
+  },
+  "Tidal Shifter Potion": {
+    "name": "Tidal Shifter Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ee/TidalShifterPotionInventory.gif/revision/latest?cb=20260802124616",
+    "how_to_get": "Bought from Lime for 15,000 Summer Points (Max 15).; Obtained from Lime's quest reward.; Obtained from Tier 50 of the season pass (premium).; Obtained with a chance of 0.28% from the Normal Summer Random Box, 0.5% from the Rare Summer Random Box and 1.15% from the Mega Summer Random Box.",
+    "usage": "No Rolling Cooltime — lasts 10,000 Rolls",
+    "description": "[Summer 2026] Ride the 'Waves' of space and time! Sets the Rolling Cooltime to INSTANT for Next 10,000 Roll",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Tidal Shift"
+  },
+  "Tutorial Potion": {
+    "name": "Tutorial Potion",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e1/Tutorial_pot.png/revision/latest?cb=20250707023818",
+    "how_to_get": "The obtainment of it is different than other potions, due to it being apart of the tutorial. In order to obtain it, the player must follow the steps of the tutorial and it will be given as a reward for completion. To start the tutorial, you must have 10-200 rolls and it will begin.",
+    "usage": "+5,000 Luck — lasts 1 Roll",
+    "description": "The Tutorial Potion was added in Eon 1-6 and is a potion rewarded to new players (who are doing the tutorial) after rolling ten times and claiming the tutorial daily quest, which rewards them with 400 Coins and the Tutorial Potion.; It's appearance is similar to a Heavenly Potion.; The player can only roll Auras up to 1 in 400,000 rarity when this potion effect is active.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "First Blessing"
+  },
+  "Void Heart": {
+    "name": "Void Heart",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8b/VoidHeartGif.gif/revision/latest?cb=20250621085128",
+    "how_to_get": "After completing Dave's fourth quest \"A timeless land\", he will reward the player with the Void Heart Recipe, among other things. The Void Heart Recipe is an item in the inventory that falls under the \"Tool\" tab, and it must be used to unlock the recipe. After that, you can craft the Void Heart from Stella's Cauldron in the cave.",
+    "usage": "+30,000,000% Luck (300,000 Luck) — lasts 1 Roll",
+    "description": "Gives you [Shattered Heart]: +300,000 Luck for Next 1 Roll",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Shattered Heart"
+  },
+  "Winter Medal 2025": {
+    "name": "Winter Medal 2025",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/51/WinterMedalGIf.gif/revision/latest?cb=20250215041700",
+    "how_to_get": "Obtained from completing all of Lime's winter quests",
+    "usage": "",
+    "description": "The Winter Medal 2025 is an item added during the Winter Event. Upon completing Lime's fourth Christmas Quest, players will be awarded the Winter Medal 2025 which can then be subsequently exchanged for the Blossom: Frozen And Frigid aura.",
+    "flags": [
+      "fandom"
+    ]
+  },
+  "Wish Stars": {
+    "name": "Wish Stars",
+    "category": "Potions",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3c/Wish_Star.gif/revision/latest?cb=20250502132942",
+    "how_to_get": "The Wish Stars can be obtained by using the Meteoric Egg. Upon using the egg, you will be given 5 Wish Stars along with the Starfall Egg. Wish Stars can also be obtainable through the Season IV Pass at level 33 on both the Premium and Regular passes, and level 50 on the Premium pass.",
+    "usage": "5,000,000% (+50,000 Luck) — lasts 5 rolls",
+    "description": "[Easter 2025] [Christmas 2025] Gives 5 stack of [Wishing Star]: +50,000 Luck for 1 roll.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Wishing Star"
+  },
+  "Wish Stocking": {
+    "name": "Wish Stocking",
+    "category": "Materials",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d7/Wish_stocking.gif/revision/latest?cb=20251224060206",
+    "how_to_get": "Wish Stockings have a chance to appear in the Memory Match and a 0.5% (1 in 200) chance to be obtained from the Roulette. After obtaining the Wish Stocking, it will appear in the Christmas section of your inventory.",
+    "usage": "",
+    "description": "[Christmas 2025] When used in the Snowy or Aurora biome, Someone who has heard your wish will come to you bearing a gift.",
+    "flags": [
+      "fandom"
+    ],
+    "effects": "Summons Santa"
   }
 }

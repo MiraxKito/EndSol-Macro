@@ -204,6 +204,24 @@ export const BUILTIN_CALIBRATION_PRESETS = [
         0,
         0
       ],
+      "autoroll_status_region": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "autoroll_toggle_button": [
+        0,
+        0
+      ],
+      "eden_contract_extra1_button": [
+        0,
+        0
+      ],
+      "eden_contract_extra2_button": [
+        0,
+        0
+      ],
       "inventory_menu": [
         32,
         515
@@ -458,6 +476,24 @@ export const BUILTIN_CALIBRATION_PRESETS = [
         0
       ],
       "memory_match_close_button": [
+        0,
+        0
+      ],
+      "autoroll_status_region": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "autoroll_toggle_button": [
+        0,
+        0
+      ],
+      "eden_contract_extra1_button": [
+        0,
+        0
+      ],
+      "eden_contract_extra2_button": [
         0,
         0
       ]

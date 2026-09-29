@@ -95,6 +95,8 @@ const CALIBRATION_GROUPS: CalibrationGroup[] = [
             { key: "quest_board_left_arrow", label: "Quest Board Left Arrow" },
             { key: "quest_board_right_arrow", label: "Quest Board Right Arrow" },
             { key: "quest_board_close_button", label: "Quest Board Close Button" },
+            { key: "autoroll_status_region", label: "Auto-Roll Status OCR Region (Auto-roll: ON/OFF)", isRegion: true },
+            { key: "autoroll_toggle_button", label: "Auto-Roll Toggle Button" },
         ]
     },
     {
@@ -187,8 +189,6 @@ const MOUSE_ACTION_REQUIREMENTS: MouseActionRequirement[] = [
 
     { page: "Movements", feature: "Auto Complete Basic Obby", calibrations: ["Movements Calibration"] },
     { page: "Movements", feature: "Use Float Aura", calibrations: ["Equip Aura Calibration", "Inventory Click Calibration"] },
-    { page: "Movements", feature: "Easter Egg Collection", calibrations: ["Movements Calibration"] },
-    { page: "Movements", feature: "Easter Egg OCR Special Detection", calibrations: ["Movements Calibration"] },
 
     { page: "Potion Craft", feature: "Potion Auto Craft / Switching", calibrations: ["Potion Crafting Calibration"] },
 
@@ -308,8 +308,6 @@ export default function CalibrationPage() {
     const [pendingPreset, setPendingPreset] = useState<any>(null);
     const [presetStatus, setPresetStatus] = useState<string>("");
     const [calibrationName, setCalibrationName] = useState("");
-    const [savedCalibrations, setSavedCalibrations] = useState<string[]>([]);
-    const [savedCalibrationProfiles, setSavedCalibrationProfiles] = useState<any[]>([]);
     const [calibrationStatus, setCalibrationStatus] = useState("");
 
 
@@ -346,33 +344,8 @@ export default function CalibrationPage() {
         };
     }, [config, setConfig]);
 
-    const refreshSavedCalibrations = async () => {
-        const result = await (window.pywebview?.api as any)?.list_calibrations?.();
-        if (result?.success) {
-            setSavedCalibrations(result.files || []);
-            setSavedCalibrationProfiles(result.profiles || []);
-        }
-    };
-
-    useEffect(() => { void refreshSavedCalibrations(); }, []);
-
-    const saveNamedCalibration = async () => {
-        const name = calibrationName.trim();
-        if (!name) { setCalibrationStatus("Enter a calibration name first."); return; }
-        const result = await (window.pywebview?.api as any)?.save_calibration?.(name);
-        setCalibrationStatus(result?.success ? `Saved to Calibrations as ${result.name}.` : (result?.error || "Could not save calibration."));
-        if (result?.success) { setCalibrationName(result.name); await refreshSavedCalibrations(); }
-    };
-
-    const createCalibrationBackup = async () => {
-        const result = await (window.pywebview?.api as any)?.backup_current_calibration?.();
-        if (!result?.success) {
-            throw new Error(result?.error || "Could not create a calibration backup.");
-        }
-    };
-
     const exportCalibrationFile = async () => {
-        const result = await (window.pywebview?.api as any)?.export_calibration_file?.();
+        const result = await (window.pywebview?.api as any)?.export_calibration_file?.(calibrationName.trim());
         const details = result?.validation_errors?.slice?.(0, 5)?.join("; ");
         setCalibrationStatus(result?.success ? `Calibration exported to ${result.path} (${result.count || 0} values).` : ((result?.error || "Export cancelled.") + (details ? ` ${details}` : "")));
     };
@@ -384,24 +357,13 @@ export default function CalibrationPage() {
         if (result?.success) {
             const latest = await window.pywebview?.api?.get_config?.();
             if (latest) setConfig(latest as AppConfig);
-            await refreshSavedCalibrations();
         }
     };
 
-    const loadNamedCalibration = async (name: string) => {
-        if (!config) { setCalibrationStatus("Configuration is not loaded yet."); return; }
-        try {
-            await createCalibrationBackup();
-            const result = await (window.pywebview?.api as any)?.load_calibration?.(name);
-            if (!result?.success || !result.calibrations) {
-                const details = result?.validation_errors?.slice?.(0, 5)?.join("; ");
-                setCalibrationStatus((result?.error || "Could not load calibration.") + (details ? ` ${details}` : ""));
-                return;
-            }
-            await saveConfig({ ...config, ...result.calibrations, calibration_preset_resolution: result.resolution || config.calibration_preset_resolution, calibration_preset_scale: result.scale || config.calibration_preset_scale, calibration_preset_mode: result.mode || config.calibration_preset_mode } as AppConfig);
-            setCalibrationStatus(`Loaded ${name}. Previous values were backed up.`);
-        } catch (err) {
-            setCalibrationStatus(String(err));
+    const createCalibrationBackup = async () => {
+        const result = await (window.pywebview?.api as any)?.backup_current_calibration?.();
+        if (!result?.success) {
+            throw new Error(result?.error || "Could not create a calibration backup.");
         }
     };
 
@@ -583,14 +545,12 @@ export default function CalibrationPage() {
             </div>
 
             <div className="card" style={{ marginBottom: "16px" }}>
-                <div className="card-header"><div className="card-icon">💾</div><div><h3>Custom Calibrations</h3><p>Export the current coordinates or import a named profile. A backup is created before every import or preset replacement.</p></div></div>
+                <div className="card-header"><div className="card-icon">💾</div><div><h3>Custom Calibrations</h3><p>Export the current coordinates to a file named after the field, or import a calibration file picked in the file explorer. A backup is created before every import or preset replacement.</p></div></div>
                 <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                     <button className="btn btn-accent" onClick={exportCalibrationFile}>Export calibration file</button>
                     <button className="btn" onClick={importCalibrationFile}>Import calibration file</button>
-                    <input className="form-input" value={calibrationName} onChange={e => setCalibrationName(e.target.value)} placeholder="Local profile name" style={{ flex: 1, minWidth: "180px" }} />
-                    <button className="btn" onClick={saveNamedCalibration}>Save local profile</button>
+                    <input className="form-input" value={calibrationName} onChange={e => setCalibrationName(e.target.value)} placeholder="File name for export" style={{ flex: 1, minWidth: "180px" }} />
                 </div>
-                {savedCalibrations.length > 0 && <div style={{ marginTop: "10px" }}><div className="form-hint">Local profiles (copied JSON files are detected automatically):</div><div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "6px" }}>{savedCalibrations.filter(name => !name.startsWith("_backup_")).map(name => { const profile = savedCalibrationProfiles.find(item => item.name === name); const target = [profile?.resolution, profile?.scale, profile?.mode].filter(Boolean).join(" · "); const label = target ? `${name} — ${target}` : name; return <button className="btn" key={name} disabled={profile ? profile.valid === false : false} title={profile?.error || ""} onClick={() => void loadNamedCalibration(name)}>{label}{profile?.valid === false ? " (invalid)" : ""}</button>; })}</div></div>}
                 {calibrationStatus && <div className="form-hint" style={{ marginTop: "8px" }}>{calibrationStatus}</div>}
             </div>
 

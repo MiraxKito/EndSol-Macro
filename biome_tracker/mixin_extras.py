@@ -1,63 +1,144 @@
 """
-Optional extras for EndSol Macro (v1.0.7).
+Optional extras for EndSol Macro (v1.0.8).
 
 All extra toggles default to OFF and live in the config:
   - dry_run                  -> log actions instead of performing them
   - key_release_failsafe     -> force-release stuck movement keys after reconnect
-  - daily_stats_webhook      -> one Discord summary message per day at ~00:05
+  - daily_stats_webhook      -> one Discord summary per completed day
+                                (00:00 UTC window), stored in a local JSON
   - rare_aura_desktop_notify -> Windows toast on Legendary+ auras
 
 Always-available (no config): feature schedule view, config profiles,
 clear-logs. See main.py Api for the UI entry points.
 """
 
+import json
 import os
 import subprocess
 import threading
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import requests
 
 from .base_support import current_ver
+from .config import APPDATA_BASE
 
-_DAILY_KEYS = ("auras", "biomes", "mm_pairs")
+_DAILY_KEYS = ("auras", "biomes", "mm_pairs", "fish")
+_DAILY_KEEP_DAYS = 14  # prune old day buckets so the JSON store stays small
 _RARE_AURA_THRESHOLD = 100_000  # Legendary and above
 
 
 class ExtrasMixin:
-    # ── session counters ────────────────────────────────────────────────
-    def _daily_bump(self, key, n=1):
+    # ── persistent daily stats ──────────────────────────────────────────
+    # Daily stats are stored OUTSIDE the config, in
+    # %LOCALAPPDATA%/EndSolMacro/daily_stats.json, so the totals survive
+    # restarts instead of describing only the current session. The stats
+    # day follows the game's daily reset: 00:00 UTC → 00:00 UTC
+    # (00:00:05 UTC is the first second that belongs to the new day).
+    # User-facing timestamps are shown in the PC's local timezone.
+
+    def _daily_stats_path(self):
+        return APPDATA_BASE / "daily_stats.json"
+
+    def _daily_day_key(self, dt=None):
+        dt = dt or datetime.now(timezone.utc)
+        return dt.strftime("%Y-%m-%d")
+
+    def _daily_load(self):
         try:
-            counters = getattr(self, "_daily_counters", None)
-            if counters is None:
-                counters = {}
-                self._daily_counters = counters
-            if key in _DAILY_KEYS:
-                counters[key] = int(counters.get(key, 0)) + int(n)
+            payload = json.loads(self._daily_stats_path().read_text(encoding="utf-8"))
+            if isinstance(payload, dict) and isinstance(payload.get("days"), dict):
+                return payload
+        except Exception:
+            pass
+        return {"version": 1, "days": {}}
+
+    def _daily_save(self, payload):
+        try:
+            path = self._daily_stats_path()
+            path.parent.mkdir(parents=True, exist_ok=True)
+            payload["version"] = 1
+            payload["updated_at"] = datetime.now(timezone.utc).isoformat()
+            tmp = path.with_name(path.name + ".tmp")
+            tmp.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+            os.replace(str(tmp), str(path))
         except Exception:
             pass
 
-    def _daily_snapshot(self):
-        """Return current counters and reset them (fish handled by snapshot)."""
-        counters = dict(getattr(self, "_daily_counters", {}) or {})
+    def _daily_entry(self, payload, day_key):
+        days = payload.setdefault("days", {})
+        entry = days.get(day_key)
+        if not isinstance(entry, dict):
+            entry = {}
+            days[day_key] = entry
         for key in _DAILY_KEYS:
-            counters.setdefault(key, 0)
-        self._daily_counters = {k: 0 for k in _DAILY_KEYS}
+            if not isinstance(entry.get(key), (int, float)):
+                entry[key] = 0
+        if not isinstance(entry.get("playtime_seconds"), (int, float)):
+            entry["playtime_seconds"] = 0
+        return entry
+
+    def _daily_prune(self, payload):
+        days = payload.get("days")
+        if isinstance(days, dict) and len(days) > _DAILY_KEEP_DAYS:
+            for old in sorted(days)[: len(days) - _DAILY_KEEP_DAYS]:
+                days.pop(old, None)
+
+    def _daily_add(self, key, n=1):
+        try:
+            n = int(n)
+            if key not in _DAILY_KEYS or n <= 0:
+                return
+            payload = self._daily_load()
+            entry = self._daily_entry(payload, self._daily_day_key())
+            entry[key] = int(entry.get(key, 0) or 0) + n
+            self._daily_prune(payload)
+            self._daily_save(payload)
+        except Exception:
+            pass
+
+    def _daily_bump(self, key, n=1):
+        """Record one event into the persistent daily stats store."""
+        self._daily_add(key, n)
+
+    def _flush_daily_fish(self):
+        """Move the fishing session counter delta into the daily store."""
         try:
             state = getattr(self, "_fishing_runtime_state", None) or {}
             current_fish = int(state.get("fish_caught_count", 0) or 0)
             last_fish = int(getattr(self, "_daily_last_fish", 0) or 0)
-            counters["fish"] = max(0, current_fish - last_fish)
             self._daily_last_fish = current_fish
+            delta = current_fish - last_fish
+            if delta > 0:
+                self._daily_add("fish", delta)
         except Exception:
-            counters["fish"] = 0
-        return counters
+            pass
+
+    def _flush_daily_playtime(self):
+        """Accumulate real macro runtime into today's daily stats entry."""
+        try:
+            stamp = getattr(self, "_daily_play_stamp", None)
+            now = time.time()
+            self._daily_play_stamp = now
+            if not stamp:
+                return
+            delta = int(now - stamp)
+            if delta <= 0:
+                return
+            payload = self._daily_load()
+            entry = self._daily_entry(payload, self._daily_day_key())
+            entry["playtime_seconds"] = int(entry.get("playtime_seconds", 0) or 0) + delta
+            self._daily_prune(payload)
+            self._daily_save(payload)
+        except Exception:
+            pass
 
     # ── daily stats webhook ─────────────────────────────────────────────
     def start_daily_stats_loop(self):
         if getattr(self, "_daily_stats_thread", None) and self._daily_stats_thread.is_alive():
             return
+        self._daily_play_stamp = time.time()
         self._daily_stats_thread = threading.Thread(
             target=self._daily_stats_loop, name="Daily Stats", daemon=True
         )
@@ -66,29 +147,59 @@ class ExtrasMixin:
     def _daily_stats_loop(self):
         while getattr(self, "detection_running", False):
             try:
+                self._flush_daily_playtime()
+                self._flush_daily_fish()
                 if self.config.get("daily_stats_webhook", False):
-                    now = datetime.now()
-                    day_key = now.strftime("%Y-%m-%d")
-                    if now.hour == 0 and now.minute >= 5 and getattr(self, "_daily_stats_sent_day", None) != day_key:
+                    now_utc = datetime.now(timezone.utc)
+                    day_key = self._daily_day_key(now_utc)
+                    # Send once inside the first hour after the 00:00 UTC
+                    # reset (= 03:00 MSK). The summary always covers the
+                    # day that just finished, not the running session.
+                    if now_utc.hour == 0 and getattr(self, "_daily_stats_sent_day", None) != day_key:
                         self._daily_stats_sent_day = day_key
                         self.send_daily_stats_webhook()
             except Exception as e:
                 self.error_logging(e, "daily stats loop")
             time.sleep(20)
+        # Macro stopped — flush the remaining runtime and fish counters.
+        try:
+            self._flush_daily_playtime()
+            self._flush_daily_fish()
+        except Exception:
+            pass
 
     def send_daily_stats_webhook(self):
-        stats = self._daily_snapshot()
+        """Send the summary of the last completed stats day (00:00 UTC)."""
+        try:
+            self._flush_daily_playtime()
+            self._flush_daily_fish()
+        except Exception:
+            pass
+        day_key = self._daily_day_key(datetime.now(timezone.utc) - timedelta(days=1))
+        entry = (self._daily_load().get("days") or {}).get(day_key)
+        if not isinstance(entry, dict):
+            self.append_log(f"[DailyStats] No data recorded for {day_key} - summary skipped.")
+            return
+        stats = {key: int(entry.get(key, 0) or 0) for key in _DAILY_KEYS}
+        playtime = int(entry.get("playtime_seconds", 0) or 0)
+        hours, minutes = divmod(playtime // 60, 60)
+        try:
+            local_tz = datetime.now().astimezone().tzname() or "local"
+        except Exception:
+            local_tz = "local"
         lines = [
+            f"**Stats day:** {day_key} (00:00-00:00 UTC / {local_tz} local time)",
             f"**Auras found:** {stats.get('auras', 0)}",
             f"**Biomes detected:** {stats.get('biomes', 0)}",
             f"**Memory Match pairs:** {stats.get('mm_pairs', 0)}",
             f"**Fish caught:** {stats.get('fish', 0)}",
+            f"**Macro runtime:** {hours}h {minutes}m",
         ]
         embed = {
             "title": "EndSol Macro — daily summary",
             "description": "\n".join(lines),
             "color": 0x7C5BF5,
-            "footer": {"text": f"EndSol Macro {current_ver}"},
+            "footer": {"text": f"EndSol Macro {current_ver} · day resets at 00:00 UTC"},
         }
         urls = [u for u in (getattr(self, "webhook_urls", []) or []) if isinstance(u, str) and u.strip()]
         if not urls:
@@ -102,7 +213,7 @@ class ExtrasMixin:
                     sent += 1
             except Exception as e:
                 self.error_logging(e, "daily stats webhook send")
-        self.append_log(f"[DailyStats] Summary sent to {sent}/{len(urls)} webhook(s): {stats}")
+        self.append_log(f"[DailyStats] Summary for {day_key} sent to {sent}/{len(urls)} webhook(s): {stats}")
 
     # ── dry-run mode ────────────────────────────────────────────────────
     def dry_run_active(self):
@@ -212,9 +323,6 @@ class ExtrasMixin:
             {"name": "Strange Controller", "enabled": bool(cfg.get("strange_controller")),
              "active": bool(getattr(self, "_br_sc_running", False)),
              "next_in_sec": _next_from_last("last_sc_time", "sc_duration", 30)},
-            {"name": "Easter Egg Collection", "enabled": bool(cfg.get("collect_easter_egg")),
-             "active": bool(getattr(self, "_egg_collecting", False)),
-             "next_in_sec": _next_from_last("last_egg_collect_time", "egg_collect_interval_min", 25)},
             {"name": "Merchant Teleporter", "enabled": bool(cfg.get("merchant_teleporter")),
              "active": bool(getattr(self, "_mt_running", False)),
              "next_in_sec": _next_from_last("last_mt_time", "merchant_interval_min", 30)},

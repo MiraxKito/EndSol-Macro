@@ -15,12 +15,122 @@ import keyboard as kb
 import json, requests, time, os, threading, re, webbrowser, random, keyboard, pyautogui, autoit, psutil, \
     locale, win32gui, win32process, win32con, ctypes, queue, mouse, sys, hashlib, winocr, asyncio, win32api, traceback
 
-current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.0.7")
+current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.0.8")
 current_version = current_ver
 
 rare_biomes = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY"]
 admin_biomes = ["THE HYPERSPACE REALM", "赤い満月", "THE NULL'S EXISTENCE", "THE CITADEL OF ORDERS"]
 special_message_biomes = set(rare_biomes + admin_biomes)
+
+# Canonical Roblox client executables + a tolerant client check: multi-instance
+# launchers commonly start secondary clients from a RENAMED copy of
+# RobloxPlayerBeta.exe, and a name-only filter made those windows invisible
+# to window detection (real session 2026-09-28: only one of two running
+# accounts was detected). The tolerant check also accepts any process whose
+# exe name or full path contains 'roblox', excluding non-client helpers.
+ROBLOX_EXE_NAMES = {"robloxplayerbeta.exe", "windows10universal.exe"}
+ROBLOX_NONCLIENT_HINTS = ("crashhandler", "launcher", "studio",
+                          "multiplerobloxinstances", "multipleinstances")
+
+
+def is_roblox_process(info: dict) -> bool:
+    """True when a process is a Roblox CLIENT (window finding / presence).
+
+    Matches the canonical executable names, plus renamed client copies:
+    multi-instance launchers start secondary clients from a renamed
+    RobloxPlayerBeta.exe, which must still be detected. A process counts as
+    a client when its exe lives in a Roblox 'Versions' folder (where the
+    game client always lives) or its name carries a roblox client marker —
+    launcher/helper processes (MultipleRobloxInstances.exe, crash handler,
+    Studio) are excluded so their windows never enter the instance list
+    (real session 2026-09-28: the launcher window was listed as an
+    instance and even stole a client's log mapping)."""
+    info = info or {}
+    name = str(info.get("name") or "").casefold()
+    exe = str(info.get("exe") or "").casefold()
+    if name in ROBLOX_EXE_NAMES:
+        return True
+    if any(hint in name or hint in exe for hint in ROBLOX_NONCLIENT_HINTS):
+        return False
+    if exe:
+        if re.search(r"roblox[^\\/]*[\\/]versions[\\/]", exe):
+            return True
+    if not name and not exe:
+        return False
+    if "roblox" in name and any(m in name for m in ("player", "client", "universal")):
+        return True
+    return False
+
+
+# Visible-top-level Roblox window scan, cached for ~1s. Windows are
+# enumerated FIRST and only the few unique window PIDs are classified
+# (name + exe per PID). Never exe-query the whole process table per poll:
+# that made the whole app lag (real session 2026-09-28).
+_WINDOW_SCAN_LOCK = threading.Lock()
+_WINDOW_SCAN_CACHE: dict = {"windows": None, "at": 0.0}
+_WINDOW_SCAN_TTL = 1.0
+
+
+def roblox_top_windows() -> list[dict]:
+    """Visible top-level Roblox CLIENT windows: [{hwnd, pid, title, rect, exe,
+    proc_name}], sorted by HWND, cached for ~1 second."""
+    now = time.time()
+    with _WINDOW_SCAN_LOCK:
+        cached = _WINDOW_SCAN_CACHE.get("windows")
+        if cached is not None and now - float(_WINDOW_SCAN_CACHE.get("at") or 0.0) < _WINDOW_SCAN_TTL:
+            return [dict(w) for w in cached]
+    if os.name != "nt":
+        return []
+    out: list[dict] = []
+    try:
+        import win32con
+        import win32gui
+        import win32process
+        by_pid: dict[int, list[dict]] = {}
+
+        def visit(hwnd: int, _param: object) -> bool:
+            try:
+                if not win32gui.IsWindowVisible(hwnd) or not win32gui.IsWindow(hwnd):
+                    return True
+                exstyle = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+                if exstyle & win32con.WS_EX_TOOLWINDOW:
+                    return True
+                _tid, pid = win32process.GetWindowThreadProcessId(hwnd)
+                left, top, right, bottom = win32gui.GetWindowRect(hwnd)
+                by_pid.setdefault(int(pid), []).append({
+                    "hwnd": int(hwnd), "pid": int(pid),
+                    "title": win32gui.GetWindowText(hwnd) or "",
+                    "rect": [left, top, right, bottom],
+                })
+            except Exception:
+                pass
+            return True
+
+        win32gui.EnumWindows(visit, None)
+        for pid, wins in by_pid.items():
+            name = ""
+            try:
+                name = str(psutil.Process(pid).name() or "")
+            except Exception:
+                continue
+            exe = ""
+            try:
+                exe = str(psutil.Process(pid).exe() or "")
+            except Exception:
+                exe = ""
+            if not is_roblox_process({"name": name, "exe": exe}):
+                continue
+            for w in wins:
+                w["exe"] = exe or name
+                w["proc_name"] = name
+            out.extend(wins)
+        out.sort(key=lambda w: (w["hwnd"], w["pid"]))
+    except Exception:
+        return []
+    with _WINDOW_SCAN_LOCK:
+        _WINDOW_SCAN_CACHE["windows"] = [dict(w) for w in out]
+        _WINDOW_SCAN_CACHE["at"] = time.time()
+    return [dict(w) for w in out]
 
 
 # в”Ђв”Ђ Discord webhook helpers в”Ђв”Ђ

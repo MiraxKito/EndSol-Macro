@@ -51,12 +51,12 @@ export default function InstructionsPage() {
       </Section>
 
       <Section icon="🗺️" title="Movements and paths">
-        <p><b>Movements</b> controls saved routes such as Obby, Eden, and egg collection. Paths replay their recorded timestamps and key events; they are not recalculated from a generic speed formula.</p>
+        <p><b>Movements</b> controls saved routes such as Obby and Eden. Paths replay their recorded timestamps and key events; they are not recalculated from a generic speed formula.</p>
         <ul><li>Use the correct VIP/Non-VIP path option for the account.</li><li>Keep Roblox focused and use the same camera alignment as when the route was recorded.</li><li>Do not edit path JSON timestamps unless you intentionally want different timing.</li></ul>
       </Section>
 
       <Section icon="🛤️" title="Custom Paths">
-        <p><b>Custom Paths</b> lets you record your own walk routes and assign them to features (Obby, Eden, Memory Match, Quest Board, egg routes). A custom path always overrides the built-in default route for that feature.</p>
+        <p><b>Custom Paths</b> lets you record your own walk routes and assign them to features (Obby, Eden, Memory Match, Quest Board). A custom path always overrides the built-in default route for that feature.</p>
         <ol><li>Press <b>Record new path (open Recorder)</b> on the Custom Paths page and perform the route in Roblox.</li><li>Stop the recording in the Recorder window, then save it on this page with a name and an optional feature.</li><li>Assign a saved path to a feature with the dropdown, or remove the assignment with <b>Custom:</b> (empty) to fall back to the default route.</li></ol>
         <Tip>Record routes at the same resolution and window mode you play with — path coordinates are resolution-dependent.</Tip>
       </Section>
@@ -77,7 +77,7 @@ export default function InstructionsPage() {
       </Section>
 
       <Section icon="🎁" title="Daily (event) Rewards">
-        <p>With <b>Daily Rewards</b> enabled in <b>Misc</b>, the macro claims the daily check-in automatically at 03:00 MSK. To verify the flow at any time, use the buttons under the toggle:</p>
+        <p>With <b>Daily Rewards</b> enabled in <b>Misc</b>, the macro claims the daily check-in automatically right after the daily reset at 00:00 UTC. To verify the flow at any time, use the buttons under the toggle:</p>
         <ul><li><b>Collect now (test)</b> — runs one claim attempt immediately and reports the OCR result (requires the macro to be started and Roblox focused).</li><li><b>Reset claimed date</b> — clears the stored date so the next window collects again.</li></ul>
       </Section>
 
@@ -87,7 +87,13 @@ export default function InstructionsPage() {
       </Section>
 
       <Section icon="🪟" title="Multiple-Instances and safety">
-        <p>Multiple-Instances is designed for Roblox windows started by the current Windows user. The first login is manual; saved profiles are runtime records for reconnect. Secondary windows remain passive and do not receive foreground fishing, pathing, OCR, or mouse automation.</p>
+        <p>Multiple-Instances is built in: enable the mode on its page, add your accounts once (sessions are stored encrypted on this PC), launch windows from the panel, pick the <b>main window</b> (or leave it automatic — the actively played window is detected by its log), and start the macro.</p>
+        <ul>
+          <li><b>Main window:</b> every full feature — detector, fishing, quests, Memory Match, merchant, item usage — runs here, and the main window's own Roblox log is read for biome/aura detection.</li>
+          <li><b>Secondary windows:</b> they receive ordered Anti-AFK jumps and per-window biome/aura/disconnect alerts from their own logs (send them to your webhooks).</li>
+          <li><b>Safe timing:</b> secondary Anti-AFK only jumps in free windows of the main cycle — it never steals focus during a fishing bite, sale, merchant run, or any other active automation. If the main cycle ever reports busy for unusually long (a stuck state), a safety cap (default 5 minutes) forces the jump so secondary windows still stay alive.</li>
+          <li><b>Reconnect safety:</b> reconnect and fishing failsafe close only the main window's process — secondary windows are never killed.</li>
+        </ul>
         <p>Never share webhook URLs, cookies, private-server links, or account identifiers. Stop the macro before changing calibration or closing Roblox.</p>
       </Section>
 

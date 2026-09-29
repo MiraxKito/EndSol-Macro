@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useT } from "../i18n";
 import "./UpdateBanner.css";
 
 interface UpdateBannerProps {
@@ -10,6 +11,7 @@ interface UpdateBannerProps {
 }
 
 export default function UpdateBanner({ version, downloadUrl, updateStatus, onDismiss, onDontAskAgain }: UpdateBannerProps) {
+    const t = useT();
     const [isUpdatingLocal, setIsUpdatingLocal] = useState(false);
 
     const handleUpdate = async () => {
@@ -40,25 +42,34 @@ export default function UpdateBanner({ version, downloadUrl, updateStatus, onDis
                 </span>
                 <span className="update-text">
                     {failed
-                        ? "Update failed. Please try downloading again."
+                        ? t("Update failed. Please try downloading again.")
                         : isDone
-                            ? `Updated! ${doneFilename || "Restarting"}`
+                            ? (t("Updated!") + " " + (doneFilename || t("Restarting")))
                             : isUpdating
-                                ? "Downloading update..."
-                                : `New EndSol Macro ${version} is available!!!`
+                                ? t("Downloading update...")
+                                : `${t("New EndSol Macro version is available")}: ${version}`
                     }
                 </span>
             </div>
             {!isUpdating && !isDone && (
                 <div className="update-banner-actions">
                     <button className="update-btn update-btn-primary" onClick={handleUpdate}>
-                        {failed ? "Retry Update" : "Update Now"}
+                        {failed ? t("Retry Update") : t("Update")}
                     </button>
-                    <button className="update-btn update-btn-secondary" onClick={onDismiss}>
-                        Dismiss
+                    {!failed && (
+                        <button className="update-btn update-btn-secondary" onClick={onDontAskAgain}>
+                            {t("Don't notify again")}
+                        </button>
+                    )}
+                    <button className="update-banner-close" title={t("Close")} aria-label={t("Close")} onClick={onDismiss}>
+                        ✕
                     </button>
-                    <button className="update-btn update-btn-secondary" onClick={onDontAskAgain}>
-                        Don't Ask Again
+                </div>
+            )}
+            {(isUpdating || isDone) && !failed && (
+                <div className="update-banner-actions">
+                    <button className="update-banner-close" title={t("Close")} aria-label={t("Close")} onClick={onDismiss}>
+                        ✕
                     </button>
                 </div>
             )}

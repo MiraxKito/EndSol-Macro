@@ -1,5 +1,12 @@
 /* ━━━ EndSol Macro — Global Styles ━━━ */
 
+/* The app is always dark; without this the browser renders native form
+   controls (select dropdowns, checkboxes, scrollbars) in light colors when
+   the OS theme is light. */
+:root {
+  color-scheme: dark;
+}
+
 :root,
 [data-theme="midnight"] {
   /* Background layers */
@@ -1524,7 +1531,6 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;

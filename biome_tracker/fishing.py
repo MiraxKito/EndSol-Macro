@@ -55,6 +55,32 @@ AUTOIT_KEY_MAP = {
     "down": "DOWN",
 }
 
+def _multi_main_focus_ok(cfg: dict[str, Any] | None) -> bool:
+    """Multi-instance guard: True unless a secondary-window action may hold
+    the focus right now.
+
+    In multi-instance mode secondary windows receive Anti-AFK jumps, but only
+    in FREE windows of the main cycle (the multi-instance loop checks the
+    busy flags). This is the mirror-side guard: while the focus is anywhere
+    but the MAIN Roblox window, the fishing loop must not act on the bite
+    indicator — the pixel read can see the overlapping secondary window and
+    clicks would land on the wrong window. The loop just keeps polling; as
+    soon as the jump restores focus (about 1.5 s), the indicator is still
+    there and the bite is handled normally.
+    """
+    try:
+        if not (cfg or {}).get("multiple_instances_enabled", False):
+            return True
+        from . import multi_instance
+        hwnd = multi_instance.get_main_hwnd()
+        if not hwnd:
+            return True
+        import win32gui
+        return win32gui.GetForegroundWindow() == hwnd
+    except Exception:
+        return True
+
+
 def _safe_type_text(text: str, cfg: dict[str, Any] | None = None) -> None:
     text = str(text)
     if cfg and cfg.get("azerty_mode", False):
@@ -185,6 +211,10 @@ def load_fishing_config(raw_config: dict[str, Any] | None = None) -> dict[str, A
         "fishing_pre_reel_wait": _coerce_float(raw.get("fishing_pre_reel_wait"), 0.18, 0.05, 0.5),
         "fishing_bar_color_tolerance": _coerce_int(raw.get("fishing_bar_color_tolerance"), 12, 3, 40),
         "fishing_bar_scan_height": _coerce_int(raw.get("fishing_bar_scan_height"), 3, 1, 30),
+
+        # Multi-instance: the fishing loop must know whether secondary-window
+        # Anti-AFK jumps can hold the focus (see _multi_main_focus_ok).
+        "multiple_instances_enabled": bool(raw.get("multiple_instances_enabled", False)),
     }
 
 
@@ -1156,6 +1186,13 @@ def run_fishing_loop(
             pixel = _get_pixel_rgb(detect_x, detect_y, sct=sct)
             if not is_indicator_active(pixel):
                 time.sleep(float(cfg.get("fishing_idle_poll_sleep", 0.004)))
+                continue
+
+            # Multi-instance: never start a bite while the focus is on a
+            # secondary window (Anti-AFK jump in progress). Wait for the
+            # jump to restore focus - the bite indicator stays visible.
+            if not _multi_main_focus_ok(cfg):
+                time.sleep(0.05)
                 continue
 
             _set_busy(True)

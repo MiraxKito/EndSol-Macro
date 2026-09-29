@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 type Entry = Record<string, any>;
@@ -151,6 +151,14 @@ const fmtNum = (n: any) => {
 
 const prettyName = (key: any) => String(key ?? "").replace(/_/g, " ").trim();
 
+/** Display name for a dataset entry: a repaired record may carry its real
+ *  wiki name (e.g. the "Fragments_of_the_Crimson_Moon|紅月の災厄" key is the
+ *  separate craftable aura "Calamity of the Crimson Moon"). */
+const entryDisplayName = (key: any, info: Entry | null | undefined) => {
+  const named = String((info as any)?.name ?? "").trim();
+  return named || prettyName(key);
+};
+
 const SOURCE_LABELS: Record<string, string> = {
   fandom: "Sol's RNG Fandom Wiki",
   fandom_article: "Sol's RNG Fandom Wiki",
@@ -168,7 +176,10 @@ const auraRarityText = (e: Entry) => {
   if (!e) return "Unknown";
   if (isCraftableAura(e) || isPotionAura(e)) {
     const rn = e.rarity_name ? canonicalRarity(e.rarity_name) : "";
-    return `${rn ? rn + " · " : ""}Crafted — see Obtainment`;
+    // Potion auras roll with a FIXED chance (luck does not apply) — they
+    // are not crafted, so keep the wording honest for each badge.
+    const kind = isCraftableAura(e) ? "Crafted — see Obtainment" : "Fixed chance — see Obtainment";
+    return `${rn ? rn + " · " : ""}${kind}`;
   }
   const native = Number(e.native_rarity);
   const global = Number(e.rarity);
@@ -188,6 +199,8 @@ const auraRarityText = (e: Entry) => {
 
 const searchableText = (name: string, info: Entry) => {
   const bits = [prettyName(name)];
+  const named = String(info?.name ?? "").trim();
+  if (named) bits.push(named.toLowerCase());
   const excl = Array.isArray(info?.exclusive_biomes) ? info.exclusive_biomes : [];
   if (excl.length) bits.push(...excl.map(prettyName));
   const exclRaw = Array.isArray(info?.exclusive_biome) ? info.exclusive_biome : [];
@@ -206,12 +219,25 @@ export default function SolsBookPage() {
   const [gauntlets, setGauntlets] = useState<MapData>({});
   const [auras, setAuras] = useState<MapData>({});
   const [section, setSection] = useState<"biomes" | "auras" | "items" | "gauntlets">("biomes");
+  const [queryInput, setQueryInput] = useState("");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailTab, setDetailTab] = useState<"info" | "media">("info");
+  // Live wiki detail is merged into a SEPARATE override store instead of the
+  // big dataset maps: mutating `auras`/`biomes` recreated the whole map and
+  // re-filtered/re-rendered the entire 479-row list on every detail load.
+  const [auraDetailOverrides, setAuraDetailOverrides] = useState<MapData>({});
+  const [biomeDetailOverrides, setBiomeDetailOverrides] = useState<MapData>({});
+
+  // Search stays responsive on huge datasets: the input updates instantly,
+  // the actual filter runs debounced.
+  useEffect(() => {
+    const t = window.setTimeout(() => setQuery(queryInput), 150);
+    return () => window.clearTimeout(t);
+  }, [queryInput]);
 
   const load = async () => {
     setLoading(true);
@@ -267,8 +293,13 @@ export default function SolsBookPage() {
     })
     .sort(([a], [b]) => a.localeCompare(b)), [data, query, category]);
 
-  const entry = selected ? data[selected] : null;
+  const entryBase = selected ? data[selected] : null;
+  const entryOverride = selected
+    ? (section === "auras" ? auraDetailOverrides[selected] : section === "biomes" ? biomeDetailOverrides[selected] : undefined)
+    : undefined;
+  const entry = entryBase ? { ...entryBase, ...(entryOverride || {}) } : null;
   const accent = entryAccent(entry, section);
+  const selectEntry = useCallback((name: string) => setSelected(name), []);
 
   const auraImageUrls = useMemo(() => {
     if (section !== "auras" || !entry) return [];
@@ -311,7 +342,7 @@ export default function SolsBookPage() {
     setDetailLoading(true);
     void window.pywebview.api.get_aura_detail(selected).then((detail: Record<string, any>) => {
       if (!alive || !detail || detail.error) return;
-      setAuras(current => ({ ...current, [selected]: { ...current[selected], ...detail } }));
+      setAuraDetailOverrides(current => ({ ...current, [selected]: { ...current[selected], ...detail } }));
     }).finally(() => { if (alive) setDetailLoading(false); });
     return () => { alive = false; };
   }, [section, selected]);
@@ -321,7 +352,7 @@ export default function SolsBookPage() {
     let alive = true;
     void window.pywebview.api.get_biome_detail(selected).then((detail: Record<string, any>) => {
       if (!alive || !detail || detail.error) return;
-      setBiomes(current => ({ ...current, [selected]: { ...current[selected], ...detail } }));
+      setBiomeDetailOverrides(current => ({ ...current, [selected]: { ...current[selected], ...detail } }));
     }).catch(() => {});
     return () => { alive = false; };
   }, [section, selected]);
@@ -368,7 +399,7 @@ export default function SolsBookPage() {
         <button className={`btn ${section === "items" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("items"); setCategory("all"); }}>🎒 Items</button>
         <button className={`btn ${section === "gauntlets" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("gauntlets"); setCategory("all"); }}>🥊 Gauntlets</button>
         
-        <input className="form-input" style={{ minWidth: 200, flex: 1, maxWidth: 340, borderRadius: "4px" }} value={query} onChange={e => setQuery(e.target.value)} placeholder={section === "auras" ? "Search auras…" : section === "biomes" ? "Search biomes…" : section === "items" ? "Search items…" : "Search gauntlets…"} />
+        <input className="form-input" style={{ minWidth: 200, flex: 1, maxWidth: 340, borderRadius: "4px" }} value={queryInput} onChange={e => setQueryInput(e.target.value)} placeholder={section === "auras" ? "Search auras…" : section === "biomes" ? "Search biomes…" : section === "items" ? "Search items…" : "Search gauntlets…"} />
         <select className="form-input" style={{ maxWidth: 190, borderRadius: "4px" }} value={category} onChange={e => setCategory(e.target.value)}>
           <option value="all">All categories</option>
           {categories.map(value => <option key={value} value={value}>{value}</option>)}
@@ -376,28 +407,8 @@ export default function SolsBookPage() {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(230px, .9fr) minmax(0, 1.6fr)", minHeight: 480 }}>
-        {/* Left List */}
-        <div style={{ padding: 12, borderRight: "1px solid rgba(255,255,255,.08)", maxHeight: 620, overflow: "auto" }}>
-          {loading && <div className="form-hint" style={{ padding: 18 }}>Opening the archive…</div>}
-          {!loading && !entries.length && <div className="form-hint" style={{ padding: 18 }}>No entries match this search.</div>}
-          {entries.map(([name, info]) => {
-            const active = name === selected;
-            const color = entryAccent(info, section);
-            const isEvent = (section === "auras" && isEventAura(info)) || (section === "gauntlets" && info.limited);
-            const itemStyle = active
-              ? ({ "--item-color": color, "--item-bg": `${color}1a`, "--item-border": `${color}66`, borderRadius: "4px" } as React.CSSProperties)
-              : isEvent
-              ? ({ border: "1px dashed rgba(34,197,94,.4)", borderRadius: "4px" } as React.CSSProperties)
-              : { borderRadius: "4px" };
-            return <button key={name} onClick={() => setSelected(name)} className={`book-item${active ? " book-item--active" : ""}`} style={itemStyle}>
-              {/* Perf: no thumbnails in selection lists — dozens of animated GIFs
-                  composited at once were the main source of FPS drops. Lists are
-                  text + rarity color dot only; images live in the detail pane. */}
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, boxShadow: `0 0 8px ${color}`, flex: "0 0 auto" }} />
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13 }}>{prettyName(name)}</span>
-            </button>;
-          })}
-        </div>
+        {/* Left List — virtualized: only visible rows exist in the DOM */}
+        <BookList entries={entries} section={section} selected={selected} onSelect={selectEntry} loading={loading} />
 
         {/* Right Detail Pane */}
         <div style={{ padding: "24px clamp(16px, 3vw, 36px)", background: "rgba(15, 13, 24, 0.4)" }}>
@@ -436,9 +447,9 @@ export default function SolsBookPage() {
             )}
 
             {detailTab === "media" && section === "auras" ? (
-              <AuraMediaViewer urls={auraImageUrls} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={prettyName(selected)} accent={accent} />
+              <AuraMediaViewer urls={auraImageUrls} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
             ) : detailTab === "media" && section === "biomes" ? (
-              <AuraMediaViewer urls={biomeImageUrls} videoUrl="" videoKind="" cutsceneNote="" musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={prettyName(selected)} accent={accent} />
+              <AuraMediaViewer urls={biomeImageUrls} videoUrl="" videoKind="" cutsceneNote="" musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
             ) : section === "gauntlets" ? <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 16 }}>
                 <Fact label="Gear Slot" value={entry.slot || entry.hand || "Right Hand"} />
@@ -472,6 +483,22 @@ export default function SolsBookPage() {
                   <div style={{ fontSize: 13.5, fontWeight: 600, color: "#f8fafc", lineHeight: 1.5 }}>{entry.usage}</div>
                 </div>
               )}
+              {entry.effects && entry.effects !== entry.usage && (
+                <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>✨ Effect</h4>
+                  <div style={{ fontSize: 13.5, fontWeight: 600, color: "#f8fafc", lineHeight: 1.5 }}>{entry.effects}</div>
+                </div>
+              )}
+              {entry.drops && (
+                <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>📦 Drops / Contents</h4>
+                  <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>
+                    {String(entry.drops).split("; ").map((line: string, i: number) => (
+                      <div key={i}>{line}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
               {entry.how_to_get && (
                 <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
                   <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>🗺 Obtainment / Crafting</h4>
@@ -489,17 +516,9 @@ export default function SolsBookPage() {
                 <Fact label="Biome Message" value={entry.chat_message || "Doesn't post a chat message on spawn"} />
               </div>
               <Section title="Chronicle"><p style={{ lineHeight: 1.7, color: "var(--text-secondary)", fontSize: 13 }}>{entry.description || entry.how_to_get || "No extended description is available for this entry yet."}</p></Section>
-              {entry.thumbnail_url && <Section title="In-game preview"><div><CachedThumb url={String(entry.thumbnail_url)} alt={String(selected)} style={{ maxWidth: "100%", maxHeight: 170, objectFit: "contain", background: "rgba(255,255,255,.04)", borderRadius: 4 }} /></div></Section>}
-              {Array.isArray((entry as any).gallery) && (entry as any).gallery.length > 0 && <Section title="Gallery">
-                <div style={{ display: "grid", gap: 12 }}>
-                  {(entry as any).gallery.map((g: any, i: number) => (
-                    <div key={i}>
-                      <CachedThumb url={String(g?.url || "")} alt={String(g?.caption || `Gallery ${i + 1}`)} style={{ maxWidth: "100%", maxHeight: 200, objectFit: "contain", background: "rgba(255,255,255,.04)", borderRadius: 4 }} />
-                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>{String(g?.caption || "")}</div>
-                    </div>
-                  ))}
-                </div>
-              </Section>}
+              {/* Media intentionally lives ONLY in the Media tab for biomes:
+                  inline preview/gallery GIFs on the Info page failed to load
+                  reliably and kept the page heavy. */}
               {entry.music_url && <Section title="🎵 Theme music"><CachedAudio url={String(entry.music_url)} /></Section>}
               {entry.exclusive_auras && <Section title="Exclusive auras"><p style={{ color: "var(--text-secondary)", fontSize: 13 }}>{Array.isArray(entry.exclusive_auras) ? entry.exclusive_auras.join(", ") : String(entry.exclusive_auras)}</p></Section>}
             </> : <>
@@ -575,8 +594,7 @@ function CachedImage({ url, alt, style, onClick }: { url?: string; alt?: string;
   );
 }
 
-function CachedThumb({ url, alt, style }: { url?: string; alt?: string; style?: React.CSSProperties }) {
-  const [previewSrc, setPreviewSrc] = useState<string>("");
+function CachedThumb({ url, alt, style }: { url?: string; alt?: string; style?: React.CSSProperties }) {  const [previewSrc, setPreviewSrc] = useState<string>("");
   useEffect(() => {
     setPreviewSrc("");
     if (!url) return;
@@ -788,8 +806,83 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
   );
 }
 
-function Fact({ label, value }: { label: string; value: any }) {
-  return <div className="book-panel" style={{ padding: "10px 12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px" }}>
+// ── Virtualized entry list ────────────────────────────────────────────
+// Sol's Book renders up to 479 aura entries. Rendering them all as live DOM
+// rows (plus re-rendering on every keystroke/scroll) is a real FPS cost on
+// software-composited WebView2 — so the list is windowed: only the visible
+// rows (+ overscan) exist in the DOM, and each row is memoized so scrolling
+// never rebuilds already-rendered entries.
+const LIST_ROW_HEIGHT = 42; // 38px row (border-box) + 4px margin-bottom
+const LIST_VIEWPORT = 620;  // matches the container's maxHeight
+const LIST_OVERSCAN = 6;
+
+const BookRow = memo(function BookRow({ name, info, active, section, onSelect }: {
+  name: string; info: Entry; active: boolean; section: string; onSelect: (name: string) => void;
+}) {
+  const color = entryAccent(info, section);
+  const isEvent = (section === "auras" && isEventAura(info)) || (section === "gauntlets" && !!info.limited);
+  const itemStyle = active
+    ? ({ "--item-color": color, "--item-bg": `${color}1a`, "--item-border": `${color}66`, borderRadius: "4px", height: "100%" } as React.CSSProperties)
+    : isEvent
+    ? ({ border: "1px dashed rgba(34,197,94,.4)", borderRadius: "4px", height: "100%" } as React.CSSProperties)
+    : ({ borderRadius: "4px", height: "100%" } as React.CSSProperties);
+  return (
+    <button onClick={() => onSelect(name)} className={`book-item${active ? " book-item--active" : ""}`} style={itemStyle}>
+      <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, boxShadow: `0 0 8px ${color}`, flex: "0 0 auto" }} />
+      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13 }}>{entryDisplayName(name, info)}</span>
+    </button>
+  );
+});
+
+function BookList({ entries, section, selected, onSelect, loading }: {
+  entries: [string, Entry][]; section: string; selected: string | null; onSelect: (name: string) => void; loading?: boolean;
+}) {
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [scrollTop, setScrollTop] = useState(0);
+  const scrollRaf = useRef(0);
+
+  const onScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const value = e.currentTarget.scrollTop;
+    if (scrollRaf.current) return;
+    scrollRaf.current = window.requestAnimationFrame(() => {
+      scrollRaf.current = 0;
+      setScrollTop(value);
+    });
+  }, []);
+  useEffect(() => () => { if (scrollRaf.current) window.cancelAnimationFrame(scrollRaf.current); }, []);
+
+  // A new filtered dataset (section / search / category change) resets the
+  // scroll position so the window math starts from the top.
+  useEffect(() => {
+    setScrollTop(0);
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [section, entries]);
+
+  const total = entries.length;
+  const startIdx = Math.max(0, Math.floor(scrollTop / LIST_ROW_HEIGHT) - LIST_OVERSCAN);
+  const endIdx = Math.min(total, Math.ceil((scrollTop + LIST_VIEWPORT) / LIST_ROW_HEIGHT) + LIST_OVERSCAN);
+  const visible = entries.slice(startIdx, endIdx);
+
+  return (
+    <div ref={scrollRef} onScroll={onScroll} style={{ padding: 12, borderRight: "1px solid rgba(255,255,255,.08)", maxHeight: LIST_VIEWPORT, overflow: "auto" }}>
+      {loading && <div className="form-hint" style={{ padding: 18 }}>Opening the archive…</div>}
+      {total === 0 && !loading && <div className="form-hint" style={{ padding: 18 }}>No entries match this search.</div>}
+      {total > 0 && (
+        <>
+          <div style={{ height: startIdx * LIST_ROW_HEIGHT }} aria-hidden="true" />
+          {visible.map(([name, info]) => (
+            <div key={name} style={{ height: LIST_ROW_HEIGHT - 4, marginBottom: 4 }}>
+              <BookRow name={name} info={info} active={name === selected} section={section} onSelect={onSelect} />
+            </div>
+          ))}
+          <div style={{ height: Math.max(0, (total - endIdx)) * LIST_ROW_HEIGHT }} aria-hidden="true" />
+        </>
+      )}
+    </div>
+  );
+}
+
+function Fact({ label, value }: { label: string; value: any }) {  return <div className="book-panel" style={{ padding: "10px 12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px" }}>
     <div style={{ color: "#a78bfa", fontSize: 10.5, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 4, fontWeight: 600 }}>{label}</div>
     <div style={{ color: "#f8fafc", lineHeight: 1.4, fontSize: 13, fontWeight: 500 }}>{String(value || "Unknown")}</div>
   </div>;

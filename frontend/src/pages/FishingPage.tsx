@@ -119,6 +119,7 @@ export default function FishingPage() {
                     onChange={(val) => updateConfig("fishing_mode", val)}
                 />
 
+                {fishingMode && <>
                 <div className="form-row" style={{ marginTop: "8px" }}>
                     <div className="form-group">
                         <label className="form-label">Fishing actions delay (in miliseconds)</label>
@@ -275,6 +276,7 @@ export default function FishingPage() {
                         </div>
                     </div>
                 )}
+                </>}
 
                 {fishingMode && (
                     <div className="info-banner" style={{ marginTop: "10px" }}>

@@ -48,24 +48,50 @@ const QUEST_VARIANTS: Record<string, string[]> = {
 // config so it comes back ready when the feature lands.
 const HIDDEN_QUEST_TYPES = new Set(["fishing", "delivery", "resonance"]);
 
+const GAME_BIOMES = [
+  "WINDY",
+  "RAINY",
+  "SNOWY",
+  "SAND STORM",
+  "HELL",
+  "STARFALL",
+  "CORRUPTION",
+  "NULL",
+  "AURORA",
+  "HEAVEN",
+  "EGGLAND",
+  "SINGULARITY",
+  "BLAZING SUN",
+  "PUMPKIN MOON",
+  "GRAVEYARD",
+  "BLOOD RAIN",
+  "THE HYPERSPACE REALM",
+  "\u8d64\u3044\u6e80\u6708",
+  "THE NULL'S EXISTENCE",
+  "THE CITADEL OF ORDERS",
+] as const;
+
 export default function MiscPage() {
   const { config, saveConfig, error } = useConfig();
   const [calibrationTarget, setCalibrationTarget] = useState<
-    "ocr" | "reconnect" | "eden_contract" | null
+    "ocr" | "reconnect" | "eden_contract" | "eden_contract_extra1" | "eden_contract_extra2" | "autoroll_region" | "autoroll_button" | null
   >(null);
   const [ocrStatus, setOcrStatus] = useState<{
     installed: boolean;
     version: string | null;
   } | null>(null);
+  const [autorollPickerOpen, setAutorollPickerOpen] = useState(false);
   const [dailyBusy, setDailyBusy] = useState(false);
   const [dailyMsg, setDailyMsg] = useState("");
   const [dailyOk, setDailyOk] = useState(false);
+  const [mmMsg, setMmMsg] = useState("");
+  const [mmOk, setMmOk] = useState(false);
   useEffect(() => {
     (window as any).onCalibrationResultMisc = (data: any) => {
       if (!calibrationTarget || !config) return;
 
       let nextValue: number[] | null = null;
-      if (calibrationTarget === "ocr") {
+      if (calibrationTarget === "ocr" || calibrationTarget === "autoroll_region") {
         if (
           Array.isArray(data?.value) &&
           data?.key === "first_item_slot_ocr_pos"
@@ -98,12 +124,21 @@ export default function MiscPage() {
         }
       } else if (
         calibrationTarget === "reconnect" ||
-        calibrationTarget === "eden_contract"
+        calibrationTarget === "eden_contract" ||
+        calibrationTarget === "eden_contract_extra1" ||
+        calibrationTarget === "eden_contract_extra2" ||
+        calibrationTarget === "autoroll_button"
       ) {
         const targetKey =
           calibrationTarget === "reconnect"
             ? "reconnect_start_button"
-            : "eden_contract_button";
+            : calibrationTarget === "eden_contract"
+              ? "eden_contract_button"
+              : calibrationTarget === "eden_contract_extra1"
+                ? "eden_contract_extra1_button"
+                : calibrationTarget === "eden_contract_extra2"
+                  ? "eden_contract_extra2_button"
+                  : "autoroll_toggle_button";
         if (Array.isArray(data?.value) && data?.key === targetKey) {
           const candidate = data.value
             .slice(0, 2)
@@ -138,6 +173,14 @@ export default function MiscPage() {
         saveConfig({ ...config, reconnect_start_button: nextValue });
       } else if (calibrationTarget === "eden_contract") {
         saveConfig({ ...config, eden_contract_button: nextValue });
+      } else if (calibrationTarget === "eden_contract_extra1") {
+        saveConfig({ ...config, eden_contract_extra1_button: nextValue });
+      } else if (calibrationTarget === "eden_contract_extra2") {
+        saveConfig({ ...config, eden_contract_extra2_button: nextValue });
+      } else if (calibrationTarget === "autoroll_region") {
+        saveConfig({ ...config, autoroll_status_region: nextValue });
+      } else if (calibrationTarget === "autoroll_button") {
+        saveConfig({ ...config, autoroll_toggle_button: nextValue });
       }
 
       setCalibrationTarget(null);
@@ -284,12 +327,47 @@ export default function MiscPage() {
     }
   };
 
-  const startEdenContractCalibration = async () => {
-    setCalibrationTarget("eden_contract");
+  const startEdenContractCalibration = async (
+    target: "eden_contract" | "eden_contract_extra1" | "eden_contract_extra2" = "eden_contract",
+  ) => {
+    const calibrationKey =
+      target === "eden_contract" ? "eden_contract_button" : `${target}_button`;
+    setCalibrationTarget(target);
     try {
       if (window.pywebview?.api) {
         await window.pywebview.api.create_calibration_window(
-          "eden_contract_button",
+          calibrationKey,
+          "point",
+        );
+      }
+    } catch (errorValue) {
+      console.error("Failed to open calibration window", errorValue);
+      alert("Failed to open calibration tool: " + errorValue);
+      setCalibrationTarget(null);
+    }
+  };
+  const startAutorollRegionCalibration = async () => {
+    setCalibrationTarget("autoroll_region");
+    try {
+      if (window.pywebview?.api) {
+        await window.pywebview.api.create_calibration_window(
+          "autoroll_status_region",
+          "region",
+        );
+      }
+    } catch (errorValue) {
+      console.error("Failed to open calibration window", errorValue);
+      alert("Failed to open calibration tool: " + errorValue);
+      setCalibrationTarget(null);
+    }
+  };
+
+  const startAutorollButtonCalibration = async () => {
+    setCalibrationTarget("autoroll_button");
+    try {
+      if (window.pywebview?.api) {
+        await window.pywebview.api.create_calibration_window(
+          "autoroll_toggle_button",
           "point",
         );
       }
@@ -474,28 +552,7 @@ export default function MiscPage() {
               Do NOT use BR/SC during these biomes:
             </label>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-              {[
-                "WINDY",
-                "RAINY",
-                "SNOWY",
-                "SAND STORM",
-                "HELL",
-                "STARFALL",
-                "CORRUPTION",
-                "NULL",
-                "AURORA",
-                "HEAVEN",
-                "EGGLAND",
-                "SINGULARITY",
-                "BLAZING SUN",
-                "PUMPKIN MOON",
-                "GRAVEYARD",
-                "BLOOD RAIN",
-                "THE HYPERSPACE REALM",
-                "\u8d64\u3044\u6e80\u6708",
-                "THE NULL'S EXISTENCE",
-                "THE CITADEL OF ORDERS",
-              ].map((biome) => {
+              {GAME_BIOMES.map((biome) => {
                 const isSelected = (
                   config.disabled_biomes_br_sc || []
                 ).includes(biome);
@@ -649,6 +706,95 @@ export default function MiscPage() {
         </div>
       </div>
 
+      {/* ── DISABLE AUTO-ROLL IN BIOME ───────────────────────────────── */}
+      <div className="card">
+        <div className="card-header">
+          <div className="card-icon">🎲</div>
+          <div style={{ flex: 1 }}>
+            <h3>Disable Auto-Roll In Biome</h3>
+            <p>Auto-Roll is switched OFF in selected biomes and back ON in all others.</p>
+          </div>
+        </div>
+        <div style={{ padding: "0 20px 16px", display: "grid", gap: "10px" }}>
+          <ToggleSwitch
+            label="Disable Auto-Roll In Biome"
+            description="Reads the in-game Auto-roll: ON/OFF status by OCR and clicks the toggle only when it disagrees with the biome selection."
+            checked={config.auto_roll_biome_enabled || false}
+            onChange={(value) => updateConfig("auto_roll_biome_enabled", value)}
+          />
+          {config.auto_roll_biome_enabled && (
+            <>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                <button
+                  className="btn"
+                  style={{ fontSize: "11px", padding: "6px 12px" }}
+                  onClick={() => setAutorollPickerOpen(!autorollPickerOpen)}
+                >
+                  Select biomes ({(config.auto_roll_biome_list || []).length})
+                </button>
+                <button
+                  className="btn"
+                  style={{ fontSize: "11px", padding: "6px 12px" }}
+                  onClick={startAutorollRegionCalibration}
+                >
+                  Auto-roll status OCR region (calibration)
+                </button>
+                <span className="form-hint">
+                  {JSON.stringify(config.autoroll_status_region || [0, 0, 0, 0])}
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                <button
+                  className="btn"
+                  style={{ fontSize: "11px", padding: "6px 12px" }}
+                  onClick={startAutorollButtonCalibration}
+                >
+                  Auto-roll toggle button (calibration)
+                </button>
+                <span className="form-hint">
+                  {JSON.stringify(config.autoroll_toggle_button || [0, 0])}
+                </span>
+              </div>
+              {autorollPickerOpen && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                  {GAME_BIOMES.map((biome) => {
+                    const isSelected = (config.auto_roll_biome_list || []).includes(biome);
+                    return (
+                      <button
+                        key={biome}
+                        onClick={() => {
+                          const current = config.auto_roll_biome_list || [];
+                          updateConfig(
+                            "auto_roll_biome_list",
+                            isSelected
+                              ? current.filter((b: string) => b !== biome)
+                              : [...current, biome],
+                          );
+                        }}
+                        style={{
+                          padding: "3px 6px",
+                          fontFamily: '"Sarpanch", sans-serif',
+                          fontSize: "11px",
+                          fontWeight: 600,
+                          letterSpacing: "0.03em",
+                          border: `1px solid ${isSelected ? "var(--accent)" : "rgba(255,255,255,0.15)"}`,
+                          background: isSelected ? "rgba(124, 91, 245, 0.15)" : "rgba(0,0,0,0.3)",
+                          color: isSelected ? "var(--accent)" : "rgba(255,255,255,0.5)",
+                          cursor: "pointer",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {biome}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+
       <div className="card">
         <div className="card-header">
           <div className="card-icon">⚡</div>
@@ -673,7 +819,7 @@ export default function MiscPage() {
                 display: "inline-block",
               }}
             >
-              Only works if fishing mode, potion crafting, auto obby, auto egg
+              Only works if fishing mode, potion crafting, auto obby
               pathing is OFF!
             </span>
             <div className="duration-input" style={{ marginTop: "10px" }}>
@@ -774,13 +920,67 @@ export default function MiscPage() {
                 <button
                   className="btn btn-accent"
                   style={{ fontSize: "11px", padding: "6px 12px" }}
-                  onClick={startEdenContractCalibration}
+                  onClick={() => startEdenContractCalibration()}
                 >
                   Eden Contract button (calibration)
                 </button>
                 <span className="form-hint">
                   {JSON.stringify(config.eden_contract_button || [0, 0])}
                 </span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                  marginTop: "10px",
+                }}
+              >
+                <button
+                  className="btn"
+                  style={{ fontSize: "11px", padding: "6px 12px" }}
+                  onClick={() => startEdenContractCalibration("eden_contract_extra1")}
+                >
+                  Extra point 1 (optional)
+                </button>
+                <span className="form-hint">
+                  {JSON.stringify(config.eden_contract_extra1_button || [0, 0])}
+                </span>
+                <button
+                  className="btn"
+                  style={{ fontSize: "11px", padding: "6px 12px" }}
+                  onClick={() => updateConfig("eden_contract_extra1_button", [0, 0])}
+                >
+                  Clear
+                </button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                  marginTop: "10px",
+                }}
+              >
+                <button
+                  className="btn"
+                  style={{ fontSize: "11px", padding: "6px 12px" }}
+                  onClick={() => startEdenContractCalibration("eden_contract_extra2")}
+                >
+                  Extra point 2 (optional)
+                </button>
+                <span className="form-hint">
+                  {JSON.stringify(config.eden_contract_extra2_button || [0, 0])}
+                </span>
+                <button
+                  className="btn"
+                  style={{ fontSize: "11px", padding: "6px 12px" }}
+                  onClick={() => updateConfig("eden_contract_extra2_button", [0, 0])}
+                >
+                  Clear
+                </button>
               </div>
             </div>
           )}
@@ -820,7 +1020,7 @@ export default function MiscPage() {
                     marginTop: "4px",
                   }}
                 >
-                  Only works if fishing, potion crafting, auto obby, auto egg
+                  Only works if fishing, potion crafting, auto obby
                   pathing is OFF!
                 </span>
                 <br />
@@ -1039,7 +1239,7 @@ export default function MiscPage() {
               <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
                 {config.daily_event_claimed_date
                   ? `Last claim: ${config.daily_event_claimed_date}`
-                  : "Not claimed yet — auto claim runs at 03:00 MSK"}
+                  : "Not claimed yet — auto claim runs after the 00:00 UTC reset"}
               </span>
             </div>
             {dailyMsg && (
@@ -1072,20 +1272,21 @@ export default function MiscPage() {
 
       {/* ── MEMORY MATCH ─────────────────────────────────────────────── */}
       <div className="card">
-        <div className="card-header"><div className="card-icon">🧠</div><div style={{ flex: 1 }}><h3>Memory Match</h3><p>Detect the 5×4 board, solve pairs, and stop safely when the board is gone.</p></div></div>
+        <div className="card-header"><div className="card-icon">🧠</div><div style={{ flex: 1 }}><h3>Memory Match (WIP)</h3><p>Detect the 5×4 board, solve pairs, and stop safely when the board is gone. Work in progress — still being tested.</p></div></div>
         <div style={{ padding: "0 20px 16px", display: "grid", gap: "10px" }}>
-          <ToggleSwitch label="Enable Memory Match" description="Runs automatically every 12h when the in-game cooldown ends." checked={config.memory_match_enabled || false} onChange={(value) => updateConfig("memory_match_enabled", value)} />
+          <ToggleSwitch label="Enable Memory Match" description="Opens the board on cooldown and solves pairs from a full tile memory." checked={config?.memory_match_enabled ?? false} onChange={(value) => updateConfig("memory_match_enabled", value)} />
+          {(config?.memory_match_enabled ?? false) && <>
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <button
               className="btn"
               onClick={async () => {
-                setDailyMsg("");
+                setMmMsg("");
                 try {
                   const res = await window.pywebview?.api?.run_memory_match_now?.();
-                  if (res?.ok) setDailyMsg("Memory Match run started — watch the log.");
-                  else setDailyMsg(`Could not start: ${res?.error || "unknown error"}`);
+                  if (res?.ok) { setMmOk(true); setMmMsg("Memory Match run started — watch the log."); }
+                  else { setMmOk(false); setMmMsg(`Could not start: ${res?.error || "unknown error"}`); }
                 } catch (e) {
-                  setDailyMsg(`Could not start: ${e}`);
+                  setMmOk(false); setMmMsg(`Could not start: ${e}`);
                 }
               }}
               title="Play one Memory Match session right now (ignores the 12h cooldown, for testing)"
@@ -1094,22 +1295,28 @@ export default function MiscPage() {
             </button>
             <span className="form-hint" style={{ margin: 0 }}>Requires the macro to be running.</span>
           </div>
+          {mmMsg && (
+            <p className="form-hint" style={{ margin: 0, color: mmOk ? "#22c55e" : "#f87171" }}>
+              {mmMsg}
+            </p>
+          )}
           <ToggleSwitch
             label="Play during fishing mode"
             description="Allow the Memory Match loop to run while fishing mode is active."
-            checked={config.memory_match_play_on_fishing !== false}
+            checked={config?.memory_match_play_on_fishing !== false}
             onChange={(value) => updateConfig("memory_match_play_on_fishing", value)}
           />
           <div className="duration-input">
             <label className="form-label">Playback speed multiplier:</label>
             <input
               className="form-input"
-              value={config.memory_match_playback_multiplier ?? 1}
+              value={config?.memory_match_playback_multiplier ?? 1}
               onChange={(e) => updateConfig("memory_match_playback_multiplier", e.target.value)}
               style={{ width: 70 }}
             />
           </div>
           <div className="form-hint">Non-VIP accounts: enable "Non-VIP movement path" in the Fishing settings so walks are stretched automatically.</div>
+          </>}
         </div>
       </div>
 
@@ -1118,6 +1325,7 @@ export default function MiscPage() {
         <div className="card-header"><div className="card-icon">📜</div><div style={{ flex: 1 }}><h3>Quest Board</h3><p>Read, accept, dismiss, and claim quests using OCR and board controls.</p></div></div>
         <div style={{ padding: "0 20px 16px", display: "grid", gap: "10px" }}>
           <ToggleSwitch label="Enable Quest Board" description="Opening uses keyboard E; mouse clicks are only for the board controls." checked={config.quest_board_enabled || false} onChange={(value) => updateConfig("quest_board_enabled", value)} />
+          {config.quest_board_enabled && <>
           <div className="duration-input">
             <label className="form-label">Check interval (minutes):</label>
             <input
@@ -1191,6 +1399,7 @@ export default function MiscPage() {
           </div>
           <div className="form-hint">Hunt quests have no tier picker — rolling completes them wherever they appear. Player Hunt is always dismissed (cannot be automated). A quest whose tier cannot be read by OCR is dismissed.</div>
           <div className="form-hint">Fishing, Delivery, and Resonance quests are hidden until their automations ship — the macro dismisses them for now.</div>
+          </>}
         </div>
       </div>
     </>

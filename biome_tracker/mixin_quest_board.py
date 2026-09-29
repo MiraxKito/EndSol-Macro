@@ -407,8 +407,7 @@ class QuestBoardMixin:
                         time.sleep(30)
                         continue
                     # Don't run if other exclusive features are active
-                    if (getattr(self, "_egg_collecting", False) or
-                        getattr(self, "_eden_running", False) or
+                    if (getattr(self, "_eden_running", False) or
                         getattr(self, "_potion_thread_active", False) or
                         getattr(self, "_obby_running", False) or
                         getattr(self, "_br_sc_running", False)):

@@ -3,6 +3,7 @@ interface PyWebViewApi {
   save_config(config: Record<string, unknown>): Promise<void>;
   get_multi_instance_state(): Promise<Record<string, unknown>>;
   set_multi_instance_enabled(enabled: boolean): Promise<{ success: boolean; error?: string }>;
+  set_multi_instance_main(pid: number): Promise<{ success: boolean; main_pid?: number; error?: string }>;
   get_biome_data(): Promise<Record<string, string>>;
   get_full_biome_data(): Promise<Record<string, unknown>>;
   get_full_aura_data(): Promise<Record<string, unknown>>;

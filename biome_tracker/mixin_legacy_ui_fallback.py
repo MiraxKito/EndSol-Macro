@@ -1031,8 +1031,8 @@ class GuiMixin:
         self.glitch_effect()
 
     def create_credit_tab(self, credits_frame):
-        current_dir = os.getcwd()
-        images_dir = os.path.join(current_dir, "images")
+        images_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"),
+                                  "EndSolMacro", "images")
         credit_paths = [
             os.path.join(images_dir, "tea.png"),
             os.path.join(images_dir, "devteam.png"),

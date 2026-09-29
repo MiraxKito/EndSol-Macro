@@ -1,12 +1,29 @@
 """
-Sol's Book — live wiki datasets for items and gauntlets (v1.0.7).
+Sol's Book — live wiki datasets for items and gauntlets (v1.0.8).
 
 Implements the no-fallback Fandom pipeline that was used to build the
 verified offline snapshots ``biome_tracker/gauntlets_fandom.json`` (53
 records: gauntlets / lanterns / talismans) and
-``biome_tracker/items_fandom.json`` (93 records). The offline snapshots stay
-the source of truth whenever the wiki cannot be reached — a failed update
-NEVER wipes or replaces them.
+``biome_tracker/items_fandom.json`` (165 records as of the 2026-09-27
+rebuild: potions / runes / tools / materials / chests / special items).
+The offline snapshots stay the source of truth whenever the wiki cannot be
+reached — a failed update NEVER wipes or replaces them.
+
+Chest-style items (v1.0.8.1 data pass): aggregated chest pages
+(Potion Chests, Fisherman Chests, Potion Gift Boxes, Potion Ice Boxes,
+Summer Random Boxes) and other tab item groups (Candies, Tickets) are
+treated like the aggregated potion pages — every tab is one item. Chest
+tabs/pages additionally get a ``drops`` field parsed from their Drops /
+Item Chances tables ("Lucky Potion — 50%; Speed Potion — 20% x50; ..."),
+rendered by the "Drops / Contents" card in SolsBookPage.tsx. Missing items
+are discovered from the wiki's own Category:Items listing (no curated name
+lists); records without real content ("???" stubs) are dropped. Single-item
+pages whose only tabber tabs are auxiliary views ("Native Chances",
+"New"/"Old" skins) still parse as whole pages — a missing tab match must
+not discard them (Godlike Potion, Oblivion Potion, Potion of the Dune).
+Template spans are DEPTH-AWARE and argument splitting is top-level aware:
+{{Aura Notice|...{{Items|X}}...}} style nesting must never leak argument
+fragments into prose.
 
 Hard rules (do not regress — they were paid for with a broken session):
   * Source is the MediaWiki API:
@@ -79,8 +96,47 @@ AGGREGATED_POTION_PAGES = (
     "Lucky Potion",
     "Speed Potion",
 )
+# Chest-style items live as <tabber> tabs on shared pages, exactly like the
+# hierarchical potions. Every tab is one purchasable/openable container
+# (Potion Chest, Rare Potion Chest, Fisherman Chest I, ...) and each tab
+# carries its own Description + Drops / Item Chances table.
+AGGREGATED_CHEST_PAGES = (
+    "Potion Chests",
+    "Fisherman Chests",
+    "Potion Gift Boxes",
+    "Potion Ice Boxes",
+    "Summer Random Boxes",
+)
+# Other tab-aggregated item groups (not chests, category is derived later).
+AGGREGATED_ITEM_PAGES = (
+    "Candies",
+    "Tickets",
+)
+# Standalone chest-like pages: single pages, not tabber aggregates. Their
+# category is forced to "Chests" (the wiki does not maintain a real
+# Category:Chests for them).
+CHEST_SINGLE_PAGES = ("Random Potion Sack", "Random Rune Chest")
+_DROPS_SECTION_NAMES = ("Drops", "Item Chances", "Contents", "Usage")
 RUNES_PAGE = "Runes"
 ITEMS_PAGE = "Items"
+
+# Dataset format version for the items/gauntlets wiki pipeline. Bump it
+# whenever the parser gains new fields (e.g. chest drop tables) or fixes a
+# systematic data error: main.py then rejects ANY appdata cache written by
+# an older version and falls back to the bundled snapshot until the next
+# successful refresh. The marker lives next to the cache file
+# (cache/<kind>_fandom.json.ver) because the datasets themselves are flat
+# name->record dicts that must not carry meta keys.
+SOL_BOOK_DATA_VERSION = 3
+
+# Discovery: the wiki's own item category lists every item page. Members are
+# resolved through the normal pipeline (no invented data); placeholder and
+# aggregate pages are skipped.
+ITEMS_DISCOVERY_CATEGORY = "Category:Items"
+# Aggregate/container pages that must never become item records themselves.
+_NON_ITEM_PAGES = set(AGGREGATED_POTION_PAGES) | set(AGGREGATED_CHEST_PAGES) | set(AGGREGATED_ITEM_PAGES) | {
+    RUNES_PAGE, ITEMS_PAGE, "Lanterns", "Talismans",
+}
 
 # Fallback HTTP when base_support cannot be imported (non-Windows dev box).
 # Production always uses base_support.fandom_get (same pacing rules).
@@ -309,23 +365,30 @@ _TABLE_HEAD_RE = re.compile(r"(?m)^\s*!.*$")
 
 
 def _innermost_template_spans(text):
-    """Spans of innermost {{...}} occurrences."""
+    """Spans of balanced top-level {{...}} templates (depth-aware). The old
+    implementation jumped over nested "{{" without counting depth, so a
+    template containing another template ("{{Aura Notice|...{{Items|X}}...}}")
+    was cut in half at the INNER template's closing braces and left stray
+    text + "}}" behind."""
     spans = []
     i = 0
     n = len(text)
     while i < n - 1:
         if text[i : i + 2] == "{{":
             j = i + 2
-            while j < n - 1:
+            depth = 1
+            while j < n - 1 and depth:
                 if text[j : j + 2] == "{{":
+                    depth += 1
                     j += 2
                 elif text[j : j + 2] == "}}":
-                    break
+                    depth -= 1
+                    j += 2
                 else:
                     j += 1
-            if j < n - 1:
-                spans.append((i, j + 2))
-                i = j + 2
+            if depth == 0:
+                spans.append((i, j))
+                i = j
                 continue
             break
         i += 1
@@ -334,9 +397,12 @@ def _innermost_template_spans(text):
 
 def _resolve_template(inner):
     """{{Aura|X}} -> X, {{Items|A|B}} -> B — a template collapses to its
-    last non-empty argument. Color helper templates collapse to ""."""
+    last non-empty argument. Color helper templates collapse to "".
+    Arguments are split TOP-LEVEL aware ({{ }} and [[ ]] protected), so a
+    link like [[Items|potion]] inside an argument never gets split into a
+    fake argument ("potion]] ..." leftovers)."""
     inner = inner.strip()
-    parts = inner.split("|")
+    parts = _split_top_level(inner)
     if len(parts) == 1:
         return ""
     name = parts[0].strip()
@@ -398,7 +464,9 @@ def _clean_segment(text):
     def _link_sub(m):
         inner = m.group(1)
         if re.match(r"^\s*File\s*:", inner, re.I):
-            return inner.split("|", 1)[1] if "|" in inner else ""
+            # image links carry no prose (sizes/captions like "|500px" are
+            # layout junk) — drop them entirely
+            return ""
         if re.match(r"^\s*Category\s*:", inner, re.I):
             return ""
         if "|" in inner:
@@ -461,6 +529,196 @@ def clean_wikitext(text, join_lines=True, joiner=" "):
 
 def _canon(name):
     return re.sub(r"[^a-z0-9]", "", str(name or "").lower())
+
+
+_TRIVIAL_TEXTS = {"...", "???", "n/a", "na", "none", "-", "unobtainable", "[description empty]"}
+
+
+def _is_trivial_text(value, name=""):
+    """True for descriptions that carry no information: empty, "???",
+    "..." or just the item's own name ("Random Potion Sack." for the
+    Random Potion Sack page)."""
+    canon = _canon(value)
+    if not canon or canon in {_canon(t) for t in _TRIVIAL_TEXTS}:
+        return True
+    if name and canon == _canon(name):
+        return True
+    return False
+
+
+def _record_has_content(rec, name=""):
+    """A record is worth keeping when it explains something: a usage, an
+    effect, a drop list, or a description that is not a trivial stub."""
+    return bool(
+        rec.get("usage")
+        or rec.get("effects")
+        or rec.get("drops")
+        or not _is_trivial_text(rec.get("description", ""), name)
+    )
+
+
+_DUPLICATED_EFFECT_TOKEN_RE = re.compile(
+    r"\[([^\[\]]+)\] \[\1\]([:.]?)", re.S
+)
+
+
+def _dedupe_effect_tokens(text):
+    """Wiki potion quotes repeat the effect name before its stat block
+    ("Gives you 5 minutes of [Fortune I] [Fortune I]: +50% Luck") — the
+    second token is the effect header of the stat line. Collapse the
+    duplicate so the description reads naturally."""
+    if not text:
+        return text
+    text = _DUPLICATED_EFFECT_TOKEN_RE.sub(r"[\1]\2", text)
+    text = re.sub(r"\{([^{}]+)\} \{\1\}([:.]?)", r"{\1}\2", text)
+    # infobox metadata fragments leak into quotes ("[Potion Group]: Misc
+    # [Potion Tier]: Mythic As you drink...") — drop them
+    text = re.sub(r"\[Potion (?:Group|Tier)\]\s*:\s*\S+\s*", "", text)
+    return text
+
+
+def _drop_leading_colon_fragment(text):
+    """Drop a trailing "; The types of potions ... are:" lead-in — it only
+    introduces the drop table that follows and reads badly on its own."""
+    if not text:
+        return text
+    parts = text.split("; ")
+    while len(parts) > 1 and parts[-1].rstrip().endswith(":"):
+        parts.pop()
+    return "; ".join(parts).strip()
+
+
+def _lead_prose(text):
+    """Cleaned prose BEFORE the first heading of a page (tables stripped).
+    Pages like Random Rune Chest open with the real intro paragraph above
+    any ==Heading==. Infobox/quote templates ({{Item Quote}}, {{Potion}},
+    {{Gears Infobox}}...) are NOT prose — they are removed entirely instead
+    of collapsing into stray argument text ("Description", "potion]] ...")."""
+    if not text:
+        return ""
+    m = _HEADING_RE.search(text)
+    lead = text[: m.start()] if m else text
+    for _ in range(60):
+        spans = _innermost_template_spans(lead)
+        if not spans:
+            break
+        for start, end in reversed(spans):
+            lead = lead[:start] + lead[end:]
+    cleaned = clean_wikitext(_strip_tables(lead), joiner="; ")
+    # disambiguation/notices hatnotes are never item prose
+    cleaned = re.sub(r"This article is about[^.;]*[.;]?\s*", "", cleaned)
+    cleaned = re.sub(r"For more uses of[^.;]*[.;]?\s*", "", cleaned)
+    return cleaned.strip()
+
+
+def _clean_table_cells(table):
+    """Rows of one wiki table as lists of cleaned cell strings."""
+    rows = []
+    row_chunks = re.split(r"(?m)^\s*\|-.*$", table)[1:]
+    for chunk in row_chunks:
+        cells = []
+
+        def _cell(seg):
+            # drop leading cell attributes ("rowspan=\"4\" |content")
+            am = re.match(r'^\s*(?:[A-Za-z-]+\s*=\s*"[^"]*"\s*)+\|(.*)$', seg, re.S)
+            return am.group(1) if am else seg
+
+        for line in chunk.split("\n"):
+            stripped = line.strip()
+            if stripped.startswith("|"):
+                first = stripped[1:]
+                inline = first.split("||")
+                cells.append(_cell(inline[0]))
+                cells.extend(_cell(extra) for extra in inline[1:])
+            elif stripped.startswith("!"):
+                continue
+            elif cells and stripped:
+                cells[-1] = cells[-1] + "\n" + stripped
+        cleaned = [clean_wikitext(c, joiner="; ") for c in cells]
+        cleaned = [c for c in cleaned if c]
+        if cleaned:
+            rows.append(cleaned)
+    return rows
+
+
+def _drops_text(body, include_description=False):
+    """Readable drop table of a chest item ("Lucky Potion — 50%; ...").
+
+    Looks for the item's Drops / Item Chances / Contents / Usage section and
+    parses its FIRST table (Item | Rarity | [Quantity]). Sections that hold
+    prose only yield "" (no drops -> no field, never invented).
+
+    Wiki quirk: several chest pages never close their tables (no "|}" line
+    before the next tab/heading), so the table body runs to the section end —
+    accept an unclosed table too.
+    """
+    if not body:
+        return ""
+    table_body = ""
+    seen = set()
+    for n in _DROPS_SECTION_NAMES:
+        want = _canon(n)
+        if want in seen:
+            continue
+        seen.add(want)
+        for heading, _level, section in _sections(body):
+            head_key = _canon(heading.split("|")[-1])
+            if head_key != want and _canon(heading) != want:
+                continue
+            m0 = re.search(r"(?m)^\s*\{\|.*$", section)
+            if m0:
+                m1 = re.search(r"(?m)^\s*\|\}\s*$", section[m0.start():])
+                table_body = section[m0.start():] if not m1 else section[m0.start(): m0.start() + m1.end()]
+                break
+        if table_body:
+            break
+    if not table_body and include_description:
+        # some chest tabs keep their drop table inside the Description
+        # section (Video Event Potion Chest) — only chest items may fall
+        # back to it, potions must never pick up chance tables this way
+        for heading, _level, section in _sections(body):
+            if _canon(heading.split("|")[-1]) != _canon("Description") and _canon(heading) != _canon("Description"):
+                continue
+            m0 = re.search(r"(?m)^\s*\{\|.*$", section)
+            if m0:
+                m1 = re.search(r"(?m)^\s*\|\}\s*$", section[m0.start():])
+                table_body = section[m0.start():] if not m1 else section[m0.start(): m0.start() + m1.end()]
+                break
+    if not table_body:
+        return ""
+    entries = []
+    for cells in _clean_table_cells(table_body):
+        if len(cells) < 2:
+            continue
+        item, chance, qty = cells[0], "", ""
+        for cell in cells[1:]:
+            if not chance and "%" in cell:
+                chance = cell
+            elif not qty and re.fullmatch(r"[0-9][0-9,]*", cell):
+                qty = cell.replace(",", "")
+        if not chance:
+            continue  # header row / not a drop entry
+        if item.lower() in ("item", "rune", "potion"):
+            continue
+        entry = f"{item} — {chance}"
+        if qty and qty != "1":
+            entry += f" x{qty}"
+        entries.append(entry)
+    return "; ".join(entries)
+
+
+def _is_chest_name(name):
+    """Chest-style container items (the wiki has no Category:Chests, so the
+    name is the only reliable signal)."""
+    low = str(name or "").lower()
+    return (
+        "chest" in low
+        or "sack" in low
+        or "gift box" in low
+        or "ice box" in low
+        or "random box" in low
+        or name in CHEST_SINGLE_PAGES
+    )
 
 
 # ------------------------------------------------------------------
@@ -613,7 +871,9 @@ def _gallery_files(value):
         v = value.strip()
         v = re.sub(r"^\s*File\s*:", "", v, flags=re.I)
         v = v.split("|")[0].strip()
-        if v and " " not in v and "." in v:
+        # a bare file name (spaces are legal on the wiki: "Potion Chest
+        # (Regular).gif") — only accept values that look like media files
+        if v and re.search(r"\.(png|gif|jpe?g|webp|svg|webm|mp3|ogg|wav)$", v, re.I):
             files.append(v)
     return files
 
@@ -687,8 +947,15 @@ def _section_text(text, names):
     """Cleaned text of the first matching section whose PROSE (outside
     tables) is non-empty. Candidate headings are tried in the given
     priority order; a section that is only one table has empty prose —
-    keep looking instead of stopping at raw non-empty text."""
-    for want in {_canon(n) for n in names}:
+    keep looking instead of stopping at raw non-empty text. Priority order
+    is preserved exactly (no set iteration — "Obtainment" must win over
+    "Brewing" when both exist)."""
+    seen = set()
+    for n in names:
+        want = _canon(n)
+        if want in seen:
+            continue
+        seen.add(want)
         for heading, _level, body in _sections(text):
             head_key = _canon(heading.split("|")[-1])
             if head_key != want and _canon(heading) != want:
@@ -998,13 +1265,35 @@ def _match_tab_in_text(name, text):
     return None
 
 
+_AUX_TAB_LABELS = {
+    "native", "nonnative", "nativechances", "nativechance", "new", "old", "current",
+    "olddesign", "newdesign", "video", "gallery", "trivia", "changelog",
+    "skins", "skin", "design", "statistics", "stats",
+}
+
+
+def _tabber_is_auxiliary(text):
+    """True when every <tabber> tab of a page is an auxiliary view
+    ("Native Chances", "New"/"Old" skins, videos...) rather than a distinct
+    item variant. Such pages describe ONE item, so a missing tab match must
+    NOT discard the page — the whole page still parses fine."""
+    tabs = _split_tabber(text)
+    if not tabs:
+        return False
+    return all(_canon(label) in _AUX_TAB_LABELS for label, _body in tabs)
+
+
 def _potion_record_from_text(name, wikitext):
     """Build an item record from a page/tab that uses {{Potion}},
     {{Gears Infobox}} or {{Item}}. Returns (record, thumbnail_files) or None."""
     quote = extract_item_quote_arg1(wikitext)
     description = clean_wikitext(quote or "")
+    description = _dedupe_effect_tokens(description)
     usage = ""
     effects = ""
+    how_to_get = ""
+    gears_obtainment = ""
+    drops = _drops_text(wikitext, include_description=_is_chest_name(name))
     thumbnail_files = []
     potion = extract_template(wikitext, "Potion")
     gears = extract_template(wikitext, "Gears Infobox")
@@ -1014,9 +1303,14 @@ def _potion_record_from_text(name, wikitext):
         named, _pos = potion
         boost = _join_boost(named.get("boost", ""))
         duration = clean_wikitext(named.get("duration", ""))
+        if boost.lower() in ("none", "n/a", "na", "-"):
+            boost = ""
+        if duration.lower() in ("none", "n/a", "na", "-"):
+            duration = ""
         effects = clean_wikitext(named.get("effect", ""))
         if effects and effects.lower() in ("none", "n/a", "na", "-"):
             effects = ""
+        effects = _dedupe_effect_tokens(effects)
         usage = boost
         if boost and duration:
             usage = f"{boost} — lasts {duration}"
@@ -1030,13 +1324,36 @@ def _potion_record_from_text(name, wikitext):
             usage = boost or effect
         if not thumbnail_files:
             thumbnail_files = _gallery_files(named.get("image", ""))
+        obtainment = clean_wikitext(named.get("obtainment", ""))
+        if obtainment and not _is_trivial_text(obtainment):
+            gears_obtainment = obtainment
     if item is not None:
         named, _pos = item
         effects = effects or clean_wikitext(named.get("effects", ""))
+        if effects and effects.lower() in ("none", "n/a", "na", "-"):
+            effects = ""
+        effects = _dedupe_effect_tokens(effects)
         if not thumbnail_files:
             thumbnail_files = _gallery_files(named.get("image", ""))
-    if not usage and not description and not effects:
+    # A trivial quote ("Random Potion Sack.", "Coin.") is not a description:
+    # fall back to the page/tab's Description / Overview / About prose.
+    if _is_trivial_text(description, name):
+        # the page's intro paragraph (above the first heading) first, then
+        # the Description / Overview / About / Usage section prose
+        description = _dedupe_effect_tokens(_lead_prose(wikitext))
+        if _is_trivial_text(description, name):
+            description = _section_text(
+                wikitext, ("Description", "Overview", "About", "Profile", "Usage", "Function")
+            )
+            description = _dedupe_effect_tokens(description)
+    description = _drop_leading_colon_fragment(description)
+    if not usage and not description and not effects and not drops:
         return None
+    # Chest-style items keep their Chests category even when the wiki page
+    # uses the {{Potion}} template (Random Potion Sack, Random Rune Chest):
+    # the wiki has no real Category:Chests to derive it from.
+    if _is_chest_name(name):
+        category = "Chests"
     if effects and "(" in effects:
         # parenthesized effect strings are page-layout artifacts
         # ("Rainbow Ice (Effect)(+100% ...)") — the verified dataset drops them
@@ -1056,6 +1373,8 @@ def _potion_record_from_text(name, wikitext):
             "Requirements",
         ),
     )
+    if not how_to_get:
+        how_to_get = _drop_leading_colon_fragment(gears_obtainment)
     record = {
         "name": name,
         "category": category,
@@ -1067,6 +1386,8 @@ def _potion_record_from_text(name, wikitext):
     }
     if effects:
         record["effects"] = effects
+    if drops:
+        record["drops"] = drops
     return record, thumbnail_files
 
 
@@ -1131,7 +1452,9 @@ def build_items(seed_names, progress=None, timeout=20):
 
     seed_names: curated names to refresh (the verified dataset's keys). The
     pipeline refreshes every seed name, adds genuinely new aggregated
-    potion/rune tabs, and drops records whose data is confirmed gone.
+    potion/rune/chest tabs, discovers item pages that are still missing
+    from the dataset (via the wiki's own Category:Items listing), and drops
+    records whose data is confirmed gone.
     Returns (data, uncertain_names, dropped_names); data is None when the
     wiki is unavailable (caller keeps the offline dataset).
     """
@@ -1143,7 +1466,7 @@ def build_items(seed_names, progress=None, timeout=20):
     thumb_requests = []
 
     aggregate_tabs = {}
-    for page in AGGREGATED_POTION_PAGES + (RUNES_PAGE,):
+    for page in AGGREGATED_POTION_PAGES + AGGREGATED_CHEST_PAGES + AGGREGATED_ITEM_PAGES + (RUNES_PAGE,):
         status, text = fetch_page_status(page, timeout=timeout)
         if status == "ok":
             aggregate_tabs[page] = _split_tabber(text)
@@ -1161,7 +1484,14 @@ def build_items(seed_names, progress=None, timeout=20):
         for page, tabs in aggregate_tabs.items():
             for label, body in tabs:
                 if _canon(label) == target:
-                    cat = "Runes" if page == RUNES_PAGE else "Potions"
+                    if page == RUNES_PAGE:
+                        cat = "Runes"
+                    elif page in AGGREGATED_CHEST_PAGES:
+                        cat = "Chests"
+                    elif page in AGGREGATED_POTION_PAGES:
+                        cat = "Potions"
+                    else:
+                        cat = ""
                     return page, label, body, cat
         return None
 
@@ -1171,9 +1501,11 @@ def build_items(seed_names, progress=None, timeout=20):
         #    must match ITS tab, never the page's first tab)
         target = _canon(name)
         tab = match_tab(target)
+        row = items_rows.get(target)
         # 2) direct page — but never the aggregate pages themselves
+        weak_page_record = None
         for cand in _page_candidates(name):
-            if cand in AGGREGATED_POTION_PAGES or cand == RUNES_PAGE:
+            if cand in _NON_ITEM_PAGES:
                 continue
             status, text = fetch_page_status(cand, timeout=timeout)
             if status == "unavailable":
@@ -1184,13 +1516,17 @@ def build_items(seed_names, progress=None, timeout=20):
                     rec, files = guarded
                     rec["name"] = name
                     return ("ok", rec, files)
-                if "<tabber" in text.lower():
-                    continue  # aggregate page without a matching tab
+                if "<tabber" in text.lower() and not _tabber_is_auxiliary(text):
+                    continue  # multi-item aggregate page without a matching tab
                 built = _potion_record_from_text(name, text)
                 if built:
                     rec, files = built
                     rec["name"] = name
-                    return ("ok", rec, files)
+                    if _record_has_content(rec, name) or not row:
+                        return ("ok", rec, files)
+                    # the page carries no real content (trivial quote, no
+                    # boosts) — the Items-page row is the better source
+                    weak_page_record = (rec, files)
         if tab:
             page, _label, body, cat = tab
             built = _potion_record_from_text(name, body)
@@ -1199,8 +1535,7 @@ def build_items(seed_names, progress=None, timeout=20):
                 rec["name"] = name
                 rec["category"] = rec.get("category") or cat
                 return ("ok", rec, files)
-        # 3) Items page table rows (easter / dev items)
-        row = items_rows.get(target)
+        # 3) Items page table rows (materials / easter / dev items)
         if row:
             rec = {
                 "name": name,
@@ -1212,6 +1547,8 @@ def build_items(seed_names, progress=None, timeout=20):
                 "flags": ["fandom"],
             }
             return ("ok", rec, row["files"])
+        if weak_page_record:
+            return ("ok", weak_page_record[0], weak_page_record[1])
         return ("missing", None, None)
 
     names = list(seed_names)
@@ -1223,6 +1560,24 @@ def build_items(seed_names, progress=None, timeout=20):
                 names.append(label)
                 existing_canon.add(_canon(label))
                 log(f"[SolBookData] new item from aggregate tabs: {label}")
+    # discovery pass: the wiki's Category:Items lists every item page.
+    # Members the dataset does not know yet are resolved through the normal
+    # pipeline; placeholder titles and aggregate pages are skipped and a
+    # discovered record must carry real content (no "???"-only stubs).
+    discovery_members = category_members(ITEMS_DISCOVERY_CATEGORY, timeout=timeout)
+    if discovery_members is None:
+        log("[SolBookData] items discovery category unavailable")
+        discovery_members = []
+    seed_canon = {_canon(n) for n in seed_names}
+    for title in discovery_members:
+        key = _canon(title)
+        if not key or key in existing_canon or key in seed_canon:
+            continue
+        if title in _NON_ITEM_PAGES or key in _PLACEHOLDER_CANON:
+            continue
+        existing_canon.add(key)
+        names.append(title)
+        log(f"[SolBookData] new item from Category:Items discovery: {title}")
     for name in names:
         status, rec, files = resolve(name)
         if status == "unavailable":
@@ -1234,6 +1589,15 @@ def build_items(seed_names, progress=None, timeout=20):
                 log(f"[SolBookData] no confirmed wiki data, dropped: {name}")
             continue
         if rec:
+            if (
+                name not in seed_names
+                and not rec.get("usage")
+                and not rec.get("effects")
+                and not rec.get("drops")
+                and _is_trivial_text(rec.get("description", ""), name)
+            ):
+                log(f"[SolBookData] discovered record has no real content, skipped: {name}")
+                continue
             thumb_requests.append((rec, files or []))
             data[name] = rec
     # derive a category for brand-new records that have none (seed records
@@ -1243,12 +1607,12 @@ def build_items(seed_names, progress=None, timeout=20):
         cat_map = page_categories([r["name"] for r in uncategorized], timeout=timeout) or {}
         for rec in uncategorized:
             cats = [c.replace("Category:", "").lower() for c in cat_map.get(rec["name"], [])]
-            if any("potion" in c for c in cats):
-                rec["category"] = "Potions"
-            elif any("tool" in c for c in cats):
-                rec["category"] = "Tools"
-            elif any("chest" in c for c in cats):
+            if "chest" in rec["name"].lower() or any("chest" in c for c in cats):
                 rec["category"] = "Chests"
+            elif any("potion" in c for c in cats):
+                rec["category"] = "Potions"
+            elif any("tool" in c for c in cats) and "chest" not in rec["name"].lower():
+                rec["category"] = "Tools"
             elif any("rune" in c for c in cats):
                 rec["category"] = "Runes"
             else:
@@ -1441,11 +1805,21 @@ def _resolve_single_item(name, timeout=20):
     """Resolution for ONE item (detail view): aggregate tab match -> direct
     page -> candidates -> Items table row. Returns (record, files) or None."""
     aggregate_tabs = {}
-    for page in AGGREGATED_POTION_PAGES + (RUNES_PAGE,):
+    for page in AGGREGATED_POTION_PAGES + AGGREGATED_CHEST_PAGES + AGGREGATED_ITEM_PAGES + (RUNES_PAGE,):
         status, text = fetch_page_status(page, timeout=timeout)
         if status == "ok":
             aggregate_tabs[page] = _split_tabber(text)
     target = _canon(name)
+
+    def _page_cat(page):
+        if page == RUNES_PAGE:
+            return "Runes"
+        if page in AGGREGATED_CHEST_PAGES:
+            return "Chests"
+        if page in AGGREGATED_POTION_PAGES:
+            return "Potions"
+        return ""
+
     for page, tabs in aggregate_tabs.items():
         for label, body in tabs:
             if _canon(label) != target:
@@ -1453,12 +1827,15 @@ def _resolve_single_item(name, timeout=20):
             built = _potion_record_from_text(name, body)
             if built:
                 rec, files = built
-                rec["category"] = rec.get("category") or (
-                    "Runes" if page == RUNES_PAGE else "Potions"
-                )
+                rec["category"] = rec.get("category") or _page_cat(page)
                 return (rec, files)
+    row = None
+    status, text = fetch_page_status(ITEMS_PAGE, timeout=timeout)
+    if status == "ok":
+        row = _items_table_rows(text).get(target)
+    weak_page_record = None
     for cand in _page_candidates(name):
-        if cand in AGGREGATED_POTION_PAGES or cand == RUNES_PAGE:
+        if cand in _NON_ITEM_PAGES:
             continue
         status, text = fetch_page_status(cand, timeout=timeout)
         if status == "unavailable":
@@ -1467,25 +1844,26 @@ def _resolve_single_item(name, timeout=20):
             guarded = _match_tab_in_text(name, text)
             if guarded is not None:
                 return guarded
-            if "<tabber" in text.lower():
-                continue  # aggregate page without a matching tab
+            if "<tabber" in text.lower() and not _tabber_is_auxiliary(text):
+                continue  # multi-item aggregate page without a matching tab
             built = _potion_record_from_text(name, text)
             if built:
-                return built
-    status, text = fetch_page_status(ITEMS_PAGE, timeout=timeout)
-    if status == "ok":
-        row = _items_table_rows(text).get(target)
-        if row:
-            rec = {
-                "name": name,
-                "category": "Special / Misc",
-                "thumbnail_url": "",
-                "how_to_get": "",
-                "usage": row["usage"],
-                "description": row["description"],
-                "flags": ["fandom"],
-            }
-            return (rec, row["files"])
+                if _record_has_content(built[0], name) or row is None:
+                    return built
+                weak_page_record = built
+    if row:
+        rec = {
+            "name": name,
+            "category": "Special / Misc",
+            "thumbnail_url": "",
+            "how_to_get": "",
+            "usage": row["usage"],
+            "description": row["description"],
+            "flags": ["fandom"],
+        }
+        return (rec, row["files"])
+    if weak_page_record:
+        return weak_page_record
     return None
 
 

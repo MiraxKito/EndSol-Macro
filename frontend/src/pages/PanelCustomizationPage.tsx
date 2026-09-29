@@ -66,7 +66,9 @@ const DEFAULT_THEME: ThemeData = {
   custom_labels: {},
   custom_icons: {},
   custom_macro_title: "EndSol Macro",
-  custom_macro_version: "v1.0.7",
+  // Empty = the sidebar always shows the live app version (stale custom
+  // version text is force-reset by the backend on every version change).
+  custom_macro_version: "",
   bg_type: "solid",
   custom_bg_url: "",
   grad1: "#7c5bf5",
@@ -575,7 +577,7 @@ export default function PanelCustomizationPage() {
                   </div>
                   <div>
                     <label className="form-label">Window Version Text</label>
-                    <input type="text" className="form-input" value={theme.custom_macro_version || "v1.0.7"} onChange={(e) => updateThemeField("custom_macro_version", e.target.value)} placeholder="v1.0.7" />
+                    <input type="text" className="form-input" value={theme.custom_macro_version || ""} onChange={(e) => updateThemeField("custom_macro_version", e.target.value)} placeholder="Auto (app version)" />
                   </div>
                 </div>
               </div>
@@ -620,7 +622,7 @@ export default function PanelCustomizationPage() {
                   </div>
                   <div>
                     <label className="form-label">Theme Version</label>
-                    <input type="text" className="form-input" value={theme.custom_macro_version || "v1.0.7"} onChange={(e) => updateThemeField("custom_macro_version", e.target.value)} placeholder="v1.0.7" />
+                    <input type="text" className="form-input" value={theme.custom_macro_version || ""} onChange={(e) => updateThemeField("custom_macro_version", e.target.value)} placeholder="Auto (app version)" />
                   </div>
                 </div>
               </div>

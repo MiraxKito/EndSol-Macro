@@ -134,13 +134,11 @@ class LifecycleMixin:
         self.last_snowman_claim = datetime.min
         self._obby_running = False
         self.last_obby_claim = datetime.min
-        self._egg_collecting = False
         self._eden_running = False
         self._eden_path_pending = False
         self._potion_thread_active = False
         self._fishing_busy = False
-        self.last_egg_collect_time = datetime.min
-        screenshot_dir = os.path.join(os.getcwd(), "images")
+        screenshot_dir = os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "EndSolMacro", "images")
         try:
             if os.path.exists(screenshot_dir):
                 for fname in os.listdir(screenshot_dir):
@@ -310,6 +308,8 @@ class LifecycleMixin:
             return
         self._idle_monitor_running = True
         self._idle_autostart_latched = False
+        self._idle_autostart_saw_running = False
+        self._idle_autostart_last_start_ts = 0.0
         self._idle_monitor_thread = threading.Thread(
             target=self._idle_monitor_loop,
             name="AutoStartIdleMonitor",
@@ -363,12 +363,31 @@ class LifecycleMixin:
                 # period to start the macro again after a manual stop.
                 if idle_seconds < timeout_seconds:
                     self._idle_autostart_latched = False
+                    self._idle_autostart_saw_running = False
                     time.sleep(2.0)
                     continue
 
-                if self._idle_autostart_latched or getattr(self, "detection_running", False):
+                if getattr(self, "detection_running", False):
+                    self._idle_autostart_saw_running = True
                     time.sleep(2.0)
                     continue
+
+                if getattr(self, "_idle_autostart_latched", False):
+                    # The macro was already started (or a start was attempted)
+                    # during this idle period. If it stopped ON ITS OWN while
+                    # the user is STILL away, allow one retry per idle window —
+                    # but only if the previous run actually came up (a start
+                    # that failed instantly must not loop error dialogs). Any
+                    # user input resets the latch in the branch above.
+                    saw_running = bool(getattr(self, "_idle_autostart_saw_running", False))
+                    started_at = float(getattr(self, "_idle_autostart_last_start_ts", 0.0) or 0.0)
+                    if saw_running and (time.time() - started_at) >= timeout_seconds:
+                        self.append_log("[Auto-Start] Macro stopped on its own while the user is still idle — restarting.")
+                        self._idle_autostart_latched = False
+                        self._idle_autostart_saw_running = False
+                    else:
+                        time.sleep(2.0)
+                        continue
 
                 if not self.check_roblox_procs():
                     now = time.monotonic()
@@ -380,7 +399,25 @@ class LifecycleMixin:
                     continue
 
                 self._idle_autostart_latched = True
+                self._idle_autostart_last_start_ts = time.time()
+                self._idle_autostart_saw_running = False
                 self.append_log(f"[Auto-Start] Starting macro after {timeout_minutes:g} minutes of user inactivity.")
+                # Auto-start must run the SAFE cycle: force Idle Mode ON
+                # before the main loop starts, so the auto-started session
+                # is idle + anti-AFK only - never the user's full automation
+                # setup (fishing, quests, Memory Match, ...).
+                if not bool(self.config.get("enable_idle_mode", False)):
+                    self.config["enable_idle_mode"] = True
+                    try:
+                        self.save_config()
+                    except Exception:
+                        pass
+                    if hasattr(self, "on_stats_update") and callable(self.on_stats_update):
+                        try:
+                            self.on_stats_update()  # panel refresh: toggle shows ON
+                        except Exception:
+                            pass
+                    self.append_log("[Auto-Start] Idle Mode enabled — the auto-started cycle runs idle + anti-AFK only.")
                 self.start_detection()
             except Exception as e:
                 try:

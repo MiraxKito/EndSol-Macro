@@ -35,6 +35,11 @@ export default function CreditsPage() {
                     <p style={{ color: "var(--text-secondary)", fontSize: "13px" }}>
                         Fork of Coteab Macro — continued development and customization
                     </p>
+                    <p style={{ margin: "6px 0 0", fontSize: "13px" }}>
+                        <a href="https://github.com/MiraxKito/EndSol-Macro" target="_blank" rel="noreferrer" style={{ color: "var(--accent)" }}>
+                            GitHub Repo
+                        </a>
+                    </p>
                 </div>
             </div>
 
