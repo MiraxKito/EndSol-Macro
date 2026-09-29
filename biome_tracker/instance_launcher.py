@@ -1149,6 +1149,44 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
             except Exception:
                 pass
             return _launch_fail(username, {"success": False, "error": msg})
+        # v45: the gate passing above means "last strip pass was clean", but a
+        # clean pass can also mean the scan never SAW the running client
+        # (renamed exe, Microsoft Store version, psutil/AV failure) — in that
+        # case the old client is UNPROTECTED and this very launch would kill
+        # it (exactly the friend's report: panel launch succeeds, the old
+        # window closes as the new one appears). Cross-check: a visible
+        # Roblox client window with ZERO matched client processes is a hard
+        # refusal, not a clean state.
+        try:
+            from .base_support import roblox_top_windows
+            live_windows = roblox_top_windows()
+            live_pids = _roblox_pids()
+            if live_windows and not live_pids:
+                msg = ("Roblox client windows are visible, but no RobloxPlayerBeta.exe process "
+                       "was matched — the singleton stripper cannot protect them (renamed client, "
+                       "Microsoft Store version, or psutil failure). Launch refused to protect the "
+                       "running window.")
+                try:
+                    log = getattr(_TRACKER, "append_log", None)
+                    if callable(log):
+                        log(f"[Launcher] {msg}")
+                except Exception:
+                    pass
+                return _launch_fail(username, {"success": False, "error": msg})
+            # v45: one diagnostic line per launch — the strip note tells
+            # exactly what the watcher saw ("no singleton handles present"
+            # with a client running is the suspicious signature).
+            with _LOCK:
+                s_note = str(_STATE.get("mutex_note") or "")
+            try:
+                log = getattr(_TRACKER, "append_log", None)
+                if callable(log):
+                    log(f"[Launcher] Singleton: {len(live_pids)} client process(es), "
+                        f"{len(live_windows)} window(s) — {s_note or 'no strip data yet'}")
+            except Exception:
+                pass
+        except Exception:
+            pass
     token = _dpapi_unprotect(str(account.get("token_enc", "")))
     if not token:
         return _launch_fail(username, {"success": False,
@@ -1406,14 +1444,23 @@ def _singleton_name_matches(name: str) -> bool:
 
 
 def _roblox_pids() -> list[int]:
-    """PIDs of running Roblox client processes (best effort)."""
+    """PIDs of running Roblox client processes (best effort).
+
+    v45: also matches the Microsoft Store client (Windows10Universal.exe) —
+    it enforces the same named singleton objects, and missing it made the
+    strip pass report "no Roblox clients running" while a Store client was
+    in fact running, so the launch gate passed with the client UNPROTECTED
+    and the next launch killed it (user report 2026-09-29: panel launch
+    works on Bloxstrap, on the friend's vanilla Roblox every new client
+    closed the previous one)."""
     try:
         import psutil
         out: list[int] = []
         for proc in psutil.process_iter(["pid", "name"]):
             try:
                 info = proc.info or {}
-                if "robloxplayerbeta" in str(info.get("name") or "").lower():
+                name = str(info.get("name") or "").lower()
+                if "robloxplayerbeta" in name or "windows10universal" in name:
                     out.append(int(info.get("pid")))
             except Exception:
                 continue
