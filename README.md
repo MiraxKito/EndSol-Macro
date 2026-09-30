@@ -94,6 +94,10 @@ See [BUILD_EXE.md](BUILD_EXE.md) and [BUILD_PROTECTED_EXE.md](BUILD_PROTECTED_EX
 
 Running a non-standard setup (different resolution, scaling, or window mode)? Share your working calibration so others can use it: open [Discussions](https://github.com/MiraxKito/EndSol-Macro/discussions), pick the **Calibration sharing** template, and attach the JSON exported from *Macro Calibrations → Export*. Verified presets are added to the built-in calibration picker, where everyone can load them with one click.
 
+## ✔ Safety
+
+EndSol Macro does not contains any virus or tracker. Feel free to scan the files at [VirusTotal](https://www.virustotal.com/gui/home/upload). If you see Windows Defender screen, just click "See more" and Run anyway", it is just because of unsigned exe file (buying of digital license is not what I can do now).
+
 ## 💜 Support
 
 EndSol Macro is free and will stay free. If you want to support development: [Boosty](https://boosty.to/eds_mirax/donate).
