@@ -96,7 +96,7 @@ Running a non-standard setup (different resolution, scaling, or window mode)? Sh
 
 ## ✔ Safety
 
-EndSol Macro does not contains any virus or tracker. Feel free to scan the files at [VirusTotal](https://www.virustotal.com/gui/home/upload). If you see Windows Defender screen, just click "See more" and Run anyway", it is just because of unsigned exe file (buying of digital license is not what I can do now).
+EndSol Macro does not contain any virus or tracker. Feel free to scan the files at [VirusTotal](https://www.virustotal.com/gui/home/upload). If you see Windows Defender screen, just click "See more" and Run anyway", it is just because of unsigned exe file (buying of digital license is not what I can do now).
 
 ## 💜 Support
 
