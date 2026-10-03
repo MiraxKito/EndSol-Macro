@@ -1135,7 +1135,12 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
             ensure_locks()
         except Exception:
             pass
-        if not _ensure_singleton_ready(timeout=5.0):
+        # Never trust the cached "already stripped" verdict at launch time:
+        # a clean scan from the client's first seconds proves nothing (the
+        # handles may be created later). Force a full re-scan of every
+        # running client NOW, so the takeover cannot kill any of them.
+        force_singleton_rescan()
+        if not _ensure_singleton_ready(timeout=10.0):
             with _LOCK:
                 note = str(_STATE.get("singleton_note") or _STATE.get("mutex_note") or "")
             msg = ("Could not strip the Roblox singleton handles "
@@ -1602,6 +1607,12 @@ def _strip_one_pid(pid: int, entries: list[Any]) -> dict[str, Any]:
 _STRIPPED_PIDS: set[int] = set()
 _PID_CLEAN_SCANS: dict[int, int] = {}
 _PID_CLEAN_SCANS_REQUIRED = 3
+# A freshly spawned client may create its singleton handles SECONDS after
+# the process shows up (after anti-tamper init). Clean scans during that
+# window prove nothing, so a young pid is never marked done on clean scans
+# alone - it keeps being scanned until it is at least this old.
+_PID_FIRST_SEEN: dict[int, float] = {}
+_PID_CLEAN_DONE_MIN_AGE = 60.0
 
 
 def _singleton_loop() -> None:
@@ -1618,11 +1629,17 @@ def _singleton_loop() -> None:
             break
         try:
             pids = _roblox_pids()
+            now_ts = time.time()
             with _LOCK:
                 # Prune dead pids every pass (self-heals Windows pid reuse).
                 _STRIPPED_PIDS.intersection_update(pids)
                 for stale in [p for p in _PID_CLEAN_SCANS if p not in pids]:
                     _PID_CLEAN_SCANS.pop(stale, None)
+                for stale in [p for p in _PID_FIRST_SEEN if p not in pids]:
+                    _PID_CLEAN_SCANS.pop(stale, None)
+                    _PID_FIRST_SEEN.pop(stale, None)
+                for p in pids:
+                    _PID_FIRST_SEEN.setdefault(p, now_ts)
                 pending = [p for p in pids if p not in _STRIPPED_PIDS]
             if not pending:
                 # Steady-state fast path: nothing new to strip — skip the
@@ -1646,15 +1663,25 @@ def _singleton_loop() -> None:
                 if ok:
                     for p in pending:
                         if p in closed_pids:
+                            # Handles were found and closed - fully done.
+                            _STRIPPED_PIDS.add(p)
+                            _PID_CLEAN_SCANS.pop(p, None)
+                            continue
+                        # Clean scans only count for a client old enough:
+                        # a just-spawned pid may not have created its
+                        # singleton handles yet, and marking it done now
+                        # would leave it unprotected forever (the next
+                        # launch would kill it through the takeover).
+                        age = now_ts - float(_PID_FIRST_SEEN.get(p, now_ts))
+                        if age < _PID_CLEAN_DONE_MIN_AGE:
+                            _PID_CLEAN_SCANS.pop(p, None)
+                            continue
+                        n = int(_PID_CLEAN_SCANS.get(p, 0)) + 1
+                        if n >= _PID_CLEAN_SCANS_REQUIRED:
                             _STRIPPED_PIDS.add(p)
                             _PID_CLEAN_SCANS.pop(p, None)
                         else:
-                            n = int(_PID_CLEAN_SCANS.get(p, 0)) + 1
-                            if n >= _PID_CLEAN_SCANS_REQUIRED:
-                                _STRIPPED_PIDS.add(p)
-                                _PID_CLEAN_SCANS.pop(p, None)
-                            else:
-                                _PID_CLEAN_SCANS[p] = n
+                            _PID_CLEAN_SCANS[p] = n
                 _STATE["singleton_clean"] = bool(ok)
                 _STATE["mutex_held"] = _STATE["singleton_clean"]
                 _STATE["mutex_note"] = str(stats.get("note") or "")
@@ -1687,6 +1714,20 @@ def _start_singleton_watcher() -> None:
     _SINGLETON_THREAD = threading.Thread(target=_singleton_loop,
                                          name="EndSol singleton stripper", daemon=True)
     _SINGLETON_THREAD.start()
+
+
+def force_singleton_rescan() -> None:
+    """Drop the per-pid done-cache so the next watcher pass re-strips EVERY
+    running client. Called right before a launch: the takeover kills every
+    client that still holds singleton handles, so the pre-launch state must
+    be verified by a fresh scan, never by a cached verdict."""
+    if os.name != "nt":
+        return
+    _start_singleton_watcher()
+    with _LOCK:
+        _STRIPPED_PIDS.clear()
+        _PID_CLEAN_SCANS.clear()
+        _STATE["singleton_clean"] = False
 
 
 def _ensure_singleton_ready(timeout: float = 5.0) -> bool:
