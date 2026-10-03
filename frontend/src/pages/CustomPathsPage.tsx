@@ -64,7 +64,7 @@ export default function CustomPathsPage() {
 
   const featureOptions = Object.entries(features);
 
-  // v44: auto-trigger editing for FREE (unassigned) paths.
+  // auto-trigger editing for FREE (unassigned) paths.
   const [trigEdits, setTrigEdits] = useState<Record<string, Trigger>>({});
   const trigFor = (p: CustomPath): Trigger => trigEdits[p.id] ?? {
     enabled: !!p.trigger?.enabled,
@@ -125,6 +125,10 @@ export default function CustomPathsPage() {
           🎣 <b>Fishing Spot</b>: record the walk from the spawn point (right after the respawn sequence) to YOUR fishing spot.
           Everyone on the same server can pick a different spot so you won't get in each other's way.
           The walk to the fish seller stays built-in and is not recorded.
+        </p>
+        <p style={{ margin: "10px 0 0", fontSize: 12.5, opacity: 0.8 }}>
+          🧪 <b>Potion Crafting Station</b>: used by Partial crafting occupancy — the macro walks to the crafting station, crafts for the scheduled duration, then resets the character (back to spawn — no return walk needed).
+          Record the walk from the spawn point to the station and assign it to <b>Potion Crafting Station</b>.
         </p>
       </div>
 

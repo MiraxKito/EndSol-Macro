@@ -61,6 +61,7 @@ const rarityTextClass = (type: string) =>
 
 const entryAccent = (info: Entry | undefined | null, section: string) => {
   if (section === "biomes") return normColor(info?.color || "#7c6cff");
+  if (section === "achievements") return "#fbbf24";
   if (!info) return "#94a3b8";
   if (info.color) return normColor(info.color);
   const type = entryRarityType(info);
@@ -218,7 +219,8 @@ export default function SolsBookPage() {
   const [items, setItems] = useState<MapData>({});
   const [gauntlets, setGauntlets] = useState<MapData>({});
   const [auras, setAuras] = useState<MapData>({});
-  const [section, setSection] = useState<"biomes" | "auras" | "items" | "gauntlets">("biomes");
+  const [achievements, setAchievements] = useState<MapData>({});
+  const [section, setSection] = useState<"biomes" | "auras" | "items" | "gauntlets" | "achievements">("biomes");
   const [queryInput, setQueryInput] = useState("");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
@@ -242,11 +244,12 @@ export default function SolsBookPage() {
   const load = async () => {
     setLoading(true);
     try {
-      const [biomeData, auraData, itemData, gauntletData] = await Promise.all([
+      const [biomeData, auraData, itemData, gauntletData, achievementData] = await Promise.all([
         window.pywebview?.api?.get_full_biome_data?.(),
         window.pywebview?.api?.get_full_aura_data?.(),
         (window.pywebview?.api as any)?.get_full_item_data?.(),
         (window.pywebview?.api as any)?.get_full_gauntlet_data?.(),
+        (window.pywebview?.api as any)?.get_full_achievement_data?.(),
       ]);
       if (biomeData && typeof biomeData === "object") {
         const limboAuras = Object.entries(auraData || {})
@@ -258,12 +261,13 @@ export default function SolsBookPage() {
       if (auraData && typeof auraData === "object") setAuras(auraData);
       if (itemData && typeof itemData === "object") setItems(itemData);
       if (gauntletData && typeof gauntletData === "object") setGauntlets(gauntletData);
+      if (achievementData && typeof achievementData === "object") setAchievements(achievementData);
     } finally { setLoading(false); }
   };
 
   useEffect(() => { void load(); }, []);
 
-  const data = section === "biomes" ? biomes : section === "items" ? items : section === "gauntlets" ? gauntlets : auras;
+  const data = section === "biomes" ? biomes : section === "items" ? items : section === "gauntlets" ? gauntlets : section === "achievements" ? achievements : auras;
   const categories = useMemo(() => {
     const set = new Map<string, string>();
     Object.values(data).forEach(item => {
@@ -362,7 +366,7 @@ export default function SolsBookPage() {
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "flex-start" }}>
         <div>
           <h2 style={{ letterSpacing: "0.04em" }}>✦ Sol’s Book</h2>
-          <p>Official Field Almanac of Sol’s RNG — Biomes, Auras, Items, and Gauntlets straight from the Fandom Wiki.</p>
+          <p>Official Field Almanac of Sol’s RNG — Biomes, Auras, Items, Gauntlets, and Achievements straight from the Fandom Wiki.</p>
         </div>
         <button className="btn" onClick={() => void load()} disabled={loading}>{loading ? "Updating…" : "↻ Refresh"}</button>
       </div>
@@ -387,6 +391,9 @@ export default function SolsBookPage() {
           <div className="book-chip" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
             <b style={{ color: "#ec4899" }}>{Object.keys(gauntlets).length}</b> gauntlets
           </div>
+          <div className="book-chip" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
+            <b style={{ color: "#fbbf24" }}>{Object.keys(achievements).length}</b> achievements
+          </div>
           <div className="book-chip" style={{ background: "rgba(34, 197, 94, 0.1)", border: "1px solid rgba(34, 197, 94, 0.2)", color: "#86efac", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
             ✓ Sol's RNG Fandom Verified
           </div>
@@ -398,8 +405,9 @@ export default function SolsBookPage() {
         <button className={`btn ${section === "auras" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("auras"); setCategory("all"); }}>✧ Auras</button>
         <button className={`btn ${section === "items" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("items"); setCategory("all"); }}>🎒 Items</button>
         <button className={`btn ${section === "gauntlets" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("gauntlets"); setCategory("all"); }}>🥊 Gauntlets</button>
-        
-        <input className="form-input" style={{ minWidth: 200, flex: 1, maxWidth: 340, borderRadius: "4px" }} value={queryInput} onChange={e => setQueryInput(e.target.value)} placeholder={section === "auras" ? "Search auras…" : section === "biomes" ? "Search biomes…" : section === "items" ? "Search items…" : "Search gauntlets…"} />
+        <button className={`btn ${section === "achievements" ? "btn-accent" : ""}`} style={{ borderRadius: "4px", padding: "6px 14px", fontWeight: 600 }} onClick={() => { setSection("achievements"); setCategory("all"); }}>🏆 Achievements</button>
+
+        <input className="form-input" style={{ minWidth: 200, flex: 1, maxWidth: 340, borderRadius: "4px" }} value={queryInput} onChange={e => setQueryInput(e.target.value)} placeholder={section === "auras" ? "Search auras…" : section === "biomes" ? "Search biomes…" : section === "items" ? "Search items…" : section === "achievements" ? "Search achievements…" : "Search gauntlets…"} />
         <select className="form-input" style={{ maxWidth: 190, borderRadius: "4px" }} value={category} onChange={e => setCategory(e.target.value)}>
           <option value="all">All categories</option>
           {categories.map(value => <option key={value} value={value}>{value}</option>)}
@@ -419,12 +427,12 @@ export default function SolsBookPage() {
                 {entry.thumbnail_url ? (
                   <CachedThumb url={String(entry.thumbnail_url)} alt={String(selected)} style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4 }} />
                 ) : (
-                  section === "biomes" ? "☁" : section === "items" ? "🎒" : section === "gauntlets" ? "🥊" : "✧"
+                  section === "biomes" ? "☁" : section === "items" ? "🎒" : section === "gauntlets" ? "🥊" : section === "achievements" ? "🏆" : "✧"
                 )}
               </div>
               <div style={{ flex: 1 }}>
                 <div className={rarityTextClass(entryRarityType(entry))} style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".16em", ...(rarityTextClass(entryRarityType(entry)) ? {} : { color: accent }) }}>
-                  {section === "gauntlets" ? (entry.slot || entry.hand || "Gauntlet") : section === "items" ? (entry.category || "Item") : entryRarityType(entry)}
+                  {section === "gauntlets" ? (entry.slot || entry.hand || "Gauntlet") : section === "items" ? (entry.category || "Item") : section === "achievements" ? (entry.category || "Achievement") : entryRarityType(entry)}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                   <h3 style={{ margin: "4px 0 4px", fontSize: 23, fontWeight: 700, color: "#fff" }}>{entry?.name ? String(entry.name) : prettyName(selected)}</h3>
@@ -521,6 +529,19 @@ export default function SolsBookPage() {
                   reliably and kept the page heavy. */}
               {entry.music_url && <Section title="🎵 Theme music"><CachedAudio url={String(entry.music_url)} /></Section>}
               {entry.exclusive_auras && <Section title="Exclusive auras"><p style={{ color: "var(--text-secondary)", fontSize: 13 }}>{Array.isArray(entry.exclusive_auras) ? entry.exclusive_auras.join(", ") : String(entry.exclusive_auras)}</p></Section>}
+            </> : section === "achievements" ? <>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
+                <Fact label="Category" value={entry.category || "Achievement"} />
+                <Fact label="Reward" value={entry.reward || "None"} />
+              </div>
+              <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>✅ How to obtain</h4>
+                <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.obtainment || "No obtainment details available."}</div>
+              </div>
+              <div className="book-card" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>📖 Description</h4>
+                <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || "No description provided."}</div>
+              </div>
             </> : <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity class" value={rarityClassFull(entry.rarity_name, entry.rarity)} />

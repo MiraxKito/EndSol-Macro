@@ -73,14 +73,14 @@ DEFAULT_CONFIG: dict = {
     "eden_path_interval": "35",
     "go_to_eden_spawn": False,
     "auto_eden_contract": False,
-    "eden_contract_button": [746, 931],
-    "eden_contract_extra1_button": [743, 843],
+    "eden_contract_button": [737, 941],
+    "eden_contract_extra1_button": [0, 0],
     "eden_contract_extra2_button": [0, 0],
     "auto_roll_biome_enabled": False,
     "auto_roll_biome_list": [],
     "autoroll_status_region": [689, 976, 133, 29],
     "autoroll_toggle_button": [761, 986],
-    "eden_contract_extra1_button": [743, 843],
+    "eden_contract_extra1_button": [0, 0],
     "eden_contract_extra2_button": [0, 0],
     "eden_contract_interval": "3",
 
@@ -93,13 +93,10 @@ DEFAULT_CONFIG: dict = {
     "multi_instance_alerts": False,
     "multi_instance_aura_min_rarity": 100000,
     "multi_instance_alert_rare_biomes_only": True,
-    "multi_instance_rejoin_enabled": True,
 
     # ── Optional extras (all OFF by default) ─────────────────────────
     "dry_run": False,
-    "key_release_failsafe": False,
     "daily_stats_webhook": False,
-    "rare_aura_desktop_notify": False,
 
     # ── Merchant ─────────────────────────────────────────────────────
     "ping_jester": False,
@@ -420,12 +417,24 @@ DEFAULT_CONFIG: dict = {
 
     # ── Potions ───────────────────────────────────────────────────────
     "selected_potion_file": "",
+    "potion_simple_name": "",
     "potion_items_tab": [1507, 227],
     "potion_search_bar": [1448, 264],
     "potion_first_potion_slot_pos": [1512, 332],
     "potion_recipe_button": [200, 815],
     "potion_auto_button": [424, 821],
     "potion_auto_add_button": [426, 813],
+    # SIMPLE craft mode (new Eon 1-23 crafting UI) + occupancy modes
+    "potion_craft_mode": "recording",          # "recording" | "simple"
+    "potion_occupancy": "full",                # "full" | "partial"
+    "potion_add_everything_button": [845, 689],
+    "potion_craft_button": [1066, 686],
+    "potion_add_wait": "1.0",
+    "potion_craft_wait": "4.0",
+    "potion_auto_target_state": "on",          # "on" | "on_craft"
+    "potion_auto_state_region": [368, 803, 129, 36],
+    "potion_partial_interval_min": "60",       # minutes between scheduled sessions
+    "potion_partial_duration_min": "10",       # crafting time per session
     # ── Platform flags ────────────────────────────────────────────────
     "vip": False,
     "has_gamepass": False,
@@ -469,7 +478,7 @@ def get_default_config() -> dict:
     return copy.deepcopy(DEFAULT_CONFIG)
 
 
-# --- Memory Match 5x4 Defaults (2026-09-27 player rewrite) ---
+# --- Memory Match 5x4 Defaults ( player rewrite) ---
 # Player timings are FIXED module constants in mixin_memory_match
 # (MM_*_DELAY) - intentionally not configurable.
 # Identity tuning: item art descriptor + quantity strip mask, images only.

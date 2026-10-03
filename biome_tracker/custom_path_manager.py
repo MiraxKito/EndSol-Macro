@@ -45,6 +45,7 @@ FEATURE_PATH_MAP = {
     "obby": "obby.json",
     "eden": "eden.json",
     "snowman": "snowman.json",
+    "potion_station": "potion_station.json",
 }
 
 FEATURE_LABELS = {
@@ -59,6 +60,10 @@ FEATURE_LABELS = {
     # the respawn sequence) to the player's own fishing spot — the walk to the
     # fish seller stays built-in on purpose.
     "fishing": "Fishing Spot",
+    # Potion Crafting (partial occupancy): walk to the crafting station
+    # (Stella). The bundled default is paths/potion_station.json (recorded
+    # by the owner). The way back is a character reset, not a walk.
+    "potion_station": "Potion Crafting Station",
 }
 
 
@@ -85,7 +90,7 @@ def list_custom_paths() -> list[dict[str, Any]]:
                 "speed_multiplier": meta.get("speed_multiplier", 1.0),
                 # None = recorded before VIP/non-VIP stamping existed (legacy).
                 "recorded_nonvip": meta.get("recorded_nonvip", None),
-                # v44: free-path auto trigger (paths NOT assigned to a
+                # Free-path auto trigger (paths NOT assigned to a
                 # feature): {"enabled": bool, "interval_min": float,
                 # "biome": "GLITCHED" | ""}.
                 "trigger": dict(meta.get("trigger") or {}),
@@ -125,7 +130,7 @@ def save_custom_path(
     playback can compensate when the mode differs. None keeps the value
     unset (legacy paths); `created` preserves the original timestamp when
     re-saving an existing path (e.g. on re-assignment). `trigger=None`
-    preserves an existing auto-trigger (v44) on re-assignment.
+    preserves an existing auto-trigger on re-assignment.
     """
     _ensure_dirs()
     filepath = CUSTOM_PATHS_DIR / f"{path_id}.json"
@@ -172,7 +177,7 @@ def delete_custom_path(path_id: str) -> bool:
 
 def set_path_trigger(path_id: str, enabled: bool = False, interval_min: float = 0.0,
                      biome: str = "") -> dict[str, Any]:
-    """Configure the AUTO TRIGGER of a free (unassigned) custom path (v44).
+    """Configure the AUTO TRIGGER of a free (unassigned) custom path.
 
     - interval_min > 0: replay the path every N minutes while the macro runs;
     - biome (e.g. "GLITCHED"): replay the path once every time this biome
@@ -206,7 +211,7 @@ def set_path_trigger(path_id: str, enabled: bool = False, interval_min: float = 
 
 
 def list_triggered_paths() -> list[dict[str, Any]]:
-    """All custom paths whose AUTO TRIGGER is ON (v44).
+    """All custom paths whose AUTO TRIGGER is ON.
 
     Used by the tracker's custom_paths_loop ticker; interval and biome
     triggers are evaluated there. Paths assigned to a feature are skipped —

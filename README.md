@@ -6,7 +6,7 @@
 
 **All-in-one automation panel for Sol's RNG (Roblox)**
 
-Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest Board · Fishing · Multi-instance main/secondary windows
+Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · Memory Match · Quest Board · Fishing · Potion Crafting · Multi-instance main/secondary windows
 
 [Download](https://github.com/MiraxKito/EndSol-Macro/releases/latest) · [Report an issue](https://github.com/MiraxKito/EndSol-Macro/issues) · [Discussions](https://github.com/MiraxKito/EndSol-Macro/discussions)
 
@@ -26,19 +26,21 @@ Biome tracking · Discord webhooks · Sol's Book wiki · Memory Match · Quest B
 - **Daily stats webhook** — statistics are kept per day (auras, biomes, Memory Match pairs, fish, macro runtime) in a local JSON file, so they survive restarts, and one Discord summary is sent after each daily reset (00:00 UTC).
 
 **Automation**
-- **Memory Match** — auto-plays the Memory Match minigame: reveals tiles, remembers items and quantities as images (no OCR for tiles), prioritizes high-value rewards, and verifies every pair.
+- **Memory Match** — auto-plays the Memory Match minigame: reveals tiles, remembers items and quantities as images (no OCR for tiles, including white/gray items), prioritizes high-value rewards, and verifies every pair.
 - **Quest Board** — accepts or dismisses quests according to your preferences, tolerant to OCR noise.
 - **Fishing** — fully automatic fishing with selling, merchant runs and failsafes.
 - **Daily Rewards** — claims the Sol's RNG daily check-in automatically right after the reset (00:00 UTC).
-- **Custom paths** — record your own walk routes (fishing spot, obby, egg routes, Memory Match, Quest Board) with VIP / non-VIP speed handling.
+- **Custom paths** — record your own walk routes (fishing spot, obby, egg routes, Memory Match, Quest Board, crafting station) with VIP / non-VIP speed handling.
+- **Potion Crafting** — rebuilt for the new (Eon 1-23) crafting UI: Simple mode drives the Auto button safely (state is detected and switched with verification) and clicks Add Everything + Craft; Full-time or Partial occupancy (the macro walks to the station on a schedule, crafts for the set duration, then resets back to spawn). Recording mode stays as a fallback.
 - **Multiple-Instances** — one panel, many Roblox windows:
   - **built-in launcher** — add your accounts once (sessions are stored encrypted with Windows DPAPI, this PC only), then launch each client with one click: it signs into its own account automatically and joins the private server link from the Webhook page — no external multi-instance tools needed, works alongside Bloxstrap;
   - pick a **main window** — the full macro (detector, fishing, quests, Memory Match, merchant, actions) runs on it, and the detector reads the main window's *own* log;
   - **secondary windows** receive ordered Anti-AFK jumps plus per-window biome/aura/disconnect alerts from their own logs;
-  - reconnect/failsafe closes only the main window's process — secondary windows always survive.
+  - reconnect/failsafe closes only the main window's process — secondary windows always survive;
+  - close any running client right from the panel's process list (graceful close, force-kill fallback, main window protected while the macro runs), and the mode can be toggled off while a single client is still running.
 
 **Sol's Book — built-in wiki 📖**
-- Browse **Auras, Biomes, Items and Gauntlets** databases synced from the Sol's RNG Fandom Wiki: rarity, obtainment, crafting recipes, effects, descriptions.
+- Browse **Auras, Biomes, Items, Gauntlets and Achievements** databases synced from the Sol's RNG Fandom Wiki: rarity, obtainment, crafting recipes, effects, descriptions, rewards.
 - **Media tab** per entry — cutscene videos, opening cutscenes, image galleries and theme music, played from a local cache so they work reliably and offline after the first view.
 <p align="center"><img width="1920" height="1018" alt="aura tab endsol" src="https://github.com/user-attachments/assets/6206bc39-43c4-4822-8906-47108675a294" /></p>
 

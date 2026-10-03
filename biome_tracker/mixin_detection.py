@@ -556,10 +556,10 @@ class DetectionMixin:
             if self.detection_running: return
             now = datetime.now()
             self.detection_running = True
-            # v41: the old "skip the first detected aura" suppression is gone.
+            # The old "skip the first detected aura" suppression is gone.
             # It assumed the first detection is the aura already worn, but with
             # nothing equipped it stayed armed and ATE the first REAL roll of
-            # the session (user log 2026-09-29: a mid-session aura never
+            # the session ( a mid-session aura never
             # reached the webhook). Every detection is announced now.
 
         # ── Auto-switch to an English keyboard layout ──
@@ -660,7 +660,7 @@ class DetectionMixin:
         # Item usage (Strange Controller, Biome Randomizer, portable crack)
         # is due IMMEDIATELY on every cycle start; the configured intervals
         # apply from this first use onwards.
-        # IMPORTANT: this block must run BEFORE the background threads below
+        # This block must run BEFORE the background threads below
         # are started. Otherwise the item loop can tick before the startup
         # gate exists (firing SC/BR while the window is still settling) and
         # the timer reset below would wipe the cooldown that first fire just
@@ -899,11 +899,16 @@ class DetectionMixin:
             if not isinstance(state_map, dict):
                 state_map = {}
                 self._log_username_state_map = state_map
-            
+
             last_guard_username = getattr(self, "_log_username_state_target", None)
             if last_guard_username != target_username:
                 state_map.clear()
                 self._log_username_state_target = target_username
+                # The per-file scan offsets belong to the old username
+                # target as well.
+                scan_pos_map = getattr(self, "_log_username_scan_pos", None)
+                if isinstance(scan_pos_map, dict):
+                    scan_pos_map.clear()
 
             state = state_map.get(log_file_path)
             if state == "rejected":
@@ -913,15 +918,54 @@ class DetectionMixin:
             if state is None:
                 state_map[log_file_path] = "pending"
 
-            # While this file is pending, keep scanning the entire file until
-            # the TutorialCursor line appears and we can accept/reject it.
-            lines_to_scan = lines
-            if lines_to_scan is None:
+            # BOUNDED INCREMENTAL SCAN. While a file is pending, every
+            # poll used to readlines() the WHOLE file - the MAIN instance's
+            # log is the oldest and largest (hundreds of MB after a long
+            # session), so each detection tick turned into a multi-megabyte
+            # read burst that lagged the panel and kept Antimalware Service
+            # Executable busy (the same problem multi_instance._log_username
+            # already fixed for its own scan). Now at most ~1 MB
+            # is scanned per call, starting where the previous attempt
+            # stopped; a hit decides immediately and the tail is picked up
+            # as it appears. The TutorialCursor warning is written at client
+            # startup, so the decision is normally reached within the first
+            # chunk.
+            if lines is not None:
+                lines_to_scan = lines
+            else:
+                pos_map = getattr(self, "_log_username_scan_pos", None)
+                if not isinstance(pos_map, dict):
+                    pos_map = {}
+                    self._log_username_scan_pos = pos_map
                 try:
-                    with open(log_file_path, "r", encoding="utf-8", errors="ignore") as f:
-                        lines_to_scan = f.readlines()
-                except Exception:
-                    lines_to_scan = []
+                    size = os.path.getsize(log_file_path)
+                except OSError:
+                    size = 0
+                scan_pos = int(pos_map.get(log_file_path, 0) or 0)
+                if scan_pos > size:
+                    scan_pos = 0  # truncated / rotated - start over
+                chunk_end = min(size, scan_pos + 1048576)
+                data = b""
+                if chunk_end > scan_pos:
+                    try:
+                        with open(log_file_path, "rb") as f:
+                            f.seek(scan_pos)
+                            data = f.read(chunk_end - scan_pos)
+                    except Exception:
+                        data = b""
+                cut = data.rfind(b"\n")
+                if cut == -1:
+                    if len(data) == (chunk_end - scan_pos) and chunk_end > scan_pos:
+                        # The whole chunk is ONE huge line - skip it (no
+                        # TutorialCursor warning is ever this long);
+                        # without this a pathologic line would stall the
+                        # scan at the same offset forever.
+                        pos_map[log_file_path] = chunk_end
+                    lines_to_scan = []  # no complete line yet
+                else:
+                    pos_map[log_file_path] = scan_pos + cut + 1
+                    lines_to_scan = [raw.decode("utf-8", errors="ignore")
+                                     for raw in data[:cut + 1].split(b"\n")]
 
             for line in (lines_to_scan or []):
                 found_username = self._extract_tutorial_cursor_username(line)
@@ -1239,7 +1283,7 @@ class DetectionMixin:
         _eggis = data.pop("Eggis", None)
         if isinstance(_eggis, dict) and not isinstance(data.get("Aegis_EGGIS"), dict):
             data["Aegis_EGGIS"] = _eggis
-        # Sol's Book labels (verified against the live wiki 2026-09-27):
+        # Sol's Book labels (verified against the live wiki):
         # "Fragments of the Crimson Moon" is ONLY obtainable from Red Moon
         # Potion I (1 in 1,000) and Red Moon Potion II (1 in 100) — fixed
         # chance, not affected by luck, NOT craftable. The craftable recipe
@@ -2639,8 +2683,6 @@ class DetectionMixin:
                                 self.last_aura_found = parsed_aura_name
                                 try:
                                     self._daily_bump("auras")
-                                    if isinstance(rarity, (int, float)) and rarity >= 100000:
-                                        self.desktop_notify("Rare aura!", f"{parsed_aura_name} ({formatted_rarity or 'unknown chance'})")
                                 except Exception:
                                     pass
 
@@ -2742,7 +2784,7 @@ class DetectionMixin:
             self.error_logging(e, "Error in check_biome_in_logs function :skull:")
 
     def _enforce_auto_roll_biome(self, biome):
-        """Disable Auto-Roll In Biome (owner feature, 2026-09-27).
+        """Disable Auto-Roll In Biome .
 
         When a SELECTED biome is detected, the in-game Auto-Roll toggle must
         be OFF; in any other biome it must be ON. The current state is read
@@ -3037,7 +3079,6 @@ class DetectionMixin:
             self._roblox_fullscreened = False
             self.reconnect_confirm_deadline = time.monotonic() + 60
             self.set_title_threadsafe(f"""EndSol Macro {current_ver} (Running)""")
-            self.failsafe_release_if_enabled("after reconnect")
             self.save_config()
         except Exception as e:
             self.error_logging(e, "_resume_timer_after_reconnect")
@@ -3049,7 +3090,6 @@ class DetectionMixin:
         self.terminate_roblox_processes()
         self.check_disconnect_loop(current_attempt)
         self.reconnecting_state = False
-        self.failsafe_release_if_enabled("after fallback reconnect")
 
     def _start_player_logger_thread(self):
         if hasattr(self, "player_logger_thread") and self.player_logger_thread and self.player_logger_thread.is_alive():

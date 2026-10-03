@@ -114,6 +114,18 @@ function App() {
 
   const startMacro = async () => {
     if (!isApiReady || !config || isMacroRunning) return;
+    // Client-side pre-check: the macro cannot start without a valid player
+    // username (log reading, stats and MI resolution depend on it). The
+    // backend enforces the same rule.
+    const uname = String(config.roblox_username || "").trim();
+    if (!uname || !/^[A-Za-z0-9_]{3,20}$/.test(uname)) {
+      window.alert(
+        !uname
+          ? "The macro cannot start: set your Roblox username on the Webhook page first (log reading, stats and multi-instance resolution rely on it)."
+          : `'${uname}' is not a valid Roblox username (3-20 characters: letters, digits, underscore). Fix it on the Webhook page.`
+      );
+      return;
+    }
     setMacroRunning(true);
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();

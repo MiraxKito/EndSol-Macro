@@ -360,24 +360,22 @@ class WebhookMixin:
     RARE_BIOME_CUSTOM = {
         "GLITCHED": {
             "color": 0xbfff00,
-            "title_start": "⚠️ ANOMALY DETECTED ⚠️",
-            "title_end": "⚠️ ANOMALY FADED ⚠️",
+            "title_start": " BiOme sTarTed: GLITCHED ",
+            "title_end": " ANOMALY FIXED ",
             "desc_start": (
-                "> ## ⚠️ ERROR BIOME DETECTION. ⚠️\n"
                 "> **Spawn:** 1 in 30,000 per biome change (~1 in 11.2M/s)\n"
                 "> **Duration:** 2m 44s | **BT:** Native auras ignore Breakthrough\n"
                 "> **Exclusive Auras:** FAULT, GLITCH, OPPRESSION *(cannot be rolled outside Glitched)*\n"
                 "> \n"
                 "> *Glitches and errors all around the server.*"
             ),
-            "desc_end": "> ## ⚠️ ANOMALY CONTAINED ⚠️\n> The corruption has been purged. Normalcy restored.",
+            "desc_end": "> ## Glitches are faded \n> The corruption has been purged. Normalcy restored.",
         },
         "DREAMSPACE": {
             "color": 0xea9dda,
             "title_start": "★ DREAMSPACE MANIFESTED ★",
             "title_end": "★ DREAMSPACE FADED ★",
             "desc_start": (
-                "> ## ★ Welcome to the Dreamscape ★\n"
                 "> **Spawn:** 1 in 3,500,000/s during Normal biome\n"
                 "> **Duration:** 3m 12s | **BT:** No Breakthrough; spawns Heavenly Potions\n"
                 "> **Exclusive Auras:** ★, ★★, ★★★, Borealis, Dreammetric\n"
@@ -405,7 +403,6 @@ class WebhookMixin:
             "title_start": "◉ SINGULARITY FORMED ◉",
             "title_end": "◉ SINGULARITY COLLAPSED ◉",
             "desc_start": (
-                "> ## ◉ The Void Has Awakened ◉\n"
                 "> **Spawn:** 1 in 100 to replace STARFALL\n"
                 "> **Duration:** 20 min (or until ASTRAIOS rolled) | **BT:** 5x Breakthrough\n"
                 "> **Key Aura:** GARGANTUA (1 in 430,000,000)\n"

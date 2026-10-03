@@ -39,7 +39,7 @@ _STATE: dict[str, Any] = {
 _COOKIE_HANDLE: Any = None
 _KERNEL32: Any = None
 
-# v39: one live client per account. A relaunch of the SAME account while its
+# one live client per account. A relaunch of the SAME account while its
 # client is still running only opens a duplicate window that fights for the
 # same session. Two layers:
 #   1. live windows whose client log identifies the account (authoritative);
@@ -49,8 +49,8 @@ _KERNEL32: Any = None
 _LAUNCH_LOCK_TTL = 120.0  # a client takes ~10-20 s to appear and log in
 _RUNNING_LOCK: dict[str, float] = {}   # username -> time of the last successful launch
 _RUN_SCAN: dict[str, Any] = {"at": 0.0, "map": None}  # window->username scan cache
-_LAUNCHED_ACCOUNTS: dict[str, float] = {}  # v43: usernames launched via the panel this app session
-# v44: launch-slot bookkeeping. _LAUNCH_CONFIRMED[username] = last time the
+_LAUNCHED_ACCOUNTS: dict[str, float] = {}  # usernames launched via the panel this app session
+# launch-slot bookkeeping. _LAUNCH_CONFIRMED[username] = last time the
 # launch watcher SAW the account's client alive; _LAUNCH_GEN[username]
 # increments on every launch so a stale watcher can never release a newer
 # launch's slot.
@@ -199,7 +199,7 @@ def _public_accounts() -> list[dict[str, Any]]:
 
 
 def set_own_server(username: str, enabled: bool) -> dict[str, Any]:
-    """Toggle the per-account "Own Server" preference (v38).
+    """Toggle the per-account "Own Server" preference.
 
     When ON, launching this account ignores the Webhook page link and
     joins the account's OWN private server for the game instead."""
@@ -316,7 +316,7 @@ def _login_watch_thread(had_backup: bool, dat_path: str, backup_path: str,
     try:
         while not _LOGIN_CANCEL.is_set() and time.time() < deadline:
             time.sleep(2.0)
-            # v29: the login window can be killed by a single-instance
+            # the login window can be killed by a single-instance
             # takeover when another Roblox client starts (e.g. launched from
             # a browser). Record that explicitly instead of leaving the user
             # staring at a silently dead window.
@@ -366,7 +366,7 @@ def _login_watch_thread(had_backup: bool, dat_path: str, backup_path: str,
             with _LOCK:
                 _STATE["login_username"] = username.lower()
                 _STATE["login_status"] = f"Saved @{username.lower()}."
-            # v29: immediately prove the stored session can mint a launch
+            # immediately prove the stored session can mint a launch
             # ticket — this is the exact operation Launch performs. A failure
             # here means the account can be re-added at once instead of
             # failing later on the Launch button.
@@ -501,7 +501,7 @@ def _auth_post(url: str, headers: dict[str, str], timeout: float = 15.0,
     connection-level failures; returns None when unreachable.
 
     json_body: the ticket endpoint REQUIRES Content-Type application/json
-    (user log 2026-09-29: an empty POST got HTTP 415 UnsupportedMediaType),
+    ( an empty POST got HTTP 415 UnsupportedMediaType),
     so callers pass {}.
     """
     global _AUTH_SESSION
@@ -556,7 +556,7 @@ def _debug_snippet(resp: Any) -> str:
 def _mint_ticket(token: str) -> str:
     """One-time authentication ticket for a .ROBLOSECURITY token ('' on failure).
 
-    v29: every failure mode is recorded (HTTP status + body snippet) in
+    every failure mode is recorded (HTTP status + body snippet) in
     _STATE["mint_debug"] and mirrored into the tracker log — the old version
     swallowed network errors, dead sessions and missing CSRF into a bare ""
     that was always reported as "session expired". Endpoint and flow follow
@@ -564,7 +564,7 @@ def _mint_ticket(token: str) -> str:
     API list): POST auth.roblox.com/v1/authentication-ticket with the
     .ROBLOSECURITY cookie, expect 403 + x-csrf-token, retry with the CSRF
     header and read rbx-authentication-ticket. The POST body is {} with
-    Content-Type application/json (user log 2026-09-29: an empty POST got
+    Content-Type application/json ( an empty POST got
     HTTP 415 UnsupportedMediaType on the ticket step).
     """
     if not token:
@@ -606,7 +606,7 @@ def _mint_ticket(token: str) -> str:
         _STATE["mint_debug"] = text
     try:
         log = getattr(_TRACKER, "append_log", None)
-        # v38: log failures only — the success line fired on every launch.
+        # log failures only — the success line fired on every launch.
         if callable(log) and not ticket:
             log(f"[Launcher] Auth ticket request FAILED: {text}")
     except Exception:
@@ -665,7 +665,7 @@ def _parse_private_server_link(link: str) -> dict[str, str] | None:
 
 def _resolve_private_api(token: str, place_id: str, link_code: str,
                          debug: list[str]) -> str:
-    """v35.1: resolve the accessCode through the games API — no page scraping.
+    """resolve the accessCode through the games API — no page scraping.
 
     GET https://games.roblox.com/v1/games/{placeId}/private-servers with the
     account's .ROBLOSECURITY cookie returns the list of private servers that
@@ -674,7 +674,7 @@ def _resolve_private_api(token: str, place_id: str, link_code: str,
     entry.accessCode). The LINK's server is found by MATCHING the entry's
     linkCode field against our privateServerLinkCode.
 
-    v35.1 WARNING learned the hard way (user report: every account joined
+    WARNING learned the hard way ( every account joined
     its OWN private server): this endpoint has NO linkCode query filter —
     the official docs list only cursor/excludeFriendServers, and an unknown
     query param is silently ignored. Taking data[0] (as LaunchRoblox's
@@ -710,7 +710,7 @@ def _resolve_private_api(token: str, place_id: str, link_code: str,
 
 
 def _scan_private_servers(token: str, place_id: str, debug: list[str]) -> list[Any] | None:
-    """Fetch EVERY private server the account can join for a place (v38).
+    """Fetch EVERY private server the account can join for a place.
 
     GET https://games.roblox.com/v1/games/{placeId}/private-servers with the
     account cookie, following nextPageCursor. Returns the raw entry list, or
@@ -759,7 +759,7 @@ def _entry_owner_id(entry: Any) -> str:
 
 def _resolve_own_server_code(token: str, user_id: str, place_id: str,
                              debug: list[str]) -> str:
-    """v38 "Own Server": find the account's OWN private server for the game
+    """Own Server: find the account's OWN private server for the game
     and return its accessCode ('' when the account has none)."""
     if not str(user_id or "").strip():
         debug.append("own server: no user id for this account")
@@ -803,7 +803,7 @@ def _place_id_for_universe(token: str, universe_id: str, debug: list[str]) -> st
 
 
 def _resolve_share_via_api(token: str, share_code: str, debug: list[str]) -> dict[str, str] | None:
-    """v38: resolve a SHARE code through Roblox's own share-links API.
+    """resolve a SHARE code through Roblox's own share-links API.
 
     The share-links page resolves codes with
     POST https://apis.roblox.com/sharelinks/v1/resolve-link
@@ -857,13 +857,12 @@ def _resolve_private_access_code(token: str, place_id: str, link_code: str,
                                  kind: str = "private") -> str:
     """Best-effort explicit accessCode for a privateServerLinkCode ('' = none).
 
-    v37: the join itself does NOT need this — PlaceLauncher resolves the
+    the join itself does NOT need this — PlaceLauncher resolves the
     linkCode server-side (the website joins with accessCode=null + linkCode).
     When the games-API scan DOES find an explicit accessCode we attach it as
-    belt-and-braces; a miss is NOT an error. NEVER guess: v36's data[0] made
+    belt-and-braces; a miss is NOT an error. NEVER guess: an earlier build's data[0] guess made
     every account join its OWN VIP server (the endpoint has no linkCode
-    filter and its entries do not even expose a linkCode field,
-    user log 2026-09-29)."""
+    filter and its entries do not even expose a linkCode field)."""
     debug: list[str] = []
     try:
         result = _resolve_private_full(token, place_id, link_code, debug)
@@ -937,13 +936,13 @@ def _record_ps_debug(debug: list[str] | str) -> None:
 
 
 def _log_ps(debug: list[str], ok: bool = True, soft: bool = False) -> None:
-    """One combined tracker-log line, FAILURES ONLY (v38: the success line
+    """One combined tracker-log line, FAILURES ONLY (the success line
     fired on every launch and drowned the log; diagnostics stay in
     _STATE["ps_debug"] for the UI either way).
 
-    soft=True (v43): a best-effort miss that does NOT abort the launch —
-    PlaceLauncher resolves the linkCode server-side (v37), so wording it as
-    "FAILED" scared users whose client joined fine (user log 2026-09-29)."""
+    soft=True: a best-effort miss that does NOT abort the launch —
+    PlaceLauncher resolves the linkCode server-side, so wording it as
+    "FAILED" scared users whose client joined fine ()."""
     try:
         if ok or not debug:
             return
@@ -998,7 +997,7 @@ def _running_accounts() -> dict[str, list[int]]:
 
 
 def launcher_launched_accounts() -> set[str]:
-    """v43: usernames launched through the built-in launcher this app session.
+    """usernames launched through the built-in launcher this app session.
 
     terminate_roblox_processes uses this to recognize panel-launched clients
     that must survive a reconnect / failsafe kill even when the
@@ -1009,13 +1008,13 @@ def launcher_launched_accounts() -> set[str]:
         return set(_LAUNCHED_ACCOUNTS)
 
 
-# v42: remember HOW each account was last launched, so the multi-instance
+# remember HOW each account was last launched, so the multi-instance
 # webhook can offer a human "Join Server" link for the same private server.
 _JOIN_INFO: dict[str, dict[str, str]] = {}   # username -> {"kind", "place_id", "link_code"}
 
 
 def _launch_fail(username: str, payload: dict[str, Any]) -> dict[str, Any]:
-    """v44: release the early launch slot after a failed launch attempt so
+    """release the early launch slot after a failed launch attempt so
     the user can retry immediately (the slot is claimed at click time,
     before the slow private-server resolve)."""
     with _LOCK:
@@ -1025,7 +1024,7 @@ def _launch_fail(username: str, payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def _start_launch_watch(username: str, gen: int) -> None:
-    """v44: watch the launched client and release the launch slot as soon as
+    """watch the launched client and release the launch slot as soon as
     the client window is gone.
 
     While the client runs, the watcher refreshes _LAUNCH_CONFIRMED, which
@@ -1074,8 +1073,8 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
     account = next((a for a in _load_accounts() if a.get("username") == username), None)
     if not account:
         return {"success": False, "error": f"Account @{username} is not stored."}
-    # v39: refuse a second client of the SAME account while one is running.
-    # v41: a DISCONNECT REJOIN skips these checks — the old client just died
+    # refuse a second client of the SAME account while one is running.
+    # a DISCONNECT REJOIN skips these checks — the old client just died
     # (the monitor saw the disconnect line), but its TTL entry and its log
     # mapping can still linger for a few seconds and would wrongly refuse.
     if not rejoin:
@@ -1093,11 +1092,11 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
             last_launch = float(_RUNNING_LOCK.get(username, 0.0))
             confirmed_at = float(_LAUNCH_CONFIRMED.get(username, 0.0))
         if last_launch and confirmed_at > last_launch:
-            # v44: the client was already seen ALIVE after that launch and no
+            # the client was already seen ALIVE after that launch and no
             # live window maps to the account now — it was closed (or it
             # crashed). Release the slot immediately instead of keeping the
             # Launch button stuck on "Running" for the rest of the TTL
-            # (user report 2026-09-29: both clients closed, the button stayed
+            # ( both clients closed, the button stayed
             # Running and Launch was refused although Roblox was closed).
             with _LOCK:
                 _RUNNING_LOCK.pop(username, None)
@@ -1110,7 +1109,7 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
                         "error": (f"@{username} was launched {int(now_ts - last_launch)} s ago and its client "
                                   f"is still starting up — try again in ~{wait_left} s. The lock clears "
                                   "by itself once the client is detected running or the wait expires.")}
-    # v44: claim the launch slot IMMEDIATELY — before the private-server
+    # claim the launch slot IMMEDIATELY — before the private-server
     # resolve, which can spend tens of seconds on HTTP round-trips. The UI
     # polls the launcher state every 2 s, so the button flips to "Running"
     # from the fresh lock long before the slow resolve answers, and a second
@@ -1121,14 +1120,14 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
         _LAUNCH_CONFIRMED.pop(username, None)
         _LAUNCH_GEN[username] = int(_LAUNCH_GEN.get(username, 0)) + 1
         _launch_gen = int(_LAUNCH_GEN[username])
-    # v38 "Own Server": the per-account preference wins over the Webhook
+    # "Own Server": the per-account preference wins over the Webhook
     # link — the account joins its OWN private server for the game.
     if own_server is None:
         own_server = bool(account.get("own_server", False))
     ps = None if own_server else _parse_private_server_link(ps_link)
     if os.name == "nt":
         # ALWAYS start the singleton stripper before launching, regardless of
-        # the Multiple-Instances toggle (v28/v32): the watcher strips the
+        # the Multiple-Instances toggle: the watcher strips the
         # ROBLOX_singletonEvent/Mutex handles out of every running client, so
         # the launched client cannot kill existing instances (and they cannot
         # kill it). The old mutex-hold approach is dead on current clients.
@@ -1149,7 +1148,7 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
             except Exception:
                 pass
             return _launch_fail(username, {"success": False, "error": msg})
-        # v45: the gate passing above means "last strip pass was clean", but a
+        # the gate passing above means "last strip pass was clean", but a
         # clean pass can also mean the scan never SAW the running client
         # (renamed exe, Microsoft Store version, psutil/AV failure) — in that
         # case the old client is UNPROTECTED and this very launch would kill
@@ -1173,7 +1172,7 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
                 except Exception:
                     pass
                 return _launch_fail(username, {"success": False, "error": msg})
-            # v45: one diagnostic line per launch — the strip note tells
+            # one diagnostic line per launch — the strip note tells
             # exactly what the watcher saw ("no singleton handles present"
             # with a client running is the suspicious signature).
             with _LOCK:
@@ -1193,7 +1192,7 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
                                         "error": f"No stored session for @{username} — press Add Account and log into this account again."})
     ticket = _mint_ticket(token)
     if not ticket:
-        # v29: distinguish a dead session from a transient Roblox/network
+        # distinguish a dead session from a transient Roblox/network
         # problem instead of always blaming the session.
         _uid, name = _validate_token(token)
         if not name:
@@ -1208,7 +1207,7 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
                                   "try again in a minute.")})
     join_url = ""
     if own_server:
-        # v38: join the account's OWN private server — resolve its
+        # join the account's OWN private server — resolve its
         # accessCode from the private-servers list (entries carry
         # accessCode; the website's server list joins the same way).
         debug: list[str] = []
@@ -1227,7 +1226,7 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
         join_url = (f"https://assetgame.roblox.com/game/PlaceLauncher.ashx"
                     f"?request=RequestPrivateGame&placeId={DEFAULT_PLACE_ID}"
                     f"&accessCode={access_code}")
-        # v42: remember HOW this account joined, so the multi-instance
+        # remember HOW this account joined, so the multi-instance
         # webhook can offer a "Join Server" link for the same server.
         with _LOCK:
             _JOIN_INFO[username] = {"kind": "own",
@@ -1238,7 +1237,7 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
         link_code = str(ps["link_code"])
         kind = str(ps.get("kind", "private"))
         if kind == "share":
-            # v38: share codes resolve through Roblox's own share-links API
+            # share codes resolve through Roblox's own share-links API
             # (POST /sharelinks/v1/resolve-link — the SAME endpoint the
             # share-links page uses) into a privateServerLinkCode, which
             # then goes to PlaceLauncher like any private link.
@@ -1258,16 +1257,16 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
                                           "directly." + hint)})
             place_id = resolved["place_id"] or place_id
             link_code = resolved["link_code"]
-        # v36.1/v37: a privateServerLinkCode goes to PlaceLauncher AS IS —
+        # A privateServerLinkCode goes to PlaceLauncher AS IS —
         # the website joins private servers with accessCode=null +
         # linkCode and PlaceLauncher resolves it server-side for the
         # authenticated user (verified in the GameLaunch bundle:
         # joinPrivateGame(placeId, null, linkCode)). The games-API match
         # below is best-effort ONLY: when it returns an explicit
-        # accessCode we attach it, but a miss is NOT an error — v36's
+        # accessCode we attach it, but a miss is NOT an error — an earlier build
         # data[0] guess made every account join its OWN VIP server
         # (the endpoint has no linkCode filter and its entries do not
-        # even expose a linkCode field, user log 2026-09-29).
+        # even expose a linkCode field).
         access_code = _resolve_private_access_code(token, place_id, link_code, "private")
         join_url = (f"https://assetgame.roblox.com/game/PlaceLauncher.ashx"
                     f"?request=RequestPrivateGame&placeId={place_id}")
@@ -1275,7 +1274,7 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
             join_url += f"&accessCode={access_code}"
         join_url += f"&linkCode={quote(link_code, safe='')}"
         final_place = place_id
-        # v42: the resolved linkCode identifies the SAME private server the
+        # the resolved linkCode identifies the SAME private server the
         # client just joined — the website opens it via the games page URL.
         with _LOCK:
             _JOIN_INFO[username] = {"kind": str(kind),
@@ -1288,20 +1287,20 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
     except Exception as exc:
         return _launch_fail(username, {"success": False, "error": f"Failed to open the launch link: {exc}"})
     with _LOCK:
-        _RUNNING_LOCK[username] = time.time()  # v39 one-client-per-account lock
-        _LAUNCHED_ACCOUNTS[username] = time.time()  # v43: remember panel launches
+        _RUNNING_LOCK[username] = time.time()  # one-client-per-account lock
+        _LAUNCHED_ACCOUNTS[username] = time.time()  # remember panel launches
         if own_server:
             _STATE["last_launched"] = f"@{username} -> own private server (place {DEFAULT_PLACE_ID})"
         elif ps:
             _STATE["last_launched"] = f"@{username} -> private server (place {final_place})"
         else:
             _STATE["last_launched"] = f"@{username} -> home (no private server link set)"
-    _start_launch_watch(username, _launch_gen)  # v44: release the slot when the client closes
+    _start_launch_watch(username, _launch_gen)  # release the slot when the client closes
     return {"success": True}
 
 
 def get_join_info(username: str) -> dict[str, str]:
-    """v42: how the account was last launched (best-effort, in-memory).
+    """how the account was last launched (best-effort, in-memory).
     Keys: kind ('own' | 'private' | 'share'), place_id, link_code."""
     username = str(username or "").strip().lower()
     with _LOCK:
@@ -1310,7 +1309,7 @@ def get_join_info(username: str) -> dict[str, str]:
 
 def join_server_link(username: str) -> str:
     """Human-clickable URL for the private server the account was launched
-    into (v42). '' when nothing shareable is known — Own Server launches
+    into. '' when nothing shareable is known — Own Server launches
     carry an accessCode only, which has no public join URL."""
     info = get_join_info(username)
     place = str(info.get("place_id") or "").strip()
@@ -1446,13 +1445,13 @@ def _singleton_name_matches(name: str) -> bool:
 def _roblox_pids() -> list[int]:
     """PIDs of running Roblox client processes (best effort).
 
-    v45: also matches the Microsoft Store client (Windows10Universal.exe) —
+    also matches the Microsoft Store client (Windows10Universal.exe) —
     it enforces the same named singleton objects, and missing it made the
     strip pass report "no Roblox clients running" while a Store client was
     in fact running, so the launch gate passed with the client UNPROTECTED
-    and the next launch killed it (user report 2026-09-29: panel launch
-    works on Bloxstrap, on the friend's vanilla Roblox every new client
-    closed the previous one)."""
+    and the next launch killed it. On a vanilla (non-Bloxstrap) client the
+    missing singleton protection lets every new client close the previous
+    one."""
     try:
         import psutil
         out: list[int] = []
@@ -1476,7 +1475,7 @@ def _strip_singleton_pass(pids: list[int]) -> dict[str, Any]:
     Modern Roblox clients enforce single-instance through the named EVENT:
     while the object exists, a new launch signals it and the running client
     exits. Stripping the handles from every running client removes the object
-    entirely, so no launch can kill another client (v32).
+    entirely, so no launch can kill another client.
     """
     if os.name != "nt":
         return {"ok": False, "note": "Windows only", "closed": 0, "pids": []}
@@ -1587,6 +1586,24 @@ def _strip_one_pid(pid: int, entries: list[Any]) -> dict[str, Any]:
     return {"closed": closed}
 
 
+# pids already handled by the stripper, plus how many consecutive clean
+# scans each had. A pid is DONE after ONE scan that closed handles, or after
+# _PID_CLEAN_SCANS_REQUIRED consecutive scans that found nothing to close —
+# a fresh client creates its singleton handles shortly after spawn, so
+# marking a just-spawned pid done after a single empty scan could race the
+# handle creation and leave the client unprotected.
+#
+# This turns the steady state (no launches happening) into a ZERO-cost loop:
+# the old version re-enumerated the WHOLE system handle table and ran
+# NtQueryObject over every handle of every Roblox client EVERY second, which
+# is heavy enough to stutter the game on the same machine. Handles are
+# created once at client startup and never recreated, so one successful scan
+# per client is sufficient — exactly what the reference tools do.
+_STRIPPED_PIDS: set[int] = set()
+_PID_CLEAN_SCANS: dict[int, int] = {}
+_PID_CLEAN_SCANS_REQUIRED = 3
+
+
 def _singleton_loop() -> None:
     while not _SINGLETON_STOP.is_set():
         # Tighter cadence while a login capture is open: a client started in
@@ -1600,19 +1617,59 @@ def _singleton_loop() -> None:
         if _SINGLETON_STOP.is_set():
             break
         try:
-            stats = _strip_singleton_pass(_roblox_pids())
+            pids = _roblox_pids()
+            with _LOCK:
+                # Prune dead pids every pass (self-heals Windows pid reuse).
+                _STRIPPED_PIDS.intersection_update(pids)
+                for stale in [p for p in _PID_CLEAN_SCANS if p not in pids]:
+                    _PID_CLEAN_SCANS.pop(stale, None)
+                pending = [p for p in pids if p not in _STRIPPED_PIDS]
+            if not pending:
+                # Steady-state fast path: nothing new to strip — skip the
+                # whole handle-table enumeration entirely.
+                with _LOCK:
+                    _STATE["singleton_last"] = {"ok": True, "note": (
+                        f"watcher active — {len(pids)} client(s) already stripped"
+                        if pids else "watcher active — no Roblox clients"),
+                        "closed": 0, "pids": []}
+                    _STATE["singleton_clean"] = True
+                    _STATE["mutex_exists"] = True
+                    _STATE["mutex_held"] = True
+                    _STATE["mutex_note"] = str(_STATE["singleton_last"]["note"])
+                continue
+            stats = _strip_singleton_pass(pending)
+            closed_pids = set(int(p) for p in (stats.get("pids") or []))
+            ok = bool(stats.get("ok"))
+            with _LOCK:
+                _STATE["singleton_last"] = stats
+                _STATE["mutex_exists"] = True
+                if ok:
+                    for p in pending:
+                        if p in closed_pids:
+                            _STRIPPED_PIDS.add(p)
+                            _PID_CLEAN_SCANS.pop(p, None)
+                        else:
+                            n = int(_PID_CLEAN_SCANS.get(p, 0)) + 1
+                            if n >= _PID_CLEAN_SCANS_REQUIRED:
+                                _STRIPPED_PIDS.add(p)
+                                _PID_CLEAN_SCANS.pop(p, None)
+                            else:
+                                _PID_CLEAN_SCANS[p] = n
+                _STATE["singleton_clean"] = bool(ok)
+                _STATE["mutex_held"] = _STATE["singleton_clean"]
+                _STATE["mutex_note"] = str(stats.get("note") or "")
         except Exception as exc:
             stats = {"ok": False, "note": f"exception: {exc}", "closed": 0, "pids": []}
-        with _LOCK:
-            _STATE["singleton_last"] = stats
-            ok = bool(stats.get("ok"))
-            _STATE["singleton_clean"] = bool(ok and not stats.get("closed"))
-            _STATE["mutex_exists"] = True  # watcher active
-            _STATE["mutex_held"] = _STATE["singleton_clean"]
-            _STATE["mutex_note"] = str(stats.get("note") or "")
-        # v38: per-strip success logging removed (fired on every launch);
+            with _LOCK:
+                _STATE["singleton_last"] = stats
+                _STATE["singleton_clean"] = False
+                _STATE["mutex_held"] = False
+                _STATE["mutex_note"] = str(stats.get("note") or "")
+        # per-strip success logging removed (fired on every launch);
         # failures surface through the launch gate's error message and
         # _STATE["singleton_note"].
+        # strip activity note is visible in the launch-time diagnostic
+        # line ("[Launcher] Singleton: ...") and the Locks line.
 
 
 def _start_singleton_watcher() -> None:
@@ -1649,9 +1706,9 @@ def _ensure_singleton_ready(timeout: float = 5.0) -> bool:
 def ensure_locks() -> dict[str, Any]:
     """Hold the shared cookie file and keep the singleton stripper running.
 
-    v32: the old "pre-hold ROBLOX_singletonMutex" trick is DEAD on current
+    the old "pre-hold ROBLOX_singletonMutex" trick is DEAD on current
     clients — the takeover goes through ROBLOX_singletonEvent, which holding
-    the mutex does NOT prevent (user report 2026-09-29: a browser-launched
+    the mutex does NOT prevent ( a browser-launched
     client killed the login window while EndSol held the mutex; every 2025+
     reference tool — MultiBlox, Multi-Roblox-Tab, SingleTonEventCloser —
     instead CLOSES the singleton event/mutex handles inside running clients
@@ -1673,7 +1730,7 @@ def ensure_locks() -> dict[str, Any]:
 def release_locks() -> None:
     """Release the cookie file lock only.
 
-    v32: the singleton STRIPPER keeps running after this on purpose — it
+    the singleton STRIPPER keeps running after this on purpose — it
     protects every running Roblox client from the takeover regardless of
     the Multiple-Instances preference (set_enabled(False) used to drop the
     protection together with the cookie lock; that is no longer wanted).
@@ -1691,12 +1748,12 @@ def get_state() -> dict[str, Any]:
             "last_error", "last_launched", "mint_debug", "ps_debug",
             "singleton_clean", "singleton_note")}
     snapshot["accounts"] = _public_accounts()
-    # v39: accounts with a live client (or inside the post-launch TTL lock) —
+    # accounts with a live client (or inside the post-launch TTL lock) —
     # the UI disables their Launch buttons.
     running_now = _running_accounts()
     with _LOCK:
         now_ts = time.time()
-        # v44: a fresh lock means "client starting up" only until the launch
+        # a fresh lock means "client starting up" only until the launch
         # watcher CONFIRMS the client alive. After that the live scan above
         # is the source of truth, so a closed client clears the Running
         # state within one UI poll instead of sticking for the whole TTL.

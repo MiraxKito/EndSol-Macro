@@ -12,6 +12,24 @@ export default function NoticePage() {
         </a>
       </p>
     </div>
+    <div className="card"><div className="card-header"><div className="card-icon">🏆</div><div><h3>v1.0.9 — Achievements, new Potion Crafting, Multi-Instances QoL</h3><p>Sol's Book Achievements, Potion Crafting rebuilt for the new UI, MI close buttons, lag fixes</p></div></div>
+      <div className="changelog-item"><h4>✅ New</h4><ul>
+        <li><b>Sol's Book — Achievements 🏆:</b> a new section with every in-game achievement — icon, description, how to obtain it and the reward — searchable and filtered by category, auto-updated from the wiki.</li>
+        <li><b>Potion Crafting rebuilt for the new crafting UI:</b> <b>Simple mode</b> drives the Auto button safely (the current state is detected and switched with verification) and clicks Add Everything + Craft; <b>Full / Partial occupancy</b> — in Partial mode the macro walks to the crafting station on a schedule (a walk path is bundled), crafts for the set duration, then resets back to spawn.</li>
+        <li><b>Multiple-Instances:</b> a <b>Close</b> button on every running window in the process list (graceful close, force-kill fallback; the main window is protected while the macro runs), and the mode can now be turned off while a single client is still running.</li>
+        <li><b>Required Roblox username:</b> the macro refuses to start without a valid username (format + online check on the Webhook page) — log reading, stats and multi-instance resolution depend on it.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
+        <li><b>Memory Match:</b> white/gray (desaturated) items are now read from their silhouettes, and a pair the game scores between two captures is no longer miscounted.</li>
+        <li><b>Lag fixes:</b> the main Roblox log is scanned incrementally with bounded reads — no more read bursts and Defender spikes while the panel runs.</li>
+        <li><b>Sol's Book media:</b> thumbnails whose file names contain underscores/encoded characters now resolve correctly (some images previously failed to load).</li>
+        <li><b>Daily stats webhook:</b> the summary now names the configured player and states that stats cover the main window only.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>✨ Other</h4><ul>
+        <li>Windows toast notifications were removed; all feedback lives in the panel log.</li>
+        <li>Rare-biome webhook texts refreshed (Glitched, Dreamspace, Singularity and others).</li>
+      </ul></div>
+    </div>
     <div className="card"><div className="card-header"><div className="card-icon">🖥️</div><div><h3>v1.0.8 — Multiple-Instances: Main Window & Secondary Windows</h3><p>Play on several Roblox windows at once, cleaner settings, a new Status page and start/stop sounds</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
         <li><b>Multiple windows:</b> pick your main Roblox window — the macro plays fully on it (fishing, quests, Memory Match, merchant), while your other windows stay logged in and send biome, aura and disconnect alerts to Discord.</li>

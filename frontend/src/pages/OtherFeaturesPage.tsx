@@ -224,12 +224,6 @@ export default function OtherFeaturesPage() {
                     onChange={(val) => updateConfig("dry_run", val)}
                 />
                 <ToggleSwitch
-                    label={t("Key-release failsafe after reconnect")}
-                    description={t("Force-release W/A/S/D/Space after every reconnect so a cut-off path playback cannot leave the character running in one direction. Off by default.")}
-                    checked={config.key_release_failsafe || false}
-                    onChange={(val) => updateConfig("key_release_failsafe", val)}
-                />
-                <ToggleSwitch
                     label={t("Panel GPU acceleration")}
                     description={t("Lets the panel use your graphics card for rendering instead of the CPU. Can noticeably improve FPS in Sol's Book and heavy pages. If the panel shows glitches or a black screen, turn this off again. Takes effect after a restart.")}
                     checked={config.webview_gpu_acceleration === true}
@@ -241,12 +235,6 @@ export default function OtherFeaturesPage() {
                     description={t("Sends one Discord message per day right after the 00:00 UTC reset with that day's totals (auras, biomes, Memory Match pairs, fish, macro runtime). Data is kept in %LOCALAPPDATA%\\EndSolMacro\\daily_stats.json and survives restarts.")}
                     checked={config.daily_stats_webhook || false}
                     onChange={(val) => updateConfig("daily_stats_webhook", val)}
-                />
-                <ToggleSwitch
-                    label={t("Windows notification on Legendary+ auras")}
-                    description={t("Shows a desktop notification for Legendary or rarer auras - useful when no Discord webhook is configured. Off by default.")}
-                    checked={config.rare_aura_desktop_notify || false}
-                    onChange={(val) => updateConfig("rare_aura_desktop_notify", val)}
                 />
 
                 <div className="setting-row" style={{ padding: '15px 20px', borderBottom: '1px solid var(--border)' }}>

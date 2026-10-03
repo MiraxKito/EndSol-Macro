@@ -1,5 +1,5 @@
 """
-Sol's Book — live wiki datasets for items and gauntlets (v1.0.8).
+Sol's Book — live wiki datasets for items, gauntlets and achievements (v1.0.9).
 
 Implements the no-fallback Fandom pipeline that was used to build the
 verified offline snapshots ``biome_tracker/gauntlets_fandom.json`` (53
@@ -25,7 +25,7 @@ Template spans are DEPTH-AWARE and argument splitting is top-level aware:
 {{Aura Notice|...{{Items|X}}...}} style nesting must never leak argument
 fragments into prose.
 
-Hard rules (do not regress — they were paid for with a broken session):
+Pipeline rules (mirrored in AGENTS.md, section "Sol's Book data pipeline"):
   * Source is the MediaWiki API:
         https://sol-rng.fandom.com/api.php?action=parse&page=<title>
             &prop=wikitext&format=json&redirects=1
@@ -348,6 +348,17 @@ def imageinfo_urls(file_names, timeout=20):
             lower = name.lower()
             if lower in normalized and normalized[lower] != name:
                 out[normalized[lower]] = url
+            # MediaWiki normalizes underscores to spaces (and percent-escapes
+            # like %2B to their characters) in page titles, so a requested
+            # "Badge_1.png" comes back as "Badge 1.png". Index the URL under
+            # the originally requested name as well.
+            for req in chunk:
+                if req in out:
+                    continue
+                req_lower = req.lower().replace("_", " ")
+                req_unquoted = urllib.parse.unquote(req_lower)
+                if req_lower == lower or req_unquoted == lower:
+                    out[req] = url
     return out
 
 
@@ -1649,6 +1660,13 @@ _GAUNTLET_REQUIRED_FIELDS = (
     "description",
     "flags",
 )
+_ACHIEVEMENT_REQUIRED_FIELDS = (
+    "name",
+    "category",
+    "description",
+    "obtainment",
+    "reward",
+)
 _PLACEHOLDER_CANON = {_canon(n) for n in ("???", "test item", "Gear A", "Gear B", "Potion")}
 
 
@@ -1656,7 +1674,12 @@ def validate_records(data, kind, seed_count=None):
     """Sanity gate for a freshly built dataset. Returns (ok, reason)."""
     if not isinstance(data, dict) or not data:
         return (False, "empty dataset")
-    required = _GAUNTLET_REQUIRED_FIELDS if kind == "gauntlets" else _ITEM_REQUIRED_FIELDS
+    if kind == "gauntlets":
+        required = _GAUNTLET_REQUIRED_FIELDS
+    elif kind == "achievements":
+        required = _ACHIEVEMENT_REQUIRED_FIELDS
+    else:
+        required = _ITEM_REQUIRED_FIELDS
     for key, rec in data.items():
         if not isinstance(rec, dict):
             return (False, f"non-dict record: {key}")
@@ -1668,6 +1691,9 @@ def validate_records(data, kind, seed_count=None):
         if kind == "gauntlets":
             if not rec.get("usage") and not rec.get("description"):
                 return (False, f"{key}: no confirmed usage/description")
+        if kind == "achievements":
+            if not rec.get("obtainment") and not rec.get("description"):
+                return (False, f"{key}: no confirmed obtainment/description")
     if seed_count:
         n = len(data)
         if n < seed_count * 0.6:
@@ -1968,3 +1994,126 @@ def load_gauntlet_detail(name, current=None, timeout=20):
         if found:
             break
     return {"error": "Fandom gauntlet page has no parseable infobox"}
+
+
+# ------------------------------------------------------------------
+# Achievements
+# ------------------------------------------------------------------
+
+ACHIEVEMENTS_PAGE = "Achievements"
+
+_ACH_ICON_FILE_RE = re.compile(r"\[\[File:([^\]|]+)", re.I)
+_ACH_FILE_LINK_RE = re.compile(r"\[\[File:[^\]]*\]\]", re.I)
+
+
+def _achievement_table_rows(body):
+    """Yield cell lists for every row of the achievements wikitable inside
+    one tabber tab body. The wiki source never closes these tables with
+    ``|}`` (the <table-progress-tracking> wrapper ends them), so the scan
+    starts at ``{|`` and stops at the wrapper close tag."""
+    m = re.search(r"(?m)^\s*\{\|.*$", body)
+    if not m:
+        return
+    table = body[m.end():]
+    stop = re.search(r"</table-progress-tracking>", table, re.I)
+    if stop:
+        table = table[:stop.start()]
+    rows = re.split(r"(?m)^\s*\|-.*$", table)
+    for row in rows[1:]:
+        cells = []
+        current = None
+        for line in row.split("\n"):
+            stripped = line.strip()
+            if re.match(r"^[!|]", stripped) and not stripped.startswith("|}"):
+                current = stripped[1:].strip()
+                cells.append(current)
+            elif current is not None:
+                current += "\n" + line
+                cells[-1] = current
+        # a trailing empty cell (bare "|" line) is markup noise, not data
+        while len(cells) > 4 and not clean_wikitext(cells[-1]):
+            cells.pop()
+        if cells:
+            yield cells
+
+
+def _achievement_record(category, cells):
+    """Build one achievement record from parsed table cells, or None when
+    the row carries no confirmed data."""
+    icon_cell = cells[0] if cells else ""
+    fm = _ACH_ICON_FILE_RE.search(icon_cell or "")
+    icon_file = fm.group(1).strip() if fm else ""
+    name = clean_wikitext(_ACH_FILE_LINK_RE.sub("", icon_cell or ""))
+    name = str(name or "").strip().strip("|").strip()
+    if not name:
+        return None
+    description = clean_wikitext(cells[1]) if len(cells) > 1 else ""
+    obtainment = clean_wikitext(cells[2]) if len(cells) > 2 else ""
+    reward = clean_wikitext(cells[3]) if len(cells) > 3 else ""
+    if not description and not obtainment:
+        return None
+    return {
+        "name": name,
+        "category": category,
+        "description": description,
+        "obtainment": obtainment,
+        "reward": reward,
+        "icon_file": icon_file,
+        "fandom_page": WIKI_BASE + ACHIEVEMENTS_PAGE.replace(" ", "_"),
+        "_metadata_source": "fandom",
+    }
+
+
+def build_achievements(progress=None, timeout=20):
+    """Rebuild the achievements dataset from the live wiki "Achievements"
+    page (one tabber tab per category, one wikitable per tab: Badge /
+    Description / Obtainment / Reward). Returns the data dict, or None when
+    the wiki is unavailable (caller keeps offline data)."""
+    log = progress or (lambda msg: None)
+    status, text = fetch_page_status(ACHIEVEMENTS_PAGE, timeout=timeout)
+    if status != "ok":
+        log("[SolBookData] achievements page unavailable")
+        return None
+    data = {}
+    icon_files = []
+    for label, body in _split_tabber(text):
+        category = clean_wikitext(label) or label
+        for cells in _achievement_table_rows(body):
+            rec = _achievement_record(category, cells)
+            if not rec:
+                log(f"[SolBookData] no confirmed data, dropped achievement row: {category}")
+                continue
+            key = rec["name"]
+            if key in data:
+                key = f"{rec['name']} ({category})"
+            data[key] = rec
+            if rec["icon_file"]:
+                icon_files.append(rec["icon_file"])
+    if not data:
+        log("[SolBookData] achievements page parsed to nothing")
+        return None
+    urls = imageinfo_urls(icon_files, timeout=timeout)
+    if urls:
+        for rec in data.values():
+            f = rec.get("icon_file", "")
+            if f and f in urls:
+                rec["thumbnail_url"] = urls[f]
+    log(f"[SolBookData] achievements built: {len(data)}")
+    return data
+
+
+def refresh_achievements(current=None, progress=None, timeout=20):
+    """Build fresh achievement data. Returns the new dict, or None when the
+    wiki is unavailable or the result fails validation (never a partial
+    wipe)."""
+    log = progress or (lambda msg: None)
+    data = build_achievements(progress=progress, timeout=timeout)
+    if data is None:
+        return None
+    ok, reason = validate_records(
+        data, "achievements", seed_count=len(current or {}) or None
+    )
+    if not ok:
+        log(f"[SolBookData] achievements refresh rejected: {reason}")
+        return None
+    return data

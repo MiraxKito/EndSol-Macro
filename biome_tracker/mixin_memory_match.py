@@ -8,7 +8,7 @@ Sol's RNG Memory Match (added Eon 1-2, expanded Summer 2026):
   - Location: near the beach, opposite direction from fishing
   - Rewards: Potions, Void Coin, Rune, Godly/Heavenly/Godlike Potion, etc.
 
-Player logic (2026-09-27 rewrite, image-only - no item-name OCR):
+Player logic ( rewrite, image-only - no item-name OCR):
   1. Click Start, wait for the panel to load, wait until tiles render
   2. Each attempt opens exactly 2 tiles (10 attempts per game):
        - a remembered pair (same item art AND same quantity) is collected
@@ -49,9 +49,9 @@ except Exception:  # pragma: no cover - keyboard is a hard dependency of the mac
     keyboard = None
 
 
-# Fixed player timings (seconds), NOT configurable on purpose (owner decision
-# 2026-09-27): every action needs its loading window - the panel after Start,
-# a tile flip before it can be captured (the owner asked for a capture
+# Fixed player timings (seconds), NOT configurable on purpose: every action
+# needs its loading window - the panel after Start,
+# a tile flip before it can be captured (the timing needs a capture
 # 0.8-1s AFTER the click with the mouse parked away), the second tile must be
 # captured BEFORE the game resolves the pair, the pair verdict is POLLED
 # (green stay-open vs flip-back), and the end-of-game reveal-all animation
@@ -83,7 +83,7 @@ def _mm_data_dir(sub: str = "memory_match") -> str:
 
 
 def _mm_purge_previous_session(tmpdir: str) -> None:
-    """v44.2: keep ONLY the latest session's captures (user request).
+    """keep ONLY the latest session's captures .
 
     Every new Memory Match session wipes the previous session's cell
     captures, cover references, baseline and debug shots from the
@@ -372,21 +372,21 @@ def _tile_bg_color(img) -> tuple | None:
 # and made the matcher click random covered pairs forever.
 _MIN_ICON_PIXELS = 40
 
-# v41: a revealed tile's OPAQUE art is strongly saturated (live board:
+# a revealed tile's OPAQUE art is strongly saturated (live board:
 # 7000+ saturated px), a covered card is not (<= ~1200 through the dimming
 # translucent panel). The gap between the two decides "is this tile showing
 # an item" — see _tile_icon_descriptor. Configurable, since the threshold
 # depends on the game's art and the panel's translucency.
 _MIN_ART_PIXELS = 2500
 
-# v42.1: DIM ITEMS. Live board 2026-09-29 (user capture cell_0_0.png): a
+# DIM ITEMS. Live board (cell_0_0.png): a
 # muted brown item keeps only ~1.8k saturated px even at saturation > 30 —
 # the 2500 gate read a REVEALED tile as "unreadable" forever and the loop
 # re-clicked the open cell endlessly. Dim items still draw their WHITE
 # QUANTITY BARS in the lower strip of the tile; covered cards have none
 # (their gray emblem ends above the strip, the card back is uniform).
 # A dim capture therefore passes the gate only with bar evidence.
-# v45.1: floor lowered 500 -> 200 — a real-board item measured only 297
+# floor lowered 500 -> 200 — a real-board item measured only 297
 # saturated px (cell_2_0.png) with 220 bar pixels; covered detection no
 # longer relies on the art gate alone (see the covered-reference diff).
 _MIN_ART_PIXELS_DIM = 200
@@ -396,7 +396,7 @@ def _strip_mean_diff(img_a, img_b) -> float:
     """Mean per-pixel difference (0..255) between two tile captures over the
     LOWER strip (y 78%..99%, x 8%..92%) — the quantity-bars region.
 
-    Live-board calibration (2026-09-29 user archive): a COVERED card is
+    Live-board calibration: a COVERED card is
     pixel-stable — two frames 0.9 s apart differ by 0.0-0.2 — while a
     revealed dim item differs from its own covered reference by 19-31 in
     that strip. The card back is opaque in practice, so this diff is a
@@ -446,10 +446,10 @@ def _tile_has_qty_bars(rgb, h: int, w: int) -> bool:
 
 def _tile_icon_descriptor(img) -> tuple | None:
     """
-    Identity descriptor of a revealed tile's ITEM ART (v41 rewrite).
+    Identity descriptor of a revealed tile's ITEM ART.
 
     Why the previous background-subtracted descriptors failed on the live
-    board (8-hour session, 2026-09-29 debug archive): the tile cards are
+    board (8-hour session debug archive): the tile cards are
     SEMI-TRANSPARENT, so the game landscape behind them bleeds into every
     capture and changes from frame to frame and cell to cell; captures of the
     same item in different cells are also misaligned by 1-8 px (int rounding
@@ -472,7 +472,7 @@ def _tile_icon_descriptor(img) -> tuple | None:
          plus the mean RGB inside the mask (color). The bbox self-normalizes
          the position, so a +7 px capture shift changes the distance by ~0.004.
 
-    Measured on the 2026-09-29 archive: same item shape 0.052 / color 0.9,
+    Measured on the archive: same item shape 0.052 / color 0.9,
     different items 0.198 / 10.7 — see _icon_distance for the scale."""
     try:
         from PIL import Image
@@ -485,7 +485,7 @@ def _tile_icon_descriptor(img) -> tuple | None:
         v = hsv[:h, :w, 2]
         mask = (s > 90) & (v > 60)
         if int(mask.sum()) < _MIN_ART_PIXELS:
-            # v42.1: dim-item second chance — a muted item keeps its white
+            # dim-item second chance — a muted item keeps its white
             # quantity bars even when the art itself has few saturated
             # pixels; a covered card has neither (see _MIN_ART_PIXELS_DIM).
             n_sat = int(mask.sum())
@@ -509,7 +509,7 @@ def _tile_icon_descriptor(img) -> tuple | None:
 def _icon_distance(a, b) -> float:
     """Distance between two icon descriptors: 50*shape + 1.5*color.
 
-    Live-capture separation (2026-09-29 archive): the same item measures
+    Live-capture separation: the same item measures
     ~4.0 (0.052 shape, 0.9 color), different items 26+ (0.198, 10.7) — the
     default identity tolerance (12) sits ~3x above 'same' and ~2x below
     'different'. The old single-scale metric mixed a 0..1 shape with a
@@ -522,6 +522,101 @@ def _icon_distance(a, b) -> float:
         return 50.0 * shape + 1.5 * color
     except Exception:
         return 999.0
+
+
+# WHITE/GRAY ITEMS. Live board: a revealed
+# tile whose item art is fully desaturated keeps ZERO saturated pixels, so
+# the art gate AND the dim gate read it as "unreadable" forever — the
+# session aborted with "cells never open" while the tile was actually open
+# (cell_3_0.png: sat_px=0, white quantity bars present, strip diff vs its
+# own covered reference 36.8). Two such tiles even formed an unplayed pair.
+# Such an item is identified from the BACKGROUND-DIFFERENCE silhouette
+# instead: pixels that differ from the tile's own background ring by > 40
+# in any channel. Measured on the archive: a covered card keeps 1158-1612
+# such px, a revealed tile 4300-5600 — the counts separate cleanly, so the
+# same count also protects the covered-reference builder from mistaking a
+# revealed white tile for the covered card.
+_MIN_MONO_PIXELS = 200
+_MIN_MONO_REVEAL_PIXELS = 1500
+_MONO_REVEAL_AREA_FRACTION = 0.30
+
+
+def _tile_thin_ring_bg(img) -> tuple | None:
+    """Median color of a THIN (2px) outer ring of the tile.
+
+    Unlike _tile_bg_color (10% ring, shared with the quantity descriptor),
+    the thin ring never reaches the card's frame/bezel, so the
+    background-difference silhouette below measures only real content."""
+    try:
+        rgb = np.asarray(img.convert("RGB")).astype(float)
+        k = 2
+        ring = np.concatenate([
+            rgb[:k].reshape(-1, 3), rgb[-k:].reshape(-1, 3),
+            rgb[:, :k].reshape(-1, 3), rgb[:, -k:].reshape(-1, 3),
+        ])
+        return tuple(np.median(ring, axis=0))
+    except Exception:
+        return None
+
+
+def _tile_bgdiff_pixels(img) -> int:
+    """Count of pixels clearly different from the tile's own thin-ring background."""
+    try:
+        rgb = np.asarray(img.convert("RGB")).astype(float)
+        bg = np.array(_tile_thin_ring_bg(img) or (0.0, 0.0, 0.0))
+        return int((np.abs(rgb - bg).max(axis=2) > 40).sum())
+    except Exception:
+        return 0
+
+
+def _tile_bgdiff_reveal_threshold(width: int, height: int) -> int:
+    """Minimum bg-diff pixel count for 'this crop shows a revealed item'.
+
+    Scales with the tile area: on the archive tile (98x107) a
+    covered card measures 1158-1612 px (~11-15% of the tile) while a
+    revealed tile measures 4300-5600 px (~41-54%) — 30% of the area sits
+    ~2x above the covered range and ~1.4x below the revealed range."""
+    try:
+        return max(_MIN_MONO_REVEAL_PIXELS,
+                   int(_MONO_REVEAL_AREA_FRACTION * max(1, int(width)) * max(1, int(height))))
+    except Exception:
+        return _MIN_MONO_REVEAL_PIXELS
+
+
+def _tile_mono_descriptor(img) -> tuple | None:
+    """Identity descriptor for a fully desaturated (white/gray) item.
+
+    Same 256-shape + 3-color layout as _tile_icon_descriptor, but the mask
+    is the BACKGROUND-DIFFERENCE silhouette (pixels that differ from the
+    tile's own background ring by > 40 in any channel) instead of the
+    saturation mask. Only called for tiles the covered-reference diff
+    already proved NOT covered, so the covered card's own emblem can never
+    enter the memory through this path.
+
+    Measured on the archive: the same white item in two
+    different cells compares at 8.8, different items at 50+ — see
+    _identity_distance (mono pairs use mono_tol)."""
+    try:
+        from PIL import Image
+        img = img.convert("RGB")
+        rgb = np.asarray(img).astype(float)
+        h, w, _ = rgb.shape
+        bg = np.array(_tile_thin_ring_bg(img) or (0.0, 0.0, 0.0))
+        mask = np.abs(rgb - bg).max(axis=2) > 40
+        if int(mask.sum()) < _MIN_MONO_PIXELS:
+            return None
+        ys, xs = np.nonzero(mask)
+        pad = 2
+        by0, by1 = max(0, int(ys.min()) - pad), min(h, int(ys.max()) + 1 + pad)
+        bx0, bx1 = max(0, int(xs.min()) - pad), min(w, int(xs.max()) + 1 + pad)
+        m = mask[by0:by1, bx0:bx1].astype(float)
+        color = rgb[by0:by1, bx0:bx1][m > 0].mean(axis=0)
+        shape = np.asarray(Image.fromarray(
+            np.clip(m * 255.0, 0, 255).astype("uint8")
+        ).resize((16, 16), Image.BOX)).astype(float) / 255.0
+        return tuple(shape.ravel()) + tuple(color)
+    except Exception:
+        return None
 
 
 def _center_signature(img) -> tuple | None:
@@ -720,7 +815,7 @@ class MemoryMatchMixin:
         memory_match_cell_padding: int               (default 4, gap between tiles)
         memory_match_start_button: [x, y]            (calibrated "Start" button)
         memory_match_close_button: [x, y]            (calibrated "Close" button)
-        Fixed player timings (module constants, owner decision 2026-09-27):
+        Fixed player timings (module constants, decision):
             MM_START_DELAY 4.0 (panel load after Start, s)
             MM_REVEAL_DELAY 0.9 (click -> park -> wait -> capture, s)
             MM_SECOND_REVEAL_DELAY 0.8 (2nd tile capture before the game resolves, s)
@@ -832,7 +927,7 @@ class MemoryMatchMixin:
             #      the Obby/Eden paths so the walk always starts from spawn.
             # Window check runs ONCE here, at the start of the cycle (the
             # character reset before the walk) - NOT before every tile click
-            # (owner request 2026-09-28: no extra load mid-session).
+            # (avoids extra load mid-session).
             try:
                 self._ensure_main_window_before_action(force=True)
             except Exception:
@@ -904,7 +999,7 @@ class MemoryMatchMixin:
                 os.makedirs(_tmpdir0, exist_ok=True)
             except Exception:
                 pass
-            # v44.2: only the LATEST session's screenshots are kept —
+            # only the LATEST session's screenshots are kept —
             # wipe the previous session's captures before this one starts.
             _mm_purge_previous_session(_tmpdir0)
             _baseline = os.path.join(_tmpdir0, "grid_baseline.png")
@@ -1171,7 +1266,7 @@ class MemoryMatchMixin:
 
     def _mm_play_grid(self, grid, board_confirmed: bool = True) -> dict:
         """
-        Play one Memory Match game using the calibrated grid (2026-09-27 rewrite).
+        Play one Memory Match game using the calibrated grid ( rewrite).
 
         Game rules (Sol's RNG, per the Fandom wiki page "Memory Match" and the
         live board):
@@ -1223,19 +1318,24 @@ class MemoryMatchMixin:
         reveal_delay = MM_REVEAL_DELAY
         second_reveal_delay = MM_SECOND_REVEAL_DELAY
         attempt_gap = MM_ATTEMPT_GAP
-        # v41: identity tolerance on the NEW descriptor scale (50*shape +
+        # identity tolerance on the NEW descriptor scale (50*shape +
         # 1.5*color; same item ~4, different items 26+). The old
         # memory_match_icon_tolerance key belonged to the retired descriptor
         # scale and is intentionally no longer read.
         icon_tol = _cfg_float("memory_match_identity_tolerance", 12.0)
         center_tol = _cfg_float("memory_match_center_tolerance", 20.0)
-        # v45.1: strip-diff tolerance for the covered-reference check.
-        # Real board (user archive 2026-09-29): a covered card differs from
+        # dedicated tolerance for WHITE/GRAY items (mono descriptors).
+        # Real-board calibration ( archive): the same desaturated
+        # item in two cells compares at ~8.8, different items at 50+ — 24
+        # sits ~2.7x above 'same' and ~2x below 'different'.
+        mono_tol = _cfg_float("memory_match_mono_tolerance", 24.0)
+        # strip-diff tolerance for the covered-reference check.
+        # Real board: a covered card differs from
         # its own reference by 0.0-0.2, a revealed dim item by 19-31 —
         # 6.0 sits ~30x above the noise and ~3x below the signal.
         cover_diff_tol = _cfg_float("memory_match_cover_diff_tolerance", 6.0)
         # Dedicated tolerance for COVER detection (real-board calibration,
-        # 2026-09-28 debug archive: covered cells sit at center distance
+        # Debug archive: covered cells sit at center distance
         # 4-16 from their own post-Start reference, revealed items at 55+;
         # the identity tolerance alone misclassified one covered cell).
         cover_center_tol = max(center_tol, 30.0)
@@ -1269,7 +1369,7 @@ class MemoryMatchMixin:
         park_x = max(2, int(park_x))
         park_y = max(2, int(park_y))
 
-        # Covered-tile references, per cell. REAL-board lesson (2026-09-28
+        # Covered-tile references, per cell. REAL-board lesson (
         # debug archive): the pre-Start baseline shows a DIFFERENT screen
         # (start overlay), 30-60 mean pixel distance away from the actual
         # covered board - comparing against it never detected "covered" and
@@ -1280,7 +1380,7 @@ class MemoryMatchMixin:
         # last-resort fallback (and for the "board changed" probe).
         covered_icons: dict[tuple[int, int], tuple | None] = {}
         covered_centers: dict[tuple[int, int], tuple | None] = {}
-        # v45.1: per-cell COVERED REFERENCE CROPS. The covered card is
+        # per-cell COVERED REFERENCE CROPS. The covered card is
         # pixel-stable while the camera is fixed (two frames 0.9 s apart
         # differ by 0.0-0.2), so the strip diff against this crop decides
         # "covered" far more reliably than the art gate: a revealed DIM
@@ -1299,13 +1399,16 @@ class MemoryMatchMixin:
                     _by = int(_cy) - _ch0 // 2 - y0
                     _crop = base_img.crop((_bx, _by, _bx + _cw0, _by + _ch0))
                     _ic = _tile_icon_descriptor(_crop)
-                    if _ic is not None:
-                        # v44.1: this cell shows a REAL ITEM in the baseline —
+                    if _ic is not None or \
+                            _tile_bgdiff_pixels(_crop) >= _tile_bgdiff_reveal_threshold(_cw0, _ch0):
+                        # this cell shows a REAL ITEM in the baseline —
                         # the board was NOT fully covered before Start (the
                         # game was already open, e.g. one pair solved). A
                         # revealed tile must never become its own covered
                         # reference: it made the open tile read "covered"
                         # forever and the macro re-clicked it endlessly.
+                        # the same guard now catches a revealed WHITE
+                        # item (zero saturated px, large bg-diff silhouette).
                         covered_icons[(_cc, _cr)] = None
                         covered_centers[(_cc, _cr)] = None
                     else:
@@ -1354,12 +1457,15 @@ class MemoryMatchMixin:
                     _by = int(_cy) - _chc // 2 - y0
                     _crop = grid_img.crop((_bx, _by, _bx + _cwc, _by + _chc))
                     _ic = _tile_icon_descriptor(_crop)
-                    if _ic is not None:
-                        # v44.1: REVEALED tile in the post-Start snapshot —
+                    if _ic is not None or \
+                            _tile_bgdiff_pixels(_crop) >= _tile_bgdiff_reveal_threshold(_cwc, _chc):
+                        # REVEALED tile in the post-Start snapshot —
                         # the board was not fully covered (a pair was already
                         # solved before this session). Never use a revealed
                         # tile as its own covered reference: the cell would
                         # read "covered" forever and be re-clicked endlessly.
+                        # the same guard now catches a revealed WHITE
+                        # item (zero saturated px, large bg-diff silhouette).
                         covered_icons[(_cc, _cr)] = None
                         covered_centers[(_cc, _cr)] = None
                         filled += 1
@@ -1374,7 +1480,7 @@ class MemoryMatchMixin:
             except Exception:
                 return False
 
-        # Debug snapshots for post-run analysis (user request 2026-09-28:
+        # Debug snapshots for post-run analysis (
         # nothing in the macro root - everything in the local appdata dir).
         def _mm_debug_snapshot(tag: str):
             try:
@@ -1446,6 +1552,7 @@ class MemoryMatchMixin:
             path = os.path.join(tmpdir, f"cell_{c}_{r}.png")
             state = {"icon": None, "center": None, "qty_sig": None, "sig": None,
                      "alt_icon": None, "alt_center": None, "alt_qty_sig": None, "alt_sig": None,
+                     "micon": None, "alt_micon": None,
                      "green": 0.0, "path": path, "readable": False, "covered": False,
                      "pos": (c, r)}
             if not target:
@@ -1456,7 +1563,7 @@ class MemoryMatchMixin:
 
             def _read_once(suffix: str) -> dict:
                 read = {"icon": None, "center": None, "qty_sig": None, "sig": None,
-                        "green": 0.0, "covered": False}
+                        "micon": None, "green": 0.0, "covered": False}
                 img_path = path if not suffix else path.replace(".png", f"{suffix}.png")
                 if not _capture_tile_screenshot(cx - cw // 2, cy - ch // 2, cw, ch, img_path):
                     return read
@@ -1477,10 +1584,10 @@ class MemoryMatchMixin:
                     read["green"] = float(((_g > 140) & (_g - _r > 60) & (_g - _b > 60)).sum() / arr.shape[0] / arr.shape[1])
                 except Exception:
                     read = {"icon": None, "center": None, "qty_sig": None, "sig": None,
-                            "green": 0.0, "covered": False}
+                            "micon": None, "green": 0.0, "covered": False}
                 ref_crop = covered_crops.get((c, r))
                 if ref_crop is not None:
-                    # v45.1: the covered card is pixel-stable while the
+                    # the covered card is pixel-stable while the
                     # camera is fixed, so the strip diff against the cell's
                     # OWN covered reference decides "covered" — a revealed
                     # dim item measures 19-31, a covered card 0.0-0.2
@@ -1490,7 +1597,7 @@ class MemoryMatchMixin:
                     cov = _strip_mean_diff(tile_img, ref_crop) <= cover_diff_tol
                 else:
                     # No reference for this cell (it was already revealed at
-                    # session start): fall back to the v41 art-gate logic.
+                    # session start): fall back to the art-gate logic.
                     base_icon = covered_icons.get((c, r))
                     if read["icon"] is None:
                         cov = True
@@ -1498,13 +1605,26 @@ class MemoryMatchMixin:
                         cov = (base_icon is not None
                                and _icon_distance(read["icon"], base_icon) <= icon_tol)
                 read["covered"] = cov
+                if not cov:
+                    # background-silhouette descriptor. Required for
+                    # fully desaturated (white/gray) item art, which passes
+                    # neither the saturation gate nor the dim-bar gate (the
+                    # covered-reference diff above already proved the tile is
+                    # NOT the covered card). Stored for COLORED tiles too, so
+                    # a white item is never compared against a colored one
+                    # through the weak center-signature fallback.
+                    try:
+                        read["micon"] = _tile_mono_descriptor(tile_img)
+                    except Exception:
+                        read["micon"] = None
                 return read
 
             for attempt_no in range(1, retries + 1):
                 read = _read_once("")
-                for k in ("icon", "center", "qty_sig", "sig", "green", "covered"):
+                for k in ("icon", "center", "qty_sig", "sig", "green", "covered", "micon"):
                     state[k] = read[k]
-                state["readable"] = state["icon"] is not None and not state["covered"]
+                state["readable"] = ((state["icon"] is not None or state["micon"] is not None)
+                                     and not state["covered"])
                 if state["readable"] or attempt_no == retries:
                     break
                 if not self._mm_sleep(retry_delay):
@@ -1520,15 +1640,33 @@ class MemoryMatchMixin:
                     if not self._mm_sleep(0.45):
                         break
                     alt = _read_once("_alt")
-                    for k in ("icon", "center", "qty_sig", "sig", "green", "covered"):
-                        state["alt_" + k] = alt[k]
-                    unstable = not (alt["icon"] is not None and state["icon"] is not None
-                                    and _icon_distance(state["icon"], alt["icon"]) <= icon_tol)
+                    same_icon = (alt["icon"] is not None and state["icon"] is not None
+                                 and _icon_distance(state["icon"], alt["icon"]) <= icon_tol)
+                    same_mono = (alt.get("micon") is not None and state.get("micon") is not None
+                                 and _icon_distance(state["micon"], alt["micon"]) <= mono_tol)
+                    unstable = not (same_icon or same_mono)
+                    alt_green = float(alt.get("green") or 0.0)
                     if not unstable:
+                        for k in ("icon", "center", "qty_sig", "sig", "green", "covered", "micon"):
+                            state["alt_" + k] = alt[k]
                         break
-                    for k in ("icon", "center", "qty_sig", "sig", "green", "covered"):
+                    if (alt_green >= green_threshold and state["readable"]
+                            and float(state.get("green") or 0.0) < green_threshold):
+                        # the game scored this tile's pair BETWEEN the
+                        # two samples - the newer frame shows the green
+                        # highlight, whose overlay destroys the art identity
+                        # (open-vs-green icon distance ~90 on the real
+                        # board). Keep the pre-score identity, adopt only the
+                        # green verdict; the caller turns it into a scored
+                        # pair instead of a phantom "already solved" tile.
+                        state["green"] = alt_green
+                        break
+                    for k in ("icon", "center", "qty_sig", "sig", "green", "covered", "micon"):
+                        state["alt_" + k] = alt[k]
+                    for k in ("icon", "center", "qty_sig", "sig", "green", "covered", "micon"):
                         state[k] = alt[k]
-                    state["readable"] = state["icon"] is not None and not state["covered"]
+                    state["readable"] = ((state["icon"] is not None or state["micon"] is not None)
+                                         and not state["covered"])
                     if not state["readable"]:
                         break
             return state
@@ -1555,7 +1693,7 @@ class MemoryMatchMixin:
             # BOTH tiles are captured twice (main + alt ~0.4s later): a
             # mid-flip frame yields a garbage identity that never matches
             # anything and silently kills the whole memory (real-board log
-            # 2026-09-28: every turn explored, memory never paired). The
+            # every turn explored, memory never paired). The
             # min-distance over the two samples absorbs one bad frame.
             state = _capture_cell(c, r, samples=2)
             state["pos"] = (c, r)
@@ -1585,6 +1723,20 @@ class MemoryMatchMixin:
                             best = d
             if best is not None:
                 return best, icon_tol
+            # white/gray items carry the background-silhouette
+            # descriptor instead of the art descriptor; the two kinds are
+            # never cross-compared (different mask semantics), so mono pairs
+            # get their own tolerance.
+            best_mono = None
+            for ka in ("micon", "alt_micon"):
+                for kb in ("micon", "alt_micon"):
+                    va, vb = a.get(ka), b.get(kb)
+                    if va is not None and vb is not None:
+                        d = _icon_distance(va, vb)
+                        if best_mono is None or d < best_mono:
+                            best_mono = d
+            if best_mono is not None:
+                return best_mono, mono_tol
             for ka in ("center", "alt_center"):
                 for kb in ("center", "alt_center"):
                     va, vb = a.get(ka), b.get(kb)
@@ -1680,12 +1832,12 @@ class MemoryMatchMixin:
             The old fixed-delay verdict mis-read the board: a non-matching
             pair is still OPEN a couple of seconds after the second flip, so
             "both tiles readable" was mistaken for a scored pair and the
-            memory got poisoned (real capture, 2026-09-27: every pair
+            memory got poisoned (real capture: every pair
             "SCORED" while the game matched none). The board is now POLLED:
             a scored pair turns GREEN (highlight), a missed pair flips back
             COVERED - anything else keeps polling.
 
-            Real-board recovery (2026-09-28 log: every pair "did not resolve
+            Real-board recovery ( log: every pair "did not resolve
             in time"): the game flips a pair back SIMULTANEOUSLY, so during
             the poll "A open + B covered" can only mean B's flip never
             registered (the click was swallowed). B is re-clicked (max
@@ -1709,20 +1861,28 @@ class MemoryMatchMixin:
                         return "failed"
                     st_a = _capture_cell(*pos_a, retries=1)
                     st_b = _capture_cell(*pos_b, retries=1)
-                    # v41: bank the identities while the tiles are OPEN. The
+                    # bank the identities while the tiles are OPEN. The
                     # reveal-time capture of the SECOND tile can lose the
-                    # race against the game's flip-back (real log 2026-09-29:
+                    # race against the game's flip-back (
                     # the cell silently dropped out of the memory and had to
                     # be re-explored, burning a whole attempt), but the poll
                     # starts while the pair is still open. The sat gate makes
                     # a mid-flip frame unreadable, so only clean reads are
                     # remembered here.
-                    if st_a.get("readable"):
+                    if st_a.get("readable") and st_a.get("green", 0.0) < green_threshold:
                         _remember(pos_a, st_a)
-                    if st_b.get("readable"):
+                    if st_b.get("readable") and st_b.get("green", 0.0) < green_threshold:
                         _remember(pos_b, st_b)
+                    # a scored pair turns BOTH tiles green. ONE green
+                    # tile proves nothing on its own: a pre-solved (still
+                    # green) first tile plus a just-flipped mismatched second
+                    # tile faked a "scored" verdict here and poisoned the
+                    # memory ( pair (0,0)+(2,0) counted
+                    # as matched while (0,0) was green from the auto-scored
+                    # (0,0)+(1,0) pair). A real scored pair shows both tiles
+                    # green within the poll window.
                     if (st_a.get("green", 0.0) >= green_threshold
-                            or st_b.get("green", 0.0) >= green_threshold):
+                            and st_b.get("green", 0.0) >= green_threshold):
                         return "scored"
                     if st_a.get("covered") and st_b.get("covered"):
                         return "failed"
@@ -1767,17 +1927,20 @@ class MemoryMatchMixin:
                         st_a = _capture_cell(*pos_a, retries=2, retry_delay=0.5)
                         st_b = _capture_cell(*pos_b, retries=2, retry_delay=0.5)
                     if _open(st_a) and _open(st_b):
-                        # v41 guard: a mismatched pair can stay open until the
+                        # Guard: a mismatched pair can stay open until the
                         # NEXT attempt (the game flips it back late), and
                         # "both still open" was counted as a scored pair —
-                        # the 2026-09-29 archive shows two DIFFERENT items
+                        # the archive shows two DIFFERENT items
                         # (ring + crystal) banked as a match this way, which
                         # welded wrong tiles into one identity group. The
                         # green-highlight path above is the game's own
                         # verdict and stays trusted; this fallback now also
                         # requires the two captures to read as the same item.
-                        if (st_a.get("icon") is not None and st_b.get("icon") is not None
-                                and not _tiles_same(st_a, st_b)):
+                        # the guard covers white/gray items too (their
+                        # identity lives in micon, not icon).
+                        _id_a = st_a.get("icon") is not None or st_a.get("micon") is not None
+                        _id_b = st_b.get("icon") is not None or st_b.get("micon") is not None
+                        if (_id_a and _id_b and not _tiles_same(st_a, st_b)):
                             verdict = "timeout"
                             self._mm_log(
                                 f"[MemoryMatch] Turn {turn}: {pos_a}+{pos_b} both open but "
@@ -1926,7 +2089,7 @@ class MemoryMatchMixin:
                         break
                     continue
                 if float(st_a.get("green") or 0.0) >= green_threshold:
-                    # v44.1: a remembered tile turns out to be ALREADY SOLVED
+                    # a remembered tile turns out to be ALREADY SOLVED
                     # (green) — possible when the session started on a board
                     # that was not fresh. Drop it from memory, mark matched.
                     matched.add(pos_a)
@@ -1979,7 +2142,7 @@ class MemoryMatchMixin:
                     if s1 is None:
                         break
                     if s1["readable"] and float(s1.get("green") or 0.0) >= green_threshold:
-                        # v44.1: the tile is ALREADY SOLVED (green highlight) —
+                        # the tile is ALREADY SOLVED (green highlight) —
                         # the session started on a board that was not fresh.
                         # Mark it matched and spend no attempt on it.
                         matched.add((c1, r1))
@@ -2018,7 +2181,7 @@ class MemoryMatchMixin:
                         #    new information. If it matches the first tile the
                         #    pair scores; if it matches an OLDER tile the
                         #    group logic collects that pair next attempt.
-                        #    v44.1: an ALREADY-SOLVED (green) cell must be
+                        #    an ALREADY-SOLVED (green) cell must be
                         #    skipped — flipping it is a no-op and the game
                         #    keeps waiting for the REAL second flip, so the
                         #    green cell would be (falsely) resolved as a
@@ -2026,12 +2189,40 @@ class MemoryMatchMixin:
                         candidates = list(unknowns[1:])
                         s2 = None
                         pos_b = None
+                        auto_scored = False
                         while candidates:
                             _, _, c2, r2 = candidates.pop(0)
                             s2 = _reveal_cell(c2, r2, second=True)
                             if s2 is None:
                                 break
                             if s2["readable"] and float(s2.get("green") or 0.0) >= green_threshold:
+                                if (s1.get("readable")
+                                        and float(s1.get("green") or 0.0) < green_threshold
+                                        and _tiles_same(s1, s2)):
+                                    # the game scored the pair with the
+                                    # still-open first tile WHILE the second
+                                    # tile was being captured (real log
+                                    # flipping (1,0) completed the
+                                    # (0,0)+(1,0) pair between the two samples;
+                                    # the green frame used to be misread as
+                                    # "already solved" and the next flip was
+                                    # falsely counted as a scored pair).
+                                    # Bank the pair exactly like a scored turn.
+                                    _remember((c2, r2), s2)
+                                    matched.add((c1, r1))
+                                    matched.add((c2, r2))
+                                    _forget((c1, r1))
+                                    _forget((c2, r2))
+                                    out["matches"] += 1
+                                    unreadable_streak = 0
+                                    self._mm_log(
+                                        f"[MemoryMatch] Turn {attempt + 1}: "
+                                        f"({c1},{r1})+({c2},{r2}) scored while the "
+                                        "second tile was being captured — pair "
+                                        f"banked ({out['matches']} total).")
+                                    s2 = None
+                                    auto_scored = True
+                                    break
                                 matched.add((c2, r2))
                                 _forget((c2, r2))
                                 self._mm_log(
@@ -2042,6 +2233,8 @@ class MemoryMatchMixin:
                             pos_b = (c2, r2)
                             break
                         if s2 is None:
+                            if auto_scored:
+                                attempt += 1
                             if not getattr(self, "detection_running", False):
                                 break
                             continue

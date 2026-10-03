@@ -26,7 +26,7 @@ APPDATA_BASE = Path(_os.environ.get("LOCALAPPDATA", _os.path.expanduser("~"))) /
 APPDATA_CONFIG = APPDATA_BASE / "config.json"
 
 # ── Project GitHub repo (single source of truth for all remote URLs) ─────
-# Releases drive the in-app updater: tag = version ("v1.0.8" ...),
+# Releases drive the in-app updater: tag = version ("v1.0.9" ...),
 # release asset = EndSolMacro.exe. All gameplay data comes from the Sol's
 # RNG Fandom wiki (plus the bundled offline snapshot) — nothing else is
 # fetched. Optional files under assets/ in this repo:
@@ -46,7 +46,7 @@ RETIRED_CONFIG_KEYS = frozenset({
     "multi_instance_mode", "multi_instance_max",
     "multi_instance_auto_reconnect", "multi_accounts",
     "multi_managed_windows", "multi_instance_custom_paths",
-    "sound_notifications",  # start/stop sounds removed entirely (2026-09-27)
+    "sound_notifications",  # start/stop sounds removed
     # Never had any effect (no reader existed) and defaulted to True, which
     # would suppress the new update notice for every existing config. The
     # working replacement key is update_notifications_disabled (default False).

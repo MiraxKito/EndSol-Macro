@@ -58,6 +58,11 @@ const RU: Record<string, string> = {
     "The client logs into its own account automatically.": "Клиент автоматически войдёт в свой аккаунт.",
     "Failed to remove the account.": "Не удалось удалить аккаунт.",
     "Launch failed.": "Не удалось запустить.",
+    "Closing…": "Закрывается…",
+    "Roblox client closed": "Клиент Roblox закрыт",
+    "forced after the grace period": "принудительно после таймаута",
+    "Close this Roblox window (the client exits like the X button; a hung client is terminated)": "Закрыть это окно Roblox (клиент завершится как по крестику; зависший клиент будет принудительно закрыт)",
+    "Failed to close the instance.": "Не удалось закрыть инстанс.",
     "Could not start the login capture.": "Не удалось начать захват входа.",
     "No Roblox windows detected. Launch an instance above or start Roblox manually.": "Окна Roblox не найдены. Запустите окно выше или вручную.",
     "Multiple-Instances — Instructions": "Мульти-окна — Инструкция",
@@ -192,9 +197,6 @@ const RU: Record<string, string> = {
     "This account already has a running client": "У этого аккаунта уже запущен клиент",
     "Running": "Запущен",
     "running": "запущен",
-    "Auto rejoin secondary accounts": "Авто-реджойн второстепенных аккаунтов",
-    "When a secondary window disconnects, relaunch the same account automatically. Turn it off to use those accounts yourself.":
-        "Когда второстепенное окно теряет соединение, этот аккаунт перезапускается автоматически. Выключите, чтобы пользоваться аккаунтами сами.",
     "Aura rarity threshold": "Порог редкости аур",
     "Reads every window's own Roblox log and sends biome, aura and disconnect alerts to your webhooks. The main instance is covered by the main detector.":
         "Читает собственный лог каждого окна и шлёт алерты биомов, аур и дисконнектов в ваши вебхуки. Основной инстанс покрыт основным детектором.",

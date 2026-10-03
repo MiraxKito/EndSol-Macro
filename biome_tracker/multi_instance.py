@@ -56,7 +56,7 @@ _JUMP_LOCK = threading.Lock()
 # Lowercase log fragments that indicate the client disconnected from the
 # server. The explicit "[FLog::Network] Client:Disconnect" line is not
 # written by every client version / disconnect type, so a small conservative
-# set of alternatives is matched case-insensitively (2026-09-27).
+# set of alternatives is matched case-insensitively.
 DISCONNECT_LOG_PATTERNS = (
     "connection lost",
     "lost connection",
@@ -74,7 +74,7 @@ _MAIN_BUSY_FLAGS = (
     "_eden_checking",         # Eden OCR check (chat + UI clicks)
     "_potion_thread_active",  # potion crafting
     "_obby_running",          # obby pathing
-    "_custom_path_running",   # v44: free custom path replay
+    "_custom_path_running",   # free custom path replay
     "_br_sc_running",         # BR/SC item usage sequence
     "_mt_running",            # merchant teleporter sequence
     "on_auto_merchant_state", # auto merchant buy sequence
@@ -199,15 +199,15 @@ def get_main_pid() -> int | None:
         # Auto fallback #1: the window whose OWN log belongs to the
         # CONFIGURED MAIN ACCOUNT (roblox_username). "Newest log file" is
         # unreliable with 2+ clients: the alt's log can be newer and the
-        # whole detector would track the alt (real session 2026-09-28: the
-        # main detector read the alt's log, the username guard rejected
-        # every line and detection went blind).
+        # whole detector would track the alt (the main detector once read
+        # the alt's log, the username guard rejected every line and
+        # detection went blind).
         #
-        # The resolution is PINNED to the account (owner request 2026-09-28):
-        # once a window is resolved by username it stays the main one while
-        # that process lives, instead of re-resolving (and possibly hopping
-        # to another instance) every cache expiry. After a reconnect the
-        # fresh client of the SAME account is found by username again.
+        # The resolution is pinned to the account: once a window is resolved
+        # by username it stays the main one while that process lives,
+        # instead of re-resolving (and possibly hopping to another
+        # instance) every cache expiry. After a reconnect the fresh client
+        # of the SAME account is found by username again.
         target_user = ""
         try:
             target_user = str((getattr(tracker, "config", {}) or {}).get("roblox_username", "") or "").strip().lower()
@@ -252,7 +252,7 @@ def get_main_pid() -> int | None:
                     # NEVER hand the main slot to a window whose log is KNOWN
                     # to belong to a DIFFERENT account — a secondary account
                     # must not become the main instance while the configured
-                    # main nick is set (real session 2026-09-28: the auto
+                    # main nick is set ( the auto
                     # fallback picked the alt because the main client's
                     # username line had not been read yet). Among unknowns
                     # prefer the freshest log, then HWND order.
@@ -303,15 +303,36 @@ def get_main_hwnd() -> int | None:
     return None
 
 
+# short-TTL cache for the main log path. get_latest_log_file resolves
+# it on EVERY detection tick (biome 1s + aura 0.6s + item-change 1s), and
+# _map_logs_to_pids lists the whole log dir + stats every file + queries
+# each PID's create time - ~3x/s of redundant filesystem work. The mapping
+# only changes when a client starts or exits, and get_main_pid() above
+# re-validates the PID every 2s anyway, so a 2s TTL is safe.
+_MAIN_LOG_CACHE: dict[str, Any] = {"pid": None, "path": None, "at": 0.0}
+_MAIN_LOG_TTL = 2.0
+
+
 def get_main_log_path() -> str | None:
     """The main window's OWN Roblox log file (None when it cannot be mapped)."""
     main_pid = get_main_pid()
     if not main_pid:
         return None
+    now = time.time()
+    with _LOCK:
+        cached_pid = _MAIN_LOG_CACHE.get("pid")
+        cached_path = _MAIN_LOG_CACHE.get("path")
+        cached_at = float(_MAIN_LOG_CACHE.get("at") or 0.0)
+    if cached_pid is not None and int(cached_pid) == int(main_pid) \
+            and now - cached_at < _MAIN_LOG_TTL:
+        return cached_path
     try:
-        return _map_logs_to_pids([int(main_pid)]).get(int(main_pid))
+        path = _map_logs_to_pids([int(main_pid)]).get(int(main_pid))
     except Exception:
         return None
+    with _LOCK:
+        _MAIN_LOG_CACHE.update(pid=int(main_pid), path=path, at=now)
+    return path
 
 
 def reset_main_cache() -> None:
@@ -352,7 +373,7 @@ def _windows() -> list[dict[str, Any]]:
 
     Delegates to the shared window-first scan (base_support.roblox_top_windows):
     window PIDs are classified individually instead of exe-querying the whole
-    process table, which lagged the whole app (real session 2026-09-28)."""
+    process table, which lagged the whole app."""
     try:
         from .base_support import roblox_top_windows
         windows = roblox_top_windows()
@@ -447,7 +468,7 @@ def _send_space_scancode(hold: float = 0.2) -> bool:
     the key (no jump, idle timer keeps running). Working anti-AFK tools
     send the hardware scan code (Space = 0x39) with KEYEVENTF_SCANCODE.
 
-    IMPORTANT: the INPUT structure must include MOUSEINPUT in its union so
+    The INPUT structure must include MOUSEINPUT in its union so
     ctypes.sizeof(INPUT) matches the real winuser INPUT (40 bytes on x64).
     SendInput silently returns 0 when cbSize is wrong, which used to make
     this helper fall back to pyautogui without anyone noticing.
@@ -533,7 +554,14 @@ def _mouse_into_window(hwnd: int) -> None:
     the cursor. Roblox's idle reset is input-driven: a window that is in the
     foreground but never sees any mouse presence is a prime suspect for
     jumps that "do not count". Moving the cursor in makes the jump look
-    like a real user interaction before the scancode Space press."""
+    like a real user interaction before the scancode Space press.
+
+    two fixes from the 3-window low-FPS report:
+      * a MINIMIZED window reports GetWindowRect around (-32000,-32000) —
+        moving the cursor there sent it off-screen and it "disappeared";
+        bail out instead (the caller restores the window before this).
+      * the move is interpolated over ~0.25s instead of a single teleport,
+        so the cursor visibly glides instead of jumping."""
     try:
         import win32api
         import win32gui
@@ -541,18 +569,44 @@ def _mouse_into_window(hwnd: int) -> None:
             left, top, right, bottom = win32gui.GetWindowRect(hwnd)
         except Exception:
             return
-        if right <= left or bottom <= top:
+        # Minimized windows report off-screen coordinates ~(-32000). Never
+        # move the real cursor off-screen.
+        if right <= left or bottom <= top or left < -30000 or top < -30000:
             return
         cx = max(left + 1, min((left + right) // 2, right - 1))
         cy = max(top + 1, min((top + bottom) // 2, bottom - 1))
         try:
-            win32api.SetCursorPos((cx, cy))
+            start_x, start_y = win32api.GetCursorPos()
+            steps = 12
+            for i in range(1, steps + 1):
+                t = i / steps
+                ix = int(start_x + (cx - start_x) * t)
+                iy = int(start_y + (cy - start_y) * t)
+                win32api.SetCursorPos((ix, iy))
+                time.sleep(0.02)
             time.sleep(0.05)
             win32api.SetCursorPos((min(cx + 3, right - 1), min(cy + 2, bottom - 1)))
             time.sleep(0.05)
             win32api.SetCursorPos((cx, cy))
         except Exception:
             pass
+    except Exception:
+        pass
+
+
+def _restore_cursor(pos) -> None:
+    """give the cursor back to the user after a jump.
+
+    The jump sequence parks the cursor inside the secondary window; when the
+    previous window is restored afterwards, the cursor stays hovering over a
+    now-BACKGROUND window (or inside the game viewport, which the client can
+    hide) — to the user the cursor simply "disappeared". Restoring the exact
+    pre-jump position makes the whole jump invisible."""
+    if not pos:
+        return
+    try:
+        import win32api
+        win32api.SetCursorPos((int(pos[0]), int(pos[1])))
     except Exception:
         pass
 
@@ -666,6 +720,14 @@ def _focus_and_jump_locked(hwnd: int, busy_cb: Any = None) -> tuple[bool, str]:
         # 2.5: put the real cursor inside the window first - a foreground
         # window that never sees the mouse is treated as untouched by the
         # client's idle logic (focus alone resets nothing in Roblox).
+        # remember where the cursor was so it can be given back at the
+        # end of the sequence.
+        cursor_before = None
+        try:
+            import win32api
+            cursor_before = win32api.GetCursorPos()
+        except Exception:
+            cursor_before = None
         _mouse_into_window(hwnd)
 
         # 3: jump - Space twice for reliability, each press held ~0.2s and
@@ -677,6 +739,14 @@ def _focus_and_jump_locked(hwnd: int, busy_cb: Any = None) -> tuple[bool, str]:
             _log("[MultiInstance] Anti-AFK: jump input fell back to pyautogui (VK-only) - jump may not register.")
         time.sleep(0.45)
         if win32gui.GetForegroundWindow() != hwnd:
+            # the main cycle may have taken the foreground while we
+            # were jumping (item sequence, sale, scheduled action started).
+            # Re-focusing the secondary NOW would steal focus back from the
+            # main window in the middle of its action — bail out instead.
+            if _main_became_busy():
+                _restore_cursor(cursor_before)
+                _restore_previous()
+                return False, "main_busy"
             _focus_window_for_jump(hwnd, attempts=2)
             time.sleep(0.3)
             _mouse_into_window(hwnd)
@@ -686,6 +756,7 @@ def _focus_and_jump_locked(hwnd: int, busy_cb: Any = None) -> tuple[bool, str]:
         # always restore the previous window (verified, with retries).
         time.sleep(settle_wait)
         restored = _restore_previous()
+        _restore_cursor(cursor_before)  # cursor back where the user left it
 
         if not restored:
             _log("[MultiInstance] Anti-AFK jump done, but the previous window could not be restored (it may have been closed).")
@@ -957,7 +1028,7 @@ def _assign_logs_to_pids(pids, candidates, create_time_fn) -> dict[int, str]:
     a launcher process started next to the clients (or clock skew) could
     otherwise leave a real client without its log, so the monitor would
     never read that window and its username/biome/aura stay unknown
-    (real session 2026-09-28: the launcher stole the main account's log)."""
+    ( the launcher stole the main account's log)."""
     mapping: dict[int, str] = {}
     claimed: set[str] = set()
     entries: list[tuple[float, int, str]] = []
@@ -1034,7 +1105,7 @@ def _map_logs_to_pids(pids: list[int]) -> dict[int, str]:
 # an empty name is retried after _LOG_USERNAME_TTL seconds because the
 # TutorialCursor warning can appear deep inside a long-running client's log
 # (the MAIN instance's log is usually the oldest and the largest — a bounded
-# prefix read missed its username line entirely, real session 2026-09-28).
+# prefix read missed its username line entirely).
 _LOG_USERNAME_CACHE: dict[str, tuple[str, float, int]] = {}  # path -> [name, checked_at, scan_pos]
 _LOG_USERNAME_TTL = 60.0
 _LOG_USERNAME_SCAN_CHUNK = 1048576  # ~1MB scanned per call (no read bursts)
@@ -1052,8 +1123,7 @@ def _log_username(path: str) -> str:
     INCREMENTALLY: every call reads at most ~1MB starting where the previous
     attempt stopped, so even a multi-hundred-MB log of a long-running client
     is covered within a minute WITHOUT multi-megabyte read bursts that lagged
-    the panel and kept Antimalware Service Executable busy (real session
-    2026-09-28). A hit is cached for the file's lifetime; new tail data
+    the panel and kept Antimalware Service Executable busy. A hit is cached for the file's lifetime; new tail data
     written later (a client joining the game) is scanned as it appears."""
     if not path:
         return ""
@@ -1166,8 +1236,7 @@ def _read_new_lines(path: str, pid: int) -> tuple[list[str], int, dict]:
 
     FIRST ATTACH starts at the END of the file: the monitor reports NEW
     events only. Reading a window's whole history from offset 0 replayed
-    every aura the account had ever equipped into the webhook (real
-    session 2026-09-28)."""
+    every aura the account had ever equipped into the webhook ."""
     with _LOCK:
         st = _INSTANCE_STATE.get(pid) or {}
         # First attach OR the file changed under the same PID (reconnect
@@ -1329,7 +1398,7 @@ def _post_multi_embed(description: str, color: int, footer: str, content: str = 
     without a tracker or URLs; never raises. `content` carries an optional
     Discord mention ping outside the embed (same shape as the main loop).
 
-    v38: embeds mirror the MAIN webhook style (description-only embed,
+    embeds mirror the MAIN webhook style (description-only embed,
     timestamp, the shared EndSol footer icon) — the only difference is the
     per-account attribution line inside the description."""
     try:
@@ -1489,7 +1558,7 @@ def _announce_window_count(count: int, main_pid: int | None, force: bool = False
 
 
 def _announce_start(count: int, main_pid: int | None) -> None:
-    """One combined status message on start (v42).
+    """One combined status message on start.
 
     Previously the start announcement was immediately followed by a
     near-identical forced window-count message — two almost the same embeds
@@ -1530,78 +1599,8 @@ def _announce_stop() -> None:
     _send_multi_status("Multi-instance paused — the macro has stopped.", color=0xe67e22)
 
 
-# ---- v41: automatic rejoin of a disconnected secondary account --------------
-# The launcher already knows how to start a stored account (ticket minting,
-# own-server / private-link resolution), so a disconnect is repaired by
-# relaunching the SAME account through the SAME link it was launched with.
-# Rate-limited per account: a client needs ~30-60 s to appear, and a dead
-# session must not turn into an infinite launch loop.
-_REJOIN_STATE: dict[str, dict[str, Any]] = {}   # username -> {"last": ts, "tries": [ts]}
-_REJOIN_MIN_GAP = 60.0        # seconds between two rejoin attempts of one account
-_REJOIN_WINDOW = 900.0        # rolling window for the attempt cap
-_REJOIN_MAX_ATTEMPTS = 3      # max attempts per account per window
-
-
-def _schedule_rejoin(username: str) -> None:
-    """Rejoin a disconnected secondary account via the built-in launcher.
-
-    Rate-limited per account. The launch itself (network + Roblox ticket)
-    runs in a short-lived daemon thread so the alert monitor never stalls;
-    the new client shows up in the monitor automatically (new PID, new log)."""
-    username = str(username or "").strip().lower()
-    if not username:
-        return
-    # v42: master switch — the user may want to drive secondary accounts
-    # manually (e.g. play them in other places), so auto-rejoin can be off.
-    try:
-        cfg = (getattr(_TRACKER, "config", {}) or {})
-        if not bool(cfg.get("multi_instance_rejoin_enabled", True)):
-            return
-    except Exception:
-        pass
-    now = time.time()
-    with _LOCK:
-        st = _REJOIN_STATE.setdefault(username, {"last": 0.0, "tries": []})
-        st["tries"] = [t for t in st["tries"] if now - t < _REJOIN_WINDOW]
-        if now - float(st.get("last") or 0.0) < _REJOIN_MIN_GAP:
-            return
-        if len(st["tries"]) >= _REJOIN_MAX_ATTEMPTS:
-            return
-        st["last"] = now
-        st["tries"].append(now)
-        attempt_no = len(st["tries"])
-    import threading
-
-    def _work() -> None:
-        ok_msg = ""
-        try:
-            from . import instance_launcher
-            with _LOCK:
-                tracker = _TRACKER
-            if tracker is not None:
-                instance_launcher.attach_tracker(tracker)
-            cfg = (getattr(tracker, "config", {}) or {}) if tracker is not None else {}
-            ps_link = str(cfg.get("private_server_link", "") or "")
-            res = instance_launcher.launch_account(username, ps_link, rejoin=True)
-            if res.get("success"):
-                ok_msg = f"[MultiInstance] Rejoin @{username} (attempt {attempt_no}): launched."
-            else:
-                ok_msg = (f"[MultiInstance] Rejoin @{username} (attempt {attempt_no}) failed: "
-                          f"{res.get('error', 'unknown error')}")
-        except Exception as exc:
-            ok_msg = f"[MultiInstance] Rejoin @{username} error: {exc}"
-        try:
-            with _LOCK:
-                tracker = _TRACKER
-            log = getattr(tracker, "append_log", None) if tracker is not None else None
-            if callable(log):
-                log(ok_msg)
-        except Exception:
-            pass
-
-    threading.Thread(target=_work, daemon=True, name=f"mm-rejoin-{username}").start()
 def _instance_join_link(uname: str) -> str:
-    """v42: human 'Join Server' URL for the private server the account was
+    """human 'Join Server' URL for the private server the account was
     launched into ('' when unknown — Own Server or no recorded launch)."""
     try:
         from . import instance_launcher
@@ -1619,10 +1618,10 @@ def _process_instance_events(pid: int, lines: list[str], order: int) -> None:
     import re as _re
     state = _INSTANCE_STATE.setdefault(pid, {})
     # Alerts are labeled with the ACCOUNT NAME when it is known - PIDs mean
-    # nothing to a human reading Discord (owner request 2026-09-28).
-    # v38: the account is a dedicated embed line, and the headings match the
-    # main webhook style ("Biome Started - X" / "✨ Aura equipped: Y"), so
-    # instance alerts read exactly like main-loop alerts apart from that line.
+    # nothing to a human reading Discord. The account is a dedicated embed
+    # line, and the headings match the main webhook style ("Biome Started -
+    # X" / "✨ Aura equipped: Y"), so instance alerts read exactly like
+    # main-loop alerts apart from that line.
     label = f"Instance {order}"
     try:
         uname = _log_username(str(state.get("log_file") or ""))
@@ -1631,7 +1630,7 @@ def _process_instance_events(pid: int, lines: list[str], order: int) -> None:
     except Exception:
         pass
     account_line = f"> **Account:** {label}"
-    # v42: when the account was launched into a private server, rare-biome
+    # when the account was launched into a private server, rare-biome
     # alerts carry a "Join Server" link so the user can jump into the same
     # server the instance is in.
     join_link = _instance_join_link(uname) if uname else ""
@@ -1682,18 +1681,14 @@ def _process_instance_events(pid: int, lines: list[str], order: int) -> None:
                     _send_instance_alert(
                         f"> ## Client disconnected\n{account_line}",
                         color=0xff0000)
-                    # v41: a disconnected SECONDARY account rejoins itself
-                    # through the launcher with the same link it was
-                    # launched with. The main window is left to the main
-                    # detector; accounts that are not stored in the launcher
-                    # are skipped by the launcher's own "not stored" refusal.
-                    if uname:
-                        try:
-                            main_pid = get_main_pid()
-                        except Exception:
-                            main_pid = None
-                        if main_pid is None or pid != main_pid:
-                            _schedule_rejoin(uname)
+                    # secondary auto-rejoin was REMOVED at the owner's
+                    # request — relaunching from the macro cannot work
+                    # reliably behind launchers that confirm/serialize
+                    # launches (Bloxstrap's "close running instance?" dialog
+                    # blocks the programmatic launch until a human clicks),
+                    # and a dead disconnected window piling up is better
+                    # handled manually from the panel. The disconnect ALERT
+                    # itself is unchanged.
         except Exception:
             continue
 
@@ -1881,9 +1876,8 @@ def stop_idle_loop() -> None:
 
     This pauses the secondary Anti-AFK loop ONLY. The user preference
     `multiple_instances_enabled` is NEVER touched here: F2 / macro stop must
-    never disable the mode itself (user report 2026-09-27 - the toggle looked
-    off after stopping/restarting because the runtime flag was displayed
-    instead of the persisted config)."""
+    never disable the mode itself (the toggle is displayed from the
+    persisted config, so stopping/restarting the macro never flips it)."""
     _STOP.set()
     try:
         tracker = _TRACKER
@@ -1895,7 +1889,7 @@ def stop_idle_loop() -> None:
     except Exception:
         pass
     # Built-in launcher locks follow the MODE (set_enabled), NOT the macro
-    # cycle (v28): stop_idle_loop used to call release_locks(), so F2 /
+    # cycle: stop_idle_loop used to call release_locks(), so F2 /
     # macro-stop silently dropped the Roblox singleton mutex while the
     # Multiple-Instances preference was still ON — the launch gate then saw
     # "no lock held" and refused to launch accounts until re-ensured.
@@ -1920,17 +1914,20 @@ def state() -> dict[str, Any]:
         cfg = getattr(_TRACKER, "config", None)
         if isinstance(cfg, dict) and "multiple_instances_enabled" in cfg:
             enabled = bool(cfg.get("multiple_instances_enabled"))
-        if enabled:
-            _LAST_WINDOWS = _windows()
+    # Refresh the window list on EVERY state poll, not only while the mode
+    # is enabled: the panel's process list (and the per-window Close
+    # buttons) must stay live even with the toggle off, and a frozen list
+    # kept showing closed windows after the mode was disabled.
+    _LAST_WINDOWS = _windows()
     main_pid = get_main_pid()
     with _LOCK:
         state_snapshot = {
             int(pid): dict(st) for pid, st in _INSTANCE_STATE.items()
         }
     # Per-instance monitor snapshot (biome/aura/last event per window)
-    # plus the ACCOUNT USERNAME of every window (owner request
-    # 2026-09-28: PIDs mean nothing to a human; the account name is the
-    # visible identity). Username lookups are cached per log file.
+    # plus the ACCOUNT USERNAME of every window (PIDs mean nothing to a
+    # human; the account name is the visible identity). Username lookups
+    # are cached per log file.
     instances = []
     username_by_pid: dict[int, str] = {}
     try:
@@ -1985,6 +1982,84 @@ def state() -> dict[str, Any]:
         },
         "warning": "Roblox may close additional windows randomly; EndSol does not bypass that behavior." if _ENABLED else "",
         }
+
+
+def _pid_alive(pid: int) -> bool:
+    try:
+        import psutil
+        return psutil.pid_exists(int(pid))
+    except Exception:
+        return False
+
+
+def close_instance(pid: int, tracker: Any = None) -> dict[str, Any]:
+    """Close ONE Roblox client from the panel's process list.
+
+    Graceful first: WM_CLOSE to every top-level window of the PID — the
+    same signal the window X button sends, so the client exits cleanly and
+    releases the account cookie itself. A client that ignores WM_CLOSE
+    within the grace period is terminated (psutil terminate -> kill), so a
+    hung client can never keep the account's session locked.
+
+    Closing the MAIN window while the macro cycle is running is refused by
+    the caller (the detector would lose its target mid-session); this
+    helper only performs the close."""
+    pid = int(pid)
+    hwnds = [w["hwnd"] for w in _windows() if w["pid"] == pid]
+    if not hwnds:
+        if not _pid_alive(pid):
+            return {"success": False, "error": "No Roblox window found for this PID (already closed?)."}
+        return {"success": False, "error": "No Roblox window found for this PID."}
+    closed_message = False
+    try:
+        import win32con
+        import win32gui
+        for h in hwnds:
+            try:
+                win32gui.PostMessage(int(h), win32con.WM_CLOSE, 0, 0)
+                closed_message = True
+            except Exception:
+                pass
+    except Exception:
+        closed_message = False
+    if not closed_message:
+        try:
+            import ctypes
+            for h in hwnds:
+                ctypes.windll.user32.PostMessageW(int(h), 0x0010, 0, 0)  # WM_CLOSE
+                closed_message = True
+        except Exception:
+            pass
+    # Grace period: give the client time to exit on its own.
+    deadline = time.time() + 4.0
+    while time.time() < deadline:
+        if not _pid_alive(pid):
+            break
+        time.sleep(0.2)
+    forced = False
+    if _pid_alive(pid):
+        forced = True
+        try:
+            import psutil
+            proc = psutil.Process(pid)
+            proc.terminate()
+            try:
+                proc.wait(timeout=5)
+            except Exception:
+                proc.kill()
+        except Exception as e:
+            return {"success": False, "error": f"Could not close PID {pid}: {e}"}
+    try:
+        log = getattr(tracker or _TRACKER, "append_log", None)
+        if callable(log):
+            log(f"[MultiInstance] Roblox client PID {pid} closed from the panel"
+                + (" (forced after the grace period)." if forced else "."))
+    except Exception:
+        pass
+    # Drop the stale per-instance state so the panel stops showing it.
+    with _LOCK:
+        _INSTANCE_STATE.pop(pid, None)
+    return {"success": True, "forced": forced, "pid": pid}
 
 
 def attach_tracker(tracker: Any) -> None:

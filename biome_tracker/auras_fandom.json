@@ -1540,10 +1540,7 @@
     "image_collection_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e2/NautilusAuraNight.gif/revision/latest?cb=20240221190755",
     "obtainment_type": "standard",
     "fandom_page": "https://sol-rng.fandom.com/wiki/Nautilus",
-    "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Era7nautilusOpening.mp4",
-    "video_file": "Era7nautilusOpening.mp4",
-    "cutscene_note": "===Opening Cutscene=== The screen will become black, dropbeat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a light bluish purple star, that slowly expands before the edges glow light blue revealing .",
-    "video_kind": "opening"
+    "cutscene_note": "===Opening Cutscene=== The screen will become black, dropbeat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a light bluish purple star, that slowly expands before the edges glow light blue revealing ."
   },
   "Permafrost": {
     "rarity": 73500,

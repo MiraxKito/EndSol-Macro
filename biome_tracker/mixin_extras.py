@@ -1,12 +1,10 @@
 """
-Optional extras for EndSol Macro (v1.0.8).
+Optional extras for EndSol Macro (v1.0.9).
 
 All extra toggles default to OFF and live in the config:
   - dry_run                  -> log actions instead of performing them
-  - key_release_failsafe     -> force-release stuck movement keys after reconnect
   - daily_stats_webhook      -> one Discord summary per completed day
                                 (00:00 UTC window), stored in a local JSON
-  - rare_aura_desktop_notify -> Windows toast on Legendary+ auras
 
 Always-available (no config): feature schedule view, config profiles,
 clear-logs. See main.py Api for the UI entry points.
@@ -195,11 +193,17 @@ class ExtrasMixin:
             f"**Fish caught:** {stats.get('fish', 0)}",
             f"**Macro runtime:** {hours}h {minutes}m",
         ]
+        # Attribute the summary to the configured player (stats are collected
+        # from the MAIN window's detector only — secondary windows never add
+        # to them).
+        uname = str((getattr(self, "config", {}) or {}).get("roblox_username", "") or "").strip()
+        if uname:
+            lines.insert(1, f"**Player:** {uname} (main window)")
         embed = {
             "title": "EndSol Macro — daily summary",
             "description": "\n".join(lines),
             "color": 0x7C5BF5,
-            "footer": {"text": f"EndSol Macro {current_ver} · day resets at 00:00 UTC"},
+            "footer": {"text": f"EndSol Macro {current_ver} · main window only · day resets at 00:00 UTC"},
         }
         urls = [u for u in (getattr(self, "webhook_urls", []) or []) if isinstance(u, str) and u.strip()]
         if not urls:
@@ -225,70 +229,6 @@ class ExtrasMixin:
     def dry_run_log(self, action):
         try:
             self.append_log(f"[DryRun] Would do: {action} (dry-run mode is ON - no action taken)")
-        except Exception:
-            pass
-
-    # ── key-release failsafe ────────────────────────────────────────────
-    def release_all_movement_keys(self, reason=""):
-        """Force-release W/A/S/D/Space in case a path playback was cut mid-key."""
-        try:
-            import keyboard as kb
-            for key in ("w", "a", "s", "d", "space"):
-                try:
-                    kb.release(key)
-                except Exception:
-                    pass
-            try:
-                import autoit
-                for token in ("{w up}", "{a up}", "{s up}", "{d up}", "{SPACE up}"):
-                    try:
-                        autoit.send(token)
-                    except Exception:
-                        pass
-            except Exception:
-                pass
-            if reason:
-                try:
-                    self.append_log(f"[Failsafe] Released all movement keys ({reason})")
-                except Exception:
-                    pass
-        except Exception:
-            pass
-
-    def failsafe_release_if_enabled(self, reason):
-        try:
-            if self.config.get("key_release_failsafe", False):
-                self.release_all_movement_keys(reason)
-        except Exception:
-            pass
-
-    # ── desktop toast (rare aura) ───────────────────────────────────────
-    def desktop_notify(self, title, message):
-        try:
-            if not self.config.get("rare_aura_desktop_notify", False):
-                return
-            threading.Thread(target=self._windows_toast, args=(title, message), daemon=True).start()
-        except Exception:
-            pass
-
-    def _windows_toast(self, title, message):
-        """Balloon-tip toast via PowerShell - no extra dependencies."""
-        try:
-            safe_title = str(title).replace("'", "").replace('"', "")
-            safe_msg = str(message).replace("'", "").replace('"', "")
-            script = (
-                "Add-Type -AssemblyName System.Windows.Forms; "
-                "$n = New-Object System.Windows.Forms.NotifyIcon; "
-                "$n.Icon = [System.Drawing.SystemIcons]::Information; "
-                "$n.Visible = $true; "
-                f"$n.ShowBalloonTip(8000, '{safe_title}', '{safe_msg}', "
-                "[System.Windows.Forms.TooltipIcon]::Info); "
-                "Start-Sleep -Seconds 9; $n.Dispose()"
-            )
-            subprocess.run(
-                ["powershell", "-NoProfile", "-Command", script],
-                timeout=15, capture_output=True,
-            )
         except Exception:
             pass
 

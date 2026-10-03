@@ -136,6 +136,9 @@ const CALIBRATION_GROUPS: CalibrationGroup[] = [
             { key: "potion_first_potion_slot_pos", label: "First Potion Slot" },
             { key: "potion_recipe_button", label: "Open Recipe Button" },
             { key: "potion_auto_add_button", label: "Auto Add button" },
+            { key: "potion_add_everything_button", label: "Add Everything Button (Simple mode)" },
+            { key: "potion_craft_button", label: "Craft Button (Simple mode)" },
+            { key: "potion_auto_state_region", label: "Auto Button State Region (drag over the Auto button, Simple mode)", isRegion: true },
         ]
     },
     {

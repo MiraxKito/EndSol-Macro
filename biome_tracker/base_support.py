@@ -15,7 +15,7 @@ import keyboard as kb
 import json, requests, time, os, threading, re, webbrowser, random, keyboard, pyautogui, autoit, psutil, \
     locale, win32gui, win32process, win32con, ctypes, queue, mouse, sys, hashlib, winocr, asyncio, win32api, traceback
 
-current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.0.8")
+current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.0.9")
 current_version = current_ver
 
 rare_biomes = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY"]
@@ -25,7 +25,7 @@ special_message_biomes = set(rare_biomes + admin_biomes)
 # Canonical Roblox client executables + a tolerant client check: multi-instance
 # launchers commonly start secondary clients from a RENAMED copy of
 # RobloxPlayerBeta.exe, and a name-only filter made those windows invisible
-# to window detection (real session 2026-09-28: only one of two running
+# to window detection ( only one of two running
 # accounts was detected). The tolerant check also accepts any process whose
 # exe name or full path contains 'roblox', excluding non-client helpers.
 ROBLOX_EXE_NAMES = {"robloxplayerbeta.exe", "windows10universal.exe"}
@@ -43,7 +43,7 @@ def is_roblox_process(info: dict) -> bool:
     game client always lives) or its name carries a roblox client marker —
     launcher/helper processes (MultipleRobloxInstances.exe, crash handler,
     Studio) are excluded so their windows never enter the instance list
-    (real session 2026-09-28: the launcher window was listed as an
+    ( the launcher window was listed as an
     instance and even stole a client's log mapping)."""
     info = info or {}
     name = str(info.get("name") or "").casefold()
@@ -65,7 +65,7 @@ def is_roblox_process(info: dict) -> bool:
 # Visible-top-level Roblox window scan, cached for ~1s. Windows are
 # enumerated FIRST and only the few unique window PIDs are classified
 # (name + exe per PID). Never exe-query the whole process table per poll:
-# that made the whole app lag (real session 2026-09-28).
+# that made the whole app lag.
 _WINDOW_SCAN_LOCK = threading.Lock()
 _WINDOW_SCAN_CACHE: dict = {"windows": None, "at": 0.0}
 _WINDOW_SCAN_TTL = 1.0
@@ -379,6 +379,16 @@ def safe_request(
                 verify=verify,
                 **kwargs,
             )
+            # Rate limiting: honor a 429 ONCE per call (bounded wait), the
+            # same etiquette the Fandom gate applies. Prevents hammering an
+            # API that asked us to slow down.
+            if getattr(resp, "status_code", 0) == 429 and attempt < attempts - 1:
+                try:
+                    wait = float(resp.headers.get("Retry-After") or 1.0)
+                except (TypeError, ValueError):
+                    wait = 1.0
+                time.sleep(min(max(wait, 0.5), 10.0))
+                continue
             return resp
         except (
             requests.exceptions.SSLError,
@@ -1142,3 +1152,108 @@ class ActionScheduler:
                 self._pq.get_nowait()
         except Exception:
             pass
+
+
+# ── Roblox username validation ────────────────────────────────────────
+# The configured player username gates log reading (the detector must know
+# which log lines belong to the player), stats attribution and the
+# multi-instance account resolution — so the macro refuses to start without
+# a valid one.
+ROBLOX_USERNAME_RE = re.compile(r"^[A-Za-z0-9_]{3,20}$")
+
+# users.roblox.com safety: a session cache + a process-wide minimum gap
+# between lookups, so the panel can never spam the Roblox users API (the
+# frontend re-validates on every edit; the macro start re-checks too — the
+# cache turns those repeats into zero requests).
+_USERNAME_CHECK_LOCK = threading.Lock()
+_USERNAME_CHECK_CACHE: dict[str, tuple[float, tuple[bool, str, str]]] = {}
+_USERNAME_CHECK_TTL = 300.0         # s a confirmed/failed result is reused
+_ROBLOX_USERS_LOCK = threading.Lock()
+_ROBLOX_USERS_STATE = {"last": 0.0}
+_ROBLOX_USERS_MIN_INTERVAL = 2.0    # s between two users.roblox.com lookups
+
+
+def _roblox_users_gate() -> None:
+    """Block until the next users.roblox.com lookup is allowed."""
+    while True:
+        with _ROBLOX_USERS_LOCK:
+            now = time.time()
+            wait = _ROBLOX_USERS_STATE["last"] + _ROBLOX_USERS_MIN_INTERVAL - now
+            if wait <= 0:
+                _ROBLOX_USERS_STATE["last"] = now
+                return
+        time.sleep(min(max(wait, 0.05), 1.0))
+
+
+def _validate_roblox_username_cached(name, timeout=6):
+    """Cached + rate-limited core of validate_roblox_username."""
+    raw = str(name or "").strip()
+    key = raw.lower()
+    now = time.time()
+    if key:
+        with _USERNAME_CHECK_LOCK:
+            hit = _USERNAME_CHECK_CACHE.get(key)
+            if hit is not None and now - hit[0] < _USERNAME_CHECK_TTL:
+                return hit[1]
+    result = _validate_roblox_username_uncached(raw, timeout)
+    # Only definitive outcomes are cached (a network warning must stay
+    # retriable; those are rare and self-throttled anyway).
+    if result[1] in ("ok", "error") and raw:
+        with _USERNAME_CHECK_LOCK:
+            if len(_USERNAME_CHECK_CACHE) > 200:
+                _USERNAME_CHECK_CACHE.clear()
+            _USERNAME_CHECK_CACHE[key] = (now, result)
+    return result
+
+
+def _validate_roblox_username_uncached(raw, timeout=6):
+    if not raw:
+        return False, "error", (
+            "Roblox username is not set. Set it on the Webhook page — log "
+            "reading, statistics and multi-instance resolution rely on it, "
+            "so the macro cannot start without it.")
+    if not ROBLOX_USERNAME_RE.match(raw):
+        return False, "error", (
+            f"'{raw}' is not a valid Roblox username "
+            "(3-20 characters: letters, digits, underscore only). "
+            "Fix it on the Webhook page.")
+    _roblox_users_gate()
+    try:
+        resp = requests.post(
+            "https://users.roblox.com/v1/usernames/users",
+            json={"usernames": [raw], "excludeBannedUsers": False},
+            headers={"User-Agent": _USER_AGENT},
+            timeout=timeout,
+        )
+        data = (resp.json() or {}) if resp is not None and getattr(resp, "ok", False) else {}
+        entries = data.get("data") or []
+        hit = next((e for e in entries if str(e.get("name", "")).lower() == raw.lower()), None)
+        if hit is None:
+            return False, "error", (
+                f"Username '{raw}' was not found on Roblox. "
+                "Check the spelling on the Webhook page.")
+        return True, "ok", ""
+    except Exception:
+        return True, "warn", ("Username format is valid; the online check is "
+                              "unavailable right now (network). Starting anyway.")
+
+
+def validate_roblox_username(name, check_online=True, timeout=6):
+    """Validate the configured player username.
+
+    Returns (ok, level, message):
+      ok=True,  level="ok"    -> usable
+      ok=True,  level="warn"  -> format is fine, online check unavailable
+      ok=False, level="error" -> the macro must not start
+
+    Format checks are instant and request-free; the online existence check
+    goes through a 5-minute session cache and a 2 s process-wide minimum
+    gap, so repeated edits / macro restarts never spam the Roblox API."""
+    raw = str(name or "").strip()
+    if not raw:
+        return _validate_roblox_username_uncached(raw)
+    if not ROBLOX_USERNAME_RE.match(raw):
+        return _validate_roblox_username_uncached(raw)
+    if not check_online:
+        return True, "ok", ""
+    return _validate_roblox_username_cached(raw, timeout)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 # MUST stay above every `biome_tracker` import: base_support reads
 # ENDSOL_MACRO_VERSION at import time for all Discord webhook footers.
-current_version = "v1.0.8"
+current_version = "v1.0.9"
 import os as _os
 _os.environ["ENDSOL_MACRO_VERSION"] = current_version
 
@@ -345,6 +345,31 @@ class LoggerWriter:
         # never beside the source tree or executable.
         LOGS_DIR.mkdir(parents=True, exist_ok=True)
         self.filename = str(LOGS_DIR / Path(filename).name)
+        self._fh = None
+        # persistent append handle. The previous write() opened and
+        # closed the log file for EVERY printed line - a filesystem
+        # open/close syscall pair (plus an Antimalware scan) per log line,
+        # on a process that logs constantly. The handle is kept open and
+        # only reopened when the file disappears (the 10 MB rotation in
+        # mixin_detection renames it to .bak).
+
+    def _handle(self):
+        fh = self._fh
+        try:
+            if fh is not None and not fh.closed and _os.path.exists(self.filename):
+                return fh
+        except Exception:
+            fh = None
+        if fh is not None:
+            try:
+                fh.close()
+            except Exception:
+                pass
+        try:
+            self._fh = open(self.filename, "a", encoding="utf-8")
+        except Exception:
+            self._fh = None
+        return self._fh
 
     def write(self, message):
         if self.terminal is not None:
@@ -360,8 +385,10 @@ class LoggerWriter:
             except Exception:
                 pass
         try:
-            with open(self.filename, "a", encoding="utf-8") as f:
-                f.write(message)
+            fh = self._handle()
+            if fh is not None:
+                fh.write(message)
+                fh.flush()
         except Exception:
             pass
 
@@ -438,24 +465,25 @@ class Api:
     def set_multi_instance_enabled(self, enabled):
         enabled = bool(enabled)
         print(f"[MultiInstance] set_multi_instance_enabled({enabled})", flush=True)
-        # v38 safety: turning the mode OFF while Roblox clients are still
-        # running drops the cookie lock + singleton watcher — with several
-        # clients open that can close instances unexpectedly. Block the
-        # toggle until every Roblox window is closed.
+        # Safety: turning the mode OFF drops the cookie lock + singleton
+        # watcher. With 2+ clients open that can close instances
+        # unexpectedly, so the toggle is blocked while MORE THAN ONE Roblox
+        # client is running. A single remaining client is fine: nothing
+        # except that one window can be affected.
         if not enabled:
             try:
-                # v43: use the launcher's shared PID scan (contains-match on
+                # use the launcher's shared PID scan (contains-match on
                 # the exe name) — the old startswith() check could miss
                 # renamed/Bloxstrap clients and let the toggle through while
-                # clients were running (user log 2026-09-29, 15:43).
+                # clients were running.
                 from biome_tracker import instance_launcher as _il
                 running = _il._roblox_pids()
-                if running:
+                if len(running) > 1:
                     return {"success": False, "blocked": True,
-                            "error": ("Cannot turn Multiple-Instances off while Roblox clients are "
-                                      f"running ({len(running)} client(s)). Close every Roblox "
-                                      "window first — turning the mode off now could close your "
-                                      "instances unexpectedly.")}
+                            "error": ("Cannot turn Multiple-Instances off while more than one Roblox "
+                                      f"client is running ({len(running)} clients). Close all but one "
+                                      "Roblox window first — turning the mode off with several "
+                                      "clients could close instances unexpectedly.")}
             except Exception:
                 pass
         try:
@@ -518,12 +546,67 @@ class Api:
             traceback.print_exc()
             return {"success": False, "error": str(exc)}
 
+    def validate_roblox_username(self, username):
+        """Live username check for the Webhook page: format + existence on
+        Roblox (best-effort online lookup). Returns (ok, level, message)."""
+        try:
+            from biome_tracker.base_support import validate_roblox_username
+            return validate_roblox_username(username, check_online=True)
+        except Exception as exc:
+            return {"success": False, "error": str(exc)}
+
+    def close_multi_instance(self, pid):
+        """Close ONE Roblox client from the panel's process list (Close
+        button on the instance row). The MAIN window is protected while the
+        macro cycle is running — closing it mid-session would leave the
+        detector without a target."""
+        try:
+            if not self._tracker:
+                return {"success": False, "error": "Tracker not available"}
+            try:
+                pid = int(pid)
+            except (TypeError, ValueError):
+                return {"success": False, "error": "Invalid PID"}
+            try:
+                main_pid = multi_instance.get_main_pid()
+            except Exception:
+                main_pid = None
+            if main_pid is not None and pid == int(main_pid):
+                try:
+                    cycle_running = bool(getattr(self._tracker, "detection_running", False))
+                except Exception:
+                    cycle_running = False
+                if cycle_running:
+                    return {"success": False, "blocked": True,
+                            "error": ("This is the MAIN window and the macro is running. Stop the "
+                                      "macro (or pick another main window) before closing it.")}
+            else:
+                # Multi-Instances mode OFF: the macro runs on its single
+                # window — refuse to close the LAST Roblox client mid-cycle
+                # (that would leave the detector without a target).
+                try:
+                    cycle_running = bool(getattr(self._tracker, "detection_running", False))
+                    mi_enabled = bool((getattr(self._tracker, "config", {}) or {}).get("multiple_instances_enabled", False))
+                    window_count = len(multi_instance.state().get("windows") or [])
+                except Exception:
+                    cycle_running, mi_enabled, window_count = False, False, 0
+                if cycle_running and not mi_enabled and window_count <= 1:
+                    return {"success": False, "blocked": True,
+                            "error": ("The macro is running on this window. Stop the macro before "
+                                      "closing the last Roblox client.")}
+            result = multi_instance.close_instance(pid, self._tracker)
+            return result
+        except Exception as exc:
+            import traceback
+            traceback.print_exc()
+            return {"success": False, "error": str(exc)}
+
     # ---- Built-in instance launcher ------------------------------------
     def launcher_get_state(self):
         try:
             from biome_tracker import instance_launcher
             instance_launcher.attach_tracker(self._tracker)
-            # v34 belt-and-braces: when the Multiple-Instances preference is
+            # Belt-and-braces: when the Multiple-Instances preference is
             # ON but the locks were never armed this session (a failed or
             # not-yet-run startup restore left the Locks line on "watcher
             # not running yet"), arm them here. Opening the MI tab is exactly
@@ -560,7 +643,7 @@ class Api:
             return {"success": False, "error": str(exc)}
 
     def launcher_set_own_server(self, username, enabled):
-        # v38 "Own Server": per-account toggle — when ON, launching this
+        # "Own Server": per-account toggle — when ON, launching this
         # account joins its OWN private server instead of the Webhook link.
         try:
             from biome_tracker import instance_launcher
@@ -977,6 +1060,12 @@ class Api:
         self._maybe_refresh_sol_book("gauntlets")
         return data
 
+    def get_full_achievement_data(self):
+        """Achievements dataset for Sol's Book (same rules as items)."""
+        data = self._sol_book_cached("achievements") or self._sol_book_bundled("achievements")
+        self._maybe_refresh_sol_book("achievements")
+        return data
+
     # ── Sol's Book items/gauntlets: offline snapshot + live refresh ─────
     # The offline snapshots (biome_tracker/items_fandom.json,
     # biome_tracker/gauntlets_fandom.json) are the verified source of truth.
@@ -1068,11 +1157,13 @@ class Api:
                     pass
 
             current = self._sol_book_cached(kind) or self._sol_book_bundled(kind)
+            dropped = []
             if kind == "items":
                 fresh, dropped = _sbd.refresh_items(current=current, progress=_log)
+            elif kind == "achievements":
+                fresh = _sbd.refresh_achievements(current=current, progress=_log)
             else:
                 fresh = _sbd.refresh_gauntlets(current=current, progress=_log)
-                dropped = []
             if fresh is None:
                 _log(f"[SolBook] {kind}: wiki unavailable or refresh rejected — offline dataset kept")
                 return
@@ -1136,7 +1227,7 @@ class Api:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    # ── Extras (v1.0.8): schedule, profiles, logs ──────────────────────
+    # ── Extras: schedule, profiles, logs ───────────────────────────────
     def get_feature_schedule(self):
         try:
             if not self._tracker:
@@ -2055,6 +2146,27 @@ class Api:
 
     def set_biome_detection(self, enabled):
         if not self._tracker: return
+        if enabled:
+            # The configured player username gates log reading, stats and
+            # multi-instance resolution — refuse to start without a valid one.
+            try:
+                from biome_tracker.base_support import validate_roblox_username
+                _uname = (self._tracker.config or {}).get("roblox_username", "")
+                _ok, _lvl, _msg = validate_roblox_username(_uname)
+                if not _ok:
+                    try:
+                        self._tracker.append_log(f"[Start blocked] {_msg}")
+                    except Exception:
+                        pass
+                    self._emit_macro_status()
+                    return {"success": False, "blocked": True, "error": _msg}
+                if _lvl == "warn":
+                    try:
+                        self._tracker.append_log(f"[Start] {_msg}")
+                    except Exception:
+                        pass
+            except Exception:
+                pass
         multi_enabled = bool(self._tracker.config.get("multiple_instances_enabled", False))
         if multi_enabled:
             # Multi-instance mode: the FULL detector runs on the selected main
@@ -2632,6 +2744,17 @@ class Api:
             return self._tracker.replay_path_recording(name, save_dir="crafting_files_do_not_open")
         return "No tracker"
 
+    def check_potion_auto_state(self):
+        """live readout of the crafting Auto button state."""
+        if not self._tracker:
+            return {"ok": False, "error": "No tracker"}
+        region = self._tracker.config.get("potion_auto_state_region") or []
+        rgb = None
+        if len(region) == 4 and all(float(v) > 0 for v in region):
+            rgb = self._tracker._potion_region_mean_rgb(region)
+        state = self._tracker._potion_auto_state() if rgb is not None else None
+        return {"ok": True, "state": state, "color": rgb}
+
     def test_aura_keybind(self):
          if self._tracker:
              def test_record():
@@ -2811,7 +2934,7 @@ class Api:
 
     def custom_paths_set_trigger(self, path_id: str, enabled: bool = False,
                                  interval_min: float = 0.0, biome: str = ""):
-        """v44: configure the auto trigger of a free (unassigned) custom path."""
+        """configure the auto trigger of a free (unassigned) custom path."""
         try:
             from biome_tracker.custom_path_manager import set_path_trigger
             res = set_path_trigger(path_id, enabled=enabled,
@@ -2821,7 +2944,7 @@ class Api:
             return {"success": False, "error": str(e)}
 
     def custom_paths_run_now(self, path_id: str):
-        """v44: queue a manual replay of one custom path (Run now button)."""
+        """queue a manual replay of one custom path (Run now button)."""
         try:
             from biome_tracker.custom_path_manager import get_custom_path
             data = get_custom_path(path_id)
@@ -2989,12 +3112,12 @@ def launch_app(api_class, tracker=None):
     tracker.on_biome_confirm_request = api._request_biome_confirm
     tracker.on_status_change = lambda status: api._emit_macro_status()
 
-    # v33: apply the persisted Multiple-Instances mode at startup. The
+    # apply the persisted Multiple-Instances mode at startup. The
     # launcher locks (cookie lock + singleton watcher) follow the MODE, not
     # the macro cycle — but set_enabled(True) only ran on the UI toggle or
     # on F1/detection start, so a fresh app run with the toggle already ON
     # showed "singleton watcher not running yet" and the cookie lock was not
-    # held until the first Launch (user report 2026-09-30).
+    # held until the first Launch.
     try:
         if bool((getattr(tracker, "config", {}) or {}).get("multiple_instances_enabled", False)):
             multi_instance.attach_tracker(tracker)
@@ -3020,7 +3143,7 @@ def launch_app(api_class, tracker=None):
     threading.Thread(target=_apply_native_window_icon_when_ready, args=(win_args["title"],), daemon=True).start()
     api.set_window(window)
 
-    # v38 safety: warn before the panel closes while Roblox instances run —
+    # Safety: warn before the panel closes while Roblox instances run —
     # closing the panel stops the singleton watcher, and running clients
     # could then close each other. Cancelable via the pywebview closing
     # event; silently skipped on builds without it.
@@ -3168,12 +3291,12 @@ def main():
                         import biome_tracker.multi_instance as _mi
                         _mi.attach_tracker(tracker)
                         _mi.set_enabled(True, tracker)
-                        # v38: the success line was diagnostic noise — failures
+                        # the success line was diagnostic noise — failures
                         # still print with a traceback below.
                 except Exception as _mi_exc:
-                    # v34: this used to fail silently, which left the Locks
+                    # this used to fail silently, which left the Locks
                     # line stuck on "watcher not running yet" with the toggle
-                    # ON (user report 2026-09-30).
+                    # ON.
                     print(f"[MultiInstance] Startup restore failed: {_mi_exc}", flush=True)
                     traceback.print_exc()
                 tracker.on_stats_update = api._emit_stats_update

@@ -64,7 +64,7 @@ QUEST_TYPES = [
     ]},
     # NOTE: "Player Hunt" is intentionally NOT a configurable type — it can
     # never be automated (requires killing players) and is always dismissed
-    # (hard rule in _qb_quest_action + DENY_PATTERNS below).
+    # (enforced in _qb_quest_action + DENY_PATTERNS below).
     {"id": "delivery", "label": "Delivery I-V (give items to NPC)", "patterns": [r"\bdelivery\b"]},
     {"id": "resonance", "label": "Resonance of X (grail offering)", "patterns": [r"\bresonance\s*of\b"]},
     {"id": "npc_visit", "label": "NPC / Location visits", "patterns": [
@@ -298,7 +298,7 @@ class QuestBoardMixin:
         Decide what to do with an OCR'd quest name: "accept" or "dismiss".
 
         Resolution order:
-          1. Hard rule: "Player Hunt" is ALWAYS dismissed — it requires
+          1. "Player Hunt" is ALWAYS dismissed — it requires
              killing players and cannot be automated.
           2. quest_board_quest_preferences config: {quest_type_id: "accept"|"dismiss"}
           3. DEFAULT_QUEST_ACTIONS (explicit defaults, see above)

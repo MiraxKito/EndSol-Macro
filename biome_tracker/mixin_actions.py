@@ -82,7 +82,7 @@ class ActionsMixin:
                         final_text = "".join(c if ord(c) < 128 else "" for c in raw).strip()
                         # No per-call logging: OCR runs on every chat /
                         # daily-event / auto-roll check - per-call lines
-                        # flooded the log (owner request 2026-09-28).
+                        # flooded the log.
                         return final_text
                     else:
                         return ""
@@ -1183,7 +1183,7 @@ class ActionsMixin:
         finally:
             self._obby_running = False
 
-    # ---- v44: FREE custom paths with their own triggers --------------------
+    # ---- FREE custom paths with their own triggers --------------------
     # A free custom path (saved WITHOUT a feature assignment) can replay
     # itself on its own trigger:
     #   - interval: every N minutes while the macro runs;
@@ -1220,7 +1220,7 @@ class ActionsMixin:
         )
 
     def custom_paths_loop(self):
-        """Ticker for free custom paths (v44).
+        """Ticker for free custom paths.
 
         One tick every ~3 s: for every enabled path, its interval trigger
         (due every N minutes) and/or its biome trigger (current biome ==
@@ -2364,6 +2364,20 @@ class ActionsMixin:
         self._eden_running = True
         try:
             print("[Eden] Performing contract...")
+            # Focus the MAIN Roblox window BEFORE the 'e' presses. This
+            # sequence sends real 'e' keys and clicks calibrated SCREEN
+            # coordinates — they land wherever the focus happens to be (e.g.
+            # a secondary window right after an Anti-AFK jump restore).
+            # perform_eden_path_sync already activates Roblox first; the
+            # contract sync was missing it entirely, so the focus arrived
+            # only AFTER the E presses.
+            if not self.check_roblox_procs():
+                print("[Eden] No Roblox process found, contract aborted")
+                return
+            for _ in range(4):
+                if not self.detection_running: return
+                self.activate_roblox_window()
+                time.sleep(0.15)
             contract_btn = self.config.get("eden_contract_button", [0, 0])
             # Optional extra click points (up to 2): the user may not have
             # calibrated the main point exactly on the contract button, so
@@ -2484,6 +2498,77 @@ class ActionsMixin:
         finally:
             self._potion_thread_active = False
 
+    def _potion_prep_sequence(self, potion_name: str, cancelled) -> bool:
+        """Open Stella's crafting menu and select the potion.
+
+        Shared by the RECORDING mode (replay loop) and the SIMPLE mode
+        (Add Everything + Craft). `cancelled` is a callable -> bool; the
+        sequence aborts (returns False) the moment it turns True."""
+        try:
+            inventory_click_delay = int(self.config.get("inventory_click_delay", "0")) / 1000.0
+            tab_pos = self.config.get("potion_items_tab", [0, 0])
+            search_pos = self.config.get("potion_search_bar", [0, 0])
+            first_slot_pos = self.config.get("potion_first_potion_slot_pos", [0, 0])
+            auto_btn = self.config.get(
+                "potion_auto_add_button",
+                self.config.get("potion_auto_button", [0, 0]),
+            )
+            recipe_btn = self.config.get("potion_recipe_button", [0, 0])
+
+            self.activate_roblox_window()
+            time.sleep(0.5)
+
+            # Press F 4 times (open crafting menu)
+            for _ in range(4):
+                if cancelled(): return False
+                autoit.send("f")
+                time.sleep(0.45)
+
+            # Click items tab 5 times
+            if tab_pos and tab_pos[0] > 0:
+                for _ in range(5):
+                    if cancelled(): return False
+                    self.Global_MouseClick(tab_pos[0], tab_pos[1])
+                    time.sleep(0.3)
+
+            # Search bar: clear and type the potion name
+            if search_pos and search_pos[0] > 0:
+                if cancelled(): return False
+                self.Global_MouseClick(search_pos[0], search_pos[1])
+                time.sleep(0.6 + inventory_click_delay)
+                autoit.send("^{a}")
+                time.sleep(0.6 + inventory_click_delay)
+                autoit.send("{BACKSPACE}")
+                time.sleep(0.6 + inventory_click_delay)
+                if potion_name:
+                    self._safe_type_text(potion_name)
+                    time.sleep(0.6 + inventory_click_delay)
+                autoit.send("{ENTER}")
+                time.sleep(1.5 + inventory_click_delay)
+
+            # Click first potion slot 3 times
+            if first_slot_pos and first_slot_pos[0] > 0:
+                for _ in range(3):
+                    if cancelled(): return False
+                    self.Global_MouseClick(first_slot_pos[0], first_slot_pos[1])
+                    time.sleep(0.3)
+
+            # Click Auto Add button (must happen before opening recipe)
+            if auto_btn and auto_btn[0] > 0:
+                if cancelled(): return False
+                self.Global_MouseClick(auto_btn[0], auto_btn[1])
+                time.sleep(0.5)
+
+            # Click recipe button
+            if recipe_btn and recipe_btn[0] > 0:
+                if cancelled(): return False
+                self.Global_MouseClick(recipe_btn[0], recipe_btn[1])
+                time.sleep(2.0)
+        except Exception as e:
+            self.error_logging(e, "Potion prep sequence failed")
+            return False
+        return True
+
     def _potion_thread_launcher_impl(self, file_name, potions_directory="crafting_files_do_not_open", stop_after=None, cancel_if=None):
         try:
             final_name = file_name if file_name.endswith(".json") else f"{file_name}.json"
@@ -2517,70 +2602,7 @@ class ActionsMixin:
                 or self.is_fishing_mode_enabled()
             )
 
-
-        try:
-            inventory_click_delay = int(self.config.get("inventory_click_delay", "0")) / 1000.0
-            tab_pos = self.config.get("potion_items_tab", [0, 0])
-            search_pos = self.config.get("potion_search_bar", [0, 0])
-            first_slot_pos = self.config.get("potion_first_potion_slot_pos", [0, 0])
-            auto_btn = self.config.get(
-                "potion_auto_add_button",
-                self.config.get("potion_auto_button", [0, 0]),
-            )
-            recipe_btn = self.config.get("potion_recipe_button", [0, 0])
-
-            self.activate_roblox_window()
-            time.sleep(0.5)
-
-            # Press F 4 times (open crafting menu)
-            for _ in range(4):
-                if _cancelled(): return
-                autoit.send("f")
-                time.sleep(0.45)
-
-            # Click items tab 5 times
-            if tab_pos and tab_pos[0] > 0:
-                for _ in range(5):
-                    if _cancelled(): return
-                    self.Global_MouseClick(tab_pos[0], tab_pos[1])
-                    time.sleep(0.3)
-
-            # Search bar: clear and type potion name
-            if search_pos and search_pos[0] > 0:
-                if _cancelled(): return
-                self.Global_MouseClick(search_pos[0], search_pos[1])
-                time.sleep(0.6 + inventory_click_delay)
-                autoit.send("^{a}")
-                time.sleep(0.6 + inventory_click_delay)
-                autoit.send("{BACKSPACE}")
-                time.sleep(0.6 + inventory_click_delay)
-                if potion_name:
-                    self._safe_type_text(potion_name)
-                    time.sleep(0.6 + inventory_click_delay)
-                autoit.send("{ENTER}")
-                time.sleep(1.5 + inventory_click_delay)
-
-            # Click first potion slot 3 times
-            if first_slot_pos and first_slot_pos[0] > 0:
-                for _ in range(3):
-                    if _cancelled(): return
-                    self.Global_MouseClick(first_slot_pos[0], first_slot_pos[1])
-                    time.sleep(0.3)
-
-            # Click Auto Add button (must happen before opening recipe)
-            if auto_btn and auto_btn[0] > 0:
-                if _cancelled(): return
-                self.Global_MouseClick(auto_btn[0], auto_btn[1])
-                time.sleep(0.5)
-
-            # Click recipe button
-            if recipe_btn and recipe_btn[0] > 0:
-                if _cancelled(): return
-                self.Global_MouseClick(recipe_btn[0], recipe_btn[1])
-                time.sleep(2.0)
-
-        except Exception as e:
-            self.error_logging(e, "Potion prep sequence failed")
+        if not self._potion_prep_sequence(potion_name, _cancelled):
             return
 
         # ── Replay loop  ──
@@ -2657,6 +2679,355 @@ class ActionsMixin:
             print("[Potion] Loop iteration finished.")
             time.sleep(0.1)
 
+    # ── SIMPLE craft mode (new Eon 1-23 crafting UI) ───────────────
+    #
+    # The game's Auto button has THREE states that CYCLE on every click:
+    # 1) автодобавление (ON, green) ->
+    # 2) автодобавление + автокрафт (ON+CRAFT, dark turquoise) ->
+    # 3) ВЫКЛ (OFF, dark neutral) -> back to 1. Clicking an already-active
+    # state eventually turns it OFF, so the macro never clicks blindly:
+    # the current state is classified from the calibrated
+    # `potion_auto_state_region` (median color; rule-based, with the
+    # captured reference colors as a fallback) and only the missing clicks
+    # towards the TARGET state are performed.
+    #
+    # Owner note: the Auto mode works on ONE selected item only - it cannot
+    # be armed on several potions at once, so the state is re-ensured after
+    # EVERY potion selection.
+    _POTION_AUTO_ORDER = ("off", "on", "on_craft")
+
+    def _potion_region_mean_rgb(self, region):
+        """Median RGB of a screen region (the Auto-state sampler)."""
+        try:
+            import pyautogui as _pg
+            x, y, w, h = (int(v) for v in region)
+            if w <= 0 or h <= 0:
+                return None
+            img = _pg.screenshot(region=(x, y, w, h)).convert("RGB")
+            arr = np.asarray(img).astype(float)
+            med = np.median(arr.reshape(-1, 3), axis=0)
+            return tuple(round(float(v), 1) for v in med)
+        except Exception:
+            return None
+
+    @staticmethod
+    def _potion_classify_auto_rgb(rgb) -> str | None:
+        """Rule-based Auto button state from its median RGB.
+
+        Hardcoded reference colors (standard crafting Auto button):
+          ON          median ~(22, 66, 17)  - GREEN fill (blue far below green)
+          ON+CRAFT    median ~(18, 66, 54)  - DARK TURQUOISE (blue close to green)
+          OFF         median ~(7, 7, 5)     - dark NEUTRAL (almost no spread)
+        The rules separate all three cleanly regardless of the exact region
+        the user calibrated (the ratios survive a few background pixels)."""
+        try:
+            r, g, b = (float(v) for v in rgb)
+            mx, mn = max(r, g, b), min(r, g, b)
+            if mx < 50 and (mx - mn) < 20:
+                return "off"
+            if g > r + 15 and (g - b) > 20:
+                return "on"
+            if g > r + 15 and (g - b) <= 20 and b >= 25:
+                return "on_craft"
+            return None
+        except Exception:
+            return None
+
+    def _potion_auto_state(self):
+        """Current crafting Auto button state: 'off' | 'on' | 'on_craft' | None.
+
+        Detection uses the hardcoded rule-based color classifier above
+        (standard crafting Auto button colors). If the game update ever
+        changes these colors, adjust _potion_classify_auto_rgb here.
+        None = unrecognizable - the caller must NOT click in that case."""
+        try:
+            region = self.config.get("potion_auto_state_region") or []
+            if len(region) != 4 or any(float(v) <= 0 for v in region):
+                return None
+            rgb = self._potion_region_mean_rgb(region)
+            if rgb is None:
+                return None
+            return self._potion_classify_auto_rgb(rgb)
+        except Exception:
+            return None
+
+    def _ensure_potion_auto_state(self, target: str) -> bool:
+        """Bring the crafting Auto button to `target` ('on' or 'on_craft').
+
+        The button CYCLES through off -> on -> on_craft on every click, so
+        the number of clicks is derived from the DETECTED current state and
+        every click is verified afterwards. An unknown current state is
+        never clicked blindly (that could disable the user's auto-add)."""
+        try:
+            target = str(target or "on").strip().lower()
+            if target not in self._POTION_AUTO_ORDER:
+                target = "on"
+            auto_btn = self.config.get("potion_auto_add_button",
+                                       self.config.get("potion_auto_button", [0, 0]))
+            if not auto_btn or int(auto_btn[0] or 0) <= 0:
+                self.append_log("[Potion] Auto button not calibrated - cannot manage the Auto state.")
+                return False
+            state = self._potion_auto_state()
+            if state == target:
+                return True
+            if state is None:
+                self.append_log(
+                    "[Potion] Cannot determine the Auto button state (state region "
+                    "not calibrated) - NOT clicking it. Calibrate the Auto Button "
+                    "State Region on the Calibration page.")
+                return False
+            clicks = (self._POTION_AUTO_ORDER.index(target)
+                      - self._POTION_AUTO_ORDER.index(state)) % 3
+            for _ in range(max(1, clicks)):
+                self.Global_MouseClick(int(auto_btn[0]), int(auto_btn[1]))
+                time.sleep(0.6)
+                new_state = self._potion_auto_state()
+                if new_state == target:
+                    return True
+                if new_state is None or new_state == state:
+                    # The click did not move the state as expected - stop
+                    # before the button cycles somewhere unintended.
+                    self.append_log(
+                        f"[Potion] Auto state did not move to '{target}' as expected "
+                        f"(now: {new_state}) - stopping Auto management for safety.")
+                    return False
+                state = new_state
+            return self._potion_auto_state() == target
+        except Exception as e:
+            try:
+                self.error_logging(e, "ensure_potion_auto_state")
+            except Exception:
+                pass
+            return False
+
+    def _potion_simple_session(self, potion_name: str, duration=None, cancelled=None,
+                               manage_flag: bool = True) -> None:
+        """One SIMPLE crafting session: prep -> Auto state -> Add Everything + Craft loop.
+
+        Works for BOTH Auto states the user may target: with plain auto-add
+        the clicks do the crafting, and on top of ON+AUTOCRAFT they are
+        harmless (: keep cycling anyway). `manage_flag=False`
+        lets a caller (the scheduled session) own _potion_thread_active so
+        the exclusivity also covers the walk to/from the station."""
+        def _cancelled():
+            if callable(cancelled) and cancelled():
+                return True
+            return (
+                not self.detection_running
+                or not getattr(self, "enable_potion_crafting_var", None)
+                or not self.enable_potion_crafting_var.get()
+                or self.is_fishing_mode_enabled()
+            )
+
+        try:
+            if manage_flag:
+                self._potion_thread_active = True
+            add_btn = self.config.get("potion_add_everything_button", [0, 0])
+            craft_btn = self.config.get("potion_craft_button", [0, 0])
+            if (not add_btn or int(add_btn[0] or 0) <= 0
+                    or not craft_btn or int(craft_btn[0] or 0) <= 0):
+                self.append_log(
+                    "[Potion] SIMPLE mode needs the 'Add Everything' and 'Craft' "
+                    "button calibrations (Calibration -> Potion Crafting).")
+                return
+            try:
+                add_wait = max(0.3, float(self.config.get("potion_add_wait", "1.0") or 1.0))
+            except (TypeError, ValueError):
+                add_wait = 1.0
+            try:
+                craft_wait = max(1.0, float(self.config.get("potion_craft_wait", "4.0") or 4.0))
+            except (TypeError, ValueError):
+                craft_wait = 4.0
+
+            print(f"[Potion] SIMPLE session for {potion_name} starting")
+            if not self._potion_prep_sequence(potion_name, _cancelled):
+                return
+            self._ensure_potion_auto_state(
+                str(self.config.get("potion_auto_target_state", "on") or "on"))
+
+            session_start = time.perf_counter()
+            cycle = 0
+            while not _cancelled():
+                if duration is not None and time.perf_counter() - session_start >= float(duration):
+                    print("[Potion] Session duration reached.")
+                    break
+                cycle += 1
+                self.Global_MouseClick(int(add_btn[0]), int(add_btn[1]))
+                time.sleep(add_wait)
+                self.Global_MouseClick(int(craft_btn[0]), int(craft_btn[1]))
+                time.sleep(craft_wait)
+                if cycle % 10 == 1:
+                    print(f"[Potion] SIMPLE: {cycle} craft cycle(s) done for {potion_name}")
+                # Periodic Auto-state re-check: the state must never silently
+                # drift (one stray click disables auto-add entirely).
+                if cycle % 10 == 0:
+                    if self._potion_auto_state() not in (
+                            None, str(self.config.get("potion_auto_target_state", "on") or "on")):
+                        self._ensure_potion_auto_state(
+                            str(self.config.get("potion_auto_target_state", "on") or "on"))
+        finally:
+            if manage_flag:
+                self._potion_thread_active = False
+
+    def _potion_station_path_events(self, filename: str) -> tuple[list, dict | None]:
+        """Path events + meta for the walk to the potion station. Prefers a
+        custom path assigned in Custom Paths (feature potion_station); falls
+        back to the bundled paths/ file."""
+        try:
+            from .custom_path_manager import load_path_for_feature_meta
+            events, meta = load_path_for_feature_meta("potion_station")
+            if events:
+                return events, meta
+        except Exception:
+            pass
+        try:
+            from .mixin_memory_match import _load_path_file
+            return _load_path_file(filename) or [], None
+        except Exception:
+            return [], None
+
+    def _potion_partial_session(self) -> None:
+        """Scheduled visit: walk to the station (paths/potion_station.json),
+        craft for potion_partial_duration_min, then reset the character to
+        return to spawn (no walk back recorded)."""
+        def _cancelled():
+            return (
+                not self.detection_running
+                or not getattr(self, "enable_potion_crafting_var", None)
+                or not self.enable_potion_crafting_var.get()
+                or self.is_fishing_mode_enabled()
+                or bool(getattr(self, "reconnecting_state", False))
+            )
+        try:
+            potion_name = str(self.config.get("potion_simple_name", "") or "").strip()
+            if not potion_name:
+                file_name = self.config.get("selected_potion_file", "").strip()
+                potion_name = os.path.splitext(os.path.basename(file_name))[0] if file_name else ""
+            if not potion_name:
+                self.append_log("[Potion] Scheduled session skipped: no potion name set.")
+                return
+            try:
+                duration = max(1.0, float(self.config.get("potion_partial_duration_min", "10") or 10)) * 60.0
+            except (TypeError, ValueError):
+                duration = 600.0
+            station, station_meta = self._potion_station_path_events("potion_station.json")
+            if not station:
+                self.append_log(
+                    "[Potion] Scheduled session skipped: paths/potion_station.json not found.")
+                return
+            self._potion_thread_active = True
+            try:
+                non_vip_now = bool(self.config.get("non_vip_movement_path", False))
+                try:
+                    from .fishing import NON_VIP_WALK_SPEED_MULTIPLIER as _nv
+                    _nv = float(_nv)
+                except Exception:
+                    _nv = 1.22
+
+                def _walk_mult(meta):
+                    # Custom paths carry a walk-speed stamp (recorded_nonvip):
+                    # play back exactly as recorded in the same mode, stretch /
+                    # compress only on a mismatch (same as Memory Match).
+                    base = _nv if non_vip_now else 1.0
+                    if meta is not None:
+                        try:
+                            from .custom_path_manager import resolve_walk_multiplier
+                            eff = resolve_walk_multiplier(meta, non_vip_now)
+                            if eff is not None:
+                                base = eff
+                        except Exception:
+                            pass
+                        try:
+                            # Per-path timing tweak (meta.speed_multiplier, also
+                            # editable in the JSON): >1 stretches (slower walk),
+                            # <1 compresses (faster walk). Same direction the
+                            # other path players use.
+                            sm = float(meta.get("speed_multiplier", 1.0) or 1.0)
+                            if sm > 0.0:
+                                base *= sm
+                        except Exception:
+                            pass
+                    return base
+
+                from .mixin_memory_match import _replay_walk_path
+                self.activate_roblox_window()
+                time.sleep(0.3)
+                self.append_log("[Potion] Walking to the crafting station (scheduled session).")
+                _replay_walk_path(station, self._sleep_with_cancel, lambda: not _cancelled(),
+                                  lambda: True, _walk_mult(station_meta))
+                if _cancelled():
+                    return
+                self._potion_simple_session(potion_name, duration=duration,
+                                            cancelled=_cancelled, manage_flag=False)
+                if not _cancelled():
+                    # No walk back needed — a character reset returns to spawn.
+                    self.append_log("[Potion] Resetting character (back to spawn).")
+                    try:
+                        from .fishing import _run_respawn_sequence
+                        _run_respawn_sequence(
+                            sleep_interruptible=self._sleep_with_cancel,
+                            should_continue=lambda: not _cancelled(),
+                            can_run=lambda: True,
+                            activate_roblox_cb=self.activate_roblox_window,
+                        )
+                    except Exception as e:
+                        try:
+                            self.error_logging(e, "potion_partial_reset")
+                        except Exception:
+                            pass
+            finally:
+                self._potion_thread_active = False
+        except Exception as e:
+            self._potion_thread_active = False
+            try:
+                self.error_logging(e, "potion_partial_session")
+            except Exception:
+                pass
+
+    def _potion_partial_loop(self, my_gen: int = 0):
+        """Background scheduler for PARTIAL crafting occupancy: every
+        potion_partial_interval_min minutes run one scheduled session (walk
+        -> craft -> walk back). Full-time crafting keeps using the main
+        craft loop; the two loops exclude each other via the config.
+        `my_gen` ties this thread to the start_potion_crafting generation,
+        so restarts never accumulate stale scheduler threads."""
+        last_run = 0.0
+        while getattr(self, "detection_running", False):
+            try:
+                if my_gen and getattr(self, "_potion_gen", 0) != my_gen:
+                    return
+                if (not getattr(self, "enable_potion_crafting_var", None)
+                        or not self.enable_potion_crafting_var.get()
+                        or str(self.config.get("potion_occupancy", "full") or "full") != "partial"):
+                    time.sleep(10)
+                    continue
+                if self.is_fishing_mode_enabled() or getattr(self, "reconnecting_state", False):
+                    time.sleep(10)
+                    continue
+                if (getattr(self, "_eden_running", False) or getattr(self, "_br_sc_running", False)
+                        or getattr(self, "_mt_running", False) or getattr(self, "_obby_running", False)
+                        or getattr(self, "_potion_thread_active", False)):
+                    time.sleep(10)
+                    continue
+                try:
+                    interval = max(1.0, float(self.config.get("potion_partial_interval_min", "60") or 60)) * 60.0
+                except (TypeError, ValueError):
+                    interval = 3600.0
+                if time.time() - last_run < interval:
+                    time.sleep(30)
+                    continue
+                last_run = time.time()
+                self.append_log("[Potion] Scheduled crafting session starting.")
+                self._action_scheduler.enqueue_action(
+                    self._potion_partial_session, name="potion:partial_session", priority=4)
+                time.sleep(5)
+            except Exception as e:
+                try:
+                    self.error_logging(e, "potion_partial_loop")
+                except Exception:
+                    pass
+                time.sleep(30)
+
     def start_potion_crafting(self):
         if not hasattr(self, '_potion_gen'):
             self._potion_gen = 0
@@ -2665,6 +3036,9 @@ class ActionsMixin:
 
         def _potion_craft_loop():
             try:
+                # The PARTIAL-occupancy scheduler runs alongside; the
+                # full-time loop below stands down while partial is selected.
+                threading.Thread(target=self._potion_partial_loop, args=(my_gen,), daemon=True).start()
                 while self.detection_running and self._potion_gen == my_gen:
                     try:
                         if self.is_fishing_mode_enabled():
@@ -2684,6 +3058,24 @@ class ActionsMixin:
 
                         if self.config.get("enable_idle_mode", False):
                             time.sleep(2)
+                            continue
+
+                        # Partial occupancy -> the scheduler thread
+                        # crafts on a schedule; this loop only idles.
+                        if str(self.config.get("potion_occupancy", "full") or "full") == "partial":
+                            time.sleep(5)
+                            continue
+
+                        # SIMPLE mode - no recording needed, the new UI
+                        # is driven by the Add Everything / Craft calibrations.
+                        if str(self.config.get("potion_craft_mode", "recording") or "recording") == "simple":
+                            potion_name = str(self.config.get("potion_simple_name", "") or "").strip()
+                            if not potion_name:
+                                time.sleep(2)
+                                continue
+                            print(f"[Potion] Starting SIMPLE craft session: {potion_name}")
+                            self._potion_simple_session(potion_name)
+                            time.sleep(1.0)
                             continue
 
                         switching_enabled = self.config.get("enable_potion_switching", False)
@@ -2707,13 +3099,30 @@ class ActionsMixin:
                                     time.sleep(0.5)
                                     continue
 
-                                print(f"[Potion] Starting Auto Craft: {target_file} (Index: {current_index})")
-                                self._potion_thread_launcher(
-                                    target_file,
-                                    "crafting_files_do_not_open",
-                                    stop_after=interval,
-                                    cancel_if=lambda: not bool(self.config.get("enable_potion_switching", False)),
-                                )
+                                if str(self.config.get("potion_craft_mode", "recording") or "recording") == "simple":
+                                    potion_name = (target_file[:-5]
+                                                   if target_file.lower().endswith(".json")
+                                                   else target_file)
+                                    print(f"[Potion] Starting SIMPLE switching session: {potion_name} (Index: {current_index})")
+                                    self._potion_simple_session(
+                                        potion_name,
+                                        duration=interval,
+                                        cancelled=lambda: (
+                                            not self.detection_running
+                                            or not getattr(self, "enable_potion_crafting_var", None)
+                                            or not self.enable_potion_crafting_var.get()
+                                            or not bool(self.config.get("enable_potion_switching", False))
+                                            or self.is_fishing_mode_enabled()
+                                        ),
+                                    )
+                                else:
+                                    print(f"[Potion] Starting Auto Craft: {target_file} (Index: {current_index})")
+                                    self._potion_thread_launcher(
+                                        target_file,
+                                        "crafting_files_do_not_open",
+                                        stop_after=interval,
+                                        cancel_if=lambda: not bool(self.config.get("enable_potion_switching", False)),
+                                    )
                                 current_index = (current_index + 1) % 4
                         else:
                             file_name = self.config.get("selected_potion_file", "").strip()
@@ -2946,7 +3355,7 @@ class ActionsMixin:
     def _client_self_rejoined(self) -> bool:
         """True when the Roblox client is recovering the connection ITSELF.
 
-        Verified against a real disconnect log (2026-09-27): after the loss
+        Verified against a real disconnect log (): after the loss
         the client logs "<< AUTO REJOIN >> Rejoin Attempt : 1", then
         "! Joining game ..." / "Entered play session." within seconds. The
         macro must NOT terminate the process during that self-rejoin; it
@@ -3043,7 +3452,7 @@ class ActionsMixin:
             # False while the username validation was pending/rejected - the
             # disconnect line was consumed and silently lost, so the macro
             # kept thinking Roblox was connected and auto-reconnect never
-            # fired (2026-09-27 fix). Disconnect detection must be
+            # fired ( fix). Disconnect detection must be
             # independent of username validation; this log is already the
             # MAIN window's own log (get_latest_log_file handles that).
 
@@ -3054,8 +3463,8 @@ class ActionsMixin:
                 # stay log-silent for minutes during perfectly healthy
                 # sessions (log cadence depends on the client version and
                 # FastFlags), which caused false reconnects while Roblox was
-                # running fine. Removed on 2026-09-21 by owner request.
-                # Disconnects are still detected explicitly below via the
+                # running fine. That watchdog was removed; disconnects are
+                # still detected explicitly below via the
                 # "[FLog::Network] Client:Disconnect" log line, and a dead
                 # process is detected by check_disconnect_loop itself.
                 return False
@@ -3224,7 +3633,7 @@ class ActionsMixin:
                 # mandatory for a reliable "we are in the game" signal.
                 if re.search(r'"state":"Equipped', line): return True
                 # Engine-level fallback (present in every client, verified
-                # against the 2026-09-27 real log): the SessionTransitionFSM
+                # against the real log): the SessionTransitionFSM
                 # announces the play session right after a successful join.
                 if "[FLog::SessionTransitionFSM] Entered play session." in line: return True
 
@@ -3334,11 +3743,11 @@ class ActionsMixin:
                     self.error_logging(e, "Error terminating main Roblox process.")
                 return
 
-            # v43: the built-in launcher opens an extra client even with the
+            # The built-in launcher opens an extra client even with the
             # Multiple-Instances preference OFF (it strips the Roblox
             # singleton handles on EVERY launch regardless of the mode, so a
             # panel launch never closes an existing window). User log
-            # 2026-09-29: with the mode OFF the user closed the main window;
+            # with the mode OFF the user closed the main window;
             # the reconnect kill-all below then took the panel-launched
             # second client down with it. Identify live clients by the
             # account written in their client log and spare every client that
@@ -3395,7 +3804,7 @@ class ActionsMixin:
             self.error_logging(e, "Error in terminate_roblox_processes function.")
 
     def _foreign_roblox_client_pids(self):
-        """v43: PIDs of live Roblox client windows a kill-all must SPARE.
+        """PIDs of live Roblox client windows a kill-all must SPARE.
 
         Used only when the Multiple-Instances preference is OFF (MI mode
         kills the main PID only and already spares secondary windows).
@@ -3521,13 +3930,13 @@ class ActionsMixin:
 
     # How often the pre-action window guard may run its probe at all. The
     # probe is a few cheap win32 calls, but there is no reason to repeat it
-    # on every single click of a long sequence (owner request 2026-09-28).
+    # on every single click of a long sequence.
     _PREACTION_CHECK_INTERVAL = 10.0
 
     def _ensure_main_window_before_action(self, force: bool = False):
-        """Guard for the MAIN Roblox window (owner request 2026-09-28):
-        focus + geometry must be correct before actions on the main window -
-        with AND without multiple-instance mode.
+        """Guard for the MAIN Roblox window: focus + geometry must be
+        correct before actions on the main window - with AND without
+        multiple-instance mode.
 
         THROTTLED: the full probe (window enum + geometry) runs at most once
         per _PREACTION_CHECK_INTERVAL seconds; `force=True` (once per
@@ -4271,7 +4680,7 @@ class ActionsMixin:
             for attempt in range(1, 4):
                 tab_text = self.extract_text_winocr(tuple(chat_ocr_region)).lower()
                 # No per-attempt logging: three OCR probes per check flooded
-                # the log with identical lines (owner request 2026-09-28).
+                # the log with identical lines.
 
                 if fuzzy_match_any(tab_text, ["general", "server message", "here"], threshold=0.75):
                     chat_detected = True
@@ -4428,9 +4837,8 @@ class ActionsMixin:
                 # to catch a wrong window state (minimized / shrunk client /
                 # unexpected window mode) before it breaks calibrated clicks.
                 # The probe itself is a few cheap win32 calls, so it runs on
-                # EVERY call (owner request 2026-09-28: no 20s throttle);
-                # the full check + repair still only runs when the window is
-                # actually wrong.
+                # EVERY call (no throttle); the full check + repair still
+                # only runs when the window is actually wrong.
                 try:
                     if not self._window_geometry_ready(hwnd) or win32gui.IsIconic(hwnd):
                         self.ensure_roblox_window_state(reason="routine action check")
@@ -4571,7 +4979,7 @@ class ActionsMixin:
         """Visible, enabled Roblox client windows (window-first shared scan).
 
         Only the few unique window PIDs are classified — never a whole-table
-        exe/username sweep, which made the app lag (2026-09-28). Windows of
+        exe/username sweep, which made the app lag (). Windows of
         Roblox processes running under a DIFFERENT Windows user are skipped
         (same rule as before)."""
         try:

@@ -191,6 +191,7 @@ export default function MiscPage() {
     };
   }, [calibrationTarget, config, saveConfig]);
 
+
   useEffect(() => {
     let alive = true;
     let retryTimer: number | undefined;

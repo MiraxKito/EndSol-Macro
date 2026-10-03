@@ -52,11 +52,14 @@ export default function MultiInstancePage() {
   const [state, setState] = useState<MultiState>(initial);
   const [launcher, setLauncher] = useState<LauncherState>({});
   const [message, setMessage] = useState("");
-  // v41: a Launch click disables THAT account's button immediately; it stays
+  // a Launch click disables THAT account's button immediately; it stays
   // disabled until the poll reports the account as running (button turns
   // into an accent "Running") or for at most 60 s (click lost / launch
   // refused -> the button becomes clickable again).
   const [launchingAt, setLaunchingAt] = useState<Record<string, number>>({});
+  // a Close click disables THAT window's button until the poll stops
+  // reporting the PID (or for at most 20 s if the close was refused).
+  const [closingAt, setClosingAt] = useState<Record<number, number>>({});
   const api = window.pywebview?.api;
   const refresh = useCallback(async () => {
     try { if (api?.get_multi_instance_state) setState(await api.get_multi_instance_state() as MultiState); }
@@ -123,6 +126,23 @@ export default function MultiInstancePage() {
       await refresh();
     } catch (error) { setMessage(String(error)); }
   };
+  const closeInstance = async (pid: number) => {
+    setClosingAt((prev) => ({ ...prev, [pid]: Date.now() }));
+    try {
+      if (!api?.close_multi_instance) { setMessage(t("API bridge is not ready yet — wait a second and try again.")); setClosingAt((prev) => { const next = { ...prev }; delete next[pid]; return next; }); return; }
+      const res = await api.close_multi_instance(pid);
+      if (!res?.success) {
+        setMessage(res?.error || t("Failed to close the instance."));
+        setClosingAt((prev) => { const next = { ...prev }; delete next[pid]; return next; });
+      } else {
+        setMessage(t("Roblox client closed") + " (PID " + pid + (res?.forced ? ", " + t("forced after the grace period") : "") + ").");
+      }
+      await refresh();
+    } catch (error) {
+      setMessage(String(error));
+      setClosingAt((prev) => { const next = { ...prev }; delete next[pid]; return next; });
+    }
+  };
   const setOwnServer = async (username: string, enabled: boolean) => {
     try {
       const res = await api?.launcher_set_own_server?.(username, enabled);
@@ -134,10 +154,10 @@ export default function MultiInstancePage() {
   // Re-render every second while a launch is pending so the 60 s timeout
   // re-enables the button on time.
   useEffect(() => {
-    if (Object.keys(launchingAt).length === 0) return;
-    const timer = window.setInterval(() => setLaunchingAt((prev) => ({ ...prev })), 1000);
+    if (Object.keys(launchingAt).length === 0 && Object.keys(closingAt).length === 0) return;
+    const timer = window.setInterval(() => { setLaunchingAt((prev) => ({ ...prev })); setClosingAt((prev) => ({ ...prev })); }, 1000);
     return () => window.clearInterval(timer);
-  }, [launchingAt]);
+  }, [launchingAt, closingAt]);
   const updateConfig = (key: string, value: unknown) => {
     if (config) void saveConfig({ ...config, [key]: value });
   };
@@ -194,7 +214,7 @@ export default function MultiInstancePage() {
           {state.windows.map((item) => { const inst = instanceFor(item.pid); const uname = inst?.username; return <option key={item.pid} value={item.pid}>{(item.title || "Roblox") + " — PID " + item.pid + (uname ? " (" + uname + ")" : "")}</option>; })}
         </select></label>
         <p className="muted">{t("All full macro features run on the main window.")}{state.main_pid ? " " + t("Resolved main window") + ": PID " + state.main_pid : ""}</p></div>
-        {state.windows.length ? <div className="window-list">{state.windows.map((item, index) => { const inst = instanceFor(item.pid); const uname = inst?.username; const exe = inst?.exe || ""; const unusualExe = exe && !/^robloxplayerbeta(\.exe)?$/i.test(exe) && !/^windows10universal(\.exe)?$/i.test(exe); return <div className="window-row" key={item.hwnd}><span className="window-order">{index + 1}</span><div><b>{item.title || "Roblox"}</b><small>PID {item.pid}{uname ? " · " + uname : ""}{inst?.main ? " · " + t("main instance") : ""}{unusualExe ? " · " + exe : ""}</small>{(() => { const inst2 = instanceFor(item.pid); if (!inst2 || inst2.main || (!inst2.biome && !inst2.aura && !inst2.last_event)) return null; return <small className="window-events">{inst2.biome ? <>Biome: <b>{inst2.biome}</b></> : null}{inst2.aura ? <> · Aura: <b>{inst2.aura}</b></> : null}{inst2.last_event ? <> · {inst2.last_event}</> : null}</small>; })()}</div><span className="window-live">{t("LIVE")}</span></div>; })}</div> : <div className="empty-state">{t("No Roblox windows detected. Launch an instance above or start Roblox manually.")}</div>}
+        {state.windows.length ? <div className="window-list">{state.windows.map((item, index) => { const inst = instanceFor(item.pid); const uname = inst?.username; const exe = inst?.exe || ""; const unusualExe = exe && !/^robloxplayerbeta(\.exe)?$/i.test(exe) && !/^windows10universal(\.exe)?$/i.test(exe); const closeTs = closingAt[item.pid]; const isClosing = !!closeTs && Date.now() - closeTs < 20000; return <div className="window-row" key={item.hwnd}><span className="window-order">{index + 1}</span><div><b>{item.title || "Roblox"}</b><small>PID {item.pid}{uname ? " · " + uname : ""}{inst?.main ? " · " + t("main instance") : ""}{unusualExe ? " · " + exe : ""}</small>{(() => { const inst2 = instanceFor(item.pid); if (!inst2 || inst2.main || (!inst2.biome && !inst2.aura && !inst2.last_event)) return null; return <small className="window-events">{inst2.biome ? <>Biome: <b>{inst2.biome}</b></> : null}{inst2.aura ? <> · Aura: <b>{inst2.aura}</b></> : null}{inst2.last_event ? <> · {inst2.last_event}</> : null}</small>; })()}</div><button className="btn btn-secondary" style={{ padding: "4px 10px", fontSize: "12px", flex: "0 0 auto" }} disabled={isClosing} title={t("Close this Roblox window (the client exits like the X button; a hung client is terminated)")} onClick={() => void closeInstance(item.pid)}>{isClosing ? t("Closing…") : "✕ " + t("Close")}</button><span className="window-live">{t("LIVE")}</span></div>; })}</div> : <div className="empty-state">{t("No Roblox windows detected. Launch an instance above or start Roblox manually.")}</div>}
       </div>
     </div>
     <div className="card">
@@ -238,7 +258,6 @@ export default function MultiInstancePage() {
         </div>
       </div>
       <ToggleSwitch label={t("Instance alerts")} description={t("Rare biomes + auras above the rarity threshold + disconnects, per window.")} checked={!!config?.multi_instance_alerts} onChange={(value) => updateConfig("multi_instance_alerts", value)} />{config?.multi_instance_alerts && <><div className="alert-config-row"><label><span>{t("Aura rarity threshold")}</span><input type="number" min={0} step={1000} value={Number(config?.multi_instance_aura_min_rarity ?? 100000)} onChange={(e) => updateConfig("multi_instance_aura_min_rarity", Number(e.target.value) || 0)} /></label><label className="inline-toggle"><input type="checkbox" checked={config?.multi_instance_alert_rare_biomes_only !== false} onChange={(e) => updateConfig("multi_instance_alert_rare_biomes_only", e.target.checked)} />{t("Rare biomes only")}</label></div><p className="muted">{t("Alerts use your normal Discord webhook list. Threshold 0 = every aura roll.")}</p></>}
-      <ToggleSwitch label={t("Auto rejoin secondary accounts")} description={t("When a secondary window disconnects, relaunch the same account automatically. Turn it off to use those accounts yourself.")} checked={config?.multi_instance_rejoin_enabled !== false} onChange={(value) => updateConfig("multi_instance_rejoin_enabled", value)} />
     </div>
     <div className="card">
       <div className="card-header">

@@ -2,6 +2,14 @@ import { useState } from "react";
 import { useConfig } from "../contexts/ConfigContext";
 import { looksLikeWebhookUrl, getWebhookWarning } from "../utils/webhookGuard";
 
+const ROBLOX_USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
+
+function usernameFormatError(val: string): string {
+    const raw = String(val || "").trim();
+    if (!raw) return "A Roblox username is required — the macro cannot start without it.";
+    if (!ROBLOX_USERNAME_RE.test(raw)) return "Invalid username (3–20 characters: letters, digits, underscore only).";
+    return "";
+}
 const FALLBACK_BIOME_COLORS: Record<string, string> = {
     "WINDY": "#9ae5ff",
     "RAINY": "#027cbd",
@@ -40,6 +48,29 @@ export default function WebhookPage() {
     const { config, saveConfig, error, biomeColors } = useConfig();
     const [testing, setTesting] = useState(false);
     const [visible, setVisible] = useState<Record<number, boolean>>({});
+    const [usernameCheck, setUsernameCheck] = useState<{ state: "idle" | "checking" | "ok" | "warn" | "fail"; message: string }>({ state: "idle", message: "" });
+
+    const currentUsername = String(config?.roblox_username || "").trim();
+    const usernameFormatMsg = usernameFormatError(currentUsername);
+
+    // Online existence check runs ONLY when the field loses focus (format
+    // validation itself is instant and request-free). The backend adds a
+    // 5-minute cache + a 2 s process-wide gap, so no typing session can
+    // spam the Roblox users API.
+    const checkUsernameOnline = (raw: string) => {
+        if (!raw || usernameFormatError(raw)) { setUsernameCheck({ state: "idle", message: "" }); return; }
+        setUsernameCheck({ state: "checking", message: "Checking the username on Roblox…" });
+        window.pywebview?.api?.validate_roblox_username?.(raw).then((res: any) => {
+            if (Array.isArray(res) && res[0] === true && res[1] === "ok") {
+                setUsernameCheck({ state: "ok", message: "✓ Username confirmed on Roblox." });
+            } else if (Array.isArray(res) && res[0] === true && res[1] === "warn") {
+                setUsernameCheck({ state: "warn", message: String(res[2] || "Could not verify online.") });
+            } else {
+                const msg = Array.isArray(res) ? String(res[2] || "Username not found on Roblox.") : String(res?.error || "Validation failed.");
+                setUsernameCheck({ state: "fail", message: msg });
+            }
+        }).catch(() => setUsernameCheck({ state: "warn", message: "Could not verify online (panel bridge not ready)." }));
+    };
 
     if (error) return (
         <div style={{ padding: "20px", color: "#ef4444" }}>
@@ -273,10 +304,33 @@ export default function WebhookPage() {
                 <input
                     className="form-input"
                     placeholder="Enter your Roblox username"
-                    style={{ width: "100%" }}
+                    style={{ width: "100%", borderColor: usernameFormatMsg ? "#ef4444" : undefined }}
                     value={config.roblox_username || ""}
                     onChange={(e) => handleRobloxUsernameChange(e.target.value)}
+                    onBlur={() => checkUsernameOnline(currentUsername)}
                 />
+                {usernameFormatMsg && (
+                    <p style={{ color: "#ef4444", fontSize: "12.5px", margin: "6px 0 0" }}>
+                        ⚠ {usernameFormatMsg} The macro refuses to start until this is fixed.
+                    </p>
+                )}
+                {!usernameFormatMsg && usernameCheck.state === "checking" && (
+                    <p style={{ color: "var(--text-muted, #94a3b8)", fontSize: "12.5px", margin: "6px 0 0" }}>⏳ {usernameCheck.message}</p>
+                )}
+                {!usernameFormatMsg && usernameCheck.state === "ok" && (
+                    <p style={{ color: "#4ade80", fontSize: "12.5px", margin: "6px 0 0" }}>{usernameCheck.message}</p>
+                )}
+                {!usernameFormatMsg && usernameCheck.state === "warn" && (
+                    <p style={{ color: "#fbbf24", fontSize: "12.5px", margin: "6px 0 0" }}>⚠ {usernameCheck.message}</p>
+                )}
+                {!usernameFormatMsg && usernameCheck.state === "fail" && (
+                    <p style={{ color: "#ef4444", fontSize: "12.5px", margin: "6px 0 0" }}>⚠ {usernameCheck.message}</p>
+                )}
+                {!usernameFormatMsg && usernameCheck.state !== "fail" && (
+                    <p style={{ color: "var(--text-muted, #94a3b8)", fontSize: "12px", margin: "6px 0 0" }}>
+                        Statistics and log reading are attributed to this player on the <b>main window</b> only.
+                    </p>
+                )}
             </div>
 
             <div className="card">
