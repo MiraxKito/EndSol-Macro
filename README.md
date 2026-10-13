@@ -10,7 +10,7 @@ Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · So
 
 [Download](https://github.com/MiraxKito/EndSol-Macro/releases/latest) · [Report an issue](https://github.com/MiraxKito/EndSol-Macro/issues) · [Discussions](https://github.com/MiraxKito/EndSol-Macro/discussions)
 
-<p align="center"><i>📸 Screenshot slot: main panel overview (replaces the old hero screenshot)</i></p>
+<p align="center"><i> Going to replace new screenshot :) </i></p>
 
 </div>
 
@@ -42,13 +42,13 @@ Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · So
 **Sol's Book — built-in wiki 📖**
 - Browse **Auras, Biomes, Items, Gauntlets and Achievements** databases synced from the Sol's RNG Fandom Wiki: rarity, obtainment, crafting recipes, effects, descriptions, rewards.
 - **Media tab** per entry — labeled media galleries (artwork, in-game previews, cutscene videos, opening cutscenes) with captions, keyboard navigation and fullscreen view, plus theme music on a custom player. Everything plays from a local cache (works offline after the first view) and can be saved to disk.
-<p align="center"><i>📸 Screenshot slot: Sol's Book — aura tab with the media gallery (replaces the old aura-tab screenshot)</i></p>
+<p align="center"><i> Another screenshot to replace </i></p>
 
 **Sol's Sim — sandbox minigame 🎲**
 - A sandbox of Sol's RNG inside the panel: roll auras on the real in-game odds (1 in N ÷ luck, the rarest hit wins, luck-exempt auras ignore luck), simulated biome spawns with a day/night clock, and gauntlet boosts taken straight from the wiki values.
 - **Honest mode** (gauntlets only) or **Sandbox cheats** — roll speed ×2/×3/×5, luck slider, forced biome spawns; the in-game style Roll button shows the roll cooldown.
 - Stats are stored locally and can be reset; drop alerts appear as in-panel banners with an optional Discord embed (no pings, no Windows notifications).
-<p align="center"><i>📸 Screenshot slot: Sol's Sim — rolling with the biome banner</i></p>
+<p align="center"><i> Screenshot to replace </i></p>
 
 
 **Panel**
