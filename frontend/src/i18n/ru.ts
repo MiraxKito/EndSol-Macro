@@ -8,6 +8,7 @@ import { RU_P4 } from "./ru_part4";
 import { RU_P5 } from "./ru_part5";
 import { RU_P6 } from "./ru_part6";
 import { RU_P7 } from "./ru_part7";
+import { RU_P8 } from "./ru_part8";
 
 export const RU_EXTRA: Record<string, string> = {
     ...RU_P1,
@@ -17,4 +18,5 @@ export const RU_EXTRA: Record<string, string> = {
     ...RU_P5,
     ...RU_P6,
     ...RU_P7,
+    ...RU_P8,
 };

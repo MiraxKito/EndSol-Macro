@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-# MUST stay above every `biome_tracker` import: base_support reads
-# ENDSOL_MACRO_VERSION at import time for all Discord webhook footers.
-current_version = "v1.0.9"
+# Keep above every biome_tracker import — base_support reads
+# ENDSOL_MACRO_VERSION at import time (Discord webhook footers).
+current_version = "v1.1.0"
 import os as _os
 _os.environ["ENDSOL_MACRO_VERSION"] = current_version
 
@@ -37,14 +37,12 @@ import keyboard
 
 ORIGINAL_ABS_FILE = os.path.abspath(__file__)
 def _gpu_acceleration_enabled() -> bool:
-    """Whether the panel WebView may use GPU compositing.
+    """True if the WebView may use GPU compositing (config `webview_gpu_acceleration`).
 
-    The panel historically forced WebView2 into software rendering
-    (--disable-gpu) for stability on odd GPU drivers. Software compositing of
-    a large DOM (Sol's Book lists, media) is a major FPS cost, so this is now
-    opt-in via config `webview_gpu_acceleration` (default OFF = old behavior).
-    Read the raw config files directly: this runs before the tracker exists
-    and the value must be known before the first window is created.
+    --disable-gpu (software rendering) is the old default for odd GPU
+    drivers, but software-compositing a big DOM (Sol's Book lists, media)
+    is a huge FPS cost — so GPU is opt-in now. Raw config read: this
+    runs before the tracker exists, before the first window is created.
     """
     try:
         from biome_tracker.config import APPDATA_CONFIG, DEV_CONFIG
@@ -1227,6 +1225,55 @@ class Api:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
+    # ── Sol's Sim (sandbox) ───────────────────────────────────────────
+    # The simulator keeps its stats + settings in its own file so a reset
+    # or a broken save can never touch the macro's real config.json.
+    def sim_load_save(self):
+        try:
+            path = APPDATA_BASE / "sim_save.json"
+            if not path.exists():
+                return {"success": True, "data": {}}
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            return {"success": True, "data": data if isinstance(data, dict) else {}}
+        except Exception as e:
+            return {"success": False, "error": str(e), "data": {}}
+
+    def sim_save_state(self, data):
+        try:
+            path = APPDATA_BASE / "sim_save.json"
+            tmp = path.with_name("sim_save.json.tmp")
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump(data if isinstance(data, dict) else {}, f, ensure_ascii=False)
+            os.replace(tmp, path)
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def sim_notify_discord(self, webhook_url, title, description, color=5814783):
+        """Sandbox drop alert: plain embed, allowed_mentions is EMPTY so it
+        can never ping anyone (sim drops are not real game drops)."""
+        try:
+            import requests
+            url = str(webhook_url or "").strip()
+            if not url.startswith("http"):
+                return {"success": False, "error": "no webhook url"}
+            payload = {
+                "username": "EndSol Sim",
+                "content": "",
+                "allowed_mentions": {"parse": []},
+                "embeds": [{
+                    "title": str(title)[:256],
+                    "description": str(description)[:2000],
+                    "color": int(color),
+                    "footer": {"text": "Sol's Sim — sandbox drop (not from the real game)"},
+                }],
+            }
+            r = requests.post(url, json=payload, timeout=10)
+            return {"success": r.status_code in (200, 204), "status": r.status_code}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
     # ── Extras: schedule, profiles, logs ───────────────────────────────
     def get_feature_schedule(self):
         try:
@@ -1679,7 +1726,7 @@ class Api:
             "Mini-Games & Quests": {
                 "Memory Match": {"active": det and _cfg_bool(cfg, "memory_match_enabled"), "enabled": _cfg_bool(cfg, "memory_match_enabled")},
                 "Quest Board": {"active": det and _cfg_bool(cfg, "quest_board_enabled"), "enabled": _cfg_bool(cfg, "quest_board_enabled")},
-                "Daily Event Check-in": {"active": det and _cfg_bool(cfg, "collect_daily_event_checkin"), "enabled": _cfg_bool(cfg, "collect_daily_event_checkin")},
+                "Daily Check-In": {"active": det and _cfg_bool(cfg, "collect_daily_event_checkin"), "enabled": _cfg_bool(cfg, "collect_daily_event_checkin")},
             },
             "Pathing & Movement": {
                 "Eden Path": {"active": bool(getattr(t, "_eden_running", False)), "enabled": _cfg_bool(cfg, "go_to_eden_spawn")},
@@ -1977,6 +2024,17 @@ class Api:
         now = time.time()
         blocking_flags = ("auto_pop_state",)
         any_blocking = False
+
+        # Yield the mouse to any running scheduled action (Daily Check-In,
+        # Memory Match, Quest Board, potions...): those click sequences must
+        # never overlap with fishing clicks.
+        scheduler = getattr(t, "_action_scheduler", None)
+        if scheduler is not None:
+            try:
+                if scheduler._action_active.is_set():
+                    return False
+            except Exception:
+                pass
 
         for flag_name in blocking_flags:
             if getattr(t, flag_name, False):

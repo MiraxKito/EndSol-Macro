@@ -1218,8 +1218,8 @@ export default function MiscPage() {
         )}
 
         <ToggleSwitch
-          label="Collect Daily Event Check-in"
-          description="Detect the Daily Event Check-in pop-up, click Check once per day, and close it. Requires all three Daily Event calibrations."
+          label="Daily Check-In"
+          description="Detect the Daily Check-In pop-up, click Check once per day, and close it. Requires the Daily Rewards calibrations."
           checked={config.collect_daily_event_checkin || false}
           onChange={(value) => updateConfig("collect_daily_event_checkin", value)}
         />
@@ -1273,7 +1273,7 @@ export default function MiscPage() {
 
       {/* ── MEMORY MATCH ─────────────────────────────────────────────── */}
       <div className="card">
-        <div className="card-header"><div className="card-icon">🧠</div><div style={{ flex: 1 }}><h3>Memory Match (WIP)</h3><p>Detect the 5×4 board, solve pairs, and stop safely when the board is gone. Work in progress — still being tested.</p></div></div>
+        <div className="card-header"><div className="card-icon">🧠</div><div style={{ flex: 1 }}><h3>Memory Match (Experimental)</h3><p>Detect the 5×4 board, solve pairs, and stop safely when the board is gone. Working end-to-end, but it can still miss a pair or two — some items may not be recognized yet.</p></div></div>
         <div style={{ padding: "0 20px 16px", display: "grid", gap: "10px" }}>
           <ToggleSwitch label="Enable Memory Match" description="Opens the board on cooldown and solves pairs from a full tile memory." checked={config?.memory_match_enabled ?? false} onChange={(value) => updateConfig("memory_match_enabled", value)} />
           {(config?.memory_match_enabled ?? false) && <>

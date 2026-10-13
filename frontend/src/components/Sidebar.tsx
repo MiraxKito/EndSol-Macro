@@ -75,6 +75,7 @@ const navItems = [
   { id: "panelcustomization", label: "Panel Customization", icon: "🎨" },
   { section: "Others" },
   { id: "solbook", label: "Sol’s Book", icon: "📚" },
+  { id: "solsim", label: "Sol’s Sim", icon: "🎲" },
   { id: "instructions", label: "Instructions", icon: "📖" },
   { id: "credits", label: "Credits", icon: "💜" },
   { id: "donations", label: "Donations <3", icon: "💎" },

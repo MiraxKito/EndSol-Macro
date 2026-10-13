@@ -76,7 +76,7 @@ export default function InstructionsPage() {
         <ul><li>While the macro runs it refreshes the data from Fandom automatically; the last verified copy is cached locally for offline use.</li><li>The source badge on the page shows whether you are viewing live Fandom data, the local cache, or the bundled offline snapshot.</li><li>Biome and aura statistics used by webhooks come from the same dataset.</li></ul>
       </Section>
 
-      <Section icon="🎁" title="Daily (event) Rewards">
+      <Section icon="🎁" title="Daily Rewards">
         <p>With <b>Daily Rewards</b> enabled in <b>Misc</b>, the macro claims the daily check-in automatically right after the daily reset at 00:00 UTC. To verify the flow at any time, use the buttons under the toggle:</p>
         <ul><li><b>Collect now (test)</b> — runs one claim attempt immediately and reports the OCR result (requires the macro to be started and Roblox focused).</li><li><b>Reset claimed date</b> — clears the stored date so the next window collects again.</li></ul>
       </Section>

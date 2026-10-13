@@ -12,6 +12,20 @@ export default function NoticePage() {
         </a>
       </p>
     </div>
+    <div className="card"><div className="card-header"><div className="card-icon">🎲</div><div><h3>v1.1.0 — Sol's Sim & Sol's Book media</h3><p>New sandbox minigame and a nicer media experience in the built-in wiki</p></div></div>
+      <div className="changelog-item"><h4>✅ New</h4><ul>
+        <li><b>Sol's Sim 🎲</b> — a sandbox of Sol's RNG inside the panel: roll auras on the real in-game odds, watch simulated biome spawns, and wear gauntlets whose boosts come straight from the wiki. Play <b>honest</b> (gauntlets only) or switch on <b>Sandbox cheats</b> — roll speed ×2/×3/×5, a luck slider and forced biome spawns. Your stats, aura collection and drop log are saved locally and can be reset; rare drops raise a banner in the panel and can go to Discord without pings.</li>
+        <li><b>Sol's Book media 🎞</b> — media galleries with captions and fullscreen view, ←/→ to flip through, a hero image on every entry, and a music player with volume control and track length. Saving videos and music to disk still works.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>✨ Improvements</h4><ul>
+        <li>The Sol's Sim page is fully translated into Russian.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
+        <li><b>Sol's Book:</b> biome previews now show the actual biome picture instead of an icon.</li>
+        <li><b>Memory Match</b> is now labeled <b>Experimental</b> — it works end-to-end but can still miss a pair.</li>
+        <li><b>Daily Rewards:</b> "Collect Daily Event Check-in" renamed to <b>Daily Check-In</b>.</li>
+      </ul></div>
+    </div>
     <div className="card"><div className="card-header"><div className="card-icon">🏆</div><div><h3>v1.0.9 — Achievements, new Potion Crafting, Multi-Instances QoL</h3><p>Sol's Book Achievements, Potion Crafting rebuilt for the new UI, MI close buttons, lag fixes</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
         <li><b>Sol's Book — Achievements 🏆:</b> a new section with every in-game achievement — icon, description, how to obtain it and the reward — searchable and filtered by category, auto-updated from the wiki.</li>

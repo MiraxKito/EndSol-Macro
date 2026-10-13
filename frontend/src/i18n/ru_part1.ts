@@ -29,7 +29,6 @@ export const RU_P1: Record<string, string> = {
     "Auto-clip when a rare aura is rolled": "Авто-клип при выпадении редкой ауры",
     "Glitched/Dreamspace/Cyberspace Biome clip keybind": "Клавиша клипа для Glitched/Dreamspace/Cyberspace",
     "Trigger a recording keybind on rare aura rolls": "Нажимать клавишу записи при редких аурах",
-    "Non-rolling and unknown-rarity auras are always sent with their obtainment method.": "Ауры вне ролла и с неизвестной редкостью всегда отправляются с указанием способа получения.",
     "Ping Minimum Rarity": "Минимальная редкость для пинга",
     "Discord Pings": "Discord-пинги",
     "Configure notifications and individual pings per biome": "Настройка уведомлений и отдельных пингов для каждого биома",

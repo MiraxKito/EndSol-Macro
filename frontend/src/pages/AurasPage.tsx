@@ -69,9 +69,6 @@ export default function AurasPage() {
                                     <option value="1000000000">1 in 1,000,000,000+</option>
                                     <option value="10000000000">1 in 10,000,000,000+</option>
                                 </select>
-                                <small style={{ color: "var(--text-muted)", fontSize: "12px", display: "block", marginTop: "4px" }}>
-                                    Non-rolling and unknown-rarity auras are always sent with their obtainment method.
-                                </small>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Discord User ID</label>

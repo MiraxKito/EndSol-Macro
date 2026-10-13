@@ -170,7 +170,7 @@ class ActionsMixin:
                 and not bool(getattr(self, "auto_pop_state", False)))
 
     def daily_event_check_loop(self):
-        """Claim Sol's Daily Event Check-in right after the daily reset.
+        """Claim Sol's Daily Check-In right after the daily reset.
 
         The reset happens at 00:00 UTC (= 03:00 MSK). All waiting is
         computed in UTC so the schedule is correct on any PC; user-facing
@@ -260,7 +260,7 @@ class ActionsMixin:
             close_btn = self.config.get("daily_event_close_button", [0, 0])
             popup_region = self.config.get("daily_event_popup_region", [0, 0, 0, 0])
             if not (isinstance(popup_region, (list, tuple)) and len(popup_region) == 4 and all(int(v) > 0 for v in popup_region[2:])):
-                self.append_log("[Daily Event] Daily Rewards OCR region is not calibrated; skipping.")
+                self.append_log("[Daily Check-In] Daily Rewards OCR region is not calibrated; skipping.")
                 return {"success": False, "reason": "Daily Rewards OCR region is not calibrated (Macro Calibrations)."}
             self.activate_roblox_window()
 
@@ -277,7 +277,7 @@ class ActionsMixin:
 
             visible, popup_text = _popup_visible()
             if not visible:
-                self.append_log(f"[Daily Event] Rewards popup not detected; OCR='{popup_text}'")
+                self.append_log(f"[Daily Check-In] Rewards popup not detected; OCR='{popup_text}'")
                 return {
                     "success": False,
                     "reason": "Rewards popup not detected (already claimed today, or the OCR region is off).",
@@ -294,36 +294,48 @@ class ActionsMixin:
             for attempt in (1, 2):
                 if attempt == 2:
                     # A cutscene may still be playing over the popup - let it
-                    # finish before clicking again.
-                    if not self._sleep_with_cancel(4.0):
-                        return {"success": False, "reason": "Claim cancelled."}
+                    # finish before clicking again. Plain sleep on purpose:
+                    # once the popup is open nothing may cancel this flow
+                    # between the claim and the close click.
+                    time.sleep(4.0)
                     still_visible, popup_text = _popup_visible()
                     if not still_visible:
-                        break  # the first claim landed late - treat as done
+                        # The first claim landed late and the popup closed
+                        # itself - that is a success, not a failure.
+                        self.config["daily_event_claimed_date"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+                        self.save_config()
+                        self.append_log("[Daily Check-In] Daily Check-In claimed and popup closed.")
+                        return {
+                            "success": True,
+                            "message": "Daily Rewards claimed and popup closed.",
+                            "claimed_date": self.config["daily_event_claimed_date"],
+                        }
                 self.Global_MouseClick(check_btn[0], check_btn[1])
-                if not self._sleep_with_cancel(0.6):
-                    return {"success": False, "reason": "Claim cancelled."}
+                # Claim -> close must be atomic: plain sleeps, no cancellable
+                # gap. A cancellable gap here used to abort right after the
+                # claim click (fishing / auto-pop / Eden flags) and leave the
+                # popup open with the reward already collected.
+                time.sleep(0.6)
                 self.Global_MouseClick(close_btn[0], close_btn[1])
-                if not self._sleep_with_cancel(2.0):
-                    return {"success": False, "reason": "Claim cancelled."}
+                time.sleep(2.0)
                 still_visible, verify_text = _popup_visible()
                 if not still_visible:
                     # Store the UTC date so the marker matches the reset
                     # window (00:00 UTC) used by daily_event_check_loop.
                     self.config["daily_event_claimed_date"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
                     self.save_config()
-                    self.append_log("[Daily Event] Daily Event Check-in claimed and popup closed."
+                    self.append_log("[Daily Check-In] Daily Check-In claimed and popup closed."
                                     + (" (verified on retry)" if attempt == 2 else ""))
                     return {
                         "success": True,
                         "message": "Daily Rewards claimed and popup closed.",
                         "claimed_date": self.config["daily_event_claimed_date"],
                     }
-                self.append_log(f"[Daily Event] Attempt {attempt}: popup still detected after claiming "
+                self.append_log(f"[Daily Check-In] Attempt {attempt}: popup still detected after claiming "
                                 f"(OCR='{verify_text[:120]}')")
 
             # Both attempts failed - skip WITHOUT marking the day claimed.
-            self.append_log("[Daily Event] Claim failed verification twice - skipping this attempt. "
+            self.append_log("[Daily Check-In] Claim failed verification twice - skipping this attempt. "
                             "The macro will retry in ~10 minutes.")
             return {
                 "success": False,
@@ -331,7 +343,7 @@ class ActionsMixin:
                 "ocr": popup_text[:200],
             }
         except Exception as e:
-            self.error_logging(e, "Error claiming Daily Event Check-in")
+            self.error_logging(e, "Error claiming Daily Check-In")
             return {"success": False, "reason": f"Claim error: {e}"}
 
     def update_theme(self, theme_name):

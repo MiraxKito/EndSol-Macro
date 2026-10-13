@@ -1,9 +1,8 @@
 """
-Sol's Book — live wiki datasets for items, gauntlets and achievements (v1.0.9).
+Sol's Book — live wiki datasets for items, gauntlets and achievements (v1.1.0).
 
-Implements the no-fallback Fandom pipeline that was used to build the
-verified offline snapshots ``biome_tracker/gauntlets_fandom.json`` (53
-records: gauntlets / lanterns / talismans) and
+Builds the verified offline snapshots ``biome_tracker/gauntlets_fandom.json``
+(53 records: gauntlets / lanterns / talismans) and
 ``biome_tracker/items_fandom.json`` (165 records as of the 2026-09-27
 rebuild: potions / runes / tools / materials / chests / special items).
 The offline snapshots stay the source of truth whenever the wiki cannot be
@@ -25,7 +24,7 @@ Template spans are DEPTH-AWARE and argument splitting is top-level aware:
 {{Aura Notice|...{{Items|X}}...}} style nesting must never leak argument
 fragments into prose.
 
-Pipeline rules (mirrored in AGENTS.md, section "Sol's Book data pipeline"):
+Pipeline rules (game data comes from the Fandom wiki only — see AGENTS.md):
   * Source is the MediaWiki API:
         https://sol-rng.fandom.com/api.php?action=parse&page=<title>
             &prop=wikitext&format=json&redirects=1

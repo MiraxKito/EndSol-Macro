@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 
 type Entry = Record<string, any>;
 type MapData = Record<string, Entry>;
+type ImageItem = { url: string; caption?: string };
+type MediaRole = "art" | "ingame" | "collection" | "cutscene" | "opening" | "music";
 
 const normColor = (value: any) => {
   const raw = String(value ?? "#8b7cff");
@@ -305,13 +307,21 @@ export default function SolsBookPage() {
   const accent = entryAccent(entry, section);
   const selectEntry = useCallback((name: string) => setSelected(name), []);
 
-  const auraImageUrls = useMemo(() => {
+  const auraImages = useMemo<ImageItem[]>(() => {
     if (section !== "auras" || !entry) return [];
-    return Array.from(new Set([
-      ...(Array.isArray(entry.image_urls) ? entry.image_urls : []),
-      entry.image_collection_url,
-      entry.image_ingame_url,
-    ].filter((url): url is string => typeof url === "string" && url.length > 0)));
+    const out: ImageItem[] = [];
+    const push = (url: any, caption?: string) => {
+      if (typeof url === "string" && url.length > 0) out.push({ url, caption });
+    };
+    if (Array.isArray(entry.image_urls)) entry.image_urls.forEach((u: any) => push(u));
+    push(entry.image_collection_url, "Collection icon");
+    push(entry.image_ingame_url, "In-game preview");
+    const seen = new Set<string>();
+    return out.filter(item => {
+      if (seen.has(item.url)) return false;
+      seen.add(item.url);
+      return true;
+    });
   }, [section, entry]);
   const auraVideoUrl = typeof entry?.video_url === "string" && entry.video_url ? entry.video_url : "";
   const auraVideoKind = typeof entry?.video_kind === "string" ? entry.video_kind : "";
@@ -319,15 +329,23 @@ export default function SolsBookPage() {
   const auraMusicUrl = typeof entry?.music_url === "string" && entry.music_url ? entry.music_url : "";
   const auraMusicFile = typeof entry?.music_file === "string" ? entry.music_file : "";
 
-  const biomeImageUrls = useMemo(() => {
+  const biomeImages = useMemo<ImageItem[]>(() => {
     if (section !== "biomes" || !entry) return [];
-    const fromGallery = Array.isArray(entry.gallery)
-      ? entry.gallery.map((g: any) => (typeof g?.url === "string" ? g.url : "")).filter(Boolean)
-      : [];
-    return Array.from(new Set([
-      typeof entry.thumbnail_url === "string" ? entry.thumbnail_url : "",
-      ...fromGallery,
-    ].filter((url): url is string => url.length > 0)));
+    const isImageFile = (u: string) => /\.(png|jpe?g|gif|webp)(\/|$|\?)/i.test(u);
+    const out: ImageItem[] = [];
+    const push = (url: any, caption?: string) => {
+      if (typeof url === "string" && url.length > 0 && isImageFile(url)) out.push({ url, caption });
+    };
+    push(entry.thumbnail_url);
+    if (Array.isArray(entry.gallery)) {
+      entry.gallery.forEach((g: any) => push(g?.url, typeof g?.caption === "string" ? g.caption : undefined));
+    }
+    const seen = new Set<string>();
+    return out.filter(item => {
+      if (seen.has(item.url)) return false;
+      seen.add(item.url);
+      return true;
+    });
   }, [section, entry]);
   const biomeMusicUrl = typeof entry?.music_url === "string" && entry.music_url ? entry.music_url : "";
   const biomeMusicFile = typeof entry?.music_file === "string" ? entry.music_file : "";
@@ -376,7 +394,7 @@ export default function SolsBookPage() {
       <div className="book-panel" style={{ padding: "20px 24px", background: "linear-gradient(180deg, rgba(30, 27, 46, 0.7) 0%, rgba(18, 16, 28, 0.9) 100%)" }}>
         <div style={{ color: "#a78bfa", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", fontWeight: 600 }}>The EndSol Reference Archive</div>
         <h3 style={{ fontSize: 24, margin: "6px 0 4px", fontWeight: 700 }}>The Almanac of Chance</h3>
-        <div style={{ color: "#94a3b8", maxWidth: 760, lineHeight: 1.5, fontSize: 13 }}>Explore comprehensive in-game encyclopedic entries loaded directly from Sol's RNG Fandom Wiki.</div>
+        <div style={{ color: "#94a3b8", maxWidth: 760, lineHeight: 1.5, fontSize: 13 }}>Explore in-game entries loaded directly from the Sol's RNG Fandom Wiki.</div>
         
         <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
           <div className="book-chip" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
@@ -450,14 +468,14 @@ export default function SolsBookPage() {
             {(section === "auras" || section === "biomes") && (
               <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
                 <button className={`btn ${detailTab === "info" ? "btn-accent" : ""}`} style={{ padding: "6px 16px", borderRadius: "4px" }} onClick={() => setDetailTab("info")}>ℹ Info</button>
-                <button className={`btn ${detailTab === "media" ? "btn-accent" : ""}`} style={{ padding: "6px 16px", borderRadius: "4px" }} onClick={() => setDetailTab("media")}>🎞 Media{(() => { const n = section === "auras" ? auraImageUrls.length + (auraVideoUrl ? 1 : 0) : biomeImageUrls.length + (biomeMusicUrl ? 1 : 0); return n ? ` (${n})` : ""; })()}</button>
+                <button className={`btn ${detailTab === "media" ? "btn-accent" : ""}`} style={{ padding: "6px 16px", borderRadius: "4px" }} onClick={() => setDetailTab("media")}>🎞 Media{(() => { const n = section === "auras" ? auraImages.length + (auraVideoUrl ? 1 : 0) + (auraMusicUrl ? 1 : 0) : biomeImages.length + (biomeMusicUrl ? 1 : 0); return n ? ` (${n})` : ""; })()}</button>
               </div>
             )}
 
             {detailTab === "media" && section === "auras" ? (
-              <AuraMediaViewer urls={auraImageUrls} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
+              <AuraMediaViewer images={auraImages} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
             ) : detailTab === "media" && section === "biomes" ? (
-              <AuraMediaViewer urls={biomeImageUrls} videoUrl="" videoKind="" cutsceneNote="" musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
+              <AuraMediaViewer images={biomeImages} videoUrl="" videoKind="" cutsceneNote="" musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
             ) : section === "gauntlets" ? <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 16 }}>
                 <Fact label="Gear Slot" value={entry.slot || entry.hand || "Right Hand"} />
@@ -518,16 +536,17 @@ export default function SolsBookPage() {
                 <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || "No description provided."}</div>
               </div>
             </> : section === "biomes" ? <>
+              {biomeImages.length > 0 && <HeroMedia item={biomeImages[0]} />}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity / spawn" value={entry.spawn_chance || "Unknown"} />
                 <Fact label="Duration" value={entry.duration || "Unknown"} />
                 <Fact label="Biome Message" value={entry.chat_message || "Doesn't post a chat message on spawn"} />
               </div>
               <Section title="Chronicle"><p style={{ lineHeight: 1.7, color: "var(--text-secondary)", fontSize: 13 }}>{entry.description || entry.how_to_get || "No extended description is available for this entry yet."}</p></Section>
-              {/* Media intentionally lives ONLY in the Media tab for biomes:
-                  inline preview/gallery GIFs on the Info page failed to load
-                  reliably and kept the page heavy. */}
-              {entry.music_url && <Section title="🎵 Theme music"><CachedAudio url={String(entry.music_url)} /></Section>}
+              {/* Full media (GIFs, videos, music) lives in the Media tab; the Info
+                  page carries only the one hero banner above — inline GIF galleries
+                  here used to fail loading and kept the page heavy. */}
+              {entry.music_url && <Section title="🎵 Theme music"><AudioPlayer url={String(entry.music_url)} accent={accent} /></Section>}
               {entry.exclusive_auras && <Section title="Exclusive auras"><p style={{ color: "var(--text-secondary)", fontSize: 13 }}>{Array.isArray(entry.exclusive_auras) ? entry.exclusive_auras.join(", ") : String(entry.exclusive_auras)}</p></Section>}
             </> : section === "achievements" ? <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
@@ -543,6 +562,7 @@ export default function SolsBookPage() {
                 <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || "No description provided."}</div>
               </div>
             </> : <>
+              {auraImages.length > 0 && <HeroMedia item={auraImages[0]} />}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity class" value={rarityClassFull(entry.rarity_name, entry.rarity)} />
                 <Fact label="Rarity" value={auraRarityText(entry)} />
@@ -550,7 +570,7 @@ export default function SolsBookPage() {
               </div>
               <Section title={entry.is_exclusive ? "Exclusive world" : "Native world"}><p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{entry.is_exclusive && entry.exclusive_biomes?.length ? `Exclusive to ${entry.exclusive_biomes.map(prettyName).join(", ")}` : entry.native_biome && entry.native_biome[0] !== "None" ? `${prettyName(entry.native_biome[0])} · native rarity ${entry.native_rarity ? `1 in ${fmtNum(entry.native_rarity)}` : `×${entry.native_biome[1] ?? 1}`}` : "Global / no native biome recorded."}</p></Section>
               <Section title="Archive notes"><p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{entry.description || entry.notes || "This aura is catalogued from the available reference data."}</p></Section>
-              {(auraImageUrls.length > 0 || auraVideoUrl) && <div className="form-hint" style={{ marginTop: 10 }}>🖼 {auraImageUrls.length + (auraVideoUrl ? 1 : 0)} media file(s) available — open the <b>Media</b> tab to view them without slowing the book down.</div>}
+              {(auraImages.length > 0 || auraVideoUrl) && <div className="form-hint" style={{ marginTop: 10 }}>🖼 {auraImages.length + (auraVideoUrl ? 1 : 0)} media file(s) available — open the <b>Media</b> tab to view them without slowing the book down.</div>}
             </>}
           </>}
         </div>
@@ -566,6 +586,25 @@ function mediaFileName(url: string): string {
     return name || "media";
   } catch { return "media"; }
 }
+
+/** What kind of media a Fandom file is — guessed from its file name + video_kind. */
+function mediaRole(url: string, videoKind?: string): MediaRole {
+  const name = mediaFileName(url).toLowerCase();
+  if (videoKind === "opening" || name.includes("opening")) return "opening";
+  if (name.includes("ingame") || name.includes("in_game") || name.includes("in-game")) return "ingame";
+  if (name.includes("collection")) return "collection";
+  if (name.includes("cutscene")) return "cutscene";
+  return "art";
+}
+
+const ROLE_LABELS: Record<MediaRole, string> = {
+  art: "Artwork",
+  ingame: "In-game",
+  collection: "Collection icon",
+  cutscene: "Cutscene",
+  opening: "Opening cutscene",
+  music: "Theme music",
+};
 
 async function saveMedia(url: string, setStatus: (s: string) => void) {
   setStatus("Saving…");
@@ -630,33 +669,144 @@ function CachedThumb({ url, alt, style }: { url?: string; alt?: string; style?: 
   return <CachedImage url={previewSrc || url} alt={alt} style={style} />;
 }
 
-function CachedAudio({ url, fileLabel, accent }: { url: string; fileLabel?: string; accent?: string }) {
+/* Volume slider styled like the seek bar (flat track, small angular thumb)
+   so the player uses one visual language instead of native red knobs. */
+const AUDIO_VOL_CSS = `
+.audio-vol{-webkit-appearance:none;appearance:none;width:72px;height:6px;border-radius:4px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);outline:none;cursor:pointer}
+.audio-vol::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:10px;height:12px;border-radius:2px;background:var(--audio-accent,#a78bfa);border:none;cursor:pointer}
+.audio-vol::-moz-range-thumb{width:10px;height:12px;border-radius:2px;background:var(--audio-accent,#a78bfa);border:none;cursor:pointer}
+`;
+
+function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: string; accent?: string }) {
   const { src, state } = useCachedMedia(url);
   const audioSrc = src || url;
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
   const [saveState, setSaveState] = useState("");
+
+  const fmtTime = (t: number) => {
+    if (!Number.isFinite(t) || t < 0) return "0:00";
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
+    return `${m}:${String(s).padStart(2, "0")}`;
+  };
+  const toggle = () => {
+    const el = audioRef.current;
+    if (!el) return;
+    if (el.paused) void el.play().catch(() => {});
+    else el.pause();
+  };
+  const seek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = audioRef.current;
+    if (!el || !Number.isFinite(el.duration) || el.duration <= 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+    el.currentTime = ratio * el.duration;
+    setCurrent(el.currentTime);
+  };
+  const progress = duration > 0 ? Math.min(100, (current / duration) * 100) : 0;
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume;
+  }, [volume]);
+
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, fontSize: 12, color: "var(--text-secondary)" }}>
-        <span>{fileLabel ? `🎵 ${prettyName(fileLabel)}` : "🎵 Theme music"}</span>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, fontSize: 12, color: "var(--text-secondary)" }}>
+        <span>{fileLabel ? `🎵 ${prettyName(fileLabel)}` : ""}</span>
         <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, opacity: .75 }}>
           {state === "loading" ? "Fetching from wiki…" : state === "ready" ? "✓ Cached" : state === "failed" ? "Wiki stream" : ""}
           {saveState ? <span>{saveState}</span> : null}
-          <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => void saveMedia(url, setSaveState)} title="Save file to disk">💾</button>
+          <button className="btn" style={{ padding: "3px 10px", fontSize: 12, borderRadius: "4px" }} onClick={() => void saveMedia(url, setSaveState)} title="Save music to disk">💾</button>
         </span>
       </div>
-      <audio controls src={audioSrc} preload="none" style={{ width: "100%", height: 32, accentColor: accent }} />
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <button
+          className="btn btn-accent"
+          onClick={toggle}
+          title={playing ? "Pause" : "Play"}
+          style={{ borderRadius: "4px", padding: "5px 14px", fontWeight: 600, minWidth: 50, flex: "0 0 auto" }}
+        >
+          {playing ? "❚❚" : "▶"}
+        </button>
+        <div onClick={seek} title="Seek" style={{ flex: 1, height: 8, borderRadius: 4, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.12)", cursor: "pointer", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: `${progress}%`, background: accent || "#a78bfa", transition: "width .12s linear" }} />
+        </div>
+        <div style={{ fontSize: 11, color: "var(--text-secondary)", fontVariantNumeric: "tabular-nums", minWidth: 78, textAlign: "right", flex: "0 0 auto" }}>
+          {fmtTime(current)} / {duration > 0 ? fmtTime(duration) : "-:--"}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 5, flex: "0 0 auto" }} title="Volume">
+          <style>{AUDIO_VOL_CSS}</style>
+          <span style={{ fontSize: 12 }}>{volume === 0 ? "🔇" : "🔊"}</span>
+          <input
+            className="audio-vol"
+            type="range" min={0} max={100} step={1}
+            value={Math.round(volume * 100)}
+            onChange={(e) => {
+              const v = Number(e.target.value) / 100;
+              setVolume(v);
+              if (audioRef.current) audioRef.current.volume = v;
+            }}
+            style={{ ["--audio-accent" as string]: accent || "#a78bfa" } as React.CSSProperties}
+          />
+        </div>
+      </div>
+      <audio
+        ref={audioRef}
+        src={audioSrc}
+        preload="metadata"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onEnded={() => { setPlaying(false); setCurrent(0); }}
+        onTimeUpdate={(e) => {
+          setCurrent(e.currentTarget.currentTime);
+          if (e.currentTarget.duration && Number.isFinite(e.currentTarget.duration)) setDuration(e.currentTarget.duration);
+        }}
+        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || 0)}
+        onDurationChange={(e) => setDuration(e.currentTarget.duration || 0)}
+        style={{ display: "none" }}
+      />
     </div>
   );
 }
 
-function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, musicFile, name, accent }: { urls: string[]; videoUrl?: string; videoKind?: string; cutsceneNote?: string; musicUrl?: string; musicFile?: string; name: string; accent: string }) {
-  type MediaItem = { kind: "image" | "video"; url: string; remoteUrl?: string };
+/** Small banner shown at the top of the Info tab — one cached still per entry.
+ *  `contain` keeps the full biome scene visible (cover used to crop wide
+ *  in-game shots into abstract close-ups). */
+function HeroMedia({ item }: { item: ImageItem }) {
+  return (
+    <div className="book-panel" style={{ position: "relative", height: 200, borderRadius: 6, overflow: "hidden", marginBottom: 16, background: "rgba(0,0,0,.35)" }}>
+      <CachedImage url={item.url} alt={item.caption || ""} style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(10,8,20,.82) 100%)" }} />
+      {item.caption && (
+        <div style={{ position: "absolute", bottom: 8, left: 12, right: 12, fontSize: 11, color: "#e2e8f0", letterSpacing: ".03em", textShadow: "0 1px 3px rgba(0,0,0,.7)" }}>
+          {item.caption}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, musicFile, name, accent }: { images: ImageItem[]; videoUrl?: string; videoKind?: string; cutsceneNote?: string; musicUrl?: string; musicFile?: string; name: string; accent: string }) {
+  type MediaItem = { kind: "image" | "video"; url: string; remoteUrl?: string; role: MediaRole; caption: string };
   const videoCached = useCachedMedia(videoUrl || undefined);
   const [videoFallback, setVideoFallback] = useState(false);
   const videoSrc = (!videoFallback && videoCached.src) ? videoCached.src : (videoUrl || "");
   const items: MediaItem[] = [
-    ...urls.map(u => ({ kind: "image" as const, url: u })),
-    ...(videoSrc ? [{ kind: "video" as const, url: videoSrc, remoteUrl: videoUrl || "" }] : []),
+    ...images.map(im => {
+      const role = mediaRole(im.url);
+      return { kind: "image" as const, url: im.url, role, caption: im.caption || ROLE_LABELS[role] };
+    }),
+    ...(videoSrc ? [{
+      kind: "video" as const,
+      url: videoSrc,
+      remoteUrl: videoUrl || "",
+      role: mediaRole(videoUrl || "", videoKind),
+      caption: videoKind === "opening" ? "Opening cutscene" : "Cutscene video",
+    }] : []),
   ];
   const [idx, setIdx] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -664,17 +814,30 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
   const [isFull, setIsFull] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
-  const listKey = urls.join("|") + "|" + (videoSrc || "");
+  const listKey = images.map(im => im.url).join("|") + "|" + (videoSrc || "");
   const [saveState, setSaveState] = useState("");
 
   useEffect(() => { setIdx(0); setZoom(1); setPan({ x: 0, y: 0 }); setIsFull(false); setVideoFallback(false); }, [listKey]);
 
+  // Keyboard: ←/→ cycle the media, Esc closes fullscreen. Keys typed into
+  // form fields (the search box, selects) are never stolen.
   useEffect(() => {
-    if (!isFull) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setIsFull(false); };
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || !!target?.isContentEditable;
+      if (e.key === "Escape") { setIsFull(false); return; }
+      if (typing || items.length < 2) return;
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        setIdx(i => e.key === "ArrowLeft" ? (i - 1 + items.length) % items.length : (i + 1) % items.length);
+        setZoom(1);
+        setPan({ x: 0, y: 0 });
+      }
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isFull]);
+  }, [items.length]);
 
   if (!items.length && !musicUrl) {
     return <div className="form-hint" style={{ padding: 18 }}>No media available for this entry.</div>;
@@ -752,7 +915,11 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
       alignItems: "center", background: "rgba(10,8,20,.72)", padding: "4px 10px", borderRadius: 4, fontSize: 12,
       backdropFilter: "blur(4px)", color: "var(--text-secondary)", pointerEvents: "auto",
     }}>
-      <span>{active.kind === "video" ? (videoKind === "opening" ? "Opening cutscene" : "Cutscene video") : `Image ${idx + 1} of ${items.length}`}</span>
+      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <b style={{ color: accent }}>{ROLE_LABELS[active.role]}</b>
+        {active.caption && active.caption !== ROLE_LABELS[active.role] ? ` · ${active.caption}` : ""}
+        {` · ${idx + 1} of ${items.length}`}
+      </span>
       {items.length > 1 && (
         <div style={{ display: "flex", gap: 6 }}>
           <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={() => { setIdx((idx - 1 + items.length) % items.length); setZoom(1); setPan({ x: 0, y: 0 }); }}>‹ Prev</button>
@@ -789,20 +956,31 @@ function AuraMediaViewer({ urls, videoUrl, videoKind, cutsceneNote, musicUrl, mu
 
       {musicUrl && (
         <div className="book-panel" style={{ marginTop: 12, padding: "10px 12px", borderRadius: "6px" } as React.CSSProperties}>
-          <CachedAudio url={musicUrl} fileLabel={musicFile} accent={accent} />
+          <AudioPlayer url={musicUrl} fileLabel={musicFile} accent={accent} />
         </div>
       )}
 
       {items.length > 1 && (
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(136px, 1fr))", gap: 8, marginTop: 12 }}>
           {items.map((item, i) => (
-            <button key={item.kind + item.url} onClick={() => { setIdx(i); setZoom(1); setPan({ x: 0, y: 0 }); }}
-              style={{ padding: 0, position: "relative", border: i === idx ? `2px solid ${accent}` : "2px solid transparent", background: "rgba(255,255,255,.06)", cursor: "pointer", lineHeight: 0, borderRadius: "4px", overflow: "hidden" }}>
-              <CachedThumb url={item.url} alt={`${name} media ${i + 1}`}
-                style={{ width: 64, height: 64, objectFit: "contain", background: "rgba(255,255,255,.05)" }} />
+            <button
+              key={item.kind + item.url}
+              onClick={() => { setIdx(i); setZoom(1); setPan({ x: 0, y: 0 }); }}
+              onDoubleClick={() => { setIdx(i); setZoom(1); setPan({ x: 0, y: 0 }); setIsFull(true); }}
+              title={item.caption}
+              style={{ padding: 0, position: "relative", border: i === idx ? `2px solid ${accent}` : "2px solid transparent", background: "rgba(255,255,255,.06)", cursor: "pointer", lineHeight: 0, borderRadius: "4px", overflow: "hidden" }}
+            >
+              <CachedThumb url={item.url} alt={item.caption}
+                style={{ width: "100%", height: 84, objectFit: "cover", background: "rgba(255,255,255,.05)" }} />
+              <span style={{ position: "absolute", top: 3, left: 3, fontSize: 8.5, letterSpacing: ".05em", textTransform: "uppercase", padding: "1px 5px", borderRadius: 3, background: "rgba(10,8,20,.78)", color: accent, fontWeight: 600, lineHeight: 1.5 }}>
+                {ROLE_LABELS[item.role]}
+              </span>
               {item.kind === "video" && (
                 <span style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", fontSize: 20, color: "#fff", background: "rgba(0,0,0,.35)" }}>▶</span>
               )}
+              <span style={{ position: "absolute", bottom: 0, left: 0, right: 0, fontSize: 9.5, padding: "2px 5px", background: "rgba(10,8,20,.72)", color: "#cbd5e1", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: 1.5 }}>
+                {item.caption}
+              </span>
             </button>
           ))}
         </div>

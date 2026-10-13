@@ -6,11 +6,11 @@
 
 **All-in-one automation panel for Sol's RNG (Roblox)**
 
-Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · Memory Match · Quest Board · Fishing · Potion Crafting · Multi-instance main/secondary windows
+Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · Sol's Sim sandbox · Memory Match · Quest Board · Fishing · Potion Crafting · Multi-instance main/secondary windows
 
 [Download](https://github.com/MiraxKito/EndSol-Macro/releases/latest) · [Report an issue](https://github.com/MiraxKito/EndSol-Macro/issues) · [Discussions](https://github.com/MiraxKito/EndSol-Macro/discussions)
 
-<p align="center"><img width="972" height="548" alt="image" src="https://github.com/user-attachments/assets/ae9756fa-7d9c-4088-97cd-8a7250832310" /></p>
+<p align="center"><i>📸 Screenshot slot: main panel overview (replaces the old hero screenshot)</i></p>
 
 </div>
 
@@ -29,7 +29,7 @@ Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · Me
 - **Memory Match** — auto-plays the Memory Match minigame: reveals tiles, remembers items and quantities as images (no OCR for tiles, including white/gray items), prioritizes high-value rewards, and verifies every pair.
 - **Quest Board** — accepts or dismisses quests according to your preferences, tolerant to OCR noise.
 - **Fishing** — fully automatic fishing with selling, merchant runs and failsafes.
-- **Daily Rewards** — claims the Sol's RNG daily check-in automatically right after the reset (00:00 UTC).
+- **Daily Check-In** — claims the Sol's RNG daily check-in automatically right after the reset (00:00 UTC).
 - **Custom paths** — record your own walk routes (fishing spot, obby, egg routes, Memory Match, Quest Board, crafting station) with VIP / non-VIP speed handling.
 - **Potion Crafting** — rebuilt for the new (Eon 1-23) crafting UI: Simple mode drives the Auto button safely (state is detected and switched with verification) and clicks Add Everything + Craft; Full-time or Partial occupancy (the macro walks to the station on a schedule, crafts for the set duration, then resets back to spawn). Recording mode stays as a fallback.
 - **Multiple-Instances** — one panel, many Roblox windows:
@@ -41,14 +41,20 @@ Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · Me
 
 **Sol's Book — built-in wiki 📖**
 - Browse **Auras, Biomes, Items, Gauntlets and Achievements** databases synced from the Sol's RNG Fandom Wiki: rarity, obtainment, crafting recipes, effects, descriptions, rewards.
-- **Media tab** per entry — cutscene videos, opening cutscenes, image galleries and theme music, played from a local cache so they work reliably and offline after the first view.
-<p align="center"><img width="1920" height="1018" alt="aura tab endsol" src="https://github.com/user-attachments/assets/6206bc39-43c4-4822-8906-47108675a294" /></p>
+- **Media tab** per entry — labeled media galleries (artwork, in-game previews, cutscene videos, opening cutscenes) with captions, keyboard navigation and fullscreen view, plus theme music on a custom player. Everything plays from a local cache (works offline after the first view) and can be saved to disk.
+<p align="center"><i>📸 Screenshot slot: Sol's Book — aura tab with the media gallery (replaces the old aura-tab screenshot)</i></p>
+
+**Sol's Sim — sandbox minigame 🎲**
+- A sandbox of Sol's RNG inside the panel: roll auras on the real in-game odds (1 in N ÷ luck, the rarest hit wins, luck-exempt auras ignore luck), simulated biome spawns with a day/night clock, and gauntlet boosts taken straight from the wiki values.
+- **Honest mode** (gauntlets only) or **Sandbox cheats** — roll speed ×2/×3/×5, luck slider, forced biome spawns; the in-game style Roll button shows the roll cooldown.
+- Stats are stored locally and can be reset; drop alerts appear as in-panel banners with an optional Discord embed (no pings, no Windows notifications).
+<p align="center"><i>📸 Screenshot slot: Sol's Sim — rolling with the biome banner</i></p>
 
 
 **Panel**
 - Desktop app built with **pywebview + React**: EN/RU localization, theming, panel customization, live logs and diagnostics.
 - **Remote control** — Discord bot integration: check status and control the macro from your phone.
-- **Status page** — session summary (version, mode, multi-instance main window), feature schedule, per-module states and runtime diagnostics.
+- **Status page** — feature schedule, per-module states and runtime diagnostics.
 
 - **Window state auto-repair** — the macro keeps the Roblox window focused and sized per the calibration: minimized / shrunk / wrong-mode windows are fixed before important actions and periodically during any action.
 
@@ -83,7 +89,7 @@ build_frontend.bat      :: once, builds frontend/dist
 Start.bat
 ```
 
-See [BUILD_EXE.md](BUILD_EXE.md) and [BUILD_PROTECTED_EXE.md](BUILD_PROTECTED_EXE.md) for build details.
+See [BUILD_EXE.md](BUILD_EXE.md) for build details.
 
 ## ⚠️ Important notes
 

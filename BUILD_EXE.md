@@ -67,7 +67,3 @@ python main.py
 ```
 
 The source mode uses the same AppData folders and the same generated icon. The one-file EXE is only the packaged distribution; it is not required for development or testing.
-
-## Protected release build
-
-For the harder-to-reverse one-file release, use `build_windows_protected.bat` and `BUILD_PROTECTED_EXE.md`. It uses Nuitka and requires the MSVC C++ toolchain.

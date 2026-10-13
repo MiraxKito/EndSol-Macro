@@ -17,6 +17,7 @@ import PotionCraftPage from "./pages/PotionCraftPage";
 import StatusPage from "./pages/StatusPage";
 import StatsPage from "./pages/StatsPage";
 import SolsBookPage from "./pages/SolsBookPage";
+import SolSimPage from "./pages/SolSimPage";
 import OtherFeaturesPage from "./pages/OtherFeaturesPage";
 import CreditsPage from "./pages/CreditsPage";
 import DonationsPage from "./pages/DonationsPage";
@@ -63,7 +64,9 @@ if (isSafeMode && !(window as any).pywebview) {
   };
 }
 
-const pages: Record<string, React.FC> = {
+// `active` lets heavy pages (Sol's Sim) stop their timers while hidden:
+// PageHost keeps every page mounted but display:none.
+const pages: Record<string, React.ComponentType<{ active?: boolean }>> = {
   notice: NoticePage,
   webhook: WebhookPage,
   calibrations: CalibrationPage,
@@ -78,6 +81,7 @@ const pages: Record<string, React.FC> = {
   potioncraft: PotionCraftPage,
   stats: StatsPage,
   solbook: SolsBookPage,
+  solsim: SolSimPage,
   status: StatusPage,
   otherfeatures: OtherFeaturesPage,
   multiinstances: MultiInstancePage,
@@ -89,10 +93,10 @@ const pages: Record<string, React.FC> = {
   // puzzle: PuzzlePage,
 };
 
-const PageHost = memo(function PageHost({ component: PageComponent, active }: { component: React.FC; active: boolean }) {
+const PageHost = memo(function PageHost({ component: PageComponent, active }: { component: React.ComponentType<{ active?: boolean }>; active: boolean }) {
   return (
     <div style={{ display: active ? "block" : "none" }} aria-hidden={!active}>
-      <ErrorBoundary><PageComponent /></ErrorBoundary>
+      <ErrorBoundary><PageComponent active={active} /></ErrorBoundary>
     </div>
   );
 });

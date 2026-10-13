@@ -7,10 +7,10 @@ Sol's RNG Quest Board (added Eon 1-4.5, May 2025):
   - Quest categories: Basic, Uncommon, Epic, Legendary, Mythic, Tutorial, Special, Fishing, Resonance
   - 8 quest types (rolls, fish, kill, etc)
 
-This module focuses on SELF-SUFFICIENT quests that complete automatically through
-the macro's normal activity (rolling, biome changes, breakthrough). It does NOT
-handle quests that require special actions (going to NPC, killing players, fishing,
-delivering items, etc.) — those need additional automation not in scope here.
+Only SELF-SUFFICIENT quests are handled — the ones that complete on their
+own through normal macro activity (rolling, biome changes, breakthrough).
+Quests needing special actions (going to NPC, killing players, fishing,
+delivering items) are out of scope here.
 
 Self-sufficient quest types we accept:
   - Meditation I/II           (just play for 10/30 min — natural via rolling)

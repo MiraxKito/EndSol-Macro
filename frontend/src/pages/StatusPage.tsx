@@ -19,19 +19,17 @@ export default function StatusPage() {
     const [autoScroll, setAutoScroll] = useState(true);
     const [modulePage, setModulePage] = useState(0);
     const [moduleFilter, setModuleFilter] = useState<"all" | "active" | "idle" | "disabled">("all");
-    const [version, setVersion] = useState<string>("");
     const [multiState, setMultiState] = useState<any>(null);
     const logContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         let isMounted = true;
-        const fetchVersionAndMulti = async () => {
+        const fetchMultiState = async () => {
             const api = window.pywebview?.api as any;
-            try { if (api?.get_macro_version && isMounted) setVersion(await api.get_macro_version()); } catch { /* ignore */ }
             try { if (api?.get_multi_instance_state && isMounted) setMultiState(await api.get_multi_instance_state()); } catch { /* ignore */ }
         };
-        void fetchVersionAndMulti();
-        const interval = setInterval(fetchVersionAndMulti, 5000);
+        void fetchMultiState();
+        const interval = setInterval(fetchMultiState, 5000);
         return () => { isMounted = false; clearInterval(interval); };
     }, []);
 
@@ -146,27 +144,6 @@ export default function StatusPage() {
         <>
             <div className="page-header">
                 <h2>Macro Status</h2>
-            </div>
-
-            <div className="card">
-                <div className="card-header">
-                    <div className="card-icon">🧭</div>
-                    <div style={{ flex: 1 }}>
-                        <h3>Session Summary</h3>
-                        <p>Current mode and the most important runtime facts at a glance</p>
-                    </div>
-                    <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--accent-text)", whiteSpace: "nowrap" }}>{version || "EndSol Macro"}</span>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "8px" }}>
-                    <div className="form-hint">Macro: <b style={{ color: isMacroRunning ? "#86efac" : "#6b7280" }}>{isMacroRunning ? "running" : "stopped"}</b></div>
-                    <div className="form-hint">Fishing mode: <b>{(statusData?.modules?.["Fishing Mode"]?.enabled) ? (statusData?.modules?.["Fishing Mode"]?.active ? "active" : "enabled") : "off"}</b></div>
-                    {multiState?.enabled ? (<>
-                        <div className="form-hint">Multi-Instances: <b style={{ color: "#86efac" }}>on</b>{multiState.main_pid ? ` · main window PID ${multiState.main_pid}` : " · main window: auto"}</div>
-                        <div className="form-hint">Secondary windows: <b>{Math.max(0, (multiState.window_count || 0) - 1)}</b> · alerts: <b>{multiState.alerts_enabled ? "on" : "off"}</b></div>
-                    </>) : (
-                        <div className="form-hint">Multi-Instances: <b>off</b> (single-window macro)</div>
-                    )}
-                </div>
             </div>
 
             {incompatibilities.length > 0 && (

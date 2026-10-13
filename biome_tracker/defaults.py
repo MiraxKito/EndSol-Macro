@@ -1,19 +1,10 @@
-"""
-EndSol Macro — single source of truth for default configuration.
-
-This module defines every configurable parameter with a sensible, working
-default value. When a user runs the macro for the first time, this dict
-is copied verbatim to %LOCALAPPDATA%/EndSolMacro/config.json and becomes
-the user's local config. The user can then modify anything through the
-panel; only the local file is mutated.
-
-Rules:
-- webhook_urls, private_server_link, user_id, accounts, cookies, roblox_username
-  start EMPTY (must be filled by the user). They are personal data.
-- Everything else has a working default that runs the macro out of the box
-  (within Roblox coordinate calibration that the user still must do).
-- Coordinates default to 0/0; the macro will warn until the user calibrates.
-"""
+# Default config. On first run this dict is copied verbatim to
+# %LOCALAPPDATA%/EndSolMacro/config.json; after that the panel mutates
+# only that local copy, never this file.
+# Personal stuff (webhook urls, server link, user ids, accounts, cookies,
+# roblox username) starts EMPTY — the user fills it in. Everything else
+# runs out of the box, except Roblox coordinates: they default to 0/0
+# and the macro warns until calibrated.
 
 # Master default config. Keep in sync with ConfigVar definitions in
 # mixin_lifecycle.py / mixin_config.py / mixin_legacy_ui_fallback.py.

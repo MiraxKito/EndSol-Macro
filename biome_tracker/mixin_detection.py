@@ -205,6 +205,53 @@ class DetectionMixin:
                     if key not in meta or not meta.get(key):
                         meta[key] = default_biome_data[biome_name].get(key, "")
 
+        # Verified biome preview images — each file was visually checked on
+        # the wiki. The live parser sometimes picks Discord status icons or
+        # cutscene frames (e.g. Glitched's spawn indicator instead of the
+        # GlitchedNew scene), so force the verified in-game scene shot here.
+        # User custom overrides below still win over this map.
+        _PREVIEW_FILES = {
+            "NORMAL": "Daytime_img.png",
+            "WINDY": "Windy_img(fixed).png",
+            "SNOWY": "snowy_img.png",
+            "RAINY": "Rainy.png",
+            "SAND STORM": "Sand_Storm.png",
+            "HELL": "New_Hell_Biome.png",
+            "STARFALL": "StarfallInGame.gif",
+            "HEAVEN": "HeavenBiomeInGame.png",
+            "CORRUPTION": "CorruptionBiomeNew.png",
+            "NULL": "Null_daytime.png",
+            "DREAMSPACE": "Dreamspace_Biome.png",
+            "GLITCHED": "GlitchedNew.png",
+            "CYBERSPACE": "CyberspaceNew.png",
+            "SINGULARITY": "SingularityBiome.png",
+            "TIME": "Daytime_img.png",
+            "GRAVEYARD": "Graveyard_Biome.png",
+            "PUMPKIN MOON": "Hallowed_Biome.png",
+            "BLAZING SUN": "Blazing.gif",
+            "BLOOD RAIN": "Bloodrain.png",
+            "AURORA": "Aurora_Biome.png",
+            "EGGLAND": "Eggland_Biome.jpg",
+            "INCINERATOR": "Incinerator.png",
+            "THE HYPERSPACE REALM": "AnotherRealmBiome.png",
+            "THE NULL'S EXISTENCE": "MastermindBiomeUpdated.png",
+            "THE CITADEL OF ORDERS": "CitadelofOrders.png",
+            "赤い満月": "NewUnknownBiomePic.png",
+        }
+        try:
+            import hashlib as _hashlib
+            for _bn, _file in _PREVIEW_FILES.items():
+                if _bn not in data or not isinstance(data.get(_bn), dict):
+                    continue
+                _fn = _file.replace(" ", "_")
+                _h = _hashlib.md5(_fn.encode()).hexdigest()
+                data[_bn]["thumbnail_url"] = (
+                    "https://static.wikia.nocookie.net/sol-rng/images/"
+                    + _h[0] + "/" + _h[:2] + "/" + _fn + "/revision/latest"
+                )
+        except Exception as _prev_exc:
+            print(f"Biome preview map failed: {_prev_exc}")
+
         custom_overrides = self.config.get("custom_biome_overrides", {})
         if isinstance(custom_overrides, dict):
             for biome_name, overrides in custom_overrides.items():
@@ -692,7 +739,7 @@ class DetectionMixin:
             (self.aura_loop_check, "Aura Check"),
             (self.anti_afk_loop, "Anti-AFK"),
             (self.quest_claim_loop, "Quest Claim"),
-            (self.daily_event_check_loop, "Daily Event Check-in"),
+            (self.daily_event_check_loop, "Daily Check-In"),
             (self.quest_board_loop, "Quest Board"),
             (self.obby_path_loop, "Obby Path"),
             (self.custom_paths_loop, "Custom Paths"),
