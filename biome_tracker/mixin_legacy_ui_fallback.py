@@ -835,13 +835,13 @@ class GuiMixin:
         interval_entry.bind("<FocusOut>", lambda e: self.save_config())
 
         ttk.Label(switch_frame, text="Select potion #2:").grid(row=1, column=0, sticky="w", padx=4, pady=(6,0))
-        self.potion2_var = ttk.StringVar(value=self.config.get("potion_file2", ""))
+        self.potion2_var = ttk.StringVar(value=self.config.get("potion_file_2", self.config.get("potion_file2", "")))
         self.potion2_combo = ttk.Combobox(switch_frame, textvariable=self.potion2_var, state="readonly", width=36)
         self.potion2_combo.grid(row=1, column=1, columnspan=2, sticky="w", padx=6, pady=(6,0))
         self.potion2_combo.bind("<<ComboboxSelected>>", lambda e: self.save_config())
 
         ttk.Label(switch_frame, text="Select potion #3:").grid(row=2, column=0, sticky="w", padx=4, pady=(6,0))
-        self.potion3_var = ttk.StringVar(value=self.config.get("potion_file3", ""))
+        self.potion3_var = ttk.StringVar(value=self.config.get("potion_file_3", self.config.get("potion_file3", "")))
         self.potion3_combo = ttk.Combobox(switch_frame, textvariable=self.potion3_var, state="readonly", width=36)
         self.potion3_combo.grid(row=2, column=1, columnspan=2, sticky="w", padx=6, pady=(6,0))
         self.potion3_combo.bind("<<ComboboxSelected>>", lambda e: self.save_config())

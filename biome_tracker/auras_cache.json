@@ -1,6 +1,8 @@
 {
   "Nothing": {
     "rarity": 1,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -20,6 +22,8 @@
   },
   "Common": {
     "rarity": 2,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -39,6 +43,8 @@
   },
   "Uncommon": {
     "rarity": 4,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -58,6 +64,8 @@
   },
   "Good": {
     "rarity": 5,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -77,6 +85,8 @@
   },
   "Natural": {
     "rarity": 8,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -96,6 +106,8 @@
   },
   "Rare": {
     "rarity": 16,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -115,13 +127,15 @@
   },
   "Divinus": {
     "rarity": 32,
+    "native_rarity": 6,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      6
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/6)",
@@ -130,7 +144,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DivinusRework1Collection.gif",
-    "native_rarity": 6,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -139,6 +152,8 @@
   },
   "Crystallized": {
     "rarity": 64,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -158,6 +173,8 @@
   },
   "Dizzy": {
     "rarity": 123,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -177,6 +194,8 @@
   },
   "Rage": {
     "rarity": 128,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -196,6 +215,8 @@
   },
   "Topaz": {
     "rarity": 150,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -215,6 +236,8 @@
   },
   "Ruby": {
     "rarity": 350,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -234,13 +257,15 @@
   },
   "Forbidden": {
     "rarity": 403,
+    "native_rarity": 202,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      202
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/202)",
@@ -249,7 +274,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ForbiddenRework.gif",
-    "native_rarity": 202,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -258,6 +282,8 @@
   },
   "Emerald": {
     "rarity": 500,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -277,13 +303,15 @@
   },
   "Gilded": {
     "rarity": 512,
+    "native_rarity": 128,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SAND STORM",
-      128
+      4
     ],
     "limited": false,
     "obtainment": "Native to SAND STORM (1/128)",
@@ -292,7 +320,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/GildedAura.gif",
-    "native_rarity": 128,
     "native_from_biomes": [
       "SAND STORM"
     ],
@@ -301,6 +328,8 @@
   },
   "Ink": {
     "rarity": 700,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -320,13 +349,15 @@
   },
   "Jackpot": {
     "rarity": 777,
+    "native_rarity": 194,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SAND STORM",
-      194
+      4
     ],
     "limited": false,
     "obtainment": "Native to SAND STORM (1/194)",
@@ -335,7 +366,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/JackpotAura.gif",
-    "native_rarity": 194,
     "native_from_biomes": [
       "SAND STORM"
     ],
@@ -346,6 +376,8 @@
   },
   "Sapphire": {
     "rarity": 800,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -365,6 +397,8 @@
   },
   "Aquamarine": {
     "rarity": 900,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -384,13 +418,15 @@
   },
   "Wind": {
     "rarity": 900,
+    "native_rarity": 300,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "WINDY",
-      300
+      3
     ],
     "limited": false,
     "obtainment": "Native to WINDY (1/300)",
@@ -399,7 +435,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WindAuraList.gif",
-    "native_rarity": 300,
     "native_from_biomes": [
       "WINDY"
     ],
@@ -408,6 +443,8 @@
   },
   "Diaboli": {
     "rarity": 1004,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -431,6 +468,8 @@
   },
   "Penumbra": {
     "rarity": 1010,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -454,6 +493,8 @@
   },
   "Umbra": {
     "rarity": 1010,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -477,6 +518,8 @@
   },
   "Precious": {
     "rarity": 1024,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -500,6 +543,8 @@
   },
   "Hydrogen": {
     "rarity": 1111,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -523,6 +568,8 @@
   },
   "Atomic": {
     "rarity": 1180,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -546,6 +593,8 @@
   },
   "Glock": {
     "rarity": 1700,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -569,6 +618,8 @@
   },
   "Magnetic": {
     "rarity": 2048,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -592,6 +643,8 @@
   },
   "Ash": {
     "rarity": 2300,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -615,13 +668,15 @@
   },
   "Glacier": {
     "rarity": 2304,
+    "native_rarity": 768,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      768
+      3
     ],
     "limited": false,
     "obtainment": "Native to SNOWY (1/768)",
@@ -630,7 +685,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/GlacierAuraNight.gif",
-    "native_rarity": 768,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -643,13 +697,15 @@
   },
   "Player": {
     "rarity": 3000,
+    "native_rarity": 1500,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      1500
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/1,500)",
@@ -658,7 +714,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CollectionPlayerRework.gif",
-    "native_rarity": 1500,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -671,26 +726,34 @@
   },
   "Flora": {
     "rarity": 3700,
+    "native_rarity": 1850,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/1,850)",
     "rarity_name": "Epic",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Floracollectiongif.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "cutscene_note": "The screen will become black as an ominous noise plays in the background before the edges of the player's screen begin to glow green, while the upper left hand corner glows pink, revealing Flora."
   },
   "Cola": {
     "rarity": 3999,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -714,6 +777,8 @@
   },
   "Sidereum": {
     "rarity": 4096,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -737,6 +802,8 @@
   },
   "Bleeding": {
     "rarity": 4444,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -760,13 +827,15 @@
   },
   "HellFire": {
     "rarity": 4776,
+    "native_rarity": 796,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      796
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/796)",
@@ -775,7 +844,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/HellfireCollection.gif",
-    "native_rarity": 796,
     "native_from_biomes": [
       "HELL"
     ],
@@ -784,22 +852,28 @@
   },
   "Flutter": {
     "rarity": 5000,
+    "native_rarity": 2500,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/2,500)",
     "rarity_name": "Epic",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FlutterCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8d/FlutterOpening.mp4/revision/latest?cb=20260117104607",
     "video_file": "FlutterOpening.mp4",
     "video_kind": "opening",
@@ -809,6 +883,8 @@
   },
   "Targeted": {
     "rarity": 5000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -830,8 +906,35 @@
     "video_kind": "opening",
     "cutscene_note": "===Opening Cutscene=== starts with a black background and is followed by some red and black stripes fading in 2 seconds later, revealing ."
   },
+  "Watcher": {
+    "rarity": 5000,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (cannot be rolled through breakthrough)",
+    "rarity_name": "Epic",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Placeholder.png",
+    "exclusive_biomes": [
+      "THE RADIANT FOREST"
+    ],
+    "is_exclusive": true,
+    "obtainment_type": "exclusive"
+  },
   ":Flushed:": {
     "rarity": 6900,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -854,13 +957,15 @@
   },
   "Hazard": {
     "rarity": 7000,
+    "native_rarity": 1400,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CORRUPTION",
-      1400
+      5
     ],
     "limited": false,
     "obtainment": "Native to CORRUPTION (1/1,400)",
@@ -869,7 +974,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/HazardGif.gif",
-    "native_rarity": 1400,
     "native_from_biomes": [
       "CORRUPTION"
     ],
@@ -882,6 +986,8 @@
   },
   "Doodle": {
     "rarity": 7500,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -903,8 +1009,35 @@
     "video_kind": "opening",
     "cutscene_note": "===Opening Cutscene==="
   },
+  "Rekindle": {
+    "rarity": 5000,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (cannot be rolled through breakthrough)",
+    "rarity_name": "Epic",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Placeholder.png",
+    "exclusive_biomes": [
+      "THE RADIANT FOREST"
+    ],
+    "is_exclusive": true,
+    "obtainment_type": "exclusive"
+  },
   "Quartz": {
     "rarity": 8192,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -928,6 +1061,8 @@
   },
   "Honey": {
     "rarity": 8335,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -951,6 +1086,8 @@
   },
   "Lost_Soul": {
     "rarity": 9200,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -971,6 +1108,8 @@
   },
   "Atomic_Ribonucleic": {
     "rarity": 9876,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -998,6 +1137,8 @@
   },
   "★": {
     "rarity": 100,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "DREAMSPACE",
       1
@@ -1023,13 +1164,15 @@
   },
   "Undead": {
     "rarity": 12000,
+    "native_rarity": 2000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      2000
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/2,000)",
@@ -1038,7 +1181,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/UndeadCollection.gif",
-    "native_rarity": 2000,
     "native_from_biomes": [
       "HELL"
     ],
@@ -1051,13 +1193,15 @@
   },
   "Corrosive": {
     "rarity": 12000,
+    "native_rarity": 2400,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CORRUPTION",
-      2400
+      5
     ],
     "limited": false,
     "obtainment": "Native to CORRUPTION (1/2,400)",
@@ -1066,7 +1210,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Corrosive.gif",
-    "native_rarity": 2400,
     "native_from_biomes": [
       "CORRUPTION"
     ],
@@ -1079,6 +1222,8 @@
   },
   "Kawaii": {
     "rarity": 12300,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1102,6 +1247,8 @@
   },
   "Rage_Heated": {
     "rarity": 12800,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1127,6 +1274,8 @@
   },
   "Ink_Leak": {
     "rarity": 14000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1152,6 +1301,8 @@
   },
   "Powered": {
     "rarity": 16384,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1175,13 +1326,15 @@
   },
   "Gilded_Crowned": {
     "rarity": 20000,
+    "native_rarity": 5000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SAND STORM",
-      5000
+      4
     ],
     "limited": false,
     "obtainment": "Native to SAND STORM (1/5,000)",
@@ -1190,7 +1343,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CrownedCollection.gif",
-    "native_rarity": 5000,
     "native_from_biomes": [
       "SAND STORM"
     ],
@@ -1205,22 +1357,28 @@
   },
   "Marsh": {
     "rarity": 25000,
+    "native_rarity": 12500,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/12,500)",
     "rarity_name": "Unique",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MarshCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/2/29/MarshCutscene.mp4/revision/latest?cb=20260509121249",
     "video_file": "MarshCutscene.mp4",
     "video_kind": "opening",
@@ -1228,6 +1386,8 @@
   },
   "Copper": {
     "rarity": 29000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1251,6 +1411,8 @@
   },
   "Watt": {
     "rarity": 32768,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1274,6 +1436,8 @@
   },
   "Aquatic": {
     "rarity": 40000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1297,13 +1461,15 @@
   },
   "Solar": {
     "rarity": 50000,
+    "native_rarity": 5000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      5000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/5,000)",
@@ -1312,7 +1478,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SolarAuraNight.gif",
-    "native_rarity": 5000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -1325,13 +1490,15 @@
   },
   "Lunar": {
     "rarity": 50000,
+    "native_rarity": 5000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      5000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/5,000)",
@@ -1340,7 +1507,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Lunar_Collection_E7.gif",
-    "native_rarity": 5000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -1353,13 +1519,15 @@
   },
   "Starlight": {
     "rarity": 50000,
+    "native_rarity": 10000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      10000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/10,000)",
@@ -1368,7 +1536,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/StarlightCollection.gif",
-    "native_rarity": 10000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -1381,13 +1548,15 @@
   },
   "StarRider": {
     "rarity": 50000,
+    "native_rarity": 10000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      10000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/10,000)",
@@ -1396,7 +1565,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/StarRiderCollection.gif",
-    "native_rarity": 10000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -1409,6 +1577,8 @@
   },
   "Pleiades": {
     "rarity": 65358,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -1436,6 +1606,8 @@
   },
   "Flushed_Lobotomy": {
     "rarity": 69000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1461,13 +1633,15 @@
   },
   "Hazard_Rays": {
     "rarity": 70000,
+    "native_rarity": 14000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CORRUPTION",
-      14000
+      5
     ],
     "limited": false,
     "obtainment": "Native to CORRUPTION (1/14,000)",
@@ -1476,7 +1650,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Hazard_Rays.gif",
-    "native_rarity": 14000,
     "native_from_biomes": [
       "CORRUPTION"
     ],
@@ -1491,6 +1664,8 @@
   },
   "Nautilus": {
     "rarity": 70000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1511,13 +1686,15 @@
   },
   "Permafrost": {
     "rarity": 73500,
+    "native_rarity": 24500,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      24500
+      3
     ],
     "limited": false,
     "obtainment": "Native to SNOWY (1/24,500)",
@@ -1526,7 +1703,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/PermafrostAura.gif",
-    "native_rarity": 24500,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -1539,6 +1715,8 @@
   },
   "Pulsar": {
     "rarity": 83345,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -1566,6 +1744,8 @@
   },
   "Constella": {
     "rarity": 86988,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -1593,13 +1773,15 @@
   },
   "Flow": {
     "rarity": 87000,
+    "native_rarity": 29000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "WINDY",
-      29000
+      3
     ],
     "limited": false,
     "obtainment": "Native to WINDY (1/29,000)",
@@ -1608,7 +1790,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FlowCollectionNew.gif",
-    "native_rarity": 29000,
     "native_from_biomes": [
       "WINDY"
     ],
@@ -1623,13 +1804,15 @@
   },
   "Stormal": {
     "rarity": 90000,
+    "native_rarity": 30000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "WINDY",
-      30000
+      3
     ],
     "limited": false,
     "obtainment": "Native to WINDY (1/30,000)",
@@ -1638,7 +1821,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Stormal_Collection_E7.gif",
-    "native_rarity": 30000,
     "native_from_biomes": [
       "WINDY"
     ],
@@ -1651,6 +1833,8 @@
   },
   "★★": {
     "rarity": 1000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "DREAMSPACE",
       1
@@ -1680,6 +1864,8 @@
   },
   "Fault": {
     "rarity": 3000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GLITCHED",
       1
@@ -1707,6 +1893,8 @@
   },
   "Content_Deleted": {
     "rarity": 4040,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GLITCHED",
       1
@@ -1731,6 +1919,8 @@
   },
   "Exotic": {
     "rarity": 99999,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1756,6 +1946,8 @@
   },
   "Diaboli_Void": {
     "rarity": 100400,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1781,13 +1973,15 @@
   },
   "Comet": {
     "rarity": 120000,
+    "native_rarity": 24000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SINGULARITY",
-      24000
+      5
     ],
     "limited": false,
     "obtainment": "Native to SINGULARITY (1/24,000)",
@@ -1796,7 +1990,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Comet_collection.gif",
-    "native_rarity": 24000,
     "native_from_biomes": [
       "SINGULARITY"
     ],
@@ -1811,13 +2004,15 @@
   },
   "Divinus_Angel": {
     "rarity": 120000,
+    "native_rarity": 24000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      24000
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/24,000)",
@@ -1826,7 +2021,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Angel_coll.gif",
-    "native_rarity": 24000,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -1843,22 +2037,28 @@
   },
   "Jade": {
     "rarity": 125000,
+    "native_rarity": 62500,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "THE RADIANT FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to THE RADIANT FOREST (1/62,500)",
     "rarity_name": "Legendary",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/JadeInCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "THE RADIANT FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0f/Jade_opening.mp4/revision/latest?cb=20240405213007",
     "video_file": "Jade opening.mp4",
     "video_kind": "opening",
@@ -1868,6 +2068,8 @@
   },
   "Spectre": {
     "rarity": 140000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1893,6 +2095,8 @@
   },
   "Jazz": {
     "rarity": 160000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1918,6 +2122,8 @@
   },
   "Aether": {
     "rarity": 180000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1940,6 +2146,8 @@
   },
   "Bounded": {
     "rarity": 200000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -1965,22 +2173,28 @@
   },
   "Lantern": {
     "rarity": 333333,
+    "native_rarity": 166666,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/166,666)",
     "rarity_name": "Legendary",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/LanternCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/9/9f/LanternOpening.mp4/revision/latest?cb=20260117105343",
     "video_file": "LanternOpening.mp4",
     "video_kind": "opening",
@@ -1990,6 +2204,8 @@
   },
   "Celestial": {
     "rarity": 350000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2015,13 +2231,15 @@
   },
   "Vortex": {
     "rarity": 399999,
+    "native_rarity": 133333,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "WINDY",
-      133333
+      3
     ],
     "limited": false,
     "obtainment": "Native to WINDY (1/133,333)",
@@ -2030,7 +2248,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/VortexCollection.gif",
-    "native_rarity": 133333,
     "native_from_biomes": [
       "WINDY"
     ],
@@ -2045,6 +2262,8 @@
   },
   "Terror": {
     "rarity": 400000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2068,13 +2287,15 @@
   },
   "Hope": {
     "rarity": 488725,
+    "native_rarity": 97745,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      97745
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/97,745)",
@@ -2083,7 +2304,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/HopeCollection.gif",
-    "native_rarity": 97745,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -2098,6 +2318,8 @@
   },
   "Raven": {
     "rarity": 500000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -2121,8 +2343,60 @@
     "music_file": "RavenSoundtrack.mp3",
     "cutscene_note": "===Opening Cutscene=== The screen turns black, as a dropbeat noise plays in the beginning of the cutscene, extending for its entirety, heard in the background. In the center of the screen lies a gray star, which slowly expands, before the edges of the screen start to glow a dark and light gray gradient, revealing , aft"
   },
+  "Artifact": {
+    "rarity": 500000,
+    "native_rarity": 250000,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "None",
+      1
+    ],
+    "native_biome": [
+      "LOST FOREST",
+      2
+    ],
+    "limited": false,
+    "obtainment": "Native to LOST FOREST (1/250,000)",
+    "rarity_name": "Legendary",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ArtifactCollection.gif",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native"
+  },
+  "Veylune": {
+    "rarity": 550000,
+    "native_rarity": 277500,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "None",
+      1
+    ],
+    "native_biome": [
+      "LOST FOREST",
+      2
+    ],
+    "limited": false,
+    "obtainment": "Native to LOST FOREST (1/277,500)",
+    "rarity_name": "Legendary",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Veylune_collect.gif",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native"
+  },
   "Warlock": {
     "rarity": 666000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2146,13 +2420,15 @@
   },
   "Undead_Devil": {
     "rarity": 666666,
+    "native_rarity": 111111,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      111111
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/111,111)",
@@ -2161,7 +2437,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DevilReworkedCollection.gif",
-    "native_rarity": 111111,
     "native_from_biomes": [
       "HELL"
     ],
@@ -2176,22 +2451,28 @@
   },
   "Kyawthuite": {
     "rarity": 850000,
+    "native_rarity": 425000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "THE RADIANT FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to THE RADIANT FOREST (1/425,000)",
     "rarity_name": "Legendary",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Kyawthuite_Collection2.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "THE RADIANT FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/8/8f/Opening.mp4/revision/latest?cb=20240501200444",
     "video_file": "Opening.mp4",
     "video_kind": "opening",
@@ -2201,6 +2482,8 @@
   },
   "★★★": {
     "rarity": 10000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "DREAMSPACE",
       1
@@ -2230,6 +2513,8 @@
   },
   "Arcane": {
     "rarity": 1000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2255,13 +2540,15 @@
   },
   "Starlight_Kunzite": {
     "rarity": 1000000,
+    "native_rarity": 200000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      200000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/200,000)",
@@ -2270,7 +2557,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/StarlightKunColl.gif",
-    "native_rarity": 200000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -2287,6 +2573,8 @@
   },
   "Gothic": {
     "rarity": 1000001,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -2312,6 +2600,8 @@
   },
   "Magnetic_Reverse_Polarity": {
     "rarity": 1024000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2339,13 +2629,15 @@
   },
   "Undefined": {
     "rarity": 1111000,
+    "native_rarity": 1111,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "NULL",
-      1111
+      1000
     ],
     "limited": false,
     "obtainment": "Native to NULL (1/1,111)",
@@ -2354,7 +2646,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Undefined_Collection1.gif",
-    "native_rarity": 1111,
     "native_from_biomes": [
       "NULL"
     ],
@@ -2367,6 +2658,8 @@
   },
   "Rage_Brawler": {
     "rarity": 1280000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2394,13 +2687,15 @@
   },
   "Symbiosis": {
     "rarity": 1331201,
+    "native_rarity": 266240,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CORRUPTION",
-      266240
+      5
     ],
     "limited": false,
     "obtainment": "Native to CORRUPTION (1/266,240)",
@@ -2409,7 +2704,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SymbosisCollection.gif",
-    "native_rarity": 266240,
     "native_from_biomes": [
       "CORRUPTION"
     ],
@@ -2424,13 +2718,15 @@
   },
   "Astral": {
     "rarity": 1336000,
+    "native_rarity": 267200,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      267200
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/267,200)",
@@ -2439,7 +2735,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Astral_Era9.gif",
-    "native_rarity": 267200,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -2454,6 +2749,8 @@
   },
   "Cosmos": {
     "rarity": 1520000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2477,6 +2774,8 @@
   },
   "Obsidian": {
     "rarity": 1750000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2502,6 +2801,8 @@
   },
   "Archmage": {
     "rarity": 1766000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2527,13 +2828,15 @@
   },
   "Player_Respawn": {
     "rarity": 1999999,
+    "native_rarity": 999999,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      999999
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/999,999)",
@@ -2542,7 +2845,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Player_respawn_collection.gif",
-    "native_rarity": 999999,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -2559,6 +2861,8 @@
   },
   "Gravitational": {
     "rarity": 2000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2584,6 +2888,8 @@
   },
   "Bounded_Unbound": {
     "rarity": 2000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2611,22 +2917,28 @@
   },
   "Flutter_Buggify": {
     "rarity": 2000000,
+    "native_rarity": 1000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/1,000,000)",
     "rarity_name": "Mythic",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BuggifyCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/c/ce/BugCutscene.mp4/revision/latest?cb=20260301041557",
     "video_file": "BugCutscene.mp4",
     "video_kind": "opening",
@@ -2638,13 +2950,15 @@
   },
   "Flowed": {
     "rarity": 2121121,
+    "native_rarity": 2121,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "NULL",
-      2121
+      1000
     ],
     "limited": false,
     "obtainment": "Native to NULL (1/2,121)",
@@ -2653,7 +2967,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FlowedColl.gif",
-    "native_rarity": 2121,
     "native_from_biomes": [
       "NULL"
     ],
@@ -2668,13 +2981,15 @@
   },
   "Virtual": {
     "rarity": 2500000,
+    "native_rarity": 1250000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      1250000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/1,250,000)",
@@ -2683,7 +2998,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/VirtualReworkCollection.gif",
-    "native_rarity": 1250000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -2698,6 +3012,8 @@
   },
   "Vega": {
     "rarity": 2580000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -2725,13 +3041,15 @@
   },
   "Parasite": {
     "rarity": 3000000,
+    "native_rarity": 600000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CORRUPTION",
-      600000
+      5
     ],
     "limited": false,
     "obtainment": "Native to CORRUPTION (1/600,000)",
@@ -2740,7 +3058,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ParasiteCollection.gif",
-    "native_rarity": 600000,
     "native_from_biomes": [
       "CORRUPTION"
     ],
@@ -2753,13 +3070,15 @@
   },
   "Orion": {
     "rarity": 3000000,
+    "native_rarity": 600000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      600000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/600,000)",
@@ -2768,7 +3087,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/OrionCollection.gif",
-    "native_rarity": 600000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -2783,6 +3101,8 @@
   },
   "Apatite": {
     "rarity": 3133133,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2808,6 +3128,8 @@
   },
   "Savior": {
     "rarity": 3200000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2833,13 +3155,15 @@
   },
   "Shiftlock": {
     "rarity": 3325000,
+    "native_rarity": 3325,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "NULL",
-      3325
+      1000
     ],
     "limited": false,
     "obtainment": "Native to NULL (1/3,325)",
@@ -2848,7 +3172,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ShiftlockCollection.gif",
-    "native_rarity": 3325,
     "native_from_biomes": [
       "NULL"
     ],
@@ -2863,13 +3186,15 @@
   },
   "Evanescent": {
     "rarity": 3360000,
+    "native_rarity": 840000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      840000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/840,000)",
@@ -2878,7 +3203,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/EvanescentCollection.gif",
-    "native_rarity": 840000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -2893,6 +3217,8 @@
   },
   "Cosmos_Alice": {
     "rarity": 3500000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2918,6 +3244,8 @@
   },
   "Crystallized_Bejeweled": {
     "rarity": 3600000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2945,6 +3273,8 @@
   },
   "Aquatic_Flame": {
     "rarity": 4000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -2970,13 +3300,15 @@
   },
   "Poseidon": {
     "rarity": 4000000,
+    "native_rarity": 1000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      1000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/1,000,000)",
@@ -2985,7 +3317,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/PoseidonCollectionNew.gif",
-    "native_rarity": 1000000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -3000,13 +3331,15 @@
   },
   "Metabytes": {
     "rarity": 4000000,
+    "native_rarity": 2000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      2000000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/2,000,000)",
@@ -3015,7 +3348,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Metabytes.gif",
-    "native_rarity": 2000000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -3030,6 +3362,8 @@
   },
   "Wraith": {
     "rarity": 4100000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3055,13 +3389,15 @@
   },
   "Zeus": {
     "rarity": 4500000,
+    "native_rarity": 900000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      900000
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/900,000)",
@@ -3070,7 +3406,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ZeusNewC.gif",
-    "native_rarity": 900000,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -3085,13 +3420,15 @@
   },
   "Solar_Solstice": {
     "rarity": 5000000,
+    "native_rarity": 500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      500000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/500,000)",
@@ -3100,7 +3437,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SolsticeCollection.gif",
-    "native_rarity": 500000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -3115,13 +3451,15 @@
   },
   "Galaxy": {
     "rarity": 5000000,
+    "native_rarity": 1000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SINGULARITY",
-      1000000
+      5
     ],
     "limited": false,
     "obtainment": "Native to SINGULARITY (1/1,000,000)",
@@ -3130,7 +3468,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Galaxy_Aura.gif",
-    "native_rarity": 1000000,
     "native_from_biomes": [
       "SINGULARITY"
     ],
@@ -3145,13 +3482,15 @@
   },
   "Lunar_Full_Moon": {
     "rarity": 5000000,
+    "native_rarity": 500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      500000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/500,000)",
@@ -3160,7 +3499,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/LunarFMReworkCollection.gif",
-    "native_rarity": 500000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -3173,8 +3511,35 @@
     "_fandom_title": "Lunar",
     "fandom_page": "https://sol-rng.fandom.com/wiki/Lunar_:_Full_Moon"
   },
+  "Moonchild": {
+    "rarity": 5000000,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (cannot be rolled through breakthrough)",
+    "rarity_name": "Mythic",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Placeholder.png",
+    "exclusive_biomes": [
+      "THE RADIANT FOREST"
+    ],
+    "is_exclusive": true,
+    "obtainment_type": "exclusive"
+  },
   "Anima": {
     "rarity": 5730000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -3198,13 +3563,15 @@
   },
   "Twilight": {
     "rarity": 6000000,
+    "native_rarity": 600000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      600000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/600,000)",
@@ -3213,7 +3580,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Twilight_Collection.gif",
-    "native_rarity": 600000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -3228,6 +3594,8 @@
   },
   "Astronaut": {
     "rarity": 6117186,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -3255,6 +3623,8 @@
   },
   "Origin": {
     "rarity": 6500000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3280,13 +3650,15 @@
   },
   "Hades": {
     "rarity": 6666666,
+    "native_rarity": 1111111,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      1111111
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/1,111,111)",
@@ -3295,7 +3667,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Waitthisishadesnewcollection.gif",
-    "native_rarity": 1111111,
     "native_from_biomes": [
       "HELL"
     ],
@@ -3308,6 +3679,8 @@
   },
   "Celestial_Divine": {
     "rarity": 7000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3335,13 +3708,15 @@
   },
   "Anubis": {
     "rarity": 7200000,
+    "native_rarity": 1800000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SAND STORM",
-      1800000
+      4
     ],
     "limited": false,
     "obtainment": "Native to SAND STORM (1/1,800,000)",
@@ -3350,7 +3725,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AnubisNewCollection.gif",
-    "native_rarity": 1800000,
     "native_from_biomes": [
       "SAND STORM"
     ],
@@ -3365,6 +3739,8 @@
   },
   "Refraction": {
     "rarity": 7242000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3390,13 +3766,15 @@
   },
   "Faith": {
     "rarity": 7250000,
+    "native_rarity": 1450000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      1450000
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/1,450,000)",
@@ -3405,7 +3783,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Faith.gif",
-    "native_rarity": 1450000,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -3420,6 +3797,8 @@
   },
   "Hyper-Volt": {
     "rarity": 7500000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3445,6 +3824,8 @@
   },
   "Velocity": {
     "rarity": 7630000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3470,6 +3851,8 @@
   },
   "Nautilus_Lost": {
     "rarity": 7700000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3497,13 +3880,15 @@
   },
   "Divinus_Guardian": {
     "rarity": 7777777,
+    "native_rarity": 1555555,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      1555555
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/1,555,555)",
@@ -3512,7 +3897,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/GuardianCollection.gif",
-    "native_rarity": 1555555,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -3529,13 +3913,15 @@
   },
   "Outlaw": {
     "rarity": 8000000,
+    "native_rarity": 2000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SAND STORM",
-      2000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to SAND STORM (1/2,000,000)",
@@ -3544,7 +3930,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Outlaw-Collection.gif",
-    "native_rarity": 2000000,
     "native_from_biomes": [
       "SAND STORM"
     ],
@@ -3559,6 +3944,8 @@
   },
   "Spectre_Requiem": {
     "rarity": 8222000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3586,6 +3973,8 @@
   },
   "Soultorn": {
     "rarity": 8333333,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3611,6 +4000,8 @@
   },
   "Harnessed": {
     "rarity": 8500000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3634,13 +4025,15 @@
   },
   "Nihility": {
     "rarity": 9000000,
+    "native_rarity": 9000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "NULL",
-      9000
+      1000
     ],
     "limited": false,
     "obtainment": "Native to NULL (1/9,000)",
@@ -3649,7 +4042,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Nihility_collection.gif",
-    "native_rarity": 9000,
     "native_from_biomes": [
       "NULL"
     ],
@@ -3664,6 +4056,8 @@
   },
   "Helios": {
     "rarity": 9000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3678,7 +4072,7 @@
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
-    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/HeliosCollection.gif",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/HeliosNewCollection.gif",
     "obtainment_type": "standard",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/5/58/HeliosOpening.mp4/revision/latest?cb=20250831213233",
     "video_file": "HeliosOpening.mp4",
@@ -3689,13 +4083,15 @@
   },
   "Stargazer": {
     "rarity": 9200000,
+    "native_rarity": 1840000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      1840000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/1,840,000)",
@@ -3704,7 +4100,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Stargazerincollection.gif",
-    "native_rarity": 1840000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -3719,22 +4114,28 @@
   },
   "Jade_Purity": {
     "rarity": 9250000,
+    "native_rarity": 4625000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "THE RADIANT FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to THE RADIANT FOREST (1/4,625,000)",
     "rarity_name": "Mythic",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Jade_purity_collect.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "THE RADIANT FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/c/ce/JadePurityCutscene.mp4/revision/latest?cb=20260704080936",
     "video_file": "JadePurityCutscene.mp4",
     "video_kind": "opening",
@@ -3746,6 +4147,8 @@
   },
   "Amethyst": {
     "rarity": 9333700,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3771,13 +4174,15 @@
   },
   "Starscourge": {
     "rarity": 10000000,
+    "native_rarity": 2000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      2000000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/2,000,000)",
@@ -3786,7 +4191,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/StarscourgeRevampCollection.gif",
-    "native_rarity": 2000000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -3801,13 +4205,15 @@
   },
   "Sharkyn": {
     "rarity": 10000000,
+    "native_rarity": 2500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      2500000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/2,500,000)",
@@ -3816,7 +4222,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SharkynCollection.gif",
-    "native_rarity": 2500000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -3831,6 +4236,8 @@
   },
   "Guardian": {
     "rarity": 10000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3856,6 +4263,8 @@
   },
   "Empty": {
     "rarity": 11111111,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "NULL OR THE LIMBO",
       1
@@ -3885,6 +4294,8 @@
   },
   "Melodic": {
     "rarity": 11300000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3910,13 +4321,15 @@
   },
   "Sailor": {
     "rarity": 12000000,
+    "native_rarity": 3000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      3000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/3,000,000)",
@@ -3925,7 +4338,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SailorCollection.gif",
-    "native_rarity": 3000000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -3940,6 +4352,8 @@
   },
   "Graffiti": {
     "rarity": 12000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -3965,6 +4379,8 @@
   },
   "Imaginary": {
     "rarity": 12200200,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -3990,13 +4406,15 @@
   },
   "Stormal_Hurricane": {
     "rarity": 13500000,
+    "native_rarity": 4500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "WINDY",
-      4500000
+      3
     ],
     "limited": false,
     "obtainment": "Native to WINDY (1/4,500,000)",
@@ -4005,7 +4423,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Hurricane_Collection_Eon_1_reupload.gif",
-    "native_rarity": 4500000,
     "native_from_biomes": [
       "WINDY"
     ],
@@ -4022,13 +4439,15 @@
   },
   "Sirius": {
     "rarity": 14000000,
+    "native_rarity": 2800000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      2800000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/2,800,000)",
@@ -4037,7 +4456,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Siriusincollection.gif",
-    "native_rarity": 2800000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -4052,6 +4470,8 @@
   },
   "Arcane_Legacy": {
     "rarity": 15000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4079,13 +4499,15 @@
   },
   "Icarus": {
     "rarity": 15660000,
+    "native_rarity": 3132000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      3132000
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/3,132,000)",
@@ -4094,7 +4516,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/IcarusCollection.gif",
-    "native_rarity": 3132000,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -4109,13 +4530,15 @@
   },
   "Lullaby": {
     "rarity": 17000000,
+    "native_rarity": 1700000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      1700000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/1,700,000)",
@@ -4124,7 +4547,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/LullabyCollectionNew.gif",
-    "native_rarity": 1700000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -4139,6 +4561,8 @@
   },
   "Chromatic": {
     "rarity": 20000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4164,6 +4588,8 @@
   },
   "Plasma": {
     "rarity": 20600000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4189,13 +4615,15 @@
   },
   "Oculus": {
     "rarity": 23233340,
+    "native_rarity": 4666668,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      4666668
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/4,666,668)",
@@ -4204,7 +4632,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Oculus_collect.gif",
-    "native_rarity": 4666668,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -4217,13 +4644,15 @@
   },
   "Aviator": {
     "rarity": 24000000,
+    "native_rarity": 8000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "WINDY",
-      8000000
+      3
     ],
     "limited": false,
     "obtainment": "Native to WINDY (1/8,000,000)",
@@ -4232,7 +4661,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Aviator_Collection.gif",
-    "native_rarity": 8000000,
     "native_from_biomes": [
       "WINDY"
     ],
@@ -4247,6 +4675,8 @@
   },
   "Ruby_Brimstone": {
     "rarity": 24060000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4274,6 +4704,8 @@
   },
   "Apotheosis": {
     "rarity": 24691356,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4299,6 +4731,8 @@
   },
   "Centurion": {
     "rarity": 25000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -4328,13 +4762,15 @@
   },
   "Blizzard": {
     "rarity": 27315000,
+    "native_rarity": 9105000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      9105000
+      3
     ],
     "limited": false,
     "obtainment": "Native to SNOWY (1/9,105,000)",
@@ -4343,7 +4779,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BlizzardCollection.gif",
-    "native_rarity": 9105000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -4358,6 +4793,8 @@
   },
   "Arcane_Dark": {
     "rarity": 30000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4385,22 +4822,28 @@
   },
   "Flora_Florest": {
     "rarity": 32800000,
+    "native_rarity": 16400000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/16,400,000)",
     "rarity_name": "Exalted",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FloraFlorest_collection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/f/fb/Florest_CUTSCENE.mp4/revision/latest?cb=20260117094136",
     "video_file": "Florest CUTSCENE.mp4",
     "video_kind": "opening",
@@ -4412,6 +4855,8 @@
   },
   "Ethereal": {
     "rarity": 35000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4437,13 +4882,15 @@
   },
   "Virtual_Fatal_Error": {
     "rarity": 40413000,
+    "native_rarity": 20206500,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      20206500
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/20,206,500)",
@@ -4452,7 +4899,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FatalErrorReowrkColl.gif",
-    "native_rarity": 20206500,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -4469,6 +4915,8 @@
   },
   "Juxtaposition": {
     "rarity": 40440400,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -4494,6 +4942,8 @@
   },
   "Overseer": {
     "rarity": 45000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4519,6 +4969,8 @@
   },
   "Exotic_Apex": {
     "rarity": 49999500,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4546,13 +4998,15 @@
   },
   "Matrix": {
     "rarity": 50000000,
+    "native_rarity": 25000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      25000000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/25,000,000)",
@@ -4561,7 +5015,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MatrixCollectionEon1.gif",
-    "native_rarity": 25000000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -4576,22 +5029,28 @@
   },
   "Runic": {
     "rarity": 50000000,
+    "native_rarity": 25000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/25,000,000)",
     "rarity_name": "Exalted",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RunicCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Roblox-2025-06-15T16_10_36.618Z.mp4",
     "video_file": "Roblox-2025-06-15T16 10 36.618Z.mp4",
     "video_kind": "opening",
@@ -4599,8 +5058,35 @@
     "music_file": "Spade - Lament Of Wings.mp3",
     "cutscene_note": "=== Opening Cutscene === A dark green star appears, similar to , which slowly spins throughout the cutscene. Eventually, the star slowly expands and the edges turn green, revealing ."
   },
+  "Cor_Lunae": {
+    "rarity": 50000000,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (cannot be rolled through breakthrough)",
+    "rarity_name": "Exalted",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Placeholder.png",
+    "exclusive_biomes": [
+      "THE RADIANT FOREST"
+    ],
+    "is_exclusive": true,
+    "obtainment_type": "exclusive"
+  },
   "Sentinel": {
     "rarity": 60000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4626,13 +5112,15 @@
   },
   "Twilight_Iridescent_Memory": {
     "rarity": 60000000,
+    "native_rarity": 6000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      6000000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/6,000,000)",
@@ -4641,7 +5129,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Twilight_-_Iridescent_Memory_Collection.gif",
-    "native_rarity": 6000000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -4658,13 +5145,15 @@
   },
   "Antivirus": {
     "rarity": 62500000,
+    "native_rarity": 31250000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      31250000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/31,250,000)",
@@ -4673,7 +5162,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AntivirusCollection.gif",
-    "native_rarity": 31250000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -4688,13 +5176,15 @@
   },
   "Dominion": {
     "rarity": 70000000,
+    "native_rarity": 14000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      14000000
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/14,000,000)",
@@ -4703,7 +5193,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DominionColl.gif",
-    "native_rarity": 14000000,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -4718,13 +5207,15 @@
   },
   "Starborn": {
     "rarity": 72000000,
+    "native_rarity": 14400000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      14400000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/14,400,000)",
@@ -4733,7 +5224,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Starborn_collection.gif",
-    "native_rarity": 14400000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -4748,13 +5238,15 @@
   },
   "Melodic_Serenade": {
     "rarity": 77000000,
+    "native_rarity": 7700000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      7700000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/7,700,000)",
@@ -4763,7 +5255,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MelodicSerenadeCollection.gif",
-    "native_rarity": 7700000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -4780,13 +5271,15 @@
   },
   "Sailor_Flying_Dutchman": {
     "rarity": 80000000,
+    "native_rarity": 20000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      20000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/20,000,000)",
@@ -4795,7 +5288,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DutchmanCollectionEon1.gif",
-    "native_rarity": 20000000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -4812,6 +5304,8 @@
   },
   "Carriage": {
     "rarity": 80000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4837,13 +5331,15 @@
   },
   "Aquaria": {
     "rarity": 80000000,
+    "native_rarity": 20000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      20000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/20,000,000)",
@@ -4852,7 +5348,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Aquaria_collection.gif",
-    "native_rarity": 20000000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -4867,13 +5362,15 @@
   },
   "Virtual_Full_Control": {
     "rarity": 80000000,
+    "native_rarity": 40000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      40000000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/40,000,000)",
@@ -4882,7 +5379,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/VirtualFullControl-Collection.gif",
-    "native_rarity": 40000000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -4899,13 +5395,15 @@
   },
   "Virtual_Ultimate": {
     "rarity": 80000000,
+    "native_rarity": 40000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      40000000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/40,000,000)",
@@ -4914,7 +5412,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Virtual_ultimate_collect.gif",
-    "native_rarity": 40000000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -4923,6 +5420,8 @@
   },
   "Harnessed_Elements": {
     "rarity": 85000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -4948,13 +5447,15 @@
   },
   "Hellbound": {
     "rarity": 85000000,
+    "native_rarity": 14166666,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      14166666
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/14,166,666)",
@@ -4963,7 +5464,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Hellbound_collect.gif",
-    "native_rarity": 14166666,
     "native_from_biomes": [
       "HELL"
     ],
@@ -4978,22 +5478,28 @@
   },
   "Runic_Wilt": {
     "rarity": 87388744,
+    "native_rarity": 43694372,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/43,694,372)",
     "rarity_name": "Exalted",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RunicWiltColl.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e5/RunicWiltCutscene.mp4/revision/latest?cb=20260627103032",
     "video_file": "RunicWiltCutscene.mp4",
     "video_kind": "opening",
@@ -5005,13 +5511,15 @@
   },
   "Virtual_WorldWide": {
     "rarity": 87500000,
+    "native_rarity": 43750000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      43750000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/43,750,000)",
@@ -5020,7 +5528,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WorldWide_Collection.gif",
-    "native_rarity": 43750000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -5035,6 +5542,8 @@
   },
   "Atomic_Nucleus": {
     "rarity": 92118000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5062,6 +5571,8 @@
   },
   "Quartz_Rose": {
     "rarity": 97500000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5089,6 +5600,8 @@
   },
   "Chromatic_Genesis": {
     "rarity": 99999999,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5116,13 +5629,15 @@
   },
   "Starscourge_Radiant": {
     "rarity": 100000000,
+    "native_rarity": 20000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      20000000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/20,000,000)",
@@ -5131,7 +5646,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Radiant_rework.gif",
-    "native_rarity": 20000000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -5148,6 +5662,8 @@
   },
   "Spectraflow": {
     "rarity": 100000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5173,22 +5689,28 @@
   },
   "Lily": {
     "rarity": 112000000,
+    "native_rarity": 56000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/56,000,000)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/LilyCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bb/LilyCutscene.mp4/revision/latest?cb=20260228100529",
     "video_file": "LilyCutscene.mp4",
     "video_kind": "opening",
@@ -5198,13 +5720,15 @@
   },
   "Sharkyn_HammerHead": {
     "rarity": 120000000,
+    "native_rarity": 30000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      30000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/30,000,000)",
@@ -5213,7 +5737,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Hammerhead_collect.gif",
-    "native_rarity": 30000000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -5230,6 +5753,8 @@
   },
   "Overture": {
     "rarity": 150000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5255,6 +5780,8 @@
   },
   "Bounded_Aichmalotos": {
     "rarity": 170000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5282,6 +5809,8 @@
   },
   "Symphony": {
     "rarity": 175000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5307,13 +5836,15 @@
   },
   "Felled": {
     "rarity": 180000000,
+    "native_rarity": 30000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      30000000
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/30,000,000)",
@@ -5322,7 +5853,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FelledColl.gif",
-    "native_rarity": 30000000,
     "native_from_biomes": [
       "HELL"
     ],
@@ -5337,13 +5867,15 @@
   },
   "Impeached": {
     "rarity": 200000000,
+    "native_rarity": 40000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CORRUPTION",
-      40000000
+      5
     ],
     "limited": false,
     "obtainment": "Native to CORRUPTION (1/40,000,000)",
@@ -5352,7 +5884,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Impeached_Collectiongifv2.gif",
-    "native_rarity": 40000000,
     "native_from_biomes": [
       "CORRUPTION"
     ],
@@ -5367,6 +5898,8 @@
   },
   "Raven_Plague": {
     "rarity": 200000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -5392,13 +5925,15 @@
   },
   "Lumenpool": {
     "rarity": 220000000,
+    "native_rarity": 55000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      55000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/55,000,000)",
@@ -5407,7 +5942,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/LumenpoolCollection.gif",
-    "native_rarity": 55000000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -5422,6 +5956,8 @@
   },
   "Hyper-Volt_Ever-Storm": {
     "rarity": 225000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5449,13 +5985,15 @@
   },
   "Virtual_Memory": {
     "rarity": 232232232,
+    "native_rarity": 116116116,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      116116116
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/116,116,116)",
@@ -5464,7 +6002,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Virtual_memory_collect.gif",
-    "native_rarity": 116116116,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -5479,13 +6016,15 @@
   },
   "Astral_Zodiac": {
     "rarity": 267200000,
+    "native_rarity": 53400000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      53400000
+      5
     ],
     "limited": false,
     "obtainment": "Native to STARFALL (1/53,400,000)",
@@ -5494,7 +6033,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Zodiacollection.gif",
-    "native_rarity": 53400000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -5511,13 +6049,15 @@
   },
   "Prophecy": {
     "rarity": 275649430,
+    "native_rarity": 55129886,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      55129886
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/55,129,886)",
@@ -5526,7 +6066,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ProphecyColl.gif",
-    "native_rarity": 55129886,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -5541,6 +6080,8 @@
   },
   "Exotic_Void": {
     "rarity": 299999999,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5568,6 +6109,8 @@
   },
   "Overture_History": {
     "rarity": 300000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5595,13 +6138,15 @@
   },
   "Bloodlust": {
     "rarity": 300000000,
+    "native_rarity": 50000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      50000000
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/50,000,000)",
@@ -5610,7 +6155,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Bloodlustnew.gif",
-    "native_rarity": 50000000,
     "native_from_biomes": [
       "HELL"
     ],
@@ -5625,13 +6169,15 @@
   },
   "Maelstrom": {
     "rarity": 309999999,
+    "native_rarity": 103333333,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "WINDY",
-      103333333
+      3
     ],
     "limited": false,
     "obtainment": "Native to WINDY (1/103,333,333)",
@@ -5640,7 +6186,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MaelstromCollection.gif",
-    "native_rarity": 103333333,
     "native_from_biomes": [
       "WINDY"
     ],
@@ -5655,13 +6200,15 @@
   },
   "Dreamer": {
     "rarity": 315000000,
+    "native_rarity": 31500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      31500000
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/31,500,000)",
@@ -5670,7 +6217,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DreamerCollection.gif",
-    "native_rarity": 31500000,
     "native_from_biomes": [
       "TIME"
     ],
@@ -5685,22 +6231,28 @@
   },
   "Perpetual": {
     "rarity": 315000000,
+    "native_rarity": 157500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/157,500,000)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/PerpetualCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/perpetualcutscene.mp4",
     "video_file": "perpetualcutscene.mp4",
     "video_kind": "opening",
@@ -5710,6 +6262,8 @@
   },
   "Lotusfall": {
     "rarity": 320000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5735,13 +6289,15 @@
   },
   "Cytokinesis": {
     "rarity": 330400472,
+    "native_rarity": 165200236,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      165200236
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/165,200,236)",
@@ -5750,7 +6306,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Cytokinesis_collect.gif",
-    "native_rarity": 165200236,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -5765,6 +6320,8 @@
   },
   "Jazz_Orchestra": {
     "rarity": 336870912,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5792,13 +6349,15 @@
   },
   "Archangel": {
     "rarity": 350000000,
+    "native_rarity": 70000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      70000000
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/70,000,000)",
@@ -5807,7 +6366,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ArchangelNewCollection.gif",
-    "native_rarity": 70000000,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -5822,13 +6380,15 @@
   },
   "Atlas": {
     "rarity": 360000000,
+    "native_rarity": 90000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SAND STORM",
-      90000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to SAND STORM (1/90,000,000)",
@@ -5837,7 +6397,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Atlas_collection.gif",
-    "native_rarity": 90000000,
     "native_from_biomes": [
       "SAND STORM"
     ],
@@ -5852,22 +6411,28 @@
   },
   "Flora_Evergreen": {
     "rarity": 370073730,
+    "native_rarity": 185036865,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/185,036,865)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/EverGreenNewColl.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Evergreen_%282%29.mp4",
     "video_file": "Evergreen_(2).mp4",
     "video_kind": "opening",
@@ -5879,13 +6444,15 @@
   },
   "Chillsear": {
     "rarity": 375000000,
+    "native_rarity": 125000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      125000000
+      3
     ],
     "limited": false,
     "obtainment": "Native to SNOWY (1/125,000,000)",
@@ -5894,7 +6461,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ChillsearColl.gif",
-    "native_rarity": 125000000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -5909,6 +6475,8 @@
   },
   "Celestial_Eclipse": {
     "rarity": 384400000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -5936,13 +6504,15 @@
   },
   "Abyssal_Hunter": {
     "rarity": 400000000,
+    "native_rarity": 100000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      100000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/100,000,000)",
@@ -5951,7 +6521,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Abyssal_Hunter_Max_Graphics.gif",
-    "native_rarity": 100000000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -5966,13 +6535,15 @@
   },
   "Twilight_Withering_Grace": {
     "rarity": 422656000,
+    "native_rarity": 42265600,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "TIME",
-      42265600
+      10
     ],
     "limited": false,
     "obtainment": "Native to TIME (1/42,265,600)",
@@ -5981,7 +6552,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WitheringGraceCollection.gif",
-    "native_rarity": 42265600,
     "native_from_biomes": [
       "TIME"
     ],
@@ -5998,13 +6568,15 @@
   },
   "Gargantua": {
     "rarity": 430000000,
+    "native_rarity": 86000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SINGULARITY",
-      86000000
+      5
     ],
     "limited": false,
     "obtainment": "Native to SINGULARITY (1/86,000,000)",
@@ -6013,7 +6585,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Collection_Gargantuarework.gif",
-    "native_rarity": 86000000,
     "native_from_biomes": [
       "SINGULARITY"
     ],
@@ -6028,13 +6599,15 @@
   },
   "Apostolos": {
     "rarity": 444000000,
+    "native_rarity": 222000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "THE CITADEL OF ORDERS",
-      222000000
+      2
     ],
     "limited": false,
     "obtainment": "Native to THE CITADEL OF ORDERS (1/222,000,000)",
@@ -6043,7 +6616,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/BetterApostolosCollection.gif",
-    "native_rarity": 222000000,
     "native_from_biomes": [
       "THE CITADEL OF ORDERS"
     ],
@@ -6058,6 +6630,8 @@
   },
   "Unknown": {
     "rarity": 444444444,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -6083,22 +6657,28 @@
   },
   "Kyawthuite_Remembrance": {
     "rarity": 450000000,
+    "native_rarity": 225000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "THE RADIANT FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to THE RADIANT FOREST (1/225,000,000)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Remembrancecollection2.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "THE RADIANT FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/4/45/KyawthuiteRemembraneActualGoodCutscene.mp4/revision/latest?cb=20251028155858",
     "video_file": "KyawthuiteRemembraneActualGoodCutscene.mp4",
     "video_kind": "opening",
@@ -6110,13 +6690,15 @@
   },
   "Volcanic": {
     "rarity": 480000000,
+    "native_rarity": 80000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      80000000
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/80,000,000)",
@@ -6125,31 +6707,61 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/VolcanicCollection.gif",
-    "native_rarity": 80000000,
     "native_from_biomes": [
       "HELL"
     ],
     "is_exclusive": false,
     "obtainment_type": "native"
   },
-  "Ruins": {
-    "rarity": 500000000,
+  "Hasuen": {
+    "rarity": 485000000,
+    "native_rarity": 242500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
+      "LOST FOREST",
+      2
+    ],
+    "limited": false,
+    "obtainment": "Native to LOST FOREST (1/242,500,000)",
+    "rarity_name": "Glorious",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Hausen_Collection.gif",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native"
+  },
+  "Ruins": {
+    "rarity": 500000000,
+    "native_rarity": 250000000,
+    "luck_exempt": false,
+    "exclusive_biome": [
       "None",
       1
     ],
+    "native_biome": [
+      "LOST FOREST",
+      2
+    ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/250,000,000)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RuinsReworkCollection.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Ruins_cutscene.mp4",
     "video_file": "Ruins_cutscene.mp4",
     "video_kind": "opening",
@@ -6159,13 +6771,15 @@
   },
   "Matrix_Overdrive": {
     "rarity": 503000000,
+    "native_rarity": 251500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      251500000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/251,500,000)",
@@ -6174,7 +6788,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MatrixOverdriveCollect1on.gif",
-    "native_rarity": 251500000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -6191,13 +6804,15 @@
   },
   "Sailor_Admiral": {
     "rarity": 540000000,
+    "native_rarity": 135000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      135000000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/135,000,000)",
@@ -6206,7 +6821,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AdmiralCollection.gif",
-    "native_rarity": 135000000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -6223,6 +6837,8 @@
   },
   "Elude": {
     "rarity": 555555555,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -6248,6 +6864,8 @@
   },
   "Sophyra": {
     "rarity": 570000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6273,13 +6891,15 @@
   },
   "Matrix_Reality": {
     "rarity": 601020102,
+    "native_rarity": 300510051,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      300510051
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/300,510,051)",
@@ -6288,7 +6908,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Matrix_but_real.gif",
-    "native_rarity": 300510051,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -6305,6 +6924,8 @@
   },
   "Sloth": {
     "rarity": 650000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6330,6 +6951,8 @@
   },
   "Prologue": {
     "rarity": 666616111,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -6355,13 +6978,15 @@
   },
   "Pythios": {
     "rarity": 666666666,
+    "native_rarity": 111111111,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HELL",
-      111111111
+      6
     ],
     "limited": false,
     "obtainment": "Native to HELL (1/111,111,111)",
@@ -6370,7 +6995,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Pythios_collection.gif",
-    "native_rarity": 111111111,
     "native_from_biomes": [
       "HELL"
     ],
@@ -6385,6 +7009,8 @@
   },
   "Sovereign": {
     "rarity": 750000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6410,22 +7036,28 @@
   },
   "Ruins_Withered": {
     "rarity": 800000000,
+    "native_rarity": 400000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "LOST FOREST",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to LOST FOREST (1/400,000,000)",
     "rarity_name": "Glorious",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Witheredcollectionnew.gif",
-    "obtainment_type": "standard",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d9/WitheredCutsene.mp4/revision/latest?cb=20250810205029",
     "video_file": "WitheredCutsene.mp4",
     "video_kind": "opening",
@@ -6437,13 +7069,15 @@
   },
   "Aegis": {
     "rarity": 825000000,
+    "native_rarity": 412500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      412500000
+      2
     ],
     "limited": false,
     "obtainment": "Native to CYBERSPACE (1/412,500,000)",
@@ -6452,7 +7086,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AegisCollection.gif",
-    "native_rarity": 412500000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -6467,13 +7100,15 @@
   },
   "Eisveil": {
     "rarity": 830000000,
+    "native_rarity": 276666666,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      276666666
+      3
     ],
     "limited": false,
     "obtainment": "Native to SNOWY (1/276,666,666)",
@@ -6482,7 +7117,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/EisveilCollection.gif",
-    "native_rarity": 276666666,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -6497,6 +7131,8 @@
   },
   "Dreamscape": {
     "rarity": 850000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -6522,13 +7158,15 @@
   },
   "Poseidon_Atlantis": {
     "rarity": 850000000,
+    "native_rarity": 212500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      212500000
+      4
     ],
     "limited": false,
     "obtainment": "Native to RAINY (1/212,500,000)",
@@ -6537,7 +7175,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AtlantisCollection.gif",
-    "native_rarity": 212500000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -6554,13 +7191,15 @@
   },
   "Ascendant": {
     "rarity": 935000000,
+    "native_rarity": 187000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      187000000
+      5
     ],
     "limited": false,
     "obtainment": "Native to HEAVEN (1/187,000,000)",
@@ -6569,7 +7208,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AscendantColl.gif",
-    "native_rarity": 187000000,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -6584,6 +7222,8 @@
   },
   "Nyctophobia": {
     "rarity": 1011111010,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE LIMBO",
       1
@@ -6609,25 +7249,29 @@
   },
   "PixelationStatic": {
     "rarity": 1073741824,
+    "native_rarity": 536870912,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "CYBERSPACE",
+      2
     ],
     "limited": false,
-    "obtainment": "Any biome (standard roll)",
+    "obtainment": "Native to CYBERSPACE (1/536,870,912)",
     "rarity_name": "Transcendent",
     "description": "",
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Newpixelationcollection.gif",
-    "obtainment_type": "standard"
+    "obtainment_type": "native"
   },
   "Luminosity": {
     "rarity": 1200000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6653,6 +7297,8 @@
   },
   "Breakthrough": {
     "rarity": 1999999999,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6678,6 +7324,8 @@
   },
   "Equinox": {
     "rarity": 2500000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6701,8 +7349,35 @@
     "music_file": "KoraiiLayersCut.mp3",
     "cutscene_note": "=== Opening Cutscene === 's cutscene starts with the screen having two clear black and white sides that swap on beat. It features a star in the middle that is affected by the black and white sides. There are pulse effects, music bars, and vertical lines that appear with the beat of the music, along with smoke and spark"
   },
+  "Tree_House": {
+    "rarity": 3800000000,
+    "native_rarity": 1900000000,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "None",
+      1
+    ],
+    "native_biome": [
+      "LOST FOREST",
+      2
+    ],
+    "limited": false,
+    "obtainment": "Native to LOST FOREST (1/1,900,000,000)",
+    "rarity_name": "Transcendent",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TreeHouseCollection.gif",
+    "native_from_biomes": [
+      "LOST FOREST"
+    ],
+    "is_exclusive": false,
+    "obtainment_type": "native"
+  },
   "Eclipse": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6726,6 +7401,8 @@
   },
   "Cell_Asteroides": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6748,6 +7425,8 @@
   },
   "Chromatic_Hyper": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6772,6 +7451,8 @@
   },
   "Atlas_A.T.L.A.S.Static": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6792,6 +7473,8 @@
   },
   "Abyssal_Hunter_Awakened": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6819,6 +7502,8 @@
   },
   "Matrix_Steampunk": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6846,6 +7531,8 @@
   },
   "MasterHand": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6871,6 +7558,8 @@
   },
   "Fragments_of_the_Crimson_Moon|紅月の災厄": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -6889,8 +7578,73 @@
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CotcmCollection.gif"
   },
+  "True_Jade": {
+    "rarity": 125000,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (cannot be rolled through breakthrough)",
+    "rarity_name": "Challenged",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TrueJadeCollection.gif",
+    "obtainment_type": "exclusive"
+  },
+  "True_Kyawthuite": {
+    "rarity": 825000,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (cannot be rolled through breakthrough)",
+    "rarity_name": "Challenged",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TrueKyawthuiteCollection.gif",
+    "obtainment_type": "exclusive"
+  },
+  "True_Twilight": {
+    "rarity": 6000000,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (cannot be rolled through breakthrough)",
+    "rarity_name": "Challenged",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TrueTwilightCollection.gif",
+    "obtainment_type": "exclusive"
+  },
   "Glitch": {
     "rarity": 12210110,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GLITCHED",
       1
@@ -6920,6 +7674,8 @@
   },
   "Borealis": {
     "rarity": 13333333,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "DREAMSPACE",
       1
@@ -6949,6 +7705,8 @@
   },
   "Projection": {
     "rarity": 197000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -6978,6 +7736,8 @@
   },
   "Point_Zero": {
     "rarity": 521121900,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -7009,6 +7769,8 @@
   },
   "Leviathan": {
     "rarity": 1730400000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "RAINY OR GLITCHED",
       1
@@ -7038,6 +7800,8 @@
   },
   "Dream_Catcher": {
     "rarity": 2222222222,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "NIGHTTIME",
       1
@@ -7067,6 +7831,8 @@
   },
   "Memory": {
     "rarity": 100,
+    "native_rarity": null,
+    "luck_exempt": true,
     "exclusive_biome": [
       "None",
       1
@@ -7093,6 +7859,8 @@
   },
   "Neferkhaf": {
     "rarity": 1000,
+    "native_rarity": null,
+    "luck_exempt": true,
     "exclusive_biome": [
       "None",
       1
@@ -7119,6 +7887,8 @@
   },
   "Fragments_of_the_Crimson_Moon": {
     "rarity": 1000,
+    "native_rarity": null,
+    "luck_exempt": true,
     "exclusive_biome": [
       "None",
       1
@@ -7143,8 +7913,10 @@
   },
   "Meta": {
     "rarity": 10000,
+    "native_rarity": null,
+    "luck_exempt": true,
     "exclusive_biome": [
-      "CYBERSPACE UNAFFECTED BY LUCK",
+      "CYBERSPACE",
       1
     ],
     "native_biome": [
@@ -7152,7 +7924,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to CYBERSPACE UNAFFECTED BY LUCK (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to CYBERSPACE (cannot be rolled through breakthrough)",
     "rarity_name": "Challenged",
     "description": "",
     "flags": [],
@@ -7172,6 +7944,8 @@
   },
   "Eden": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7196,6 +7970,8 @@
   },
   "Oppression": {
     "rarity": 220000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GLITCHED",
       1
@@ -7225,6 +8001,8 @@
   },
   "Dreammetric": {
     "rarity": 320000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "DREAMSPACE",
       1
@@ -7254,6 +8032,8 @@
   },
   "Astraios": {
     "rarity": 1750000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "SINGULARITY",
       1
@@ -7283,6 +8063,8 @@
   },
   "Hellborn": {
     "rarity": 2644600640,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "HELL OR GLITCHED",
       1
@@ -7306,13 +8088,15 @@
   },
   "Monarch": {
     "rarity": 3000000000,
+    "native_rarity": 3000000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "CORRUPTION OR GLITCHED",
       1
     ],
     "native_biome": [
       "CORRUPTION",
-      3000000000
+      1
     ],
     "limited": false,
     "obtainment": "Native to CORRUPTION (1/3,000,000,000)",
@@ -7321,7 +8105,6 @@
     "flags": [],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MonarchCollection.gif",
-    "native_rarity": 3000000000,
     "native_from_biomes": [
       "CORRUPTION"
     ],
@@ -7336,6 +8119,8 @@
   },
   "Oblivion": {
     "rarity": 2000,
+    "native_rarity": null,
+    "luck_exempt": true,
     "exclusive_biome": [
       "None",
       1
@@ -7362,8 +8147,10 @@
   },
   "Illusionary": {
     "rarity": 10000000,
+    "native_rarity": null,
+    "luck_exempt": true,
     "exclusive_biome": [
-      "CYBERSPACE UNAFFECTED BY LUCK",
+      "CYBERSPACE",
       1
     ],
     "native_biome": [
@@ -7371,7 +8158,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to CYBERSPACE UNAFFECTED BY LUCK (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to CYBERSPACE (cannot be rolled through breakthrough)",
     "rarity_name": "Challenged+",
     "description": "",
     "flags": [],
@@ -7391,6 +8178,8 @@
   },
   "Divinus_Love": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7413,6 +8202,8 @@
   },
   "Flushed_Heart_Eye": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7435,6 +8226,8 @@
   },
   "Celestial_Cupid": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7459,6 +8252,8 @@
   },
   "Blossom": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7484,13 +8279,15 @@
   },
   "Defined": {
     "rarity": 2222000,
+    "native_rarity": 2222,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "NULL",
-      2222
+      1000
     ],
     "limited": true,
     "obtainment": "Limited (1/2,222,000(1/2,222 in Null) (Limited) April Fools 2024)",
@@ -7501,7 +8298,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Defined_Collection.gif",
-    "native_rarity": 2222,
     "native_from_biomes": [
       "NULL"
     ],
@@ -7513,6 +8309,8 @@
   },
   "Kromat1k": {
     "rarity": 40000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7539,6 +8337,8 @@
   },
   "Impeached_i'm_peach": {
     "rarity": 400000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7567,6 +8367,8 @@
   },
   "Watermelon": {
     "rarity": 320000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7593,13 +8395,15 @@
   },
   "StarRider_Starfish": {
     "rarity": 250000,
+    "native_rarity": 25000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      25000
+      10
     ],
     "limited": true,
     "obtainment": "Limited (1/250,000(1/25,000 in Starfall) (Limited) Summer 2024)",
@@ -7610,7 +8414,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Starfish_Rider_Collection.gif",
-    "native_rarity": 25000,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -7624,13 +8427,15 @@
   },
   "Shard_Surfer": {
     "rarity": 225000000,
+    "native_rarity": 75000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      75000000
+      3
     ],
     "limited": true,
     "obtainment": "Limited (1/225,000,000(1/75,000,000 in Snowy) (Limited) Summer 2024)",
@@ -7641,7 +8446,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ShardSurferReworkCollection.gif",
-    "native_rarity": 75000000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -7655,6 +8459,8 @@
   },
   "Surfer": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7677,6 +8483,8 @@
   },
   "Innovator": {
     "rarity": 30000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -7703,6 +8511,8 @@
   },
   "Pump": {
     "rarity": 200000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -7731,6 +8541,8 @@
   },
   "Lunar_Nightfall": {
     "rarity": 3000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -7764,6 +8576,8 @@
   },
   "Vital": {
     "rarity": 6000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -7794,6 +8608,8 @@
   },
   "Moonflower": {
     "rarity": 10000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -7824,6 +8640,8 @@
   },
   "Cryptfire": {
     "rarity": 21000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -7854,6 +8672,8 @@
   },
   "Soul_Hunter": {
     "rarity": 40000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -7884,6 +8704,8 @@
   },
   "Dullahan": {
     "rarity": 72000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -7914,6 +8736,8 @@
   },
   "Nightmare_Sky": {
     "rarity": 190000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -7944,6 +8768,8 @@
   },
   "Harvester": {
     "rarity": 666000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -7974,6 +8800,8 @@
   },
   "Apostolos_Veil": {
     "rarity": 800000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON OR GRAVEYARD",
       1
@@ -8007,13 +8835,15 @@
   },
   "Wonderland": {
     "rarity": 12000000,
+    "native_rarity": 4000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      4000000
+      3
     ],
     "limited": true,
     "obtainment": "Limited (1/12,000,000(1/4,000,000 in Snowy)(Limited) Winter 2025)",
@@ -8024,7 +8854,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WonderlandCollection.gif",
-    "native_rarity": 4000000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -8038,13 +8867,15 @@
   },
   "Santa_Frost": {
     "rarity": 45000000,
+    "native_rarity": 15000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      15000000
+      3
     ],
     "limited": true,
     "obtainment": "Limited (1/45,000,000(1/15,000,000 in Snowy) (Limited) Winter 2025)",
@@ -8055,7 +8886,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FrostCollection.gif",
-    "native_rarity": 15000000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -8069,13 +8899,15 @@
   },
   "Winter_Fantasy": {
     "rarity": 72000000,
+    "native_rarity": 24000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      24000000
+      3
     ],
     "limited": true,
     "obtainment": "Limited (1/72,000,000(1/24,000,000 in Snowy) (Limited) Winter 2025)",
@@ -8086,7 +8918,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Winter_Fantasy(Collection).gif",
-    "native_rarity": 24000000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -8100,13 +8931,15 @@
   },
   "Express": {
     "rarity": 90000000,
+    "native_rarity": 30000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      30000000
+      3
     ],
     "limited": true,
     "obtainment": "Limited (1/90,000,000(1/30,000,000 in Snowy) (Limited) Winter 2025)",
@@ -8117,7 +8950,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ExpressCollectionGIf.gif",
-    "native_rarity": 30000000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -8131,13 +8963,15 @@
   },
   "Abominable": {
     "rarity": 120000000,
+    "native_rarity": 40000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      40000000
+      3
     ],
     "limited": true,
     "obtainment": "Limited (1/120,000,000(1/40,000,000 in Snowy) (Limited) Winter 2025)",
@@ -8148,7 +8982,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AbomiNableReworkCollection.gif",
-    "native_rarity": 40000000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -8162,13 +8995,15 @@
   },
   "Atlas_Yuletide": {
     "rarity": 510000000,
+    "native_rarity": 170000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "SNOWY",
-      170000000
+      3
     ],
     "limited": true,
     "obtainment": "Limited (1/510,000,000(1/170,000,000 in Snowy) (Limited) Winter 2025)",
@@ -8179,7 +9014,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/FixedYuletideColl.gif",
-    "native_rarity": 170000000,
     "native_from_biomes": [
       "SNOWY"
     ],
@@ -8195,6 +9029,8 @@
   },
   "Blossom_Frozen": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8222,6 +9058,8 @@
   },
   "Frigid": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8247,6 +9085,8 @@
   },
   "pukeko": {
     "rarity": 3198,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8271,6 +9111,8 @@
   },
   "Flushed_Troll": {
     "rarity": 1000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8297,6 +9139,8 @@
   },
   "Origin_Onion": {
     "rarity": 8000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8325,6 +9169,8 @@
   },
   "Glock_the_glock_of_the_sky": {
     "rarity": 170000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8351,6 +9197,8 @@
   },
   "Windy_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8371,6 +9219,8 @@
   },
   "Snowy_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8391,6 +9241,8 @@
   },
   "Rainy_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8411,6 +9263,8 @@
   },
   "Sandstorm_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8433,6 +9287,8 @@
   },
   "Hellfire_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8455,6 +9311,8 @@
   },
   "Starfall_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8477,6 +9335,8 @@
   },
   "Corruption_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8499,6 +9359,8 @@
   },
   "Null_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8521,6 +9383,8 @@
   },
   "Glitched_Egg": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8543,13 +9407,15 @@
   },
   "Manta": {
     "rarity": 300000000,
+    "native_rarity": 150000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "BLAZING SUN",
-      150000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/300,000,000(1/150,000,000 in Blazing Sun) (Limited) Summer 2025)",
@@ -8560,7 +9426,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Manta_In-Collection.gif",
-    "native_rarity": 150000000,
     "native_from_biomes": [
       "BLAZING SUN"
     ],
@@ -8574,13 +9439,15 @@
   },
   "Aegis_Watergun": {
     "rarity": 825000000,
+    "native_rarity": 412500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "BLAZING SUN",
-      412500000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/825,000,000(1/412,500,000 in Blazing Sun) (Limited) Summer 2025)",
@@ -8591,7 +9458,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Aegis_Watergun_in_collection.gif",
-    "native_rarity": 412500000,
     "native_from_biomes": [
       "BLAZING SUN"
     ],
@@ -8607,6 +9473,8 @@
   },
   "SandBasket": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8631,6 +9499,8 @@
   },
   "Bubble": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8657,6 +9527,8 @@
   },
   "Parasol": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8680,6 +9552,8 @@
   },
   "Bioluminescent": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8706,6 +9580,8 @@
   },
   "Life_Guard": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8732,6 +9608,8 @@
   },
   "Ink_PaintballGun": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8757,6 +9635,8 @@
   },
   "Scorpion": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -8782,6 +9662,8 @@
   },
   "Pump_Trickster": {
     "rarity": 600000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -8814,6 +9696,8 @@
   },
   "Celestial_Wicked": {
     "rarity": 1500000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -8846,6 +9730,8 @@
   },
   "Lunar_Cultist": {
     "rarity": 2000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -8879,6 +9765,8 @@
   },
   "Headless": {
     "rarity": 3200000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -8909,6 +9797,8 @@
   },
   "Werewolf": {
     "rarity": 3600000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -8939,6 +9829,8 @@
   },
   "Shucks": {
     "rarity": 4460000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -8969,6 +9861,8 @@
   },
   "Oni": {
     "rarity": 6666666,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -8999,6 +9893,8 @@
   },
   "Sinister": {
     "rarity": 15000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -9029,6 +9925,8 @@
   },
   "Headless_Horseman": {
     "rarity": 32000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -9061,6 +9959,8 @@
   },
   "Reaper": {
     "rarity": 66000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -9091,6 +9991,8 @@
   },
   "Accursed": {
     "rarity": 82000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -9121,6 +10023,8 @@
   },
   "Bloodgarden": {
     "rarity": 88000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -9151,6 +10055,8 @@
   },
   "Grief": {
     "rarity": 88250000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -9181,6 +10087,8 @@
   },
   "Crimson": {
     "rarity": 120000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -9211,6 +10119,8 @@
   },
   "Graveborn": {
     "rarity": 290000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -9239,6 +10149,8 @@
   },
   "Afterparty": {
     "rarity": 440000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -9269,6 +10181,8 @@
   },
   "Phantasma": {
     "rarity": 462000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -9299,6 +10213,8 @@
   },
   "Apocalypse": {
     "rarity": 624000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -9329,6 +10245,8 @@
   },
   "Wraithlight": {
     "rarity": 695000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -9357,6 +10275,8 @@
   },
   "Malediction": {
     "rarity": 730000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -9385,6 +10305,8 @@
   },
   "Banshee": {
     "rarity": 730000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -9415,6 +10337,8 @@
   },
   "Ravage": {
     "rarity": 930000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "GRAVEYARD",
       1
@@ -9445,6 +10369,8 @@
   },
   "Arachnophobia": {
     "rarity": 940000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "PUMPKIN MOON",
       1
@@ -9475,6 +10401,8 @@
   },
   "Lamenthyr": {
     "rarity": 1000000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -9505,6 +10433,8 @@
   },
   "Erebus": {
     "rarity": 1200000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLOOD RAIN",
       1
@@ -9535,6 +10465,8 @@
   },
   "Veinweaver": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -9557,6 +10489,8 @@
   },
   "Dreadsea": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -9579,6 +10513,8 @@
   },
   "Carousel": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -9601,6 +10537,8 @@
   },
   "Lament": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -9627,6 +10565,8 @@
   },
   "Thaneborne": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -9649,6 +10589,8 @@
   },
   "Slaughter": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -9674,13 +10616,15 @@
   },
   "Snowball": {
     "rarity": 10000,
+    "native_rarity": 5000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      5000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/10,000 (1/5,000 in Aurora) (Limited) Christmas 2025)",
@@ -9691,7 +10635,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SnowballInCollection.gif",
-    "native_rarity": 5000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9705,13 +10648,15 @@
   },
   "StarRider_Snowflake": {
     "rarity": 240000,
+    "native_rarity": 120000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      120000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/240,000 (1/120,000 in Aurora) (Limited) Christmas 2025)",
@@ -9722,7 +10667,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SnowflakeCollection.gif",
-    "native_rarity": 120000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9738,8 +10682,10 @@
   },
   "Cryogenic": {
     "rarity": 250000,
+    "native_rarity": null,
+    "luck_exempt": true,
     "exclusive_biome": [
-      "AURORA UNAFFECTED BY LUCK",
+      "AURORA",
       1
     ],
     "native_biome": [
@@ -9768,13 +10714,15 @@
   },
   "Gingerbread": {
     "rarity": 3750000,
+    "native_rarity": 1875000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      1875000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/3,750,000 (1/1,875,000 in Aurora) (Limited) Christmas 2025)",
@@ -9785,7 +10733,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/GingerbreadCollection.gif",
-    "native_rarity": 1875000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9799,13 +10746,15 @@
   },
   "Jackfrost": {
     "rarity": 4700000,
+    "native_rarity": 2350000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      2350000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/4,700,000 (1/2,350,000 in Aurora) (Limited) Christmas 2025)",
@@ -9816,7 +10765,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/JackFrost_InCollection.gif",
-    "native_rarity": 2350000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9830,13 +10778,15 @@
   },
   "Lost_Soul_Wander": {
     "rarity": 9400000,
+    "native_rarity": 4700000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      4700000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/9,400,000 (1/4,700,000 in Aurora) (Limited) Christmas 2025)",
@@ -9847,7 +10797,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WanderCollection.gif",
-    "native_rarity": 4700000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9863,13 +10812,15 @@
   },
   "Frostwood": {
     "rarity": 24500000,
+    "native_rarity": 12250000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      12250000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/24,500,000 (1/12,250,000 in Aurora) (Limited) Christmas 2025)",
@@ -9880,7 +10831,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Frostwoodcollection.gif",
-    "native_rarity": 12250000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9894,13 +10844,15 @@
   },
   "North_Pole": {
     "rarity": 45000000,
+    "native_rarity": 22500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      22500000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/45,000,000 (1/22,500,000 in Aurora) (Limited) Christmas 2025)",
@@ -9911,7 +10863,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NPCollection.gif",
-    "native_rarity": 22500000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9925,13 +10876,15 @@
   },
   "Sky_Burst": {
     "rarity": 60000000,
+    "native_rarity": 30000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      30000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/60,000,000 (1/30,000,000 in Aurora) (Limited) Christmas 2025)",
@@ -9942,7 +10895,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SkyburstCollection.gif",
-    "native_rarity": 30000000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9956,13 +10908,15 @@
   },
   "Encase": {
     "rarity": 230000000,
+    "native_rarity": 115000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      115000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/230,000,000 (1/115,000,000 in Aurora) (Limited) Christmas 2025)",
@@ -9973,7 +10927,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Encase_Collection.gif",
-    "native_rarity": 115000000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -9984,13 +10937,15 @@
   },
   "CryoFang": {
     "rarity": 380000000,
+    "native_rarity": 190000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      190000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/380,000,000 (1/190,000,000 in Aurora) (Limited) Christmas 2025)",
@@ -10001,7 +10956,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Cryofang_collection.gif",
-    "native_rarity": 190000000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -10015,13 +10969,15 @@
   },
   "Northern": {
     "rarity": 405000000,
+    "native_rarity": 202500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      202500000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/405,000,000 (1/202,500,000 in Aurora) (Limited) Christmas 2025)",
@@ -10032,7 +10988,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NorthernCollection.gif",
-    "native_rarity": 202500000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -10046,13 +11001,15 @@
   },
   "EveNight": {
     "rarity": 424000000,
+    "native_rarity": 212000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      212000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/424,000,000 (1/212,000,000 in Aurora) (Limited) Christmas 2025)",
@@ -10063,7 +11020,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/EveNightCollection.gif",
-    "native_rarity": 212000000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -10077,13 +11033,15 @@
   },
   "Workshop": {
     "rarity": 700000000,
+    "native_rarity": 350000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      350000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/700,000,000 (1/350,000,000 in Aurora) (Limited) Christmas 2025)",
@@ -10094,7 +11052,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Workshop_coll.gif",
-    "native_rarity": 350000000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -10108,13 +11065,15 @@
   },
   "Parol": {
     "rarity": 760000000,
+    "native_rarity": 380000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      380000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/760,000,000 (1/380,000,000 in Aurora) (Limited) Christmas 2025)",
@@ -10125,7 +11084,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Parol_collection.gif",
-    "native_rarity": 380000000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -10139,13 +11097,15 @@
   },
   "Sovereign_Frostveil": {
     "rarity": 1000000000,
+    "native_rarity": 500000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      500000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/1,000,000,000 (1/500,000,000 in Aurora) (Limited) Christmas 2025)",
@@ -10156,7 +11116,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Frostveil_coll.gif",
-    "native_rarity": 500000000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -10172,13 +11131,15 @@
   },
   "Winter_Garden": {
     "rarity": 1450012025,
+    "native_rarity": 725006013,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      725006013
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/1,450,012,025 (1/725,006,013 in Aurora) (Limited) Christmas 2025)",
@@ -10189,7 +11150,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WinterGardenCollection.gif",
-    "native_rarity": 725006013,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -10203,13 +11163,15 @@
   },
   "Dream_Traveler": {
     "rarity": 2025012025,
+    "native_rarity": 1012506013,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      1012506013
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/2,025,012,025 (1/1,012,506,013 in Aurora) (Limited) Christmas 2025)",
@@ -10220,7 +11182,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DreamTravelerCollection.gif",
-    "native_rarity": 1012506013,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -10234,6 +11195,8 @@
   },
   "Present": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10256,6 +11219,8 @@
   },
   "Skyforge": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10278,6 +11243,8 @@
   },
   "Christmastide": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10300,6 +11267,8 @@
   },
   "Reina": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10325,6 +11294,8 @@
   },
   "Symphony_Bloomed": {
     "rarity": 375000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10353,6 +11324,8 @@
   },
   "Velvet": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10376,6 +11349,8 @@
   },
   "Blood_Demon": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10398,6 +11373,8 @@
   },
   "Hatchwarden": {
     "rarity": 40000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10424,6 +11401,8 @@
   },
   "Emperor": {
     "rarity": 80000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10450,6 +11429,8 @@
   },
   "Eggsistance": {
     "rarity": 307777777,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10476,6 +11457,8 @@
   },
   "Revive": {
     "rarity": 645000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10502,6 +11485,8 @@
   },
   "Eggore": {
     "rarity": 700000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10528,6 +11513,8 @@
   },
   "Eostre": {
     "rarity": 1000000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10554,13 +11541,15 @@
   },
   "Eggis": {
     "rarity": 1150000000,
+    "native_rarity": 575000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CYBERSPACE",
-      575000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/1,150,000,000 (Limited) Easter 2026)",
@@ -10571,7 +11560,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Eggis_collect.gif",
-    "native_rarity": 575000000,
     "native_from_biomes": [
       "CYBERSPACE"
     ],
@@ -10585,6 +11573,8 @@
   },
   "Yolkegg": {
     "rarity": 1790909090,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10611,6 +11601,8 @@
   },
   "Sky_Festival": {
     "rarity": 2000000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10637,6 +11629,8 @@
   },
   "Egger": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10659,6 +11653,8 @@
   },
   "Easter_Isles": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10681,6 +11677,8 @@
   },
   "Aeroquest": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10703,6 +11701,8 @@
   },
   "Rabbit_Invasion": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10725,6 +11725,8 @@
   },
   "Scavenger": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10753,6 +11755,8 @@
   },
   "Burger": {
     "rarity": 676767,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10777,13 +11781,15 @@
   },
   "StarRider_yourdidit": {
     "rarity": 1234567,
+    "native_rarity": 246913,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "STARFALL",
-      246913
+      5
     ],
     "limited": true,
     "obtainment": "Limited (1/1,234,567 (Limited) April Fools 2026)",
@@ -10794,7 +11800,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Udidit_collect.gif",
-    "native_rarity": 246913,
     "native_from_biomes": [
       "STARFALL"
     ],
@@ -10808,6 +11813,8 @@
   },
   "Bounded_Kidnapped": {
     "rarity": 2000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10836,6 +11843,8 @@
   },
   "Very_Small_Sewage_Rat_That's_About_3.082_Studs_Long": {
     "rarity": 20070629,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10862,6 +11871,8 @@
   },
   "Pukeko_Jumping": {
     "rarity": 31980000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10888,13 +11899,15 @@
   },
   "Aether_Disappointment": {
     "rarity": 33333330,
+    "native_rarity": 6666666,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "HEAVEN",
-      6666666
+      5
     ],
     "limited": true,
     "obtainment": "Limited (1/33,333,330 (1/6,666,666 in Heaven) (Limited) April Fools 2026)",
@@ -10905,7 +11918,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DisappointmentColl.gif",
-    "native_rarity": 6666666,
     "native_from_biomes": [
       "HEAVEN"
     ],
@@ -10921,6 +11933,8 @@
   },
   "Bloated.exe": {
     "rarity": 67676767,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10945,13 +11959,15 @@
   },
   "Impeached_Imcrine": {
     "rarity": 250000000,
+    "native_rarity": 50000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "CORRUPTION",
-      50000000
+      5
     ],
     "limited": true,
     "obtainment": "Limited (1/250,000,000(1/50,000,000 in Corruption) (Limited)April Fools 2026)",
@@ -10962,7 +11978,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ImcrineCollection.gif",
-    "native_rarity": 50000000,
     "native_from_biomes": [
       "CORRUPTION"
     ],
@@ -10974,6 +11989,8 @@
   },
   "Doodle_Abyssal_Hunter": {
     "rarity": 400000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -10994,6 +12011,8 @@
   },
   "Surfer_Symphony": {
     "rarity": 600000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -11018,13 +12037,15 @@
   },
   "Lumenpool_Ramenpool": {
     "rarity": 630000000,
+    "native_rarity": 157500000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "RAINY",
-      157500000
+      4
     ],
     "limited": true,
     "obtainment": "Limited (1/630,000,000 (1/157,500,000 in Rainy) (Limited)April Fools 2026)",
@@ -11035,7 +12056,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RamenpoolColl.gif",
-    "native_rarity": 157500000,
     "native_from_biomes": [
       "RAINY"
     ],
@@ -11047,13 +12067,15 @@
   },
   "Workshop_System": {
     "rarity": 650000000,
+    "native_rarity": 325000000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
       "AURORA",
-      325000000
+      2
     ],
     "limited": true,
     "obtainment": "Limited (1/650,000,000 (1/325,000,000 in Aurora)(Limited) April Fools 2026)",
@@ -11064,7 +12086,6 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SystemColl.gif",
-    "native_rarity": 325000000,
     "native_from_biomes": [
       "AURORA"
     ],
@@ -11076,6 +12097,8 @@
   },
   "Pukeko_P.U.K.E.K.O.G.O.D.": {
     "rarity": 1000000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -11104,6 +12127,8 @@
   },
   "A_Fool's_Experience": {
     "rarity": 1000000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -11130,6 +12155,8 @@
   },
   "Equinox_You_Are_An_Idiot": {
     "rarity": 2500000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -11150,6 +12177,8 @@
   },
   "Zilch": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -11172,6 +12201,8 @@
   },
   "Disciple_of_the_Crimson_Moon": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -11192,6 +12223,8 @@
   },
   "Raft": {
     "rarity": 8000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11221,6 +12254,8 @@
   },
   "Buoyant": {
     "rarity": 32000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11250,6 +12285,8 @@
   },
   "Breeze": {
     "rarity": 80000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11279,6 +12316,8 @@
   },
   "Heatstroke": {
     "rarity": 83430,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11308,6 +12347,8 @@
   },
   "Floaty": {
     "rarity": 600000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11337,6 +12378,8 @@
   },
   "Beach_Ball": {
     "rarity": 1938000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11368,6 +12411,8 @@
   },
   "Watermelon_Summersnack": {
     "rarity": 3200000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11396,6 +12441,8 @@
   },
   "Vendor": {
     "rarity": 17500000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11425,6 +12472,8 @@
   },
   "Nostalgia": {
     "rarity": 20270000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11454,6 +12503,8 @@
   },
   "Coconut": {
     "rarity": 34720000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11483,6 +12534,8 @@
   },
   "FruitPunch": {
     "rarity": 45000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11512,6 +12565,8 @@
   },
   "Goose_Rave": {
     "rarity": 50000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11541,6 +12596,8 @@
   },
   "Vacation": {
     "rarity": 58620000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11570,6 +12627,8 @@
   },
   "Bayview": {
     "rarity": 60000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11599,6 +12658,8 @@
   },
   "Bubble_Cascade": {
     "rarity": 110000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11628,6 +12689,8 @@
   },
   "Life_Guard_On-Duty": {
     "rarity": 600000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11653,6 +12716,8 @@
   },
   "Tropical_Isles": {
     "rarity": 730000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11681,6 +12746,8 @@
   },
   "Pool_Party": {
     "rarity": 972000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11710,6 +12777,8 @@
   },
   "Crabtropica": {
     "rarity": 1334221000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11735,6 +12804,8 @@
   },
   "Taverna|OSTERIA": {
     "rarity": 1444444444,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11755,6 +12826,8 @@
   },
   "Centaurus": {
     "rarity": 3000000000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "BLAZING SUN",
       1
@@ -11786,6 +12859,8 @@
   },
   "Alohaoe": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -11808,6 +12883,8 @@
   },
   "Prowler": {
     "rarity": 540000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE HYPERSPACE REALM",
       1
@@ -11837,6 +12914,8 @@
   },
   "Clockwork": {
     "rarity": 530000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE NULL'S EXISTENCE",
       1
@@ -11866,6 +12945,8 @@
   },
   "Attorney": {
     "rarity": 270000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE CITADEL OF ORDERS",
       1
@@ -11895,6 +12976,8 @@
   },
   "Verdict": {
     "rarity": 700000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "THE CITADEL OF ORDERS",
       1
@@ -11924,8 +13007,10 @@
   },
   "Observer_of_the_Crimson_Moon": {
     "rarity": 444444,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
-      "赤い満月|THE RED FULL MOON",
+      "赤い満月",
       1
     ],
     "native_biome": [
@@ -11933,7 +13018,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to 赤い満月|THE RED FULL MOON (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to 赤い満月 (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
     "flags": [],
@@ -11953,8 +13038,10 @@
   },
   "Seeker_of_the_Crimson_Moon": {
     "rarity": 666666,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
-      "赤い満月|THE RED FULL MOON",
+      "赤い満月",
       1
     ],
     "native_biome": [
@@ -11962,7 +13049,7 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to 赤い満月|THE RED FULL MOON (cannot be rolled through breakthrough)",
+    "obtainment": "Exclusive to 赤い満月 (cannot be rolled through breakthrough)",
     "rarity_name": "Event",
     "description": "",
     "flags": [],
@@ -11982,6 +13069,8 @@
   },
   "Megaphone": {
     "rarity": 5000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12007,6 +13096,8 @@
   },
   "Astral_Astrald": {
     "rarity": 267000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12034,6 +13125,8 @@
   },
   "Lightning": {
     "rarity": 40000,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12059,6 +13152,8 @@
   },
   "Sol": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12086,6 +13181,8 @@
   },
   "Prowler|Another_Realm": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12107,6 +13204,8 @@
   },
   "Red_Full_Moon": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12134,6 +13233,8 @@
   },
   "Mastermind": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12160,6 +13261,8 @@
   },
   "Edict": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12183,6 +13286,8 @@
   },
   "Abomination": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12204,6 +13309,8 @@
   },
   "Cruel": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12227,6 +13334,8 @@
   },
   "yuyo": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12248,6 +13357,8 @@
   },
   "Find_the_probability_of_this_aura.": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12269,6 +13380,8 @@
   },
   "Samgong": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12290,6 +13403,8 @@
   },
   "Rare|THE_RAREST_AURA": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12311,6 +13426,8 @@
   },
   "Kanade": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12332,6 +13449,8 @@
   },
   "Sapphire_Peace": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12358,6 +13477,8 @@
   },
   "Godslayer": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12383,6 +13504,8 @@
   },
   "Chromatic_Exotic": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12408,16 +13531,18 @@
   },
   "Astral_Legendarium": {
     "rarity": 267200000,
+    "native_rarity": 53440000,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
     ],
     "native_biome": [
-      "None",
-      1
+      "STARFALL",
+      5
     ],
     "limited": false,
-    "obtainment": "Removed / unavailable aura (not obtainable by rolling)",
+    "obtainment": "Native to STARFALL (1/53,440,000)",
     "rarity_name": "Transcendent",
     "description": "",
     "flags": [
@@ -12425,7 +13550,7 @@
     ],
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Astral_-_Legendarium_Collection.gif",
-    "obtainment_type": "unobtainable",
+    "obtainment_type": "native",
     "video_url": "https://static.wikia.nocookie.net/sol-rng/images/d/d3/AstralLegendariumCutsceneReworked.mp4/revision/latest?cb=20250804220815",
     "video_file": "AstralLegendariumCutsceneReworked.mp4",
     "video_kind": "opening",
@@ -12437,6 +13562,8 @@
   },
   "The_Rock": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12458,6 +13585,8 @@
   },
   "ConstraintTest": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12479,6 +13608,8 @@
   },
   "Layers": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12502,6 +13633,8 @@
   },
   "Kyawthuite_Iridescent_Memory": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12523,6 +13656,8 @@
   },
   "Twilight_Viridescent_Memory": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12544,6 +13679,8 @@
   },
   "Stardust": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12565,6 +13702,8 @@
   },
   "Therma": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12590,6 +13729,8 @@
   },
   "Sirius_unob": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12611,6 +13752,8 @@
   },
   "Lunatic": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12632,6 +13775,8 @@
   },
   "Hallucination": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12653,6 +13798,8 @@
   },
   "Duke": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12674,6 +13821,8 @@
   },
   "Galaxy_Contact": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12695,6 +13844,8 @@
   },
   "Stella": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12718,6 +13869,8 @@
   },
   "Deepwoken": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12739,6 +13892,8 @@
   },
   ":smiro:": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12760,6 +13915,8 @@
   },
   "Road_Trip": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1
@@ -12783,6 +13940,8 @@
   },
   "Stellar": {
     "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
     "exclusive_biome": [
       "None",
       1

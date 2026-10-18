@@ -7,6 +7,7 @@ interface HeaderBarProps {
     onThemeChange: (theme: string) => void;
     isGlitching: boolean;
     setActiveTab?: (tab: string) => void;
+    hasCustomPalette?: boolean;
 }
 
 const themes = [
@@ -46,8 +47,12 @@ const SEARCH_INDEX = [
     { title: "Donations <3", tab: "donations", keywords: ["donate", "donations", "boosty", "support the project"] },
 ];
 
-export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, isGlitching, setActiveTab }: HeaderBarProps) {
+export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, isGlitching, setActiveTab, hasCustomPalette }: HeaderBarProps) {
     const [alwaysOnTop, setAlwaysOnTop] = useState(false);
+    // The Panel Customization palette is a first-class theme ("My Palette").
+    // Built-in presets must stay clickable: before this, the saved palette
+    // variables were injected over EVERY preset and none of them did anything.
+    const themeList = hasCustomPalette ? [...themes, { id: "custom", label: "My Palette" }] : themes;
     const [isImporting, setIsImporting] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -117,13 +122,13 @@ export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, i
 
     const handleThemeWheel = useCallback((e: React.WheelEvent) => {
         e.preventDefault();
-        const idx = themes.findIndex((t) => t.id === theme);
+        const idx = themeList.findIndex((t) => t.id === theme);
         if (idx === -1) return;
         const next = e.deltaY > 0
-            ? (idx + 1) % themes.length
-            : (idx - 1 + themes.length) % themes.length;
-        onThemeChange(themes[next].id);
-    }, [theme, onThemeChange]);
+            ? (idx + 1) % themeList.length
+            : (idx - 1 + themeList.length) % themeList.length;
+        onThemeChange(themeList[next].id);
+    }, [theme, onThemeChange, themeList]);
 
     return (
         <div className={`header-bar ${isGlitching ? "glitch-no-drag" : ""}`}>
@@ -280,7 +285,7 @@ export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, i
                         cursor: "pointer",
                     }}
                 >
-                    {themes.map((t) => (
+                    {themeList.map((t) => (
                         <option key={t.id} value={t.id}>{t.label}</option>
                     ))}
                 </select>

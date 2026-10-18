@@ -1,5 +1,5 @@
 """
-Sol's Book — live wiki datasets for items, gauntlets and achievements (v1.1.0).
+Sol's Book — live wiki datasets for items, gauntlets and achievements (v1.1.1).
 
 Builds the verified offline snapshots ``biome_tracker/gauntlets_fandom.json``
 (53 records: gauntlets / lanterns / talismans) and
@@ -126,7 +126,7 @@ ITEMS_PAGE = "Items"
 # successful refresh. The marker lives next to the cache file
 # (cache/<kind>_fandom.json.ver) because the datasets themselves are flat
 # name->record dicts that must not carry meta keys.
-SOL_BOOK_DATA_VERSION = 3
+SOL_BOOK_DATA_VERSION = 4
 
 # Discovery: the wiki's own item category lists every item page. Members are
 # resolved through the normal pipeline (no invented data); placeholder and
@@ -1008,15 +1008,16 @@ def _join_boost(value):
     return "".join(parts).strip()
 
 
-def _recipe_text(value):
-    """Recipe list -> "1x Hologrammer, 2x Chromatic, ...".
+def _recipe_lines(value):
+    """Bullet list of the Gears Infobox "recipe" param -> clean ingredient
+    lines ("1x Gargantua", "70x Kyawthuite", …).
 
     Only bullet entries count as recipe lines (the verified dataset treats
     plain-line "recipes" — Darkshader, Hologrammer, Luck Glove, Ragnaröker —
     as no recipe at all: flags stay empty, how_to_get has no Recipe part).
     A literal "N/A" recipe (Snow Rider, X-mas Champion) is no recipe."""
     if not value:
-        return ""
+        return []
     lines = []
     for line in value.split("\n"):
         line = line.strip()
@@ -1029,10 +1030,82 @@ def _recipe_text(value):
         cleaned = re.sub(r"[ \t]+", " ", cleaned).strip()
         if cleaned:
             lines.append(cleaned)
-    joined = ", ".join(lines).strip()
-    if joined.lower() in ("n/a", "na", "none", "-"):
-        return ""
-    return joined
+    if len(lines) == 1 and lines[0].lower() in ("n/a", "na", "none", "-"):
+        return []
+    return lines
+
+
+def _recipe_text(value):
+    """Recipe list -> "1x Hologrammer, 2x Chromatic, ..."."""
+    return ", ".join(_recipe_lines(value)).strip()
+
+
+def _table_row_cells(row):
+    """Split one wikitable row into its cell texts (inline || and multi-line
+    continuation lines both join into the current cell)."""
+    cells: list = []
+    current = None
+    for line in row.splitlines():
+        s = line.strip()
+        if s.startswith("|"):
+            inline = s[1:].split("||")
+            current = inline[0]
+            cells.append(current)
+            for extra in inline[1:]:
+                cells.append(extra)
+        elif s and current is not None and not s.startswith("!"):
+            cells[-1] = cells[-1] + " " + s
+    return cells
+
+
+def _recipe_table_lines(wikitext):
+    """Crafting table under "==Recipe==" -> ["1x Gargantua", ...].
+
+    Rows are (Item | Quantity | Rarity). This is the page's structured recipe
+    when the Gears Infobox carries none — without it items like Singularity
+    Catalyst or Condensed Memory showed only "Jake's Workshop" as their
+    obtainment and the ingredients were lost."""
+    m = re.search(r"(?ms)^=+\s*Recipe\s*=+\s*$(.*?)(?=^=+|\Z)", wikitext or "")
+    if not m:
+        return []
+    out = []
+    for row in re.split(r"(?m)^\s*\|-.*$", m.group(1))[1:]:
+        cells = _table_row_cells(row)
+        if len(cells) < 2:
+            continue
+        item = clean_wikitext(cells[0], join_lines=False).strip()
+        qty = clean_wikitext(cells[1], join_lines=False).strip()
+        if not item or not qty or item.lower() in ("item", "n/a", "-"):
+            continue
+        out.append(qty if qty.lower().endswith("x") else f"{qty}x")
+        out[-1] = f"{out[-1]} {item}"
+    return out
+
+
+def _obtainment_recipe_lines(wikitext):
+    """Obtainment tables (Obtainment Method | Quantity | Recipe | Note) ->
+    the ingredient list of the Brewing row.
+
+    Potions like Haste / Fortune put their recipe into that column instead of
+    a ==Recipe== section, so their crafting lists used to be invisible."""
+    m = re.search(r"(?ms)^=+\s*(?:Obtainment|Brewing|How to Obtain)\s*=+\s*$(.*?)(?=^=+|\Z)", wikitext or "")
+    if not m:
+        return []
+    for row in re.split(r"(?m)^\s*\|-.*$", m.group(1))[1:]:
+        cells = _table_row_cells(row)
+        if len(cells) < 3:
+            continue
+        method = clean_wikitext(cells[0], join_lines=False).lower()
+        if not re.search(r"brew|craft", method):
+            continue
+        recipe_cell = clean_wikitext(cells[2], join_lines=False)
+        out = []
+        for part in re.split(r"[\n;]+", recipe_cell):
+            part = re.sub(r"\s+", " ", part).strip(" ,")
+            if part and part.lower() not in ("n/a", "na", "none", "-"):
+                out.append(part)
+        return out
+    return []
 
 
 def _gauntlet_record(name, slot, infobox_named, quote, categories):
@@ -1303,6 +1376,7 @@ def _potion_record_from_text(name, wikitext):
     effects = ""
     how_to_get = ""
     gears_obtainment = ""
+    recipe_lines: list = []
     drops = _drops_text(wikitext, include_description=_is_chest_name(name))
     thumbnail_files = []
     potion = extract_template(wikitext, "Potion")
@@ -1337,6 +1411,7 @@ def _potion_record_from_text(name, wikitext):
         obtainment = clean_wikitext(named.get("obtainment", ""))
         if obtainment and not _is_trivial_text(obtainment):
             gears_obtainment = obtainment
+        recipe_lines = _recipe_lines(named.get("recipe", ""))
     if item is not None:
         named, _pos = item
         effects = effects or clean_wikitext(named.get("effects", ""))
@@ -1385,6 +1460,11 @@ def _potion_record_from_text(name, wikitext):
     )
     if not how_to_get:
         how_to_get = _drop_leading_colon_fragment(gears_obtainment)
+    if not recipe_lines:
+        # Some pages carry the ingredients only in the "==Recipe==" table
+        # (Singularity Catalyst, Condensed Memory); potions like Haste and
+        # Fortune keep them in the Recipe column of their Obtainment table.
+        recipe_lines = _recipe_table_lines(wikitext) or _obtainment_recipe_lines(wikitext)
     record = {
         "name": name,
         "category": category,
@@ -1394,6 +1474,13 @@ def _potion_record_from_text(name, wikitext):
         "description": description,
         "flags": ["fandom"],
     }
+    if recipe_lines:
+        recipe = ", ".join(recipe_lines)
+        record["recipe"] = recipe
+        record["recipe_lines"] = recipe_lines
+        record["flags"].append("craftable")
+        if how_to_get and "recipe" not in how_to_get.lower():
+            record["how_to_get"] = how_to_get + " | Recipe: " + recipe
     if effects:
         record["effects"] = effects
     if drops:

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from "react";
+import { useState, useEffect, useRef, memo, useCallback } from "react";
 import "./App.css";
 import { useConfig } from "./contexts/ConfigContext";
 import { ToastProvider } from "./contexts/ToastContext";
@@ -104,6 +104,12 @@ const PageHost = memo(function PageHost({ component: PageComponent, active }: { 
 function App() {
   const [activeTab, setActiveTab] = useState("notice");
   const { config, saveConfig, isMacroRunning, setMacroRunning } = useConfig();
+  // Every tab switch also nudges the shared data refresh: pages stay mounted,
+  // so without this they would keep showing whatever they loaded at startup.
+  const handleTabChange = useCallback((tab: string) => {
+    setActiveTab(tab);
+    window.dispatchEvent(new Event("endsol:refresh"));
+  }, []);
   const [isApiReady, setIsApiReady] = useState(new URLSearchParams(window.location.search).get("safe_mode") !== null);
   const [theme, setTheme] = useState("midnight");
   const [isGlitching, setIsGlitching] = useState(false);
@@ -414,8 +420,22 @@ function App() {
       body.style.removeProperty(key);
     });
     const custom = config?.custom_theme_data as any;
-    const nextKeys: string[] = [];
+    // Also drop EVERY saved palette key: the Panel Customization page's live
+    // preview writes inline styles that App never tracked, and inline styles
+    // beat body[data-theme] — that is exactly why presets stayed dead until
+    // "My Palette" re-applied (and tracked) the same keys first.
     if (custom?.variables && typeof custom.variables === "object") {
+      Object.keys(custom.variables).forEach(key => {
+        root.style.removeProperty(key);
+        body.style.removeProperty(key);
+      });
+    }
+    const nextKeys: string[] = [];
+    // The saved palette belongs to the "My Palette" theme only — injecting it
+    // over every preset made the built-in themes look broken (nothing changed
+    // when switching). Built-in presets now render exactly as designed, and
+    // the custom palette is one click away in the same picker.
+    if (theme === "custom" && custom?.variables && typeof custom.variables === "object") {
       Object.entries(custom.variables).forEach(([key, value]) => {
         if (typeof value === "string" && value) {
           // App.css defines variables on body[data-theme], which wins over
@@ -507,7 +527,7 @@ function App() {
       <div className="corner-bracket bl" />
       <div className="corner-bracket br" />
       <div className="app-layout" style={(!isApiReady || !config) ? { pointerEvents: 'none', opacity: 0.62 } : {}}>
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} isGlitching={isGlitching} macroVersion={macroVersion} customTheme={config?.custom_theme_data} />
+        <Sidebar activeTab={activeTab} onTabChange={handleTabChange} isGlitching={isGlitching} macroVersion={macroVersion} customTheme={config?.custom_theme_data} />
         <div className="main-content" style={{ position: "relative" }}>
           <HeaderBar
             isRunning={isMacroRunning}
@@ -515,7 +535,12 @@ function App() {
             theme={theme}
             onThemeChange={handleThemeChange}
             isGlitching={isGlitching}
-            setActiveTab={setActiveTab}
+            setActiveTab={handleTabChange}
+            hasCustomPalette={Boolean(
+              config?.custom_theme_data
+              && typeof (config.custom_theme_data as any).variables === "object"
+              && Object.keys((config.custom_theme_data as any).variables || {}).length
+            )}
           />
           {(activeTab === "notice" && updateInfo && !(config as any)?.update_notifications_disabled) && (
             <UpdateBanner

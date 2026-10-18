@@ -406,11 +406,12 @@ class QuestBoardMixin:
                     if (not play_with_fishing) and self._is_fishing_active():
                         time.sleep(30)
                         continue
-                    # Don't run if other exclusive features are active
-                    if (getattr(self, "_eden_running", False) or
-                        getattr(self, "_potion_thread_active", False) or
-                        getattr(self, "_obby_running", False) or
-                        getattr(self, "_br_sc_running", False)):
+                    # Don't run if other exclusive features are active.
+                    # _macro_busy_reason covers direct-run sequences (Eden,
+                    # potion crafting, obby, BR/SC, merchant teleporter,
+                    # auto-pop, auto-merchant, remote) and other scheduler
+                    # actions - all of them also drive the mouse.
+                    if self._macro_busy_reason():
                         time.sleep(10)
                         continue
                     if not getattr(self, "detection_running", False):
@@ -437,6 +438,11 @@ class QuestBoardMixin:
     def _qb_process_via_scheduler(self):
         """Wrapper that runs the board processing in scheduler context."""
         try:
+            # Re-check busy flags at EXECUTION time: a direct-run sequence
+            # may have started since the enqueue. We run INSIDE a scheduled
+            # action, so exclude our own scheduler bit.
+            if self._macro_busy_reason(include_scheduler=False):
+                return
             res = self.process_quest_board()
             try:
                 if isinstance(res, dict) and res.get("action"):

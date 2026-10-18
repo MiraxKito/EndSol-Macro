@@ -6,17 +6,21 @@ the Fandom wiki data (auras_data), not hardcoded names.
 
 Aura types:
   - normal: rollable anywhere, no special conditions
-  - biome_native: boosted chance in specific biome(s) — always webhook
-  - biome_exclusive: ONLY rollable in specific biome — always webhook
-  - breakthrough: obtainable via Breakthrough mechanic — always webhook
-  - crafted: made at Jake's Workshop — always webhook
-  - potion_required: requires specific potion to roll — always webhook
-  - event_exclusive: only during limited events — always webhook
-  - limbo: rolled in The Limbo dimension — respects the rarity threshold
+  - biome_native: boosted chance in specific biome(s) - respects threshold
+  - biome_exclusive: ONLY rollable in specific biome - always webhook
+  - crafted: made at Jake's Workshop - always webhook
+  - potion_required: requires specific potion to roll - always webhook
+  - breakthrough: obtainable via Breakthrough mechanic - respects threshold
+  - event_exclusive: only during limited events - respects threshold
+  - shop / quest_reward: bought from NPC or quest reward - respects threshold
+  - limbo: rolled in The Limbo dimension - respects the rarity threshold
     (it IS a roll, just from a different dimension)
+Only biome_exclusive / crafted / potion_required bypass the user's minimum
+rarity threshold - see should_always_webhook() below.
 """
 
 from __future__ import annotations
+import re
 from typing import Any
 
 
@@ -103,7 +107,7 @@ def classify_aura(aura_name: str, aura_info: dict[str, Any]) -> dict[str, Any]:
             result["type"] = "limbo"
             result["condition"] = "Limbo exclusive"
             return result
-        if "breakthrough" in obtain_lower or "bt" in obtain_lower:
+        if "breakthrough" in obtain_lower or re.search(r"\bbt\b", obtain_lower):
             result["type"] = "breakthrough"
             result["condition"] = "Breakthrough exclusive"
             return result

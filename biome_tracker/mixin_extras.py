@@ -1,5 +1,5 @@
 """
-Optional extras for EndSol Macro (v1.1.0).
+Optional extras for EndSol Macro (v1.1.1).
 
 All extra toggles default to OFF and live in the config:
   - dry_run                  -> log actions instead of performing them

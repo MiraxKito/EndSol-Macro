@@ -132,15 +132,146 @@ const canonicalRarity = (raw: any) => {
 const entryRarityType = (info: Entry) =>
   canonicalRarity(info?.category || info?.rarity_name || (info?.rarity ? rarityClass(info.rarity) : "Other"));
 
-const obtainmentLabel = (entry: Entry) => {
-  if (entry?.obtainment) return String(entry.obtainment);
-  const native = entry?.native_biome;
-  if (entry?.is_exclusive && Array.isArray(entry.exclusive_biomes) && entry.exclusive_biomes.length) return `Exclusive to ${entry.exclusive_biomes.join(", ")}`;
-  if (Array.isArray(native) && native[0] && native[0] !== "None") return `Native to ${native[0]}`;
-  const exclusive = entry?.exclusive_biome;
-  if (Array.isArray(exclusive) && exclusive[0] && exclusive[0] !== "None") return `Exclusive to ${exclusive[0]}`;
-  return "Obtainment details unavailable";
+/** Numbers that already sit on the dedicated Rarity line (the global odds and
+ *  the in-biome odds) are stripped from prose so the same figure never shows
+ *  up twice — but potion/craftable per-source odds are kept whole, those only
+ *  live in the prose. */
+const stripShownRarities = (s: string, e: Entry) => {
+  const forms = new Set<string>();
+  const g = Number(e?.rarity);
+  if (Number.isFinite(g) && g > 0) { forms.add(fmtNum(g)); forms.add(String(g)); }
+  const nr = Number(e?.native_rarity);
+  if (Number.isFinite(nr) && nr > 0) { forms.add(fmtNum(nr)); forms.add(String(nr)); }
+  let out = String(s || "");
+  for (const form of forms) {
+    const esc = form.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    out = out.replace(new RegExp(`\\(?\\s*1\\s*(?:in|/)\\s*${esc}\\s*\\)?`, "gi"), "");
+  }
+  return out
+    .replace(/\(\s*\)/g, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s+([,.;:])/g, "$1")
+    .replace(/^[\s,.;:]+/, "")
+    .trim();
 };
+
+/** Deterministic variant picker — the same aura always reads the same way,
+ *  while different auras don't all repeat one template sentence. */
+const hashName = (s: string) => {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+};
+const pick = <T,>(variants: T[], seed: string): T => variants[hashName(seed) % variants.length];
+
+/** "How to get it" — the condition prose. Numbers already shown on the
+ *  Rarity line or in the biome sentence are stripped; crafted/potion auras
+ *  keep every number because their per-source odds only exist here. The
+ *  biome detail itself is left to biomeStory() so the two never repeat. */
+const obtainmentProse = (e: Entry, name: string) => {
+  const raw = String(e?.obtainment || "").trim();
+  if (isCraftableAura(e) || isPotionAura(e) || e?.rarity_is_potion) {
+    return raw || (isCraftableAura(e) ? "Crafted at Jake's Workshop — not rolled." : "Fixed-chance potion roll — luck does not touch it.");
+  }
+  const lower = raw.toLowerCase();
+  if (lower.startsWith("limited") || (/\bevent\b/.test(lower) && !lower.startsWith("exclusive to"))) {
+    const detail = stripShownRarities(raw, e)
+      .replace(/\(limited\)/gi, "")
+      .replace(/^limited\s*[:—-]?\s*/i, "")
+      .replace(/^\(+/, "").replace(/\)+$/, "")
+      .replace(/\(\s*\)/g, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+    return pick([
+      `A limited event aura — ${detail || "available only while its event runs"}.`,
+      `Event gear — ${detail || "it only drops during its season"}.`,
+    ], name);
+  }
+  if (lower.startsWith("exclusive to") || (Array.isArray(e?.exclusive_biome) && e.exclusive_biome[0] && e.exclusive_biome[0] !== "None")) {
+    return pick([
+      "Not a global roll — it belongs to one world.",
+      "A biome-bound roll, not a global one.",
+      "This one does not travel: its drop is tied to a single place.",
+    ], name);
+  }
+  if (lower.startsWith("native to") || (Array.isArray(e?.native_biome) && e.native_biome[0] && e.native_biome[0] !== "None")) {
+    return pick([
+      "A standard roll anywhere — its home biome just answers better.",
+      "Ordinary rolling luck produces it; the home biome improves the odds.",
+      "Rolled like any aura, with a clear favourite place to stand.",
+    ], name);
+  }
+  if (!raw || lower.includes("obtainment details unavailable") || lower.includes("obtainment not verified")) {
+    return pick([
+      "A plain roll — no ritual, no requirement.",
+      "Just rolling: nothing unlocks it besides luck.",
+      "It comes from the roll button like most auras — no special condition.",
+    ], name);
+  }
+  if (lower.includes("standard roll") || lower.includes("any biome")) {
+    return pick([
+      "A standard roll — any biome, any time.",
+      "No conditions attached: every roll can hit it.",
+      "Rolled like any common aura, wherever you stand.",
+    ], name);
+  }
+  if (lower.includes("effect is active") || lower.includes("only rolls while")) {
+    return stripShownRarities(raw, e) || raw;
+  }
+  const cleaned = stripShownRarities(raw, e);
+  return cleaned || raw;
+};
+
+/** The biome sentence — the one place the in-biome odds are allowed to show. */
+const biomeStory = (e: Entry, name: string) => {
+  const nb = Array.isArray(e?.native_biome) ? e.native_biome : null;
+  const nativeName = nb && nb[0] && nb[0] !== "None" ? prettyName(nb[0]) : "";
+  const exclList = Array.isArray(e?.exclusive_biomes) && e.exclusive_biomes.length ? e.exclusive_biomes.map(prettyName) : [];
+  const exclRaw = Array.isArray(e?.exclusive_biome) && e.exclusive_biome[0] && e.exclusive_biome[0] !== "None" ? prettyName(e.exclusive_biome[0]) : "";
+  const worlds = exclList.length ? exclList : (exclRaw ? [exclRaw] : []);
+  const globalN = Number(e?.rarity);
+  const nativeN = Number(e?.native_rarity);
+  if (worlds.length) {
+    const where = worlds.length > 1 ? `${worlds.slice(0, -1).join(", ")} and ${worlds[worlds.length - 1]}` : worlds[0];
+    const btLocked = /breakthrough/i.test(String(e?.obtainment || ""));
+    return pick([
+      btLocked
+        ? `Its only home is ${where} — Breakthrough will not smuggle it out.`
+        : `Its only home is ${where}; elsewhere it needs a Breakthrough roll to appear.`,
+      btLocked
+        ? `Find ${where} or find nothing: outside it the aura simply never drops.`
+        : `Listed as ${where}-bound — outside those walls only Breakthrough can reach it.`,
+    ], name);
+  }
+  if (nativeName) {
+    const nativeTxt = Number.isFinite(nativeN) && nativeN > 0 ? `1 in ${fmtNum(nativeN)}` : `×${nb![1] ?? 1} luck`;
+    const anywhere = Number.isFinite(globalN) && globalN > 0 ? `1 in ${fmtNum(globalN)}` : "";
+    return pick([
+      anywhere
+        ? `${nativeName} is its home biome — the roll tightens to ${nativeTxt} there, against ${anywhere} anywhere else.`
+        : `${nativeName} is its home biome, with odds of ${nativeTxt}.`,
+      anywhere
+        ? `Anywhere it takes ${anywhere}; stand in ${nativeName} and the hunt shrinks to ${nativeTxt}.`
+        : `${nativeName} boosts it to ${nativeTxt}.`,
+      anywhere
+        ? `Global rolls pay ${anywhere} — but ${nativeName} answers better, at ${nativeTxt}.`
+        : `${nativeName} is where this one thrives: ${nativeTxt}.`,
+    ], name);
+  }
+  return pick([
+    "No biome holds special rights to it — it rolls anywhere.",
+    "It is a global roll: any biome, any time.",
+    "No home biome recorded, so every roll counts the same.",
+  ], name);
+};
+
+/** Archive notes fallback — honest and varied instead of one canned line. */
+const archiveNotes = (e: Entry, name: string) =>
+  String(e?.description || e?.notes || "").trim() || pick([
+    "The wiki keeps no description for this one yet — the numbers above are everything the reference data carries.",
+    "No lore has been written for it so far; the rarity and the source are all that is verified.",
+    "Nothing beyond the stats is documented yet — when the wiki grows a page, it will appear here.",
+  ], name);
 
 const rarityClassFull = (rarityName: string | undefined, value: any) => {
   if (rarityName && rarityName.trim()) return rarityName.trim();
@@ -175,29 +306,22 @@ const sourceLabel = (value: any) => {
   return SOURCE_LABELS[key] || "Sol's RNG Fandom Wiki";
 };
 
+/** Rarity fact: the GLOBAL odds only. The in-biome odds live in the biome
+ *  sentence ("How to get it"), and per-source odds of crafted/potion auras
+ *  live in their own prose — nothing is ever printed twice. */
 const auraRarityText = (e: Entry) => {
   if (!e) return "Unknown";
   if (isCraftableAura(e) || isPotionAura(e)) {
     const rn = e.rarity_name ? canonicalRarity(e.rarity_name) : "";
     // Potion auras roll with a FIXED chance (luck does not apply) — they
     // are not crafted, so keep the wording honest for each badge.
-    const kind = isCraftableAura(e) ? "Crafted — see Obtainment" : "Fixed chance — see Obtainment";
+    const kind = isCraftableAura(e) ? "Crafted — see How to get it" : "Fixed chance — see How to get it";
     return `${rn ? rn + " · " : ""}${kind}`;
   }
-  const native = Number(e.native_rarity);
   const global = Number(e.rarity);
-  const biome = String(e.native_biome?.[0] ?? "");
-  if (e.is_exclusive && !Number.isFinite(native) && !Number.isFinite(global)) return "N/A — exclusive";
-  const parts: string[] = [];
-  if (Number.isFinite(native) && native > 0) {
-    parts.push(`1 in ${fmtNum(native)}${biome && biome !== "None" ? ` in ${prettyName(biome)}` : ""}`);
-  }
-  if (!e.is_exclusive && Number.isFinite(global) && global > 0 && (!Number.isFinite(native) || global !== native)) {
-    parts.push(`1 in ${fmtNum(global)} anywhere`);
-  }
-  if (!parts.length && Number.isFinite(global) && global > 0) parts.push(`1 in ${fmtNum(global)}`);
-  if (e.is_exclusive) parts.push("exclusive");
-  return parts.join(" · ") || "Unknown";
+  if (e.is_exclusive && !Number.isFinite(global)) return "N/A — exclusive";
+  if (Number.isFinite(global) && global > 0) return `1 in ${fmtNum(global)}`;
+  return "Unknown";
 };
 
 const searchableText = (name: string, info: Entry) => {
@@ -216,7 +340,7 @@ const searchableText = (name: string, info: Entry) => {
   return bits.join(" ").toLowerCase();
 };
 
-export default function SolsBookPage() {
+export default function SolsBookPage({ active }: { active?: boolean }) {
   const [biomes, setBiomes] = useState<MapData>({});
   const [items, setItems] = useState<MapData>({});
   const [gauntlets, setGauntlets] = useState<MapData>({});
@@ -243,8 +367,8 @@ export default function SolsBookPage() {
     return () => window.clearTimeout(t);
   }, [queryInput]);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [biomeData, auraData, itemData, gauntletData, achievementData] = await Promise.all([
         window.pywebview?.api?.get_full_biome_data?.(),
@@ -264,10 +388,20 @@ export default function SolsBookPage() {
       if (itemData && typeof itemData === "object") setItems(itemData);
       if (gauntletData && typeof gauntletData === "object") setGauntlets(gauntletData);
       if (achievementData && typeof achievementData === "object") setAchievements(achievementData);
-    } finally { setLoading(false); }
+    } finally { if (!silent) setLoading(false); }
   };
 
   useEffect(() => { void load(); }, []);
+
+  // The book must never show stale data: the background fandom refresh can
+  // land new auras/items/achievements while another tab is open. Re-pull the
+  // datasets every time the book becomes active — silently, without the
+  // loading flash and without reloading the page.
+  const wasActive = useRef(true);
+  useEffect(() => {
+    if (active !== false && !wasActive.current) void load(true);
+    wasActive.current = active !== false;
+  }, [active]);
 
   const data = section === "biomes" ? biomes : section === "items" ? items : section === "gauntlets" ? gauntlets : section === "achievements" ? achievements : auras;
   const categories = useMemo(() => {
@@ -318,8 +452,11 @@ export default function SolsBookPage() {
     push(entry.image_ingame_url, "In-game preview");
     const seen = new Set<string>();
     return out.filter(item => {
-      if (seen.has(item.url)) return false;
-      seen.add(item.url);
+      // One file can arrive through several URLs — dedupe by file name so the
+      // gallery never shows the same picture twice.
+      const key = mediaFileName(item.url).toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
       return true;
     });
   }, [section, entry]);
@@ -327,7 +464,7 @@ export default function SolsBookPage() {
   const auraVideoKind = typeof entry?.video_kind === "string" ? entry.video_kind : "";
   const auraCutsceneNote = typeof entry?.cutscene_note === "string" ? entry.cutscene_note : "";
   const auraMusicUrl = typeof entry?.music_url === "string" && entry.music_url ? entry.music_url : "";
-  const auraMusicFile = typeof entry?.music_file === "string" ? entry.music_file : "";
+  const auraMusicFile = (typeof entry?.music_name === "string" && entry.music_name) ? entry.music_name : (typeof entry?.music_file === "string" ? entry.music_file : "");
 
   const biomeImages = useMemo<ImageItem[]>(() => {
     if (section !== "biomes" || !entry) return [];
@@ -336,19 +473,29 @@ export default function SolsBookPage() {
     const push = (url: any, caption?: string) => {
       if (typeof url === "string" && url.length > 0 && isImageFile(url)) out.push({ url, caption });
     };
-    push(entry.thumbnail_url);
+    // Info-page preview: the rectangular in-game biome view (preview_url).
+    // thumbnail_url is the square spawn icon — it must NEVER double as the
+    // preview; when the wiki has no scene yet, the preview area stays empty.
+    push(entry.preview_url, "In-game view");
     if (Array.isArray(entry.gallery)) {
       entry.gallery.forEach((g: any) => push(g?.url, typeof g?.caption === "string" ? g.caption : undefined));
     }
     const seen = new Set<string>();
     return out.filter(item => {
-      if (seen.has(item.url)) return false;
-      seen.add(item.url);
+      // One file can arrive through several URLs (the CDN /revision/latest
+      // form and the Special:FilePath form) — dedupe by file name, or the
+      // media gallery shows every picture twice.
+      const key = mediaFileName(item.url).toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
       return true;
     });
   }, [section, entry]);
   const biomeMusicUrl = typeof entry?.music_url === "string" && entry.music_url ? entry.music_url : "";
-  const biomeMusicFile = typeof entry?.music_file === "string" ? entry.music_file : "";
+  const biomeMusicFile = (typeof entry?.music_name === "string" && entry.music_name) ? entry.music_name : (typeof entry?.music_file === "string" ? entry.music_file : "");
+  const biomeVideoUrl = typeof entry?.video_url === "string" && entry.video_url ? entry.video_url : "";
+  const biomeVideoKind = typeof entry?.video_kind === "string" ? entry.video_kind : "";
+  const biomeCutsceneNote = typeof entry?.cutscene_note === "string" ? entry.cutscene_note : "";
 
   useEffect(() => {
     if (!selected || !entries.some(([name]) => name === selected)) {
@@ -441,9 +588,10 @@ export default function SolsBookPage() {
           {!entry && <div className="form-hint">Select an entry from the archive.</div>}
           {entry && <>
             <div style={{ display: "flex", alignItems: "flex-start", gap: 16, borderBottom: `1px solid rgba(255,255,255,0.08)`, paddingBottom: 18, marginBottom: 18 }}>
-              <div className="book-panel" style={{ width: 64, height: 64, display: "grid", placeItems: "center", fontSize: 28, flex: "0 0 auto", overflow: "hidden", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px" }}>
+              <div className="book-panel" style={{ width: 64, height: 64, display: "grid", placeItems: "center", fontSize: 28, flex: "0 0 auto", overflow: "hidden" }}>
                 {entry.thumbnail_url ? (
-                  <CachedThumb url={String(entry.thumbnail_url)} alt={String(selected)} style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4 }} />
+                  <CachedThumb url={String(entry.thumbnail_url)} alt={String(selected)} style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4 }}
+                    placeholder={<span style={{ fontSize: 28 }}>{section === "biomes" ? "☁" : section === "items" ? "🎒" : section === "gauntlets" ? "🥊" : section === "achievements" ? "🏆" : "✧"}</span>} />
                 ) : (
                   section === "biomes" ? "☁" : section === "items" ? "🎒" : section === "gauntlets" ? "🥊" : section === "achievements" ? "🏆" : "✧"
                 )}
@@ -475,7 +623,7 @@ export default function SolsBookPage() {
             {detailTab === "media" && section === "auras" ? (
               <AuraMediaViewer images={auraImages} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
             ) : detailTab === "media" && section === "biomes" ? (
-              <AuraMediaViewer images={biomeImages} videoUrl="" videoKind="" cutsceneNote="" musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
+              <AuraMediaViewer images={biomeImages} videoUrl={biomeVideoUrl} videoKind={biomeVideoKind} cutsceneNote={biomeCutsceneNote} musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
             ) : section === "gauntlets" ? <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 16 }}>
                 <Fact label="Gear Slot" value={entry.slot || entry.hand || "Right Hand"} />
@@ -531,18 +679,34 @@ export default function SolsBookPage() {
                   <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.how_to_get}</div>
                 </div>
               )}
+              {(Array.isArray((entry as any).recipe_lines) && (entry as any).recipe_lines.length > 0) || (entry as any).recipe ? (
+                <div className="book-card" style={{ marginBottom: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>🛠 Crafting recipe</h4>
+                  {Array.isArray((entry as any).recipe_lines) && (entry as any).recipe_lines.length > 0 ? (
+                    <ul style={{ margin: 0, paddingLeft: 18, listStyle: "disc", fontSize: 13, color: "#cbd5e1", lineHeight: 1.8 }}>
+                      {(entry as any).recipe_lines.map((line: string, i: number) => <li key={i}>{line}</li>)}
+                    </ul>
+                  ) : (
+                    <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{String((entry as any).recipe)}</div>
+                  )}
+                </div>
+              ) : null}
               <div className="book-card" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
                 <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>📝 Description</h4>
-                <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || "No description provided."}</div>
+                <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || "The reference carries no flavour text for this item — the mechanics above are everything verified."}</div>
               </div>
             </> : section === "biomes" ? <>
-              {biomeImages.length > 0 && <HeroMedia item={biomeImages[0]} />}
+              {biomeImages.length > 0 && <BiomePreview item={biomeImages[0]} />}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity / spawn" value={entry.spawn_chance || "Unknown"} />
                 <Fact label="Duration" value={entry.duration || "Unknown"} />
                 <Fact label="Biome Message" value={entry.chat_message || "Doesn't post a chat message on spawn"} />
               </div>
-              <Section title="Chronicle"><p style={{ lineHeight: 1.7, color: "var(--text-secondary)", fontSize: 13 }}>{entry.description || entry.how_to_get || "No extended description is available for this entry yet."}</p></Section>
+              <Section title="Chronicle"><p style={{ lineHeight: 1.7, color: "var(--text-secondary)", fontSize: 13 }}>{entry.description || entry.how_to_get || pick([
+                "The wiki writes no story for this biome yet — the spawn odds and the chat line above are everything the reference carries.",
+                "No lore page so far. What is verified: how it spawns, how long it stays, and what it says when it arrives.",
+                "Beyond the mechanics above, the reference data is silent — a proper chronicle lands here once the wiki writes one.",
+              ], String(entry.name || entry.spawn_chance || "biome"))}</p></Section>
               {/* Full media (GIFs, videos, music) lives in the Media tab; the Info
                   page carries only the one hero banner above — inline GIF galleries
                   here used to fail loading and kept the page heavy. */}
@@ -559,17 +723,23 @@ export default function SolsBookPage() {
               </div>
               <div className="book-card" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "12px 16px" }}>
                 <h4 style={{ margin: "0 0 6px", fontSize: 11, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em" }}>📖 Description</h4>
-                <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || "No description provided."}</div>
+                <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{entry.description || pick([
+                  "No description has been written for this achievement yet.",
+                  "The reference data lists the reward but no flavour text — it will show up here once documented.",
+                ], String(entry.category || entry.reward || "achievement"))}</div>
               </div>
             </> : <>
               {auraImages.length > 0 && <HeroMedia item={auraImages[0]} />}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity class" value={rarityClassFull(entry.rarity_name, entry.rarity)} />
                 <Fact label="Rarity" value={auraRarityText(entry)} />
-                <Fact label="Obtainment" value={obtainmentLabel(entry)} />
               </div>
-              <Section title={entry.is_exclusive ? "Exclusive world" : "Native world"}><p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{entry.is_exclusive && entry.exclusive_biomes?.length ? `Exclusive to ${entry.exclusive_biomes.map(prettyName).join(", ")}` : entry.native_biome && entry.native_biome[0] !== "None" ? `${prettyName(entry.native_biome[0])} · native rarity ${entry.native_rarity ? `1 in ${fmtNum(entry.native_rarity)}` : `×${entry.native_biome[1] ?? 1}`}` : "Global / no native biome recorded."}</p></Section>
-              <Section title="Archive notes"><p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{entry.description || entry.notes || "This aura is catalogued from the available reference data."}</p></Section>
+              <Section title="How to get it">
+                <p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>
+                  {obtainmentProse(entry, entryDisplayName(selected, entry))} {biomeStory(entry, entryDisplayName(selected, entry))}
+                </p>
+              </Section>
+              <Section title="Archive notes"><p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{archiveNotes(entry, entryDisplayName(selected, entry))}</p></Section>
               {(auraImages.length > 0 || auraVideoUrl) && <div className="form-hint" style={{ marginTop: 10 }}>🖼 {auraImages.length + (auraVideoUrl ? 1 : 0)} media file(s) available — open the <b>Media</b> tab to view them without slowing the book down.</div>}
             </>}
           </>}
@@ -634,11 +804,27 @@ function useCachedMedia(remoteUrl?: string): { src: string; state: "idle" | "loa
   return { src, state };
 }
 
-function CachedImage({ url, alt, style, onClick }: { url?: string; alt?: string; style?: React.CSSProperties; onClick?: () => void }) {
-  const { src } = useCachedMedia(url || undefined);
-  const [failed, setFailed] = useState(false);
-  if (!url) return null;
-  const effective = (!failed && src) ? src : url;
+function CachedImage({ url, alt, style, onClick, placeholder }: { url?: string; alt?: string; style?: React.CSSProperties; onClick?: () => void; placeholder?: React.ReactNode }) {
+  const { src, state } = useCachedMedia(url || undefined);
+  // Deterministic source order: the local cache FIRST, the raw wiki URL only
+  // after the cache resolved or failed, then the placeholder. The old flow
+  // rendered the direct CDN URL while the cache call was still in flight —
+  // Cloudflare rejected it instantly and the image was declared dead before
+  // the good local copy could ever appear (why full GIFs "never loaded" while
+  // thumbnails, whose URL swap arrives later, worked fine).
+  const [usedDirect, setUsedDirect] = useState(false);
+  const [dead, setDead] = useState(false);
+  useEffect(() => { setUsedDirect(false); setDead(false); }, [url]);
+  const fallback = placeholder ?? (
+    <div style={{
+      ...style, display: "grid", placeItems: "center", minHeight: 48,
+      background: "rgba(255,255,255,.05)", color: "rgba(226,232,240,.5)", fontSize: 18, lineHeight: 1,
+    }}>✧</div>
+  );
+  if (!url || dead) return <>{fallback}</>;
+  const usingDirect = usedDirect || state === "failed";
+  const effective = usingDirect ? url : src;
+  if (!effective) return <>{fallback}</>; // cache still resolving — hold
   return (
     <img
       src={effective}
@@ -648,13 +834,13 @@ function CachedImage({ url, alt, style, onClick }: { url?: string; alt?: string;
       decoding="async"
       draggable={false}
       referrerPolicy="no-referrer"
-      onError={() => { if (src) setFailed(true); }}
+      onError={() => { if (!usingDirect) setUsedDirect(true); else setDead(true); }}
       style={{ display: "block", ...style }}
     />
   );
 }
 
-function CachedThumb({ url, alt, style }: { url?: string; alt?: string; style?: React.CSSProperties }) {  const [previewSrc, setPreviewSrc] = useState<string>("");
+function CachedThumb({ url, alt, style, placeholder }: { url?: string; alt?: string; style?: React.CSSProperties; placeholder?: React.ReactNode }) {  const [previewSrc, setPreviewSrc] = useState<string>("");
   useEffect(() => {
     setPreviewSrc("");
     if (!url) return;
@@ -666,7 +852,7 @@ function CachedThumb({ url, alt, style }: { url?: string; alt?: string; style?: 
     return () => { alive = false; };
   }, [url]);
 
-  return <CachedImage url={previewSrc || url} alt={alt} style={style} />;
+  return <CachedImage url={previewSrc || url} alt={alt} style={style} placeholder={placeholder} />;
 }
 
 /* Volume slider styled like the seek bar (flat track, small angular thumb)
@@ -685,7 +871,25 @@ function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: stri
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [loop, setLoop] = useState(false);
   const [saveState, setSaveState] = useState("");
+  // Track title: the wiki file name when the entry carries none — the player
+  // used to show an empty header whenever music_file was missing.
+  const title = fileLabel ? prettyName(fileLabel) : prettyName(mediaFileName(url));
+
+  // A tab/entry switch swaps the src under the same element: the browser
+  // silently stops playback while the old "playing" flag survived, so the
+  // button kept lying (and the first click seemed dead). Reset on track
+  // change and keep the icon in sync with the real element state.
+  useEffect(() => {
+    setPlaying(false);
+    setCurrent(0);
+    setDuration(0);
+  }, [url]);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.loop = loop;
+  }, [loop]);
 
   const fmtTime = (t: number) => {
     if (!Number.isFinite(t) || t < 0) return "0:00";
@@ -716,7 +920,7 @@ function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: stri
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, fontSize: 12, color: "var(--text-secondary)" }}>
-        <span>{fileLabel ? `🎵 ${prettyName(fileLabel)}` : ""}</span>
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "55%" }}>🎵 {title}</span>
         <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, opacity: .75 }}>
           {state === "loading" ? "Fetching from wiki…" : state === "ready" ? "✓ Cached" : state === "failed" ? "Wiki stream" : ""}
           {saveState ? <span>{saveState}</span> : null}
@@ -731,6 +935,19 @@ function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: stri
           style={{ borderRadius: "4px", padding: "5px 14px", fontWeight: 600, minWidth: 50, flex: "0 0 auto" }}
         >
           {playing ? "❚❚" : "▶"}
+        </button>
+        <button
+          className="btn"
+          onClick={() => setLoop(v => !v)}
+          title={loop ? "Repeat: on" : "Repeat: off"}
+          style={{
+            borderRadius: "4px", padding: "5px 10px", flex: "0 0 auto", fontWeight: 600,
+            opacity: loop ? 1 : 0.55,
+            borderColor: loop ? (accent || "#a78bfa") : undefined,
+            color: loop ? (accent || "#a78bfa") : undefined,
+          }}
+        >
+          🔁
         </button>
         <div onClick={seek} title="Seek" style={{ flex: 1, height: 8, borderRadius: 4, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.12)", cursor: "pointer", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: `${progress}%`, background: accent || "#a78bfa", transition: "width .12s linear" }} />
@@ -778,9 +995,61 @@ function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: stri
  *  in-game shots into abstract close-ups). */
 function HeroMedia({ item }: { item: ImageItem }) {
   return (
-    <div className="book-panel" style={{ position: "relative", height: 200, borderRadius: 6, overflow: "hidden", marginBottom: 16, background: "rgba(0,0,0,.35)" }}>
+    <div className="book-panel" style={{ position: "relative", height: 200, borderRadius: 0, overflow: "hidden", marginBottom: 16, background: "rgba(0,0,0,.35)" }}>
       <CachedImage url={item.url} alt={item.caption || ""} style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(10,8,20,.82) 100%)" }} />
+      {item.caption && (
+        <div style={{ position: "absolute", bottom: 8, left: 12, right: 12, fontSize: 11, color: "#e2e8f0", letterSpacing: ".03em", textShadow: "0 1px 3px rgba(0,0,0,.7)" }}>
+          {item.caption}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Biome preview: a wide cinematic strip (the in-game screenshot cropped to
+ *  a letterbox) with softly blurred top/bottom edges. Hold the mouse still on
+ *  it for 2 seconds and it unfolds until the whole image fits; move the mouse
+ *  away and 2 seconds later it folds back. */
+function BiomePreview({ item }: { item: ImageItem }) {
+  const [expanded, setExpanded] = useState(false);
+  const holdTimer = useRef(0);
+  const clearHold = () => {
+    if (holdTimer.current) { window.clearTimeout(holdTimer.current); holdTimer.current = 0; }
+  };
+  useEffect(() => () => clearHold(), []);
+  return (
+    <div
+      className="book-panel"
+      onMouseEnter={() => { clearHold(); holdTimer.current = window.setTimeout(() => setExpanded(true), 2000); }}
+      onMouseLeave={() => { clearHold(); holdTimer.current = window.setTimeout(() => setExpanded(false), 2000); }}
+      style={{ position: "relative", borderRadius: 0, overflow: "hidden", marginBottom: 16, background: "rgba(0,0,0,.35)", cursor: "pointer" }}
+    >
+      <CachedImage
+        url={item.url}
+        alt={item.caption || ""}
+        placeholder={<div style={{ width: "100%", height: expanded ? 420 : 150, display: "grid", placeItems: "center", background: "rgba(255,255,255,.04)", color: "rgba(226,232,240,.55)", fontSize: 22, transition: "height .45s ease" }}>☁</div>}
+        style={{
+          width: "100%",
+          height: expanded ? 420 : 150,
+          objectFit: expanded ? "contain" : "cover",
+          objectPosition: "center",
+          display: "block",
+          transition: "height .45s ease",
+        }}
+      />
+      {/* soft dark gradient on the top and bottom edges while folded */}
+      <div style={{
+        position: "absolute", left: 0, right: 0, top: 0, height: expanded ? 0 : 46, pointerEvents: "none",
+        background: "linear-gradient(to bottom, rgba(8,8,14,.55), rgba(8,8,14,0))",
+        transition: "height .45s ease",
+      }} />
+      <div style={{
+        position: "absolute", left: 0, right: 0, bottom: 26, height: expanded ? 0 : 46, pointerEvents: "none",
+        background: "linear-gradient(to top, rgba(8,8,14,.55), rgba(8,8,14,0))",
+        transition: "height .45s ease",
+      }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(10,8,20,.82) 100%)", pointerEvents: "none" }} />
       {item.caption && (
         <div style={{ position: "absolute", bottom: 8, left: 12, right: 12, fontSize: 11, color: "#e2e8f0", letterSpacing: ".03em", textShadow: "0 1px 3px rgba(0,0,0,.7)" }}>
           {item.caption}
@@ -931,12 +1200,14 @@ function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, 
 
   return (
     <div>
-      <div className="book-panel" style={{ position: "relative", background: "rgba(0,0,0,.35)", overflow: "hidden", height: 340, cursor: active.kind === "image" && zoom > 1 ? "grab" : "default", borderRadius: "6px" } as React.CSSProperties}
-        onWheel={onWheel} onMouseDown={onDragStart} onMouseMove={onDragMove} onMouseUp={endDrag} onMouseLeave={endDrag}>
-        {mediaEl()}
-        {controlsRow(false)}
-        {captionRow()}
-      </div>
+      {items.length > 0 && (
+        <div className="book-panel" style={{ position: "relative", background: "rgba(0,0,0,.35)", overflow: "hidden", height: 340, cursor: active.kind === "image" && zoom > 1 ? "grab" : "default", borderRadius: 0 } as React.CSSProperties}
+          onWheel={onWheel} onMouseDown={onDragStart} onMouseMove={onDragMove} onMouseUp={endDrag} onMouseLeave={endDrag}>
+          {mediaEl()}
+          {controlsRow(false)}
+          {captionRow()}
+        </div>
+      )}
 
       {videoUrl && (
         <div style={{ marginTop: 6, fontSize: 12, color: "var(--text-secondary)" }}>
@@ -955,7 +1226,7 @@ function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, 
       )}
 
       {musicUrl && (
-        <div className="book-panel" style={{ marginTop: 12, padding: "10px 12px", borderRadius: "6px" } as React.CSSProperties}>
+        <div className="book-panel" style={{ marginTop: 12, padding: "10px 12px", borderRadius: 0 } as React.CSSProperties}>
           <AudioPlayer url={musicUrl} fileLabel={musicFile} accent={accent} />
         </div>
       )}
@@ -971,6 +1242,7 @@ function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, 
               style={{ padding: 0, position: "relative", border: i === idx ? `2px solid ${accent}` : "2px solid transparent", background: "rgba(255,255,255,.06)", cursor: "pointer", lineHeight: 0, borderRadius: "4px", overflow: "hidden" }}
             >
               <CachedThumb url={item.url} alt={item.caption}
+                placeholder={<div style={{ width: "100%", height: 84, background: "rgba(0,0,0,.55)" }} />}
                 style={{ width: "100%", height: 84, objectFit: "cover", background: "rgba(255,255,255,.05)" }} />
               <span style={{ position: "absolute", top: 3, left: 3, fontSize: 8.5, letterSpacing: ".05em", textTransform: "uppercase", padding: "1px 5px", borderRadius: 3, background: "rgba(10,8,20,.78)", color: accent, fontWeight: 600, lineHeight: 1.5 }}>
                 {ROLE_LABELS[item.role]}
@@ -1081,7 +1353,9 @@ function BookList({ entries, section, selected, onSelect, loading }: {
   );
 }
 
-function Fact({ label, value }: { label: string; value: any }) {  return <div className="book-panel" style={{ padding: "10px 12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px" }}>
+function Fact({ label, value }: { label: string; value: any }) {  // No inline background/borderRadius: .book-panel draws the panel's own
+  // sharp corners and bracket accents — rounded overrides used to hide them.
+  return <div className="book-panel" style={{ padding: "10px 12px" }}>
     <div style={{ color: "#a78bfa", fontSize: 10.5, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 4, fontWeight: 600 }}>{label}</div>
     <div style={{ color: "#f8fafc", lineHeight: 1.4, fontSize: 13, fontWeight: 500 }}>{String(value || "Unknown")}</div>
   </div>;
@@ -1090,6 +1364,6 @@ function Fact({ label, value }: { label: string; value: any }) {  return <div cl
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return <div style={{ marginTop: 16 }}>
     <h4 style={{ color: "#a78bfa", margin: "0 0 6px", letterSpacing: ".06em", fontSize: 12, textTransform: "uppercase", fontWeight: 600 }}>{title}</h4>
-    {children}
+    <div className="book-panel" style={{ padding: "12px 14px" }}>{children}</div>
   </div>;
 }

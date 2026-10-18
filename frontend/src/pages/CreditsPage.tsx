@@ -32,9 +32,6 @@ export default function CreditsPage() {
                 <div style={{ textAlign: "center", marginBottom: "16px" }}>
                     <h3 style={{ margin: 0 }}>Mirax Kitoro</h3>
                     <p style={{ color: "var(--accent)", margin: "4px 0", fontSize: "14px" }}>EndSol Macro Developer</p>
-                    <p style={{ color: "var(--text-secondary)", fontSize: "13px" }}>
-                        Fork of Coteab Macro — continued development and customization
-                    </p>
                     <p style={{ margin: "6px 0 0", fontSize: "13px" }}>
                         <a href="https://github.com/MiraxKito/EndSol-Macro" target="_blank" rel="noreferrer" style={{ color: "var(--accent)" }}>
                             GitHub Repo
@@ -43,13 +40,13 @@ export default function CreditsPage() {
                 </div>
             </div>
 
-            {/* Original Coteab Macro Team */}
+            {/* Origins: Coteab Macro team + their extra credits */}
             <div className="card">
                 <div className="card-header">
                     <div className="card-icon">👥</div>
                     <div>
-                        <h3>Coteab Macro — Original Team</h3>
-                        <p>The creators of the original macro that EndSol is based on</p>
+                        <h3>Origins — Coteab Macro</h3>
+                        <p>The original project this macro grew out of, and the people behind it</p>
                     </div>
                 </div>
 
@@ -70,6 +67,30 @@ export default function CreditsPage() {
                         GitHub: Coteab Macro (original)
                     </a>
                 </div>
+
+                <div className="card-header" style={{ marginTop: "18px" }}>
+                    <div className="card-icon">🏅</div>
+                    <div>
+                        <h3>Extra Credits (original project)</h3>
+                        <p>Thanks to everyone who contributed</p>
+                    </div>
+                </div>
+                <div style={{
+                    padding: "14px 16px",
+                    background: "var(--bg-input)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius-md)",
+                    fontSize: "13px",
+                    lineHeight: "1.8",
+                    color: "var(--text-secondary)",
+                }}>
+                    <div>- Vexthecoder — Icons and assets</div>
+                    <div>- Cresqnt, Baz & the Scope Team — Anti-AFK inspiration</div>
+                    <div>- rnd.xy, imsomeone — External contributions</div>
+                    <div>- Finnerinch — Former developer</div>
+                    <div>- .ivelchampion249._30053 — Fishing logic inspiration</div>
+                    <div>- All the testers who made this possible</div>
+                </div>
             </div>
 
             {/* MaxStellar */}
@@ -89,41 +110,12 @@ export default function CreditsPage() {
                 </div>
                 <h3>MaxStellar</h3>
                 <p style={{ color: "var(--text-secondary)", fontSize: "13px" }}>
-                    Biome Macro Creator — Inspiration and biome detection logic
+                    Big contribution to macro support and biome detection logic
                 </p>
                 <a href="https://www.youtube.com/@maxstellar_" target="_blank" rel="noreferrer"
                     style={{ color: "var(--accent)", textDecoration: "underline", fontSize: "13px" }}>
                     YouTube Channel
                 </a>
-            </div>
-
-            {/* Extra Credits */}
-            <div className="card">
-                <div className="card-header">
-                    <div className="card-icon">🏅</div>
-                    <div>
-                        <h3>Extra Credits</h3>
-                        <p>Thanks to everyone who contributed</p>
-                    </div>
-                </div>
-
-                <div style={{
-                    padding: "14px 16px",
-                    background: "var(--bg-input)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "var(--radius-md)",
-                    fontSize: "13px",
-                    lineHeight: "1.8",
-                    color: "var(--text-secondary)",
-                }}>
-                    <div>- maxstellar — Inspiration and biome detection logic</div>
-                    <div>- Vexthecoder — Icons and assets</div>
-                    <div>- Cresqnt, Baz & the Scope Team — Anti-AFK inspiration</div>
-                    <div>- rnd.xy, imsomeone — External contributions</div>
-                    <div>- Finnerinch — Former developer</div>
-                    <div>- .ivelchampion249._30053 — Fishing logic inspiration</div>
-                    <div>- All the testers who made this possible</div>
-                </div>
             </div>
 
             {/* Rights and License */}
@@ -138,6 +130,7 @@ export default function CreditsPage() {
                 <div style={{ color: "var(--text-secondary)", fontSize: "13px", lineHeight: "1.7" }}>
                     <div><strong>EndSol Macro © 2026 EndSol Development Team</strong></div>
                     <div style={{ marginTop: "8px" }}>This software is free for personal, non-commercial use. Copying, republishing, selling, sublicensing, or presenting modified versions as an official release is not permitted without written permission.</div>
+                    <div style={{ marginTop: "8px" }}>Using any part of this macro's functionality — even partial or modified — in other projects requires the author's explicit consent.</div>
                     <div style={{ marginTop: "8px", color: "var(--text-muted)", fontSize: "12px" }}>Third-party components remain subject to their respective licenses.</div>
                 </div>
             </div>

@@ -10,9 +10,17 @@ type AutoPopBiomeEntry = {
 };
 type AutoPopBiomeMap = Record<string, AutoPopBiomeEntry>;
 
-const RARE_BIOMES = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY"];
+const RARE_BIOMES = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY", "THE RADIANT FOREST"];
 const EVENT_BIOMES = ["AURORA", "EGGLAND", "BLAZING SUN", "INCINERATOR", "PUMPKIN MOON", "GRAVEYARD", "BLOOD RAIN"];
 const ADMIN_BIOMES = ["THE HYPERSPACE REALM", "\u8d64\u3044\u6e80\u6708", "THE NULL'S EXISTENCE", "THE CITADEL OF ORDERS"];
+// Every biome the game can spawn, seeded into the picker so brand-new ones
+// (Lost Forest, The Radiant Forest right after an update) are configurable
+// before their names ever appear in the user's config.
+const KNOWN_BIOMES = [
+    "WINDY", "RAINY", "SNOWY", "SAND STORM", "HELL", "STARFALL", "CORRUPTION", "NULL",
+    "LOST FOREST",
+    ...RARE_BIOMES, ...EVENT_BIOMES, ...ADMIN_BIOMES,
+];
 const DEFAULT_BUFFS = [
     "Fortune Potion I",
     "Fortune Potion II",
@@ -51,6 +59,8 @@ const FALLBACK_BIOME_COLORS: Record<string, string> = {
     EGGLAND: "#d4fc8d",
     INCINERATOR: "#3b1f1f",
     SINGULARITY: "#cf4023",
+    "LOST FOREST": "#27F55E",
+    "THE RADIANT FOREST": "#8A48A8",
 };
 
 function normalizeColor(value: string | undefined): string {
@@ -118,6 +128,10 @@ function getAutoPopBiomes(config: Record<string, unknown>, customItems: string[]
 function getBiomeNames(config: Record<string, unknown>, autoPopBiomes: AutoPopBiomeMap): string[] {
     const names = new Set<string>();
 
+    for (const biomeName of KNOWN_BIOMES) {
+        names.add(biomeName);
+    }
+
     for (const biomeName of Object.keys(autoPopBiomes)) {
         if (biomeName && biomeName !== "NORMAL") {
             names.add(biomeName);
@@ -176,7 +190,7 @@ function getBiomeColor(config: Record<string, unknown>, biomeName: string, conte
 }
 
 export default function AutoPopBuffPage() {
-    const { config, saveConfig, error, biomeColors: contextColors } = useConfig();
+    const { config, setConfig, saveConfig, error, biomeColors: contextColors } = useConfig();
     const [selectedBiome, setSelectedBiome] = useState<string | null>(null);
     const [customItems, setCustomItems] = useState<string[]>([]);
     const [newItemName, setNewItemName] = useState("");
@@ -234,6 +248,13 @@ export default function AutoPopBuffPage() {
                         ? returnedItems
                         : [...customItems.filter((i) => i !== name), name];
                     setCustomItems(updated);
+                    // Keep the SHARED config state in sync: it is the source of
+                    // every later saveConfig() payload, and a stale
+                    // custom_auto_pop_buffs there used to overwrite the backend
+                    // list ("one item replaces another" in the UI).
+                    if (config) {
+                        setConfig({ ...config, custom_auto_pop_buffs: updated } as AppConfig);
+                    }
                     setNewItemName("");
                     setItemSuccess(`Added "${name}"`);
                     return;
@@ -267,7 +288,12 @@ export default function AutoPopBuffPage() {
             if (api && typeof api.remove_auto_pop_item === "function") {
                 const result = await api.remove_auto_pop_item(name) as { success: boolean; error?: string; custom?: string[]; items?: string[] };
                 if (result.success) {
-                    setCustomItems(result.custom ?? result.items ?? customItems.filter((i) => i !== name));
+                    const updated = (Array.isArray(result.custom) ? result.custom : result.items)
+                        ?? customItems.filter((i) => i !== name);
+                    setCustomItems(updated);
+                    if (config) {
+                        setConfig({ ...config, custom_auto_pop_buffs: updated } as AppConfig);
+                    }
                 }
             } else {
                 const typedConfig = (config ?? {}) as Record<string, unknown>;

@@ -10,6 +10,89 @@ class DetectionMixin:
                 return lines
         return []
 
+    _BIOME_IMAGE_EXT_RE = re.compile(r"\.(png|jpe?g|gif|webp|bmp|svg)$", re.I)
+    _BIOME_IMAGE_SKIP_RE = re.compile(r"placeholder", re.I)
+
+    @classmethod
+    def _name_matches_biome(cls, text, biome_canon):
+        """Filename/caption loosely belongs to the biome ("RadiantForest…"
+        matches THE RADIANT FOREST; leading "the" is ignored; light stemming
+        keeps "Glitch"/"exampleofglitcheffect" attached to GLITCHED)."""
+        canon = re.sub(r"[^a-z0-9]", "", str(text or "").lower())
+        target = re.sub(r"[^a-z0-9]", "", str(biome_canon or "").lower())
+        if not canon or not target:
+            return False
+
+        def stems(s):
+            out = {s}
+            if s.startswith("the") and len(s) > 5:
+                out.add(s[3:])
+            for suf in ("ed", "es", "s"):
+                if s.endswith(suf) and len(s) - len(suf) >= 4:
+                    out.add(s[: -len(suf)])
+            return out
+
+        for t in stems(target):
+            for c in stems(canon):
+                if t and (t in c or c in t):
+                    return True
+        return False
+
+    @classmethod
+    def _known_biome_canons(cls):
+        out = set()
+        for names in cls._BIOME_CATEGORY_SETS.values():
+            for raw in names:
+                canon = re.sub(r"[^a-z0-9]", "", raw.lower())
+                if canon.startswith("the") and len(canon) > 5:
+                    canon = canon[3:]
+                # "normal"/"time" are ordinary words — too weak as evidence of
+                # ownership; very short names collide with unrelated text.
+                if canon and canon not in ("normal", "time") and len(canon) >= 4:
+                    out.add(canon)
+        return out
+
+    @classmethod
+    def _biome_image_ok(cls, file_name, caption, biome_canon):
+        """True when a wiki file really pictures THIS biome.
+
+        Unfinished sections carry junk next to their headings: literal
+        placeholder files (placeholder.jpeg for Lost Forest), videos used as
+        previews (RadiantForestCutscene.mp4) and foreign images (a "Null" gif
+        or "SingularityTitle.png" sitting in another biome's zone). Ownership
+        is decided by file name OR caption; an asset that names a DIFFERENT
+        known biome is dropped, while generic captions and neutral file names
+        stay. Wrong art must never leak into the panel — an empty icon is the
+        correct state until the wiki has real pictures."""
+        name = str(file_name or "").split("|")[0].strip()
+        if not name:
+            return False
+        if cls._BIOME_IMAGE_SKIP_RE.search(name):
+            return False
+        if not cls._BIOME_IMAGE_EXT_RE.search(name):
+            return False  # mp4/webm cutscenes and audio are not pictures
+        if cls._name_matches_biome(name, biome_canon) or cls._name_matches_biome(caption, biome_canon):
+            return True
+        for other in cls._known_biome_canons():
+            if cls._name_matches_biome(name, other) or cls._name_matches_biome(caption, other):
+                return False  # belongs to a different known biome
+        return True
+
+    @classmethod
+    def _biome_video_ok(cls, file_name, caption, biome_canon):
+        """Cutscene/media clips belong to a biome by caption or file name —
+        the zone-before-heading convention alone is not enough, since a
+        biome's zone can also hold the PREVIOUS biome's soundtrack file."""
+        name = str(file_name or "").split("|")[0].strip()
+        if not name or cls._BIOME_IMAGE_SKIP_RE.search(name):
+            return False
+        if not re.search(r"\.(mp4|webm|mov|ogv)$", name, re.I):
+            return False
+        cap = str(caption or "").strip()
+        if cap and cls._name_matches_biome(cap, biome_canon):
+            return True
+        return cls._name_matches_biome(name, biome_canon)
+
     def load_biome_data(self):
         self._biome_source_status = {"source": "unknown", "reachable": False, "error": None}
         # Sol's RNG Fandom is the authoritative and ONLY remote data source.
@@ -240,17 +323,51 @@ class DetectionMixin:
         }
         try:
             import hashlib as _hashlib
-            for _bn, _file in _PREVIEW_FILES.items():
-                if _bn not in data or not isinstance(data.get(_bn), dict):
-                    continue
-                _fn = _file.replace(" ", "_")
-                _h = _hashlib.md5(_fn.encode()).hexdigest()
-                data[_bn]["thumbnail_url"] = (
-                    "https://static.wikia.nocookie.net/sol-rng/images/"
-                    + _h[0] + "/" + _h[:2] + "/" + _fn + "/revision/latest"
+            from urllib.parse import quote as _urlquote
+            # Resolve the verified preview files through the wiki's imageinfo
+            # API first: the canonical URL is immune to filename case and
+            # underscore mistakes ("snowy_img.png" vs the real "Snowy img.png"
+            # produced a dead static.wikia hash link — the grey preview that
+            # never loaded). The md5 construction stays as an offline fallback.
+            wanted = [(_bn, _file) for _bn, _file in _PREVIEW_FILES.items()
+                      if _bn in data and isinstance(data.get(_bn), dict)]
+            resolved = {}
+            if wanted:
+                titles = "|".join("File:" + _f.replace(" ", "_") for _bn, _f in wanted)
+                resp = fandom_get(
+                    "https://sol-rng.fandom.com/api.php?action=query&titles="
+                    + _urlquote(titles) + "&prop=imageinfo&iiprop=url&format=json",
+                    timeout=30,
                 )
+                if resp is not None and resp.ok:
+                    pages = ((resp.json().get("query") or {}).get("pages") or {}).values()
+                    for page in pages:
+                        info = (page.get("imageinfo") or [None])[0]
+                        if info and info.get("url"):
+                            key = str(page.get("title", "")).lower().replace("_", " ")
+                            resolved[key] = info["url"]
+            for _bn, _file in wanted:
+                _fn = _file.replace(" ", "_")
+                _url = resolved.get(("file:" + _fn).lower().replace("_", " "))
+                if not _url:
+                    _h = _hashlib.md5(_fn.encode()).hexdigest()
+                    _url = (
+                        "https://static.wikia.nocookie.net/sol-rng/images/"
+                        + _h[0] + "/" + _h[:2] + "/" + _fn + "/revision/latest"
+                    )
+                data[_bn]["thumbnail_url"] = _url
         except Exception as _prev_exc:
             print(f"Biome preview map failed: {_prev_exc}")
+
+        # `preview_url` freezes the Fandom in-game view (rectangular biome
+        # screenshot) for the Sol's Book info-page preview and the sim
+        # banner. The custom overrides below then replace `thumbnail_url`
+        # with the square spawn icons used in lists/detail headers — the two
+        # roles are deliberately separate.
+        for biome_name in list(data.keys()):
+            entry = data.get(biome_name)
+            if isinstance(entry, dict) and entry.get("thumbnail_url"):
+                entry["preview_url"] = entry["thumbnail_url"]
 
         custom_overrides = self.config.get("custom_biome_overrides", {})
         if isinstance(custom_overrides, dict):
@@ -288,6 +405,26 @@ class DetectionMixin:
             k: v for k, v in data.items()
             if not (isinstance(v, dict) and (v.get("hidden") or k.strip().upper() == "TIME"))
         }
+
+        # Final sanitation for icons/previews: the bundled snapshot's older
+        # records can backfill a junk URL (the wiki's literal placeholder.jpeg
+        # or a cutscene .mp4 used as a thumbnail) right after the parser
+        # filtered it out. Those never render as art — an empty value keeps
+        # the UI placeholder instead of a grey or broken picture.
+        from urllib.parse import unquote as _unquote
+        for biome_name, entry in data.items():
+            if not isinstance(entry, dict):
+                continue
+            for key in ("thumbnail_url", "preview_url"):
+                url = str(entry.get(key) or "").strip()
+                if not url:
+                    continue
+                path = url.split("?")[0].split("#")[0]
+                # "/revision/latest" is a suffix of the URL, not the file name.
+                path = re.sub(r"/revision/[^/]*$", "", path)
+                file_part = _unquote(path.rsplit("/", 1)[-1])
+                if not self._biome_image_ok(file_part, "", biome_name):
+                    entry[key] = ""
         return data
 
     def error_logging(self, exception, custom_message=None, max_log_size=3 * 1024 * 1024):
@@ -340,7 +477,7 @@ class DetectionMixin:
                     return
             if not self.check_roblox_procs():
                 return
-            if (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
+            if self._macro_busy_reason(include_scheduler=False, exclude="remote action"):
                 return
 
             for _ in range(4):
@@ -603,6 +740,11 @@ class DetectionMixin:
             if self.detection_running: return
             now = datetime.now()
             self.detection_running = True
+            # New run generation: zombie loop threads left over from a quick
+            # Stop->Start keep sleeping with their old generation and will
+            # see detection_running == False and exit instead of duplicating
+            # this run's work (see the property in mixin_lifecycle).
+            self._detection_gen = getattr(self, "_detection_gen", 0) + 1
             # The old "skip the first detected aura" suppression is gone.
             # It assumed the first detection is the aura already worn, but with
             # nothing equipped it stayed armed and ATE the first REAL roll of
@@ -750,8 +892,15 @@ class DetectionMixin:
             (self.start_daily_stats_loop, "Daily Stats"),
         ]
 
+        def _run_loop(thread_func, name):
+            self._register_loop_thread()
+            try:
+                thread_func()
+            finally:
+                self._unregister_loop_thread()
+
         for thread_func, name in threads:
-            thread = threading.Thread(target=thread_func, name=name, daemon=True)
+            thread = threading.Thread(target=_run_loop, args=(thread_func, name), name=name, daemon=True)
             thread.start()
 
         # Multi-instance mode: the full detector above runs on the MAIN
@@ -1359,6 +1508,20 @@ class DetectionMixin:
             if not str(_fcm_mut.get("obtainment", "")).strip():
                 _fcm_mut["obtainment"] = "Crafted at Jake's Workshop"
                 _fcm_mut["obtainment_type"] = "craftable"
+        # The Summer 2026 event aura was renamed "Taverna" -> "Osteria" (the
+        # old name is an alcohol reference Roblox censors). The Auras page
+        # still writes the link label as "Taverna|OSTERIA", so the parser
+        # keyed the record under that artifact (older snapshots use plain
+        # "TAVERNA") and lookups by the real game name "Osteria" always
+        # missed it.
+        _osteria = data.pop("Taverna|OSTERIA", None)
+        for _stale in ("TAVERNA", "Taverna"):
+            _old = data.pop(_stale, None)
+            if _osteria is None:
+                _osteria = _old
+        if isinstance(_osteria, dict) and not isinstance(data.get("Osteria"), dict):
+            _osteria["name"] = "Osteria"
+            data["Osteria"] = _osteria
         for item in data.values():
             if not isinstance(item, dict):
                 continue
@@ -1382,6 +1545,25 @@ class DetectionMixin:
                 else:
                     item["obtainment"] = "Obtainment details unavailable in cached index"
                     item["obtainment_type"] = "unknown"
+            # native_biome / exclusive_biome [1] is the in-biome LUCK
+            # MULTIPLIER ("x2" = twice as easy there); the raw 1-in-N value
+            # belongs to the native_rarity field. Older enrichment wrote the
+            # 1-in-N into the multiplier slot — records that carry the
+            # dedicated native_rarity field let us detect and convert them
+            # on load, so stale caches heal themselves.
+            rarity_val = item.get("rarity")
+            native_rarity_val = item.get("native_rarity")
+            if native_rarity_val and rarity_val and rarity_val != native_rarity_val:
+                for field in ("native_biome", "exclusive_biome"):
+                    pair = item.get(field)
+                    if not (isinstance(pair, list) and len(pair) >= 2):
+                        continue
+                    if pair[1] != native_rarity_val:
+                        continue
+                    try:
+                        pair[1] = max(1, round(float(rarity_val) / float(native_rarity_val)))
+                    except (TypeError, ValueError, ZeroDivisionError):
+                        pass
         # These fixed-rarity DREAMSPACE auras are listed in the Fandom
         # reference table but older local caches omitted their biome field.
         known = {"★": (100, "UNIQUE"), "★★": (1000, "LEGENDARY"), "★★★": (10000, "MYTHIC")}
@@ -1890,6 +2072,19 @@ class DetectionMixin:
             # Galleries are images only; audio/video handled separately.
             if re.search(r"\.(?:mp4|webm|mov|ogv|ogg|oga|mp3|wav)(?:\?|$)", base, re.I):
                 return
+            # Gallery pipes carry options and a caption ("|thumb|200px|Null").
+            # The caption names the biome the picture belongs to — that is how
+            # foreign art (a "Null" gif sitting in Lost Forest's zone) and the
+            # wiki's literal placeholder files get dropped instead of leaking
+            # into Sol's Book.
+            cap = str(caption or "").strip()
+            if not cap:
+                for seg in reversed([s.strip() for s in str(raw_file or "").split("|")[1:]]):
+                    if seg and not re.fullmatch(r"(?:thumb|right|left|center|frameless|border|\d+px|upright[=.\d]*|class=[^\s]*)", seg, re.I):
+                        cap = seg
+                        break
+            if not self._biome_image_ok(base, cap, name):
+                return
             seen.add(base.lower())
             human = re.sub(r"\.[a-z0-9]+$", "", base, flags=re.I)
             human = re.sub(r"[_\-]+", " ", human)
@@ -1903,12 +2098,38 @@ class DetectionMixin:
         for m in re.finditer(r"\[\[File:([^\]\]]+)\]\]", zone):
             _add(m.group(1))
 
+        # Cutscene clips live in the same zone (e.g. The Radiant Forest's
+        # "Spawn Animation"). Ownership is decided by caption or file name —
+        # the zone can also carry the previous biome's soundtrack file.
+        for m_vid in re.finditer(r"\[\[File:([^\]\]]+)\]\]", zone + "\n" + body):
+            parts = [p.strip() for p in m_vid.group(1).split("|")]
+            base = parts[0]
+            cap = ""
+            for seg in reversed(parts[1:]):
+                if seg and not re.fullmatch(r"(?:thumb|right|left|center|frameless|border|\d+px|upright[=.\d]*|class=[^\s]*)", seg, re.I):
+                    cap = seg
+                    break
+            if self._biome_video_ok(base, cap, name):
+                entry["video_url"] = self._FANDOM_WIKI_URL + "Special:FilePath/" + base.replace(" ", "_")
+                entry["video_file"] = base
+                entry["video_kind"] = "cutscene"
+                if cap and not entry.get("cutscene_note"):
+                    entry["cutscene_note"] = cap
+                break
+
         if not entry.get("music_url"):
             m_audio = re.search(r"\[\[File:([^\]\]]+\.(?:ogg|oga|mp3|wav))", body, re.I)
             if m_audio:
-                audio = m_audio.group(1).strip()
+                audio = m_audio.group(1).split("|")[0].strip()
                 entry["music_url"] = self._FANDOM_WIKI_URL + "Special:FilePath/" + audio.replace(" ", "_")
                 entry["music_file"] = audio
+        if not entry.get("music_url"):
+            # Event biomes (Pumpkin Moon, Graveyard, …) embed no audio in
+            # their Biomes-page section — the wiki documents every track on
+            # the "Sound Tracks" page ("Biomes, Weathers and Time").
+            track = self._music_from_sound_tracks(name)
+            if track:
+                entry.update({k: v for k, v in track.items() if v})
 
         entry["gallery"] = gallery[:8]
         entry["_metadata_source"] = "fandom_article"
@@ -1939,6 +2160,60 @@ class DetectionMixin:
         except Exception:
             return ""
 
+    def _sound_tracks_wikitext(self):
+        """Raw wikitext of the "Sound Tracks" page, fetched once per session."""
+        text = getattr(self, "_fandom_sound_tracks_cache", "")
+        if text:
+            return text
+        try:
+            response = fandom_get(
+                "https://sol-rng.fandom.com/api.php?action=parse&page=Sound%20Tracks&prop=wikitext&format=json",
+                timeout=30,
+            )
+            if response is None or not response.ok:
+                return ""
+            raw = response.json()
+            text = (((raw.get("parse") or {}).get("wikitext") or {}).get("*")
+                    if isinstance(raw, dict) else "") or ""
+            if text:
+                self._fandom_sound_tracks_cache = text
+            return text
+        except Exception:
+            return ""
+
+    def _music_from_sound_tracks(self, biome_name):
+        """Biome soundtrack lookup on the "Sound Tracks" page.
+
+        Each row pairs {{Biome|X}} with its track: an external link labelled
+        "Artist - Title" and a [[File:...mp3]] embed. The FIRST audio file in
+        the row is the current track (older ones are listed as "Previous")."""
+        text = self._sound_tracks_wikitext()
+        if not text:
+            return {}
+        target = re.sub(r"[^a-z0-9]", "", str(biome_name or "").lower())
+        if not target:
+            return {}
+        for row in text.split("|-"):
+            m_biome = re.search(r"\{\{Biome\s*\|\s*([^}|]+)", row, re.I)
+            if not m_biome:
+                continue
+            if re.sub(r"[^a-z0-9]", "", m_biome.group(1).lower()) != target:
+                continue
+            m_file = re.search(r"\[\[File:([^\]\]]+\.(?:ogg|oga|mp3|wav))", row, re.I)
+            if not m_file:
+                continue
+            audio = m_file.group(1).split("|")[0].strip()
+            title = ""
+            m_title = re.search(r"\[(?:https?://[^\s\]]+)\s+([^\]]+)\]", row)
+            if m_title:
+                title = re.sub(r"\s+", " ", m_title.group(1)).strip()
+            return {
+                "music_url": self._FANDOM_WIKI_URL + "Special:FilePath/" + audio.replace(" ", "_"),
+                "music_file": audio,
+                "music_name": title,
+            }
+        return {}
+
     # ------------------------------------------------------------------
     # Fandom Biomes page parser (prose format: ==={{Biome|X}}=== sections)
     # ------------------------------------------------------------------
@@ -1956,8 +2231,12 @@ class DetectionMixin:
 
     _BIOME_CATEGORY_SETS = {
         "admin": {"THE NULL'S EXISTENCE", "THE HYPERSPACE REALM", "赤い満月", "THE CITADEL OF ORDERS"},
-        "rare": {"GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY"},
+        "rare": {"GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY", "THE RADIANT FOREST"},
         "event": {"AURORA", "EGGLAND", "INCINERATOR", "BLAZING SUN", "PUMPKIN MOON", "GRAVEYARD", "BLOOD RAIN"},
+        # The wiki's Sound Tracks page splits "Weather" (Windy/Snowy/Rainy)
+        # from the regular "Biomes" list (Sandstorm, Hell, Starfall, …).
+        "weather": {"NORMAL", "WINDY", "SNOWY", "RAINY"},
+        "biome": {"SAND STORM", "HELL", "STARFALL", "HEAVEN", "CORRUPTION", "NULL", "LOST FOREST"},
     }
 
     @classmethod
@@ -1972,7 +2251,9 @@ class DetectionMixin:
         for cat, names in cls._BIOME_CATEGORY_SETS.items():
             if canonical in names:
                 return cat
-        return "weather"
+        # Unknown/new biomes default to the regular biome group, not weather —
+        # the wiki's weather tab only covers Windy/Snowy/Rainy.
+        return "biome"
 
     @staticmethod
     def _biome_clean_text(value):
@@ -2044,14 +2325,19 @@ class DetectionMixin:
                 entry["color"] = "#" + chat.group(1).upper()
                 entry["chat_message"] = self._biome_clean_text(chat.group(3))
             else:
-                span = re.search(r"color[:=]\s*#([0-9a-fA-F]{6})", body[:350])
+                span = re.search(r"color\s*[:=]\s*\"?\s*#([0-9a-fA-F]{6})", body[:350])
                 if span:
                     entry["color"] = "#" + span.group(1).upper()
 
-            imgs = re.findall(r"\[\[File:([^|\]]+)", image_tail)
-            if imgs:
-                entry["image_file"] = imgs[-1].strip()
-                entry["thumbnail_url"] = self._FANDOM_WIKI_URL + "Special:FilePath/" + entry["image_file"].replace(" ", "_")
+            imgs = re.findall(r"\[\[File:([^\]|]+)(?:\|([^\]]*))?\]\]", image_tail)
+            picked = ""
+            for f_name, f_cap in reversed(imgs):
+                if self._biome_image_ok(f_name, f_cap, name_canon):
+                    picked = f_name.strip()
+                    break
+            if picked:
+                entry["image_file"] = picked
+                entry["thumbnail_url"] = self._FANDOM_WIKI_URL + "Special:FilePath/" + picked.replace(" ", "_")
 
             def mechanics_sentence():
                 idx = -1
@@ -2116,13 +2402,13 @@ class DetectionMixin:
                     i = t.find(cut_kw)
                     if i > 0:
                         t = t[:i]
-                return t.strip()
+                return t.strip(" ,")
 
             m = re.search(r"duration of ([^.]+)", body, re.I)
             if m:
                 entry["duration"] = trim_duration(self._biome_clean_text(m.group(1)))
             else:
-                m = re.search(r"lasting for ([^.,]+)", body, re.I)
+                m = re.search(r"lasting for ([^.]+)", body, re.I)
                 if m:
                     entry["duration"] = trim_duration(self._biome_clean_text(m.group(1)))
                 else:
@@ -2159,6 +2445,18 @@ class DetectionMixin:
             prose = re.sub(r"\[[^\]\[]{1,40}\]:", " ", prose)
             if entry["chat_message"]:
                 prose = prose.replace(entry["chat_message"], "").strip(" .:-")
+            # Wiki-editor placeholder notes are not lore: drop the sentences
+            # carrying them ("someone add a desc here im too lazy to",
+            # "The song ... [link here], by [artist here]", "[mp3 of ...]").
+            kept = []
+            for sentence in re.split(r"(?<=[.!?])\s+", prose):
+                low = sentence.lower()
+                if ("someone add a desc" in low or "im too lazy" in low
+                        or "[link here]" in low or "[artist here]" in low
+                        or "[platform here]" in low or "[mp3 of" in low):
+                    continue
+                kept.append(sentence)
+            prose = re.sub(r"\s+", " ", " ".join(kept)).strip(" .:-,")
             entry["description"] = prose
             if entry["description"]:
                 first = re.split(r"(?<=[.!?])\s", entry["description"])[0]
@@ -2229,10 +2527,15 @@ class DetectionMixin:
                     if is_biome_heading(sections[j][0]):
                         break
                     tail = sections[j][1][-600:]
-                    imgs = re.findall(r"\[\[File:([^|\]]+)", tail)
-                    if imgs:
-                        results[name]["image_file"] = imgs[-1].strip()
-                        results[name]["thumbnail_url"] = self._FANDOM_WIKI_URL + "Special:FilePath/" + imgs[-1].strip().replace(" ", "_")
+                    imgs = re.findall(r"\[\[File:([^\]|]+)(?:\|([^\]]*))?\]\]", tail)
+                    picked = ""
+                    for f_name, f_cap in reversed(imgs):
+                        if self._biome_image_ok(f_name, f_cap, name):
+                            picked = f_name.strip()
+                            break
+                    if picked:
+                        results[name]["image_file"] = picked
+                        results[name]["thumbnail_url"] = self._FANDOM_WIKI_URL + "Special:FilePath/" + picked.replace(" ", "_")
                         break
         # TIME is a passive day/night cycle, not a detectable biome — never
         # surface it in biome lists, stats, or webhooks.
@@ -2260,15 +2563,20 @@ class DetectionMixin:
                 if e.get("rarity") and a.get("native_rarity"):
                     mult = max(1, round(e["rarity"] / a["native_rarity"]))
                 if a["exclusive_only"]:
+                    # exclusive_biome[1] is the in-biome LUCK MULTIPLIER (1
+                    # for plain biome locks) — the sim and the "x{m}" labels
+                    # read it that way. The 1-in-N value stays in native_rarity.
                     if e.get("exclusive_biome", ["None", 1])[0] == "None":
-                        e["exclusive_biome"] = [biome_name, a["native_rarity"] or 1]
+                        e["exclusive_biome"] = [biome_name, mult]
                     e.setdefault("exclusive_biomes", [])
                     if biome_name not in e["exclusive_biomes"]:
                         e["exclusive_biomes"].append(biome_name)
                 else:
                     if a.get("breakthrough_rarity") and a.get("native_rarity"):
                         mult = max(1, round(a["breakthrough_rarity"] / a["native_rarity"]))
-                    e["native_biome"] = [biome_name, a["native_rarity"] or 1]
+                    # native_biome[1] = multiplier (x2 = twice as easy in that
+                    # biome); the raw in-biome 1-in-N goes to native_rarity.
+                    e["native_biome"] = [biome_name, mult]
                     if a.get("native_rarity"):
                         e["native_rarity"] = a["native_rarity"]
                     e.setdefault("native_from_biomes", [])
@@ -2291,7 +2599,14 @@ class DetectionMixin:
                 exclusive = e.get("exclusive_biome") or ["None", 1]
                 flags = e.get("flags") or []
                 if native[0] != "None":
-                    e["obtainment"] = f"Native to {native[0]} (1/{native[1]:,})"
+                    # The 1-in-N number lives in native_rarity; the second
+                    # pair element is the luck MULTIPLIER (x4 = four times
+                    # easier in that biome).
+                    nr_val = e.get("native_rarity")
+                    if nr_val:
+                        e["obtainment"] = f"Native to {native[0]} (1/{int(nr_val):,})"
+                    else:
+                        e["obtainment"] = f"Native to {native[0]} (x{native[1]} luck in that biome)"
                     e["obtainment_type"] = "native"
                 elif exclusive[0] != "None":
                     e["obtainment"] = f"Exclusive to {exclusive[0]} (cannot be rolled through breakthrough)"
@@ -2457,8 +2772,36 @@ class DetectionMixin:
             if rarity is None and not (craftable or limited or unobtainable or dev_exclusive or removed or unreleased):
                 continue
 
-            biome_match = re.search(r"\{\{Biome\s*\|\s*([^}|]+)", combined, re.I)
-            biome_raw = clean(biome_match.group(1)) if biome_match else clean(fields.get("biome"))
+            # Biome links live in the RAW chance/obtainment markup — clean()
+            # strips {{Biome|...}} down to plain text, so a search on the
+            # cleaned value never sees them. Read the raw fields first: the
+            # wiki writes native bonuses as "(1/N in {{Biome|X}})" and locks
+            # as "(in {{Biome|X}})" / "(only in {{Biome|X}})". This is what
+            # makes brand-new biomes (Lost Forest, The Radiant Forest right
+            # after an update) usable before the Biomes article lists them.
+            raw_chance_text = (str(raw_fields.get("chance", "")) + " "
+                               + str(raw_fields.get("obtainment", "")))
+            link_prefix = r"(?:\[\[[^\]|]+\|)?"
+            m_bonus = re.search(
+                r"1\s*/\s*([\d,]+)\s+in\s+" + link_prefix + r"\{\{Biome\s*\|\s*([^}|]+)",
+                raw_chance_text, re.I)
+            biome_raw = clean(fields.get("biome"))
+            if m_bonus:
+                biome_raw = clean(m_bonus.group(2))
+            else:
+                # Lock form: "(in {{Biome|X}})", "(only in {{Biome|X}})" and
+                # multi-world locks like "(in {{Biome|Hell}} or
+                # {{Biome|Glitched}})" — keep every referenced world.
+                m_lock_paren = re.search(r"\(\s*(?:only\s+in|in)\s+([^\)]*)\)", raw_chance_text, re.I)
+                if m_lock_paren:
+                    refs = [clean(r) for r in re.findall(
+                        r"\{\{Biome\s*\|\s*([^}|]+)", m_lock_paren.group(1), re.I)]
+                    if refs:
+                        biome_raw = " or ".join(refs)
+            if not biome_raw:
+                biome_match = re.search(r"\{\{Biome\s*\|\s*([^}|]+)", combined, re.I)
+                if biome_match:
+                    biome_raw = clean(biome_match.group(1))
             only_in = "only in" in lowered
             # "(in X)" with a single chance number = the aura is locked to
             # that world (e.g. Limbo auras like Anima): no outside rolling.
@@ -2471,10 +2814,19 @@ class DetectionMixin:
             locked_only = bool(biome_raw) and bool(re.match(r"^(only\s+in|in)\b", paren_text))
             native = not (only_in or locked_only) and not any(word in lowered for word in ("exclusive", "cannot be"))
             multiplier = 1
+            native_rarity_value = None
             native_rarity = re.search(r"1\s*/\s*([\d,]+)\s+in", combined)
-            if native and native_rarity and rarity:
-                nr = int(native_rarity.group(1).replace(",", ""))
-                multiplier = max(1, round(rarity / nr)) if nr else 1
+            if native_rarity:
+                try:
+                    native_rarity_value = int(native_rarity.group(1).replace(",", ""))
+                except ValueError:
+                    native_rarity_value = None
+            if native and native_rarity_value and rarity:
+                multiplier = max(1, round(rarity / native_rarity_value))
+            elif not native:
+                # For biome-locked auras the single chance IS the rarity;
+                # there is no separate in-biome value to publish.
+                native_rarity_value = None
             if fields.get("multiplier"):
                 try: multiplier = float(fields["multiplier"])
                 except ValueError: pass
@@ -2556,6 +2908,12 @@ class DetectionMixin:
             key = normalize_name(aura_name)
             entry = {
                 "rarity": rarity,
+                "native_rarity": native_rarity_value,
+                # Fixed-chance auras ("chance is not affected by Lucks" —
+                # Illusionary, Meta, Cryogenic and the potion-gated drops)
+                # roll at their raw 1 in N; the sim must never luck-scale them.
+                "luck_exempt": bool(re.search(
+                    r"unaffected by luck|not affected by (?:the )?luck", combined, re.I)),
                 "exclusive_biome": [biome, multiplier] if biome and not native else ["None", 1],
                 "native_biome": [biome, multiplier] if biome and native else ["None", 1],
                 "limited": limited or "limited" in lowered,
@@ -2811,7 +3169,9 @@ class DetectionMixin:
                             
                             self.biome_data[biome] = {
                                 "color": "0xffffff",
-                                "thumbnail_url": "https://raw.githubusercontent.com/xVapure/Noteab-Macro/refs/heads/main/images/biome_placeholder.png"
+                                # No foreign placeholder art: the icon stays
+                                # empty until the wiki has real pictures.
+                                "thumbnail_url": ""
                             }
                             
                         # Set "Message" default for event biome whenever sol dev added to da game 
@@ -3133,10 +3493,17 @@ class DetectionMixin:
     def fallback_reconnect(self, current_attempt):
         print(f"Attempting fallback reconnect from attempt {current_attempt}...")
         self.reconnecting_state = True
-
-        self.terminate_roblox_processes()
-        self.check_disconnect_loop(current_attempt)
-        self.reconnecting_state = False
+        # ONE reconnect cycle — never check_disconnect_loop() itself: that is
+        # the forever-running monitoring loop and it used to swallow the
+        # caller's thread (e.g. the Daily Check-In action) indefinitely.
+        try:
+            if not self._network_is_up():
+                self._enter_offline_mode("Fallback reconnect needed but the internet connection is down.")
+                return
+            self._run_reconnect_cycle(current_attempt)
+        finally:
+            if getattr(self, "detection_running", False):
+                self.reconnecting_state = False
 
     def _start_player_logger_thread(self):
         if hasattr(self, "player_logger_thread") and self.player_logger_thread and self.player_logger_thread.is_alive():
@@ -3376,7 +3743,7 @@ class DetectionMixin:
             if datetime.now() < _startup_gate:
                 return
 
-            if self.config.get("teleport_portable_crack") and datetime.now() - getattr(self, 'last_crack_time', datetime.min) >= crack_cooldown and not getattr(self, '_br_sc_running', False) and not getattr(self, '_portable_crack_running', False) and not getattr(self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not (getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False)) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until', datetime.min) and not (self.config.get("enable_idle_mode", False)):
+            if self.config.get("teleport_portable_crack") and datetime.now() - getattr(self, 'last_crack_time', datetime.min) >= crack_cooldown and not getattr(self, '_br_sc_running', False) and not getattr(self, '_portable_crack_running', False) and not getattr(self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not (getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False)) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until', datetime.min) and not (self.config.get("enable_idle_mode", False)) and not self._macro_busy_reason():
                 try:
                     self.use_portable_crack()
                     self.append_log("[Items] Portable Crack fired.")
@@ -3388,7 +3755,7 @@ class DetectionMixin:
                                                                                                         False) and not getattr(self, '_portable_crack_running', False) and not getattr(
                             self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not getattr(
                             self, '_br_sc_running', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
-                                                                                datetime.min) and not (self.config.get("enable_idle_mode", False)):
+                                                                                datetime.min) and not (self.config.get("enable_idle_mode", False)) and not self._macro_busy_reason():
                 try:
                     self.use_merchant_teleporter()
                     self.last_mt_time = datetime.now()
@@ -3405,7 +3772,7 @@ class DetectionMixin:
                                                                                                         False) and not getattr(self, '_portable_crack_running', False) and not getattr(
                             self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not getattr(
                             self, '_br_sc_running', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
-                                                                                    datetime.min) and not (self.config.get("enable_idle_mode", False)):
+                                                                                    datetime.min) and not (self.config.get("enable_idle_mode", False)) and not self._macro_busy_reason():
                     # Pre-check the same conditions the implementation will check
                     # when it runs. If blocked (e.g. disabled biome), do NOT
                     # enqueue and do NOT consume the cooldown — retry on the
@@ -3430,7 +3797,7 @@ class DetectionMixin:
                                                                                                         False) and not getattr(self, '_portable_crack_running', False) and not getattr(
                             self, '_mt_running', False) and not getattr(self, '_remote_running', False) and not getattr(
                             self, '_br_sc_running', False) and not getattr(self, 'auto_pop_state', False) and datetime.now() >= getattr(self, '_cancel_next_actions_until',
-                                                                                    datetime.min) and not (self.config.get("enable_idle_mode", False)):
+                                                                                    datetime.min) and not (self.config.get("enable_idle_mode", False)) and not self._macro_busy_reason():
                     _br_blocked = self.br_sc_blocked_reason()
                     if _br_blocked:
                         self._log_item_postponed("Biome Randomizer", _br_blocked)
@@ -3443,11 +3810,13 @@ class DetectionMixin:
             item_lock.release()
 
     def perform_periodic_aura_screenshot_sync(self):
-        if not self.detection_running or self.reconnecting_state: 
+        if not self.detection_running or self.reconnecting_state:
             return
         if getattr(self, "enable_potion_crafting_var", None) and self.enable_potion_crafting_var.get():
-            return 
+            return
         if hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked():
+            return
+        if self._macro_busy_reason(include_scheduler=False):
             return
         inventory_close_button = self.config.get("inventory_close_button", [1418, 298])
         try:

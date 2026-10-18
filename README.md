@@ -10,7 +10,7 @@ Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · So
 
 [Download](https://github.com/MiraxKito/EndSol-Macro/releases/latest) · [Report an issue](https://github.com/MiraxKito/EndSol-Macro/issues) · [Discussions](https://github.com/MiraxKito/EndSol-Macro/discussions)
 
-<p align="center"><img width="970" height="514" alt="image" src="https://github.com/user-attachments/assets/12d64f27-589d-4f5b-a23a-1aeaf37c427e" /></p>
+<p align="center"><i>📸 Screenshot slot: main panel overview (replaces the old hero screenshot)</i></p>
 
 </div>
 
@@ -42,13 +42,14 @@ Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · So
 **Sol's Book — built-in wiki 📖**
 - Browse **Auras, Biomes, Items, Gauntlets and Achievements** databases synced from the Sol's RNG Fandom Wiki: rarity, obtainment, crafting recipes, effects, descriptions, rewards.
 - **Media tab** per entry — labeled media galleries (artwork, in-game previews, cutscene videos, opening cutscenes) with captions, keyboard navigation and fullscreen view, plus theme music on a custom player. Everything plays from a local cache (works offline after the first view) and can be saved to disk.
-<p align="center"><img width="1920" height="1015" alt="image" src="https://github.com/user-attachments/assets/6761707e-df51-4e7a-a8fc-498d8431fd97" /></p>
+<p align="center"><i>📸 Screenshot slot: Sol's Book — aura tab with the media gallery (replaces the old aura-tab screenshot)</i></p>
 
 **Sol's Sim — sandbox minigame 🎲**
 - A sandbox of Sol's RNG inside the panel: roll auras on the real in-game odds (1 in N ÷ luck, the rarest hit wins, luck-exempt auras ignore luck), simulated biome spawns with a day/night clock, and gauntlet boosts taken straight from the wiki values.
 - **Honest mode** (gauntlets only) or **Sandbox cheats** — roll speed ×2/×3/×5, luck slider, forced biome spawns; the in-game style Roll button shows the roll cooldown.
 - Stats are stored locally and can be reset; drop alerts appear as in-panel banners with an optional Discord embed (no pings, no Windows notifications).
-<p align="center"><img width="1920" height="1017" alt="image" src="https://github.com/user-attachments/assets/959fd1f6-a29f-407f-be60-89e949215940" /></p>
+<p align="center"><i>📸 Screenshot slot: Sol's Sim — rolling with the biome banner</i></p>
+
 
 **Panel**
 - Desktop app built with **pywebview + React**: EN/RU localization, theming, panel customization, live logs and diagnostics.
@@ -56,6 +57,9 @@ Biome tracking · Discord webhooks · Sol's Book wiki (incl. Achievements) · So
 - **Status page** — feature schedule, per-module states and runtime diagnostics.
 
 - **Window state auto-repair** — the macro keeps the Roblox window focused and sized per the calibration: minimized / shrunk / wrong-mode windows are fixed before important actions and periodically during any action.
+
+<p align="center"><img width="1920" height="1018" alt="biome tab endsol" src="https://github.com/user-attachments/assets/d693b23d-1b2a-4608-a9c1-9d098bfa444c" /></p>
+
 
 ## Installation
 

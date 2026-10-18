@@ -1,7 +1,10 @@
 from .base_support import *
 
 CUSTOM_WEBHOOK_MESSAGE_LIMIT = 300
-WEBHOOK_SPECIAL_MESSAGE_BIOMES = set(special_message_biomes) - {"SINGULARITY"}
+# SINGULARITY and THE RADIANT FOREST are rare biomes but keep their webhook
+# embed fully configurable (Message/None + custom text + custom ping) instead
+# of forcing the special rare-biome embed like GLITCHED/DREAMSPACE/CYBERSPACE.
+WEBHOOK_SPECIAL_MESSAGE_BIOMES = set(special_message_biomes) - {"SINGULARITY", "THE RADIANT FOREST"}
 
 
 def _normalize_aura_lookup(value):
@@ -49,6 +52,7 @@ NATIVE_AURA_MULTIPLIERS = {
     "SAND STORM": "4x", "HELL": "6x", "STARFALL": "5x",
     "HEAVEN": "5x", "CORRUPTION": "5x", "NULL": "1000x",
     "CYBERSPACE": "2x", "SINGULARITY": "5x",
+    "LOST FOREST": "2x", "THE RADIANT FOREST": "2x",
     "GLITCHED": "N/A — unique rare-biome rules",
     "DREAMSPACE": "N/A — unique rare-biome rules",
 }
@@ -411,6 +415,20 @@ class WebhookMixin:
             ),
             "desc_end": "> ## ◉ Event Horizon Reached ◉\n> The singularity has collapsed. STARFALL may resume.",
         },
+        "THE RADIANT FOREST": {
+            "color": 0x8A48A8,
+            "title_start": "✦ THE RADIANT FOREST REMEMBERS ✦",
+            "title_end": "✦ MEMORIES LET GO ✦",
+            "desc_start": (
+                "> **Spawn:** Condensed Memory used inside Lost Forest (Nighttime only)\n"
+                "> **Duration:** 22 min | time locked to Nighttime | **2x** multiplier\n"
+                "> **Auras:** 4 native, 8 exclusive\n"
+                "> \n"
+                "> *Yet again, THEIR Memories Begin to Let Go...*\n"
+                "> *\"I will remember you again, I promise.\"*"
+            ),
+            "desc_end": "> ## ✦ The Forest Falls Silent ✦\n> The memories scatter as Nighttime lets go — until someone remembers again.",
+        },
         "THE HYPERSPACE REALM": {
             "color": 0x9b59b6,
             "title_start": "◈ HYPERSPACE BREACHED ◈",
@@ -493,8 +511,13 @@ class WebhookMixin:
             }
         
         biome_info = self.biome_data[biome]
-        color_str = biome_info.get("color", "0xffffff").replace("#", "")
-        biome_color = int(color_str, 16)
+        # A brand-new biome can carry an empty color until the wiki fills it
+        # in — never let that crash the embed builder.
+        color_str = (str(biome_info.get("color") or "").strip() or "0xffffff").replace("#", "")
+        try:
+            biome_color = int(color_str, 16)
+        except ValueError:
+            biome_color = 0x7C6CFF
         if unix_ts is None:
             unix_ts = int(time.time())
         timestamp_title = f"<t:{unix_ts}:F> (<t:{unix_ts}:R>)"
@@ -578,16 +601,30 @@ class WebhookMixin:
         def _rarity_obtainment_line():
             """Info summary plus the in-game chat appearance ("[Biome]: phrase")."""
             lines_out = []
-            if rarity_text and str(rarity_text).strip().casefold() not in {"unknown", "none", "n/a"}:
-                lines_out.append(f"> **Spawn:** {str(rarity_text).strip()}")
+            spawn_text = str(rarity_text or "").strip()
+            if spawn_text and spawn_text.casefold() not in {"unknown", "none", "n/a"}:
+                lines_out.append(f"> **Spawn:** {spawn_text}")
             if source_text and str(source_text).strip().casefold() not in {"unknown", "not verified", "none", "n/a"}:
                 info_text = str(source_text).strip()
                 # The "[Biome]:" insert belongs with the chat phrase line
                 # below — never inside the Info sentence itself.
                 info_text = re.sub(r"^\s*\[[^\]]{1,40}\]\s*:\s*", "", info_text)
-                info_text = re.sub(r"\s+", " ", info_text).strip()
-                if info_text:
-                    lines_out.append(f"> **Info:** {info_text}")
+                # The Info line must never repeat the Spawn / Duration lines:
+                # strip the shared spawn-rate and duration clauses, then every
+                # numeric rarity (numbers live in the Spawn line only).
+                if spawn_text and info_text.casefold().startswith(spawn_text.casefold()):
+                    info_text = info_text[len(spawn_text):]
+                info_text = re.sub(r"\bwith\s+a\s+spawn\s+rate\s+of\s+[^,;.]+[,:]?\s*", "", info_text, flags=re.I)
+                info_text = re.sub(r"\b[a-z\s]*\bhas\s+a\s+spawn\s+rate\s+of\s+[^,;.]+[,.]?\s*", "", info_text, flags=re.I)
+                info_text = re.sub(r"\s*(?:and\s+)?(?:a\s+)?duration\s+of\s+[^,;.]+", "", info_text, flags=re.I)
+                info_text = re.sub(r"\(?\b1\s*(?:in|/)\s*[\d,]+(?:\.\d+)?(?:\s*/\s*\w+)?\s*%?\)?", "", info_text, flags=re.I)
+                info_text = re.sub(r"\(\s*[\d.,%\s/]+\s*\)", "", info_text)
+                info_text = re.sub(r"\s+", " ", info_text).strip(" ,;:-.")
+                # A sentence reduced to just the biome name (or nothing) is
+                # pure duplication of the lines above — drop the Info line.
+                leftover = info_text.strip(" .").casefold()
+                if leftover and leftover != biome.casefold() and len(leftover.split()) >= 3:
+                    lines_out.append(f"> **Info:** {info_text}.")
             flavor = str(biome_meta.get("chat_message") or "").strip()
             if flavor:
                 # Mirror the real in-game chat look: "[Biome]: phrase"

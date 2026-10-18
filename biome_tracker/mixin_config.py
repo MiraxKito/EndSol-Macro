@@ -184,9 +184,15 @@ class ConfigMixin:
             "enable_potion_crafting": self.enable_potion_crafting_var.get(),
             "enable_potion_switching": self.enable_potion_switching_var.get() if hasattr(self, "enable_potion_switching_var") else self.config.get("enable_potion_switching", False),
             "potion_switch_interval": self.potion_switch_interval_var.get() if hasattr(self, "potion_switch_interval_var") else self.config.get("potion_switch_interval", "60"),
+            # Slot files: legacy UI keeps them in combobox vars (they were
+            # never saved before), modern code reads potion_file_1/2/3. Save
+            # from the vars when the legacy UI is up and mirror the legacy
+            # potion_file2/3 spellings so old and new readers stay in sync.
             "potion_file_1": self.config.get("potion_file_1", ""),
-            "potion_file_2": self.config.get("potion_file_2", ""),
-            "potion_file_3": self.config.get("potion_file_3", ""),
+            "potion_file_2": self.potion2_var.get() if hasattr(self, "potion2_var") else self.config.get("potion_file_2", ""),
+            "potion_file_3": self.potion3_var.get() if hasattr(self, "potion3_var") else self.config.get("potion_file_3", ""),
+            "potion_file2": self.potion2_var.get() if hasattr(self, "potion2_var") else self.config.get("potion_file_2", self.config.get("potion_file2", "")),
+            "potion_file3": self.potion3_var.get() if hasattr(self, "potion3_var") else self.config.get("potion_file_3", self.config.get("potion_file3", "")),
 
             # ── Fishing Calibration ──
             "fishing_bar_region": self.config.get("fishing_bar_region", [757, 762, 405, 21]),
@@ -382,6 +388,10 @@ class ConfigMixin:
                 "br_duration": "36",
                 "claim_quest_button": [618, 770],
                 "collections_button": [35, 463],
+                # Square "spawn icon" images for the biome ICONS (list + detail
+                # header). The info-page PREVIEW (rectangular in-game view)
+                # uses the separate `preview_url` field built in
+                # load_biome_data from the Fandom snapshot.
                 "custom_biome_overrides": {
                     "AURORA": { "color": "0x0047ab", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/aurora.png" },
                     "CORRUPTION": { "color": "0x6d32a8", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/corruption.png" },
@@ -830,14 +840,20 @@ class ConfigMixin:
                     pass
             except Exception:
                 pass
-                if "potion_file2" in config:
-                    if hasattr(self, "potion2_var"): self.potion2_var.set(config.get("potion_file2", ""))
-                if "potion_file3" in config:
-                    if hasattr(self, "potion3_var"): self.potion3_var.set(config.get("potion_file3", ""))
-                if "enable_potion_switching" in config:
-                    if hasattr(self, "enable_potion_switching_var"): self.enable_potion_switching_var.set(config.get("enable_potion_switching", False))
-                if "potion_switch_interval" in config:
-                    if hasattr(self, "potion_switch_interval_var"): self.potion_switch_interval_var.set(str(config.get("potion_switch_interval", "60")))
+            # NOTE: these must run in the NORMAL path (they used to sit inside
+            # the except-block above and were applied only when the try failed).
+            # Modern configs store potion_file_2/3, legacy ones potion_file2/3 —
+            # accept both so the craft-switcher sees the imported values.
+            if "potion_file_2" in config or "potion_file2" in config:
+                if hasattr(self, "potion2_var"):
+                    self.potion2_var.set(config.get("potion_file_2", config.get("potion_file2", "")))
+            if "potion_file_3" in config or "potion_file3" in config:
+                if hasattr(self, "potion3_var"):
+                    self.potion3_var.set(config.get("potion_file_3", config.get("potion_file3", "")))
+            if "enable_potion_switching" in config:
+                if hasattr(self, "enable_potion_switching_var"): self.enable_potion_switching_var.set(config.get("enable_potion_switching", False))
+            if "potion_switch_interval" in config:
+                if hasattr(self, "potion_switch_interval_var"): self.potion_switch_interval_var.set(str(config.get("potion_switch_interval", "60")))
             # biome count
             self.biome_counts = config.get("biome_counts", {biome: 0 for biome in self.biome_data})
             for biome, count in self.biome_counts.items():

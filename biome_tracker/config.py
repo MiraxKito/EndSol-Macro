@@ -505,10 +505,14 @@ def load_config() -> dict[str, Any]:
         if current is None and recovered is None:
             return defaults
 
-        # Case D: primary exists but is empty (no user data), no backup
-        # — this is a fresh install or after manual reset. Use defaults.
+        # Case D: primary exists but has no personal-data keys (webhook /
+        # private server / username / user id) and no backup. The file can
+        # still hold real user settings (calibrations, toggles, intervals),
+        # so it is backfilled with defaults instead of being discarded —
+        # returning bare defaults here silently reset those settings on
+        # every start for users without webhooks or finished onboarding.
         if not _looks_like_user_data(current):
-            return _backfill_and_normalize(defaults)
+            return _backfill_and_normalize(current)
 
         # Fallback: should not reach here
         return _backfill_and_normalize(current if current else defaults)

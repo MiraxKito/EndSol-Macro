@@ -2305,11 +2305,12 @@ class MemoryMatchMixin:
                             self._mm_log(f"[MemoryMatch] On cooldown — next session ready at {ready_at.strftime('%H:%M')}.")
                         time.sleep(60)
                         continue
-                    # Don't run if other exclusive features are active
-                    if (getattr(self, "_eden_running", False) or
-                        getattr(self, "_potion_thread_active", False) or
-                        getattr(self, "_obby_running", False) or
-                        getattr(self, "_br_sc_running", False)):
+                    # Don't run if other exclusive features are active.
+                    # _macro_busy_reason covers direct-run sequences (Eden,
+                    # potion crafting, obby, BR/SC, merchant teleporter,
+                    # auto-pop, auto-merchant, remote) AND other scheduler
+                    # actions - all of which also drive the mouse.
+                    if self._macro_busy_reason():
                         time.sleep(10)
                         continue
                     # Don't run if fishing is exclusive (user disabled integration)
@@ -2319,7 +2320,13 @@ class MemoryMatchMixin:
                         continue
                     # Schedule the play as a one-shot action so it goes through the
                     # action scheduler (similar to periodic quest claim) and doesn't
-                    # block the main loop.
+                    # block the main loop. One queued play at a time: the cooldown
+                    # flag flips only at the END of a session, so without this guard
+                    # the loop would re-enqueue a duplicate every poll.
+                    if getattr(self, "_mm_play_pending", False):
+                        time.sleep(5)
+                        continue
+                    self._mm_play_pending = True
                     try:
                         self._action_scheduler.enqueue_action(
                             self._mm_play_via_scheduler,
@@ -2327,7 +2334,7 @@ class MemoryMatchMixin:
                             priority=4,
                         )
                     except Exception:
-                        pass
+                        self._mm_play_pending = False
                     # No separate check interval: the 12h cooldown (plus the
                     # ~30min retry for failed sessions) IS the schedule. The
                     # loop simply polls every minute until the cooldown ends.
@@ -2347,6 +2354,17 @@ class MemoryMatchMixin:
     def _mm_play_via_scheduler(self):
         """Wrapper that runs play_memory_match in scheduler context."""
         try:
+            # Re-check the cooldown at EXECUTION time: by the time a queued
+            # action gets its turn, a previous session may have already set
+            # memory_match_last_played (queued duplicates, manual runs).
+            if not self.mm_cooldown_ready():
+                return
+            # ...and re-check the busy flags: a direct-run sequence (Eden,
+            # potion crafting, obby, merchant teleporter, auto-pop...) may
+            # have started between the enqueue and this turn. We run INSIDE
+            # a scheduled action, so exclude our own scheduler bit.
+            if self._macro_busy_reason(include_scheduler=False):
+                return
             res = self.play_memory_match()
             try:
                 err = str(res.get("error") or "")
@@ -2362,6 +2380,8 @@ class MemoryMatchMixin:
                 self.error_logging(e, "_mm_play_via_scheduler")
             except Exception:
                 pass
+        finally:
+            self._mm_play_pending = False
 
     # ---- helpers used by integration points ----
     def _is_fishing_active(self) -> bool:

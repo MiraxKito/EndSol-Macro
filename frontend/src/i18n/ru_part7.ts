@@ -53,16 +53,14 @@ export const RU_P7: Record<string, string> = {
     // ── Credits ──
     "EndSol Macro development team": "Команда разработки EndSol Macro",
     "EndSol Macro Developer": "Разработчик EndSol Macro",
-    "Fork of Coteab Macro — continued development and customization": "Форк Coteab Macro — продолжение разработки и доработки",
-    "Coteab Macro — Original Team": "Coteab Macro — оригинальная команда",
-    "The creators of the original macro that EndSol is based on": "Создатели оригинального макроса, на котором основан EndSol",
+    "Origins — Coteab Macro": "Истоки — Coteab Macro",
+    "The original project this macro grew out of, and the people behind it": "Оригинальный проект, из которого вырос этот макрос, и люди, стоявшие за ним",
     "— Lead Developer, fullstack": "— ведущий разработчик, fullstack",
     "GitHub: Coteab Macro (original)": "GitHub: Coteab Macro (оригинал)",
-    "Biome Macro Creator — Inspiration and biome detection logic": "Автор Biome Macro — вдохновение и логика детекта биомов",
+    "Big contribution to macro support and biome detection logic": "Огромный вклад в поддержку макросов и логику детекта биомов",
     "YouTube Channel": "YouTube-канал",
-    "Extra Credits": "Дополнительные благодарности",
+    "Extra Credits (original project)": "Дополнительные благодарности (оригинальный проект)",
     "Thanks to everyone who contributed": "Спасибо всем, кто помогал",
-    "- maxstellar — Inspiration and biome detection logic": "- maxstellar — вдохновение и логика детекта биомов",
     "- Vexthecoder — Icons and assets": "- Vexthecoder — иконки и ассеты",
     "- Cresqnt, Baz & the Scope Team — Anti-AFK inspiration": "- Cresqnt, Baz и команда Scope — вдохновение для Anti-AFK",
     "- rnd.xy, imsomeone — External contributions": "- rnd.xy, imsomeone — внешние доработки",
@@ -73,6 +71,8 @@ export const RU_P7: Record<string, string> = {
     "Free personal use — redistribution is not permitted": "Бесплатное личное использование — распространение запрещено",
     "This software is free for personal, non-commercial use. Copying, republishing, selling, sublicensing, or presenting modified versions as an official release is not permitted without written permission.":
         "Это ПО бесплатно для личного некоммерческого использования. Копирование, повторная публикация, продажа, сублицензирование или выдача изменённых версий за официальный релиз без письменного разрешения запрещены.",
+    "Using any part of this macro's functionality — even partial or modified — in other projects requires the author's explicit consent.":
+        "Использование любой части функционала этого макроса — даже частично или в изменённом виде — в других проектах требует явного согласия автора.",
     "Third-party components remain subject to their respective licenses.": "Сторонние компоненты подчиняются своим лицензиям.",
 
     // ── Instructions ──

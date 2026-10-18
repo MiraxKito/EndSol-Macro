@@ -1208,6 +1208,11 @@ def run_fishing_loop(
             midbar_x, midbar_y = cfg["fishing_midbar_sample_pos"]
             bar_color = _get_pixel_rgb(midbar_x, midbar_y, sct=sct)
             start_time = time.time()
+            # A "catch" is only counted when the reel loop actually saw the
+            # minigame bar: a spurious indicator (weather effects, UI overlay)
+            # used to count as a catch too and inflated the sell/merchant
+            # counters.
+            saw_minigame = False
 
             while (time.time() - start_time) < 9:
                 if not _should_continue() or not _can_run():
@@ -1219,7 +1224,9 @@ def run_fishing_loop(
                     scan_height=int(cfg.get("fishing_bar_scan_height", 3)),
                     sct=sct,
                 )
-                if not found:
+                if found:
+                    saw_minigame = True
+                else:
                     click_burst = int(cfg.get("fishing_click_burst", 2))
                     for i in range(max(1, click_burst)):
                         autoit.mouse_click("left", click_x, click_y, speed=3)
@@ -1242,10 +1249,13 @@ def run_fishing_loop(
                 if not _sleep_interruptible(0.7):
                     break
 
-            fish_caught_count += 1
-            fish_caught_since_merchant += 1
-            fish_caught_since_merchant_ocr += 1
-            fish_caught_since_br_sc += 1
+            if saw_minigame:
+                fish_caught_count += 1
+                fish_caught_since_merchant += 1
+                fish_caught_since_merchant_ocr += 1
+                fish_caught_since_br_sc += 1
+            else:
+                print(f"{log_prefix} no minigame bar seen during the reel window - not counted as a catch.")
             _persist_runtime_counters()
 
             _set_busy(False)

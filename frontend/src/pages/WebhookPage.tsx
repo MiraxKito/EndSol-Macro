@@ -26,6 +26,8 @@ const FALLBACK_BIOME_COLORS: Record<string, string> = {
     "HEAVEN": "#dfaf63",
     "EGGLAND": "#d4fc8d",
     "SINGULARITY": "#cf4023",
+    "LOST FOREST": "#27F55E",
+    "THE RADIANT FOREST": "#8A48A8",
     "PUMPKIN MOON": "#FF6600",
     "GRAVEYARD": "#4A4A4A",
     "BLOOD RAIN": "#CC0000",
@@ -37,6 +39,10 @@ const FALLBACK_BIOME_COLORS: Record<string, string> = {
     "THE CITADEL OF ORDERS": "#c0a030",
 };
 
+// The forced-@everyone trio only. SINGULARITY and THE RADIANT FOREST are rare
+// biomes too, but they stay in the configurable Biome Configuration list with
+// their own Message/None setting and custom ping — exactly how Singularity
+// has always worked.
 const RARE_BIOMES = new Set(["GLITCHED", "DREAMSPACE", "CYBERSPACE"]);
 const ADMIN_BIOMES = new Set(["THE HYPERSPACE REALM", "赤い満月", "THE NULL'S EXISTENCE", "THE CITADEL OF ORDERS"]);
 const SPECIAL_MESSAGE_BIOMES = new Set([...RARE_BIOMES, ...ADMIN_BIOMES]);
@@ -88,17 +94,19 @@ export default function WebhookPage() {
     // Build ordered biome list from biome_notifier keys (excluding NORMAL)
     const knownBiomeNames = [
         "WINDY", "RAINY", "SNOWY", "SAND STORM", "HELL", "STARFALL", "CORRUPTION", "NULL",
+        "LOST FOREST",
         "AURORA", "HEAVEN", "EGGLAND", "BLAZING SUN", "INCINERATOR", "PUMPKIN MOON", "GRAVEYARD", "BLOOD RAIN",
-        "GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY", "THE HYPERSPACE REALM", "赤い満月",
+        "GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY", "THE RADIANT FOREST",
+        "THE HYPERSPACE REALM", "赤い満月",
         "THE NULL'S EXISTENCE", "THE CITADEL OF ORDERS"
     ];
     const allBiomeNames = Array.from(new Set([...knownBiomeNames, ...Object.keys(biomes), ...Object.keys(biomeColors)]))
         .filter(b => b !== "NORMAL")
         .sort((a, b) => {
             const knownOrder = [
-                "GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY",
+                "GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY", "THE RADIANT FOREST",
                 "WINDY", "RAINY", "SNOWY", "SAND STORM",
-                "HELL", "STARFALL", "CORRUPTION", "NULL",
+                "HELL", "STARFALL", "CORRUPTION", "NULL", "LOST FOREST",
                 "AURORA", "HEAVEN", "EGGLAND", "BLAZING SUN", "INCINERATOR",
                 "PUMPKIN MOON", "GRAVEYARD", "BLOOD RAIN",
                 "THE HYPERSPACE REALM", "\u8d64\u3044\u6e80\u6708",

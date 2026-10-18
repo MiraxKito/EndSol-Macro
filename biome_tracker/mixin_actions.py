@@ -276,11 +276,43 @@ class ActionsMixin:
                 return ok, text
 
             visible, popup_text = _popup_visible()
+            if not visible and not manual:
+                # Sol's RNG shows the Daily Check-In popup when you JOIN the
+                # game after the daily reset - a session that stays online
+                # through the reset never gets it automatically (the log from
+                # 15/10 shows 7 failed OCR attempts in a row for this reason).
+                # Rejoin ONCE per day so the popup appears, then retry.
+                today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+                deep_links = []
+                try:
+                    deep_links = self._build_reconnect_deep_links(
+                        self.config.get("private_server_link", "")) or []
+                except Exception:
+                    deep_links = []
+                if (self.config.get("daily_rejoin_attempted_date", "") != today
+                        and self.config.get("auto_reconnect", False)
+                        and deep_links):
+                    self.config["daily_rejoin_attempted_date"] = today
+                    self.save_config()
+                    self.append_log(
+                        "[Daily Check-In] Rewards popup is not visible - rejoining the game once "
+                        "so it appears (Sol's RNG shows it on join after the daily reset)."
+                    )
+                    try:
+                        self.fallback_reconnect(1)
+                    except Exception as e:
+                        self.error_logging(e, "Daily Check-In rejoin")
+                    # Let the game settle after the rejoin, then look again.
+                    time.sleep(3.0)
+                    self.activate_roblox_window()
+                    visible, popup_text = _popup_visible()
             if not visible:
                 self.append_log(f"[Daily Check-In] Rewards popup not detected; OCR='{popup_text}'")
                 return {
                     "success": False,
-                    "reason": "Rewards popup not detected (already claimed today, or the OCR region is off).",
+                    "reason": ("Rewards popup not detected (already claimed today, wrong OCR region, "
+                               "or the session stayed online through the reset - the game shows the "
+                               "popup on join)."),
                     "ocr": popup_text[:200],
                 }
 
@@ -434,10 +466,74 @@ class ActionsMixin:
             raise ValueError("Update downloads require an HTTPS URL")
         if not str(parsed.path).lower().endswith(".exe"):
             raise ValueError("Update asset must be an EXE")
+        # Host allowlist: the downloaded EXE is executed on this machine, so
+        # only GitHub's release CDN (or the host that serves the update
+        # metadata itself, for a custom self-hosted update API) is accepted.
+        host = (parsed.hostname or "").lower()
+        allowed_hosts = {
+            "github.com", "objects.githubusercontent.com",
+            "raw.githubusercontent.com", "api.github.com",
+            "release-assets.githubusercontent.com",
+        }
+        try:
+            from urllib.parse import urlparse as _urlparse
+            api_host = (_urlparse(self._get_update_api_url()).hostname or "").lower()
+        except Exception:
+            api_host = ""
+        if api_host:
+            allowed_hosts.add(api_host)
+        if host not in allowed_hosts:
+            raise ValueError(f"Update host not allowed: {host}")
         return parsed.geturl()
+
+    def _expected_update_sha256(self, download_url):
+        """sha256 of the asset from the CURRENT release metadata, if published
+        (GitHub exposes `digest: sha256:<hex>` on release assets). None when
+        metadata cannot be fetched at all — the host allowlist is then the
+        only guard. When metadata IS available but does not list this URL,
+        the download is refused (the asset is not part of the release)."""
+        try:
+            release = self._fetch_latest_release()
+        except Exception as e:
+            print(f"Update hash lookup failed: {e}")
+            return None
+        if not isinstance(release, dict):
+            return None
+        assets = release.get("assets", [])
+        if not isinstance(assets, list) or not assets:
+            return None
+        for asset in assets:
+            if not isinstance(asset, dict):
+                continue
+            if str(asset.get("browser_download_url", "")).strip() != str(download_url).strip():
+                continue
+            digest = str(asset.get("digest") or asset.get("sha256") or "").strip().lower()
+            if digest.startswith("sha256:"):
+                digest = digest.split(":", 1)[1]
+            if digest and len(digest) == 64 and all(c in "0123456789abcdef" for c in digest):
+                return digest
+            return None
+        raise RuntimeError("Update asset is not listed in the current release metadata")
+
+    def _verify_download_sha256(self, file_path, expected_sha256):
+        if not expected_sha256:
+            return
+        import hashlib
+        hasher = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(1024 * 256), b""):
+                hasher.update(chunk)
+        actual = hasher.hexdigest()
+        if actual != str(expected_sha256).lower():
+            try:
+                os.remove(file_path)
+            except Exception:
+                pass
+            raise RuntimeError("Downloaded update failed sha256 verification")
 
     def _download_and_stage_exe_update(self, download_url, asset_name="EndSolMacro.exe"):
         download_url = self._validate_update_download_url(download_url)
+        expected_sha256 = self._expected_update_sha256(download_url)
         if not getattr(sys, "frozen", False):
             return False
 
@@ -460,6 +556,8 @@ class ActionsMixin:
 
         if not os.path.exists(temp_exe) or os.path.getsize(temp_exe) <= 0:
             raise RuntimeError("Downloaded update file is empty")
+
+        self._verify_download_sha256(temp_exe, expected_sha256)
 
         canonical_exe = os.path.join(current_dir, "EndSolMacro.exe")
         args = [
@@ -531,6 +629,7 @@ class ActionsMixin:
 
     def _download_exe_to_folder(self, download_url, target_dir, asset_name="EndSolMacro.exe"):
         download_url = self._validate_update_download_url(download_url)
+        expected_sha256 = self._expected_update_sha256(download_url)
         os.makedirs(target_dir, exist_ok=True)
 
         base_name = os.path.basename(str(asset_name or "").strip()) or "EndSolMacro.exe"
@@ -552,6 +651,8 @@ class ActionsMixin:
 
         if not os.path.exists(target_path) or os.path.getsize(target_path) <= 0:
             raise RuntimeError("Downloaded update file is empty")
+
+        self._verify_download_sha256(target_path, expected_sha256)
 
         return target_path
 
@@ -657,9 +758,9 @@ class ActionsMixin:
                     return
             if not self.check_roblox_procs():
                 return
-            if (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)):
+            if self._macro_busy_reason(include_scheduler=False, exclude="remote action"):
                 return
-            
+
             for _ in range(4):
                 self.activate_roblox_window()
                 time.sleep(0.35)
@@ -731,7 +832,7 @@ class ActionsMixin:
             while True:
                 if not self.detection_running or self.reconnecting_state:
                     return
-                if not getattr(self, "_br_sc_running", False) and not getattr(self, "_mt_running", False) and not getattr(self, "auto_pop_state", False) and not getattr(self, "on_auto_merchant_state", False) and not (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) and not self.config.get("enable_potion_crafting", False):
+                if not self._macro_busy_reason() and not self.config.get("enable_potion_crafting", False):
                     break
                 time.sleep(0.67)
             if menu and menu[0]:
@@ -982,7 +1083,8 @@ class ActionsMixin:
                     getattr(self, "_mt_running", False) or
                     getattr(self, "auto_pop_state", False) or
                     getattr(self, "on_auto_merchant_state", False) or
-                    getattr(self, "config", {}).get("enable_potion_crafting", False)):
+                    getattr(self, "config", {}).get("enable_potion_crafting", False) or
+                    self._macro_busy_reason()):
                     time.sleep(2)
                     continue
 
@@ -1218,15 +1320,54 @@ class ActionsMixin:
             self._cp_cache = cache
         return cache[1]
 
+    def _macro_busy_reason(self, include_scheduler: bool = True, include_remote: bool = True,
+                           exclude: str = "") -> str:
+        """Name of the feature currently driving the game's mouse/keyboard,
+        or "" when the macro is free. Single source of truth used by the
+        direct-run loops (potion crafting, Eden, Obby, auto-pop, items,
+        remote commands) and by the scheduler-run sessions (Memory Match,
+        Quest Board) so their click sequences never overlap.
+
+        include_scheduler=False is for code that ALREADY runs inside a
+        scheduled action (its own _action_active bit would otherwise match).
+        include_remote=False lets remote commands QUEUE behind a running
+        remote action instead of being rejected by it.
+        """
+        checks = (
+            ("reconnecting", getattr(self, "reconnecting_state", False)),
+            ("auto-pop", getattr(self, "auto_pop_state", False)),
+            ("auto merchant", getattr(self, "on_auto_merchant_state", False)),
+            ("Eden", getattr(self, "_eden_running", False)),
+            ("potion crafting", getattr(self, "_potion_thread_active", False)),
+            ("obby path", getattr(self, "_obby_running", False)),
+            ("BR/SC sequence", getattr(self, "_br_sc_running", False)),
+            ("merchant teleporter", getattr(self, "_mt_running", False)),
+            ("portable crack", getattr(self, "_portable_crack_running", False)),
+            ("remote action", getattr(self, "_remote_running", False)),
+            ("Memory Match", getattr(self, "_mm_session_active", False)),
+            ("custom path", getattr(self, "_custom_path_running", False)),
+        )
+        for name, busy in checks:
+            if busy:
+                if name == exclude:
+                    continue
+                if name == "remote action" and not include_remote:
+                    continue
+                return name
+        if include_scheduler:
+            scheduler = getattr(self, "_action_scheduler", None)
+            if scheduler is not None:
+                try:
+                    if scheduler._action_active.is_set():
+                        return "scheduled action"
+                except Exception:
+                    pass
+        return ""
+
     def _custom_paths_busy(self) -> bool:
         """Same 'full feature' guard set obby_path_loop uses."""
         return bool(
-            getattr(self, "_eden_running", False)
-            or getattr(self, "_potion_thread_active", False)
-            or getattr(self, "_br_sc_running", False)
-            or getattr(self, "_mt_running", False)
-            or getattr(self, "auto_pop_state", False)
-            or getattr(self, "on_auto_merchant_state", False)
+            self._macro_busy_reason()
             or getattr(self, "_custom_path_running", False)
             or (getattr(self, "config", {}) or {}).get("enable_potion_crafting", False)
         )
@@ -1686,13 +1827,7 @@ class ActionsMixin:
                 except Exception:
                     pass
 
-                if (self.reconnecting_state or
-                    self.auto_pop_state or
-                    (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
-                    getattr(self, "_obby_running", False) or
-                    getattr(self, "_br_sc_running", False) or
-                    getattr(self, "_mt_running", False) or
-                    getattr(self, "on_auto_merchant_state", False) or
+                if (self._macro_busy_reason() or
                     getattr(self, "_auto_merchant_running", False) or
                     getattr(self, "_fishing_busy", False) or
                     self._is_fishing_blocked()):
@@ -1932,13 +2067,7 @@ class ActionsMixin:
                 except Exception:
                     pass
 
-                if (self.reconnecting_state or
-                    self.auto_pop_state or
-                    (getattr(self, "_eden_running", False) or getattr(self, "_potion_thread_active", False)) or
-                    getattr(self, "_obby_running", False) or
-                    getattr(self, "_br_sc_running", False) or
-                    getattr(self, "_mt_running", False) or
-                    getattr(self, "on_auto_merchant_state", False) or
+                if (self._macro_busy_reason() or
                     getattr(self, "_auto_merchant_running", False) or
                     getattr(self, "_fishing_busy", False) or
                     self._is_fishing_blocked()):
@@ -2445,7 +2574,7 @@ class ActionsMixin:
                     time.sleep(2)
                     continue
 
-                if self.is_fishing_mode_enabled() or getattr(self, "_potion_thread_active", False) or getattr(self, "_obby_running", False):
+                if self.is_fishing_mode_enabled() or self._macro_busy_reason():
                     time.sleep(2)
                     continue
 
@@ -2456,13 +2585,9 @@ class ActionsMixin:
                     time.sleep(2)
                     continue
 
-                if (getattr(self, "_br_sc_running", False) or
-                    getattr(self, "_mt_running", False) or
-                    getattr(self, "auto_pop_state", False) or
-                    getattr(self, "on_auto_merchant_state", False) or
-                    getattr(self, "_auto_merchant_running", False) or
+                if (getattr(self, "_auto_merchant_running", False) or
                     getattr(self, "_fishing_busy", False) or
-                    self.reconnecting_state):
+                    self._macro_busy_reason()):
                     time.sleep(2)
                     continue
 
@@ -2962,6 +3087,14 @@ class ActionsMixin:
                     return base
 
                 from .mixin_memory_match import _replay_walk_path
+                # Same deterministic prelude as every other path feature
+                # (Memory Match / Quest Board): reset the character so the
+                # recorded walk starts from spawn, close leftover UI and
+                # align the camera. Without it the path replayed from
+                # wherever the character happened to stand (fishing, obby,
+                # merchant...) and missed the crafting station.
+                if not self._feature_walk_prelude("PotionStation"):
+                    return
                 self.activate_roblox_window()
                 time.sleep(0.3)
                 self.append_log("[Potion] Walking to the crafting station (scheduled session).")
@@ -3016,9 +3149,7 @@ class ActionsMixin:
                 if self.is_fishing_mode_enabled() or getattr(self, "reconnecting_state", False):
                     time.sleep(10)
                     continue
-                if (getattr(self, "_eden_running", False) or getattr(self, "_br_sc_running", False)
-                        or getattr(self, "_mt_running", False) or getattr(self, "_obby_running", False)
-                        or getattr(self, "_potion_thread_active", False)):
+                if self._macro_busy_reason():
                     time.sleep(10)
                     continue
                 try:
@@ -3060,11 +3191,8 @@ class ActionsMixin:
                             time.sleep(1)
                             continue
 
-                        if (self.reconnecting_state or self.auto_pop_state or
-                            self.on_auto_merchant_state or
-                            self.current_biome in ("GLITCHED", "DREAMSPACE", "CYBERSPACE") or
-                            getattr(self, '_mt_running', False) or
-                            (getattr(self, '_eden_running', False) or getattr(self, '_potion_thread_active', False))):
+                        if (self._macro_busy_reason() or
+                            self.current_biome in ("GLITCHED", "DREAMSPACE", "CYBERSPACE")):
                             time.sleep(2)
                             continue
 
@@ -3364,46 +3492,229 @@ class ActionsMixin:
         except Exception:
             return []
 
-    def _client_self_rejoined(self) -> bool:
-        """True when the Roblox client is recovering the connection ITSELF.
+    # ── Reconnect policy (v2) ────────────────────────────────────────────
+    # After a disconnect the game's OWN auto-rejoin (its automatic Start press)
+    # gets a full two-minute window. Only when no successful join happened does the macro run its reconnect cycle, and
+    # that cycle NEVER starts without a verified internet connection: no
+    # internet -> macro OFF with a background connection watcher that starts
+    # the macro and rejoins once the line is stable again.
+    REJOIN_WAIT_SECONDS = 120.0      # window for the game's own auto-rejoin
+    REJOIN_POLL_SECONDS = 5.0        # log poll inside that window
+    RECONNECT_CLOSE_DELAY = 30.0     # close Roblox -> wait 30s -> relaunch
+    OFFLINE_POLL_SECONDS = 30.0      # internet poll while in offline mode
+    OFFLINE_STABLE_DELAY = 15.0      # gap between the two quality probes
+
+    def _wait_for_self_rejoin(self, window_seconds=None) -> bool:
+        """Watch the post-disconnect log tail for the game's own auto-rejoin.
 
         Verified against a real disconnect log (): after the loss
         the client logs "<< AUTO REJOIN >> Rejoin Attempt : 1", then
-        "! Joining game ..." / "Entered play session." within seconds. The
-        macro must NOT terminate the process during that self-rejoin; it
-        should only force-reconnect when the client does NOT recover."""
+        "! Joining game ..." / "Entered play session." within seconds. With a
+        broken connection the client can sit on the disconnect screen far
+        longer before its retry lands, so the macro waits the whole window
+        before taking over.
+
+        Recovery counts ONLY on a real play-session entry ("Entered play
+        session." or an equipped-aura RPC line) seen AFTER the disconnect
+        offset — "! Joining game" alone is NOT enough (with broken internet
+        the client can start rejoining and then hang)."""
         try:
             log_file = getattr(self, "_disconnect_log_file", None)
             offset = int(getattr(self, "_disconnect_line_offset", 0) or 0)
             if not log_file or not os.path.exists(log_file):
                 return False
-            deadline_no_attempt = time.time() + 8.0
-            deadline_attempt = None
-            while self.detection_running:
-                with open(log_file, "rb") as f:
-                    f.seek(offset)
-                    data = f.read()
+            deadline = time.time() + float(window_seconds or self.REJOIN_WAIT_SECONDS)
+            announced = False
+            while self.detection_running and time.time() < deadline:
+                try:
+                    with open(log_file, "rb") as f:
+                        f.seek(offset)
+                        data = f.read()
+                except OSError:
+                    data = b""
                 text = data.decode("utf-8", errors="ignore").lower()
-                if deadline_attempt is None and "auto rejoin >> rejoin attempt" in text:
-                    deadline_attempt = time.time() + 20.0
+                if not announced and "auto rejoin >> rejoin attempt" in text:
+                    announced = True
                     self.append_log("[Disconnect] Roblox client is attempting its own auto-rejoin - waiting for it.")
-                if deadline_attempt is not None:
-                    # Recovery counts ONLY when the client actually ENTERED
-                    # the play session. "! Joining game" alone is NOT enough:
-                    # with broken internet the client can start rejoining and
-                    # then hang on the disconnect screen with no further
-                    # game-side auto-rejoin (user-verified behavior in Sol's
-                    # RNG) - the macro must take over in that case.
-                    if "entered play session" in text:
-                        return True
-                    if time.time() > deadline_attempt:
-                        return False
-                elif time.time() > deadline_no_attempt:
-                    return False
-                time.sleep(2.0)
+                if "entered play session" in text or '"state":"equipped' in text:
+                    return True
+                time.sleep(self.REJOIN_POLL_SECONDS)
             return False
         except Exception:
             return False
+
+    def _network_is_up(self) -> bool:
+        """True when at least one probe host answers. Never raises: an
+        unavailable probe must not block recovery."""
+        try:
+            from .base_support import is_network_available
+            return bool(is_network_available())
+        except Exception:
+            return True
+
+    def _internet_stable(self) -> bool:
+        """Connection-quality check used before trusting a restored line:
+        two successful probe rounds with a gap between them. A single probe
+        right after a dropout often succeeds on a flapping connection."""
+        if not self._network_is_up():
+            return False
+        time.sleep(self.OFFLINE_STABLE_DELAY)
+        return self._network_is_up()
+
+    def _enter_offline_mode(self, reason=None):
+        """Macro OFF, internet watcher ON.
+
+        Used whenever a (re)join is needed but the machine is offline. The
+        watcher is a standalone daemon thread — it is NOT in the detection
+        thread list, so it survives stop_detection() and restarts everything
+        once the connection is verified stable."""
+        try:
+            if getattr(self, "_offline_watch_active", False):
+                return
+            self._offline_watch_active = True
+            msg = reason or "Internet connection is down - macro paused."
+            self.append_log(f"[Offline] {msg}")
+            try:
+                self.send_webhook_status(
+                    f"{msg} The macro is switched off and will restart by itself when the connection is back.",
+                    color=0xff7700)
+            except Exception:
+                pass
+            self.set_title_threadsafe(f"EndSol Macro {current_ver} (Offline - waiting for internet)")
+            threading.Thread(
+                target=self._offline_network_watch_loop, name="OfflineNetWatch", daemon=True
+            ).start()
+        except Exception as e:
+            self.error_logging(e, "_enter_offline_mode")
+
+    def _offline_network_watch_loop(self):
+        try:
+            # Stop the macro cleanly first; this watcher deliberately lives
+            # outside the detection thread list and keeps polling.
+            try:
+                self.stop_detection()
+            except Exception:
+                pass
+            while not getattr(self, "detection_running", False):
+                if self._internet_stable():
+                    self.append_log("[Offline] Internet is back and verified stable - starting the macro and rejoining the game.")
+                    try:
+                        self.send_webhook_status(
+                            "Internet is back - starting the macro and rejoining the game.", color=0x4aff65)
+                    except Exception:
+                        pass
+                    self._restart_after_offline()
+                    return
+                for _ in range(int(self.OFFLINE_POLL_SECONDS)):
+                    if getattr(self, "detection_running", False):
+                        break  # the user started the macro manually
+                    time.sleep(1)
+        except Exception as e:
+            self.error_logging(e, "_offline_network_watch_loop")
+        finally:
+            self._offline_watch_active = False
+
+    def _restart_after_offline(self):
+        """Когда интернет вернулся: сначала запуск макроса, потом перезаход
+        в игру (цикл с проверкой сети)."""
+        try:
+            self.start_detection()
+        except Exception as e:
+            self.error_logging(e, "_restart_after_offline: start_detection")
+            return
+        time.sleep(3.0)
+        try:
+            self._run_reconnect_cycle()
+        except Exception as e:
+            self.error_logging(e, "_restart_after_offline: reconnect cycle")
+
+    def _run_reconnect_cycle(self, current_attempt=1) -> bool:
+        """Закрыть окно Roblox, подождать 30 сек, перезапустить deep link и
+        довести до игры через кнопку Start. True — если вошли в игру.
+
+        Only call with a verified connection; every attempt re-checks the
+        network first and parks in offline mode if the line died mid-cycle."""
+        if getattr(self, "_reconnect_in_progress", False):
+            return False
+        self._reconnect_in_progress = True
+        try:
+            private_server_link = self.config.get("private_server_link")
+            reconnect_deep_links = self._build_reconnect_deep_links(private_server_link)
+            if not reconnect_deep_links:
+                return False
+            old_log_file = None
+            try:
+                old_log_file = self.get_latest_log_file()
+            except Exception:
+                pass
+            max_retries = 4
+            attempt = current_attempt
+            for attempt in range(current_attempt, max_retries + 1):
+                if not self.detection_running:
+                    break
+                if not self._network_is_up():
+                    self._enter_offline_mode("Internet connection lost during the reconnect cycle.")
+                    return False
+                self.terminate_roblox_processes()
+                # Closing the client and instantly relaunching races the old
+                # instance's shutdown — the game asked for a 30s breather.
+                time.sleep(self.RECONNECT_CLOSE_DELAY)
+                self.send_webhook_status(f"Reconnecting to your server. hold on bro", color=0xffff00)
+                self.set_title_threadsafe(
+                    f"""EndSol Macro {current_ver} (Reconnecting)""")
+                launched = False
+                launch_err = None
+                for deep_link in reconnect_deep_links:
+                    try:
+                        os.startfile(deep_link)
+                        launched = True
+                        break
+                    except Exception as e:
+                        launch_err = e
+
+                if not launched:
+                    if launch_err is not None: self.error_logging(launch_err, "Failed to launch reconnect link")
+                    time.sleep(2)
+                    continue
+
+                wait_timeout = 180
+                wait_start = time.time()
+                roblox_opened = False
+                while time.time() - wait_start < wait_timeout:
+                    if not self.detection_running: break
+                    if self.check_roblox_procs():
+                        roblox_opened = True
+                        break
+                    time.sleep(2)
+
+                if roblox_opened:
+                    self.send_webhook_status("Roblox opened. Loading into the games...", color=0x4aff65)
+                    if not self._ensure_roblox_window_ready():
+                        self.append_log("[Reconnect] Roblox window is not usable after launch; retrying.")
+                        continue
+                    self.has_sent_disconnected_message = False
+                    if not self.reconnect_check_start_button(old_log_file=old_log_file):
+                        self.send_webhook_status(
+                            "Stuck in 'In Main Menu' for too long. I might reconnect bro back to server again",
+                            color=0xff0000)
+                        continue
+                    self._resume_timer_after_reconnect()
+                    self._disconnect_handled = False
+                    return True
+                time.sleep(1)
+
+            if attempt >= max_retries:
+                if not self.check_roblox_procs() or getattr(self, "_disconnect_handled", True):
+                    self.terminate_roblox_processes()
+                    self.send_webhook_status("Max retries reached but failed to rejoin the game. Macro stopped", color=0xff0000)
+                    time.sleep(2)
+                    self.stop_detection()
+            return False
+        except Exception as e:
+            self.error_logging(e, "_run_reconnect_cycle")
+            return False
+        finally:
+            self._reconnect_in_progress = False
 
     def _disconnect_log_patterns(self):
         try:
@@ -3483,7 +3794,7 @@ class ActionsMixin:
 
             for line in reversed(new_lines):
                 low = (line or "").lower()
-                if any(pat in low for pat in _disconnect_log_patterns()):
+                if any(pat in low for pat in self._disconnect_log_patterns()):
                     self.append_log(f"[Disconnect] Detected client disconnect in logs: {line.strip()}")
                     self._last_disconnect_time = time.time()
                     self._disconnect_handled = True
@@ -3500,6 +3811,12 @@ class ActionsMixin:
 
         while self.detection_running:
             try:
+                # A reconnect cycle (possibly started by the offline watcher)
+                # owns Roblox right now — keep the detector quiet.
+                if getattr(self, "_reconnect_in_progress", False):
+                    time.sleep(1)
+                    continue
+
                 is_process_dead = not self.check_roblox_procs()
                 log_disconnect = False
                 if not is_process_dead:
@@ -3510,7 +3827,11 @@ class ActionsMixin:
                     self._pause_timer_for_disconnect(reason)
                     time.sleep(4.5)
 
-                    if log_disconnect and self._client_self_rejoined():
+                    # Phase 1 (log disconnects only): a dead process has no
+                    # client that could recover, but a live client that lost
+                    # the server recovers through its own auto-rejoin — give
+                    # it the full two-minute window before touching anything.
+                    if log_disconnect and self._wait_for_self_rejoin():
                         self.append_log("[Disconnect] Roblox client rejoined by itself - macro reconnect not needed.")
                         self._resume_timer_after_reconnect()
                         self._disconnect_handled = False
@@ -3518,68 +3839,14 @@ class ActionsMixin:
                         continue
 
                     if self.config.get("auto_reconnect"):
-                        private_server_link = self.config.get("private_server_link")
-                        reconnect_deep_links = self._build_reconnect_deep_links(private_server_link)
-                        if reconnect_deep_links:
-                            old_log_file = None
-                            try:
-                                old_log_file = self.get_latest_log_file()
-                            except Exception: pass
-                            max_retries = 4
-                            for attempt in range(current_attempt, max_retries + 1):
-                                if not self.detection_running: break
-                                self.terminate_roblox_processes()
-                                self.send_webhook_status(f"Reconnecting to your server. hold on bro", color=0xffff00)
-                                self.set_title_threadsafe(
-                                    f"""EndSol Macro {current_ver} (Reconnecting)""")
-                                launched = False
-                                launch_err = None
-                                for deep_link in reconnect_deep_links:
-                                    try:
-                                        os.startfile(deep_link)
-                                        launched = True
-                                        break
-                                    except Exception as e:
-                                        launch_err = e
-
-                                if not launched:
-                                    if launch_err is not None: self.error_logging(launch_err, "Failed to launch reconnect link")
-                                    time.sleep(2)
-                                    continue
-
-                                wait_timeout = 180
-                                wait_start = time.time()
-                                roblox_opened = False
-                                while time.time() - wait_start < wait_timeout:
-                                    if not self.detection_running: break
-                                    if self.check_roblox_procs():
-                                        roblox_opened = True
-                                        break
-                                    time.sleep(2)
-
-                                if roblox_opened:
-                                    self.send_webhook_status("Roblox opened. Loading into the games...", color=0x4aff65)
-                                    if not self._ensure_roblox_window_ready():
-                                        self.append_log("[Reconnect] Roblox window is not usable after launch; retrying.")
-                                        continue
-                                    self.has_sent_disconnected_message = False
-                                    if not self.reconnect_check_start_button(old_log_file=old_log_file):
-                                        self.send_webhook_status(
-                                            "Stuck in 'In Main Menu' for too long. I might reconnect bro back to server again",
-                                            color=0xff0000)
-                                        continue
-                                    self._resume_timer_after_reconnect()
-                                    self._disconnect_handled = False
-                                    break
-                                time.sleep(1)
-
-                            if attempt == max_retries:
-                                if not self.check_roblox_procs() or getattr(self, "_disconnect_handled", True):
-                                    self.terminate_roblox_processes()
-                                    self.send_webhook_status("Max retries reached but failed to rejoin the game. Macro stopped", color=0xff0000)
-                                    time.sleep(2)
-                                    self.stop_detection()
-                                    return
+                        # Phase 2: reconnect cycle — NEVER without a verified
+                        # connection. No internet -> macro switches OFF with a
+                        # background watcher that restarts it and rejoins once
+                        # the line is stable again.
+                        if not self._network_is_up():
+                            self._enter_offline_mode("Reconnect needed but the internet connection is down.")
+                            return
+                        self._run_reconnect_cycle(current_attempt)
                     else:
                         while self.detection_running and not self.check_roblox_procs():
                             time.sleep(1)
@@ -3875,6 +4142,7 @@ class ActionsMixin:
             if getattr(self, "enable_potion_crafting_var", None) and self.enable_potion_crafting_var.get(): return
             if not getattr(self, "periodical_inventory_var", None) or not self.periodical_inventory_var.get(): return
             if not self.detection_running or self.reconnecting_state: return
+            if self._macro_busy_reason(include_scheduler=False): return
             try:
                 interval_min = float(self.periodical_inventory_interval_var.get())
             except Exception:
@@ -4124,6 +4392,25 @@ class ActionsMixin:
                 if (getattr(self, "_eden_running", False)
                         or getattr(self, "_potion_thread_active", False)):
                     return "eden/potion running"
+                if getattr(self, "_obby_running", False):
+                    return "obby path running"
+                if getattr(self, "_mm_session_active", False):
+                    return "memory match running"
+                if getattr(self, "_custom_path_running", False):
+                    return "custom path running"
+                if getattr(self, "_remote_running", False):
+                    return "remote action running"
+                _scheduler = getattr(self, "_action_scheduler", None)
+                if _scheduler is not None and not getattr(self, "_br_sc_running", False):
+                    # When BR/SC IS the running scheduled action, _action_active
+                    # matches our own run. Counting it blocked cancelled every
+                    # scheduler-driven item use instantly — the log said "fired"
+                    # while the item was never actually used in game.
+                    try:
+                        if _scheduler._action_active.is_set():
+                            return "scheduled action running"
+                    except Exception:
+                        pass
             return None
         except Exception:
             return None
@@ -5415,6 +5702,21 @@ class ActionsMixin:
             if not target_biome or target_biome == "NORMAL": return
             if self.config.get("enable_idle_mode", False): return
             if getattr(self, "enable_potion_crafting_var", None) and self.enable_potion_crafting_var.get(): return
+
+            # Wait (bounded) for any direct-run sequence - potion crafting,
+            # Eden, obby, remote action... - to release the mouse. Auto-pop is
+            # biome-scoped, so give it a short window instead of clicking over
+            # an ongoing sequence or skipping the buffs instantly.
+            _reason = ""
+            _deadline = time.time() + 45
+            while time.time() < _deadline:
+                _reason = self._macro_busy_reason(include_scheduler=False, exclude="auto-pop")
+                if not _reason:
+                    break
+                time.sleep(1)
+            else:
+                self.append_log(f"[AutoPop] Skipped for {target_biome}: {_reason} is still running.")
+                return
 
             biome_entry = self._get_auto_pop_biome_entry(target_biome)
             if not biome_entry.get("enabled", False): return

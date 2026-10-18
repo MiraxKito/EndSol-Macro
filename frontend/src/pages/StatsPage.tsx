@@ -6,13 +6,15 @@ import { useT } from "../i18n";
 const GLITCH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()[]{}<>?/\\|~`";
 
 // ── Biome categories (matches backend base_support.py) ──
-type BiomeCategoryKey = "weather" | "rare" | "event" | "admin" | "other";
+type BiomeCategoryKey = "weather" | "biome" | "rare" | "event" | "admin" | "other";
 
 const BIOME_CATEGORIES: Record<string, BiomeCategoryKey> = {
     NORMAL: "weather", WINDY: "weather", RAINY: "weather", SNOWY: "weather",
-    "SAND STORM": "weather", HELL: "weather", STARFALL: "weather",
-    HEAVEN: "weather", CORRUPTION: "weather", NULL: "weather",
+    "SAND STORM": "biome", HELL: "biome", STARFALL: "biome",
+    HEAVEN: "biome", CORRUPTION: "biome", NULL: "biome",
+    "LOST FOREST": "biome",
     GLITCHED: "rare", DREAMSPACE: "rare", CYBERSPACE: "rare", SINGULARITY: "rare",
+    "THE RADIANT FOREST": "rare",
     "PUMPKIN MOON": "event", GRAVEYARD: "event", "BLOOD RAIN": "event",
     AURORA: "event", EGGLAND: "event", "BLAZING SUN": "event", INCINERATOR: "event",
     "THE HYPERSPACE REALM": "admin", "\u8d64\u3044\u6e80\u6708": "admin",
@@ -20,14 +22,15 @@ const BIOME_CATEGORIES: Record<string, BiomeCategoryKey> = {
 };
 
 const CATEGORY_LABELS: Record<BiomeCategoryKey, string> = {
-    weather: "Normal (Weather)",
+    weather: "Weather",
+    biome: "Biomes",
     rare: "Rare",
     event: "Event (Limited)",
     admin: "Admin (Dev Event)",
     other: "Other / Unlisted",
 };
 
-const CATEGORY_ORDER: BiomeCategoryKey[] = ["weather", "rare", "event", "admin", "other"];
+const CATEGORY_ORDER: BiomeCategoryKey[] = ["weather", "biome", "rare", "event", "admin", "other"];
 
 const FALLBACK_BIOME_COLORS: Record<string, string> = {
     "WINDY": "#9ae5ff",
@@ -45,6 +48,8 @@ const FALLBACK_BIOME_COLORS: Record<string, string> = {
     "HEAVEN": "#dfaf63",
     "EGGLAND": "#d4fc8d",
     "SINGULARITY": "#cf4023",
+    "LOST FOREST": "#27F55E",
+    "THE RADIANT FOREST": "#8A48A8",
     "PUMPKIN MOON": "#FF6600",
     "GRAVEYARD": "#4A4A4A",
     "BLOOD RAIN": "#CC0000",
@@ -173,7 +178,7 @@ export default function StatsPage() {
     // Group biomes by category — include ALL known biomes from BIOME_CATEGORIES (not just detected ones)
     const allKnownBiomes = new Set([...Object.keys(BIOME_CATEGORIES), ...Object.keys(biomeCounts)]);
     allKnownBiomes.delete("NORMAL");
-    const grouped: Record<BiomeCategoryKey, string[]> = { weather: [], rare: [], event: [], admin: [], other: [] };
+    const grouped: Record<BiomeCategoryKey, string[]> = { weather: [], biome: [], rare: [], event: [], admin: [], other: [] };
     for (const biome of allKnownBiomes) {
         const cat = BIOME_CATEGORIES[biome] || "other";
         grouped[cat].push(biome);
@@ -231,7 +236,7 @@ export default function StatsPage() {
                     <div className="card" key={cat}>
                         <div className="card-header">
                             <div className="card-icon">
-                                {cat === "weather" ? "🌤️" : cat === "rare" ? "💎" : cat === "event" ? "🎪" : cat === "admin" ? "🔧" : "❓"}
+                                {cat === "weather" ? "🌤️" : cat === "biome" ? "🗺️" : cat === "rare" ? "💎" : cat === "event" ? "🎪" : cat === "admin" ? "🔧" : "❓"}
                             </div>
                             <div>
                                 <h3>{t(CATEGORY_LABELS[cat])}</h3>

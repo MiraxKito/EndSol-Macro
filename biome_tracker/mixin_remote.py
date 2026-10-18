@@ -52,6 +52,14 @@ class RemoteMixin:
             except Exception:
                 print("[Remote] No bot token provided.")
             return
+        try:
+            if not self.remote_allowed_user_id_var.get().strip():
+                warn = ("[Remote] No allowed Discord user ID set - "
+                        "ALL bot commands will be rejected until it is configured.")
+                print(warn)
+                self.append_log(warn)
+        except Exception:
+            pass
         self.remote_worker_running = True
         self.remote_bot_thread = threading.Thread(target=self._remote_bot_thread_func, daemon=True)
         self.remote_bot_thread.start()
@@ -186,9 +194,12 @@ class RemoteMixin:
             def _check_auth(ctx):
                 user = getattr(ctx, "user", None) or getattr(ctx, "author", None)
                 user_id = getattr(user, "id", None)
-                if allowed_id_int and user_id != allowed_id_int:
+                # Deny-all by default: without a configured owner ID the bot
+                # must not accept commands from ANYONE (it may sit in servers
+                # where every member could otherwise drive the macro).
+                if not allowed_id_int:
                     return False
-                return True
+                return user_id == allowed_id_int
 
             async def _safe_respond(ctx, content, ephemeral=False):
                 try:
@@ -312,7 +323,7 @@ class RemoteMixin:
                         await _safe_respond(ctx, "Unauthorized", ephemeral=True)
                         return
                         
-                    is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
+                    is_blocked = bool(self._macro_busy_reason(include_remote=False)) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
                     if is_blocked:
                         embed = discord.Embed(title="Action Blocked", description=f"Cannot equip **{name}** while the macro is actively running an un-interruptible mode (e.g., Fishing Mode). Please wait for the macro to finish those action.", color=0xFF0000)
                         await ctx.response.send_message(embed=embed, ephemeral=True)
@@ -369,7 +380,7 @@ class RemoteMixin:
                         await _safe_respond(ctx, "Unauthorized", ephemeral=True)
                         return
                         
-                    is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
+                    is_blocked = bool(self._macro_busy_reason(include_remote=False)) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
                     if is_blocked:
                         embed = discord.Embed(title="Action Blocked", description=f"Cannot use items while the macro is actively running an un-interruptible mode (e.g., Fishing Mode). Please wait for the macro to finish those action.", color=0xFF0000)
                         await ctx.response.send_message(embed=embed, ephemeral=True)
@@ -417,7 +428,7 @@ class RemoteMixin:
                         t = "full"
                         
                     if t != "full":
-                        is_blocked = getattr(self, "_br_sc_running", False) or getattr(self, "_mt_running", False) or getattr(self, "auto_pop_state", False) or getattr(self, "on_auto_merchant_state", False) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
+                        is_blocked = bool(self._macro_busy_reason(include_remote=False)) or (hasattr(self, "_is_fishing_blocked") and self._is_fishing_blocked())
                         if is_blocked:
                             embed = discord.Embed(title="Action Blocked", description=f"Cannot take an **{t}** screenshot while the macro is actively running an un-interruptible mode (e.g., Fishing Mode). Please wait for the macro to finish those action, or request a **Fullscreen** screenshot instead.", color=0xFF0000)
                             await ctx.response.send_message(embed=embed, ephemeral=True)

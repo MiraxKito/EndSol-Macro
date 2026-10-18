@@ -15,10 +15,10 @@ import keyboard as kb
 import json, requests, time, os, threading, re, webbrowser, random, keyboard, pyautogui, autoit, psutil, \
     locale, win32gui, win32process, win32con, ctypes, queue, mouse, sys, hashlib, winocr, asyncio, win32api, traceback
 
-current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.1.0")
+current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.1.1")
 current_version = current_ver
 
-rare_biomes = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY"]
+rare_biomes = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY", "THE RADIANT FOREST"]
 admin_biomes = ["THE HYPERSPACE REALM", "赤い満月", "THE NULL'S EXISTENCE", "THE CITADEL OF ORDERS"]
 special_message_biomes = set(rare_biomes + admin_biomes)
 
@@ -530,29 +530,40 @@ def is_network_available(hosts: list = None) -> bool:
     return False
 
 # в”Ђв”Ђ Biome category classification (based on Sol's RNG wiki data) в”Ђв”Ђ
+# The wiki itself splits the regular world into "Weather" (Windy/Snowy/Rainy
+# — the Sound Tracks page's Weather tab) and "Biomes" (Sandstorm, Hell,
+# Starfall, Heaven, Corruption, Null, …). Rare/event/admin stay separate.
 BIOME_CATEGORY_WEATHER  = "weather"
+BIOME_CATEGORY_BIOME    = "biome"
 BIOME_CATEGORY_RARE     = "rare"
 BIOME_CATEGORY_EVENT    = "event"
 BIOME_CATEGORY_ADMIN    = "admin"
 BIOME_CATEGORY_OTHER    = "other"
 
 BIOME_CATEGORIES: dict[str, str] = {
-    # Weather / Normal
+    # Weather (Windy/Snowy/Rainy per the wiki's Weather tab)
     "NORMAL":       BIOME_CATEGORY_WEATHER,
     "WINDY":        BIOME_CATEGORY_WEATHER,
     "SNOWY":        BIOME_CATEGORY_WEATHER,
     "RAINY":        BIOME_CATEGORY_WEATHER,
-    "SAND STORM":   BIOME_CATEGORY_WEATHER,
-    "HELL":         BIOME_CATEGORY_WEATHER,
-    "STARFALL":     BIOME_CATEGORY_WEATHER,
-    "HEAVEN":       BIOME_CATEGORY_WEATHER,
-    "CORRUPTION":   BIOME_CATEGORY_WEATHER,
-    "NULL":         BIOME_CATEGORY_WEATHER,
-    # Rare (4)
+    # Regular biomes
+    "SAND STORM":   BIOME_CATEGORY_BIOME,
+    "HELL":         BIOME_CATEGORY_BIOME,
+    "STARFALL":     BIOME_CATEGORY_BIOME,
+    "HEAVEN":       BIOME_CATEGORY_BIOME,
+    "CORRUPTION":   BIOME_CATEGORY_BIOME,
+    "NULL":         BIOME_CATEGORY_BIOME,
+    # Radiant Forest update (Eon 1-28): Lost Forest is a regular biome;
+    # The Radiant Forest is rare (user-verified — the wiki aura rows link
+    # both with the plain [[Biomes#Biomes]] anchor, which is why the first
+    # pass read them both as weather biomes).
+    "LOST FOREST":       BIOME_CATEGORY_BIOME,
+    # Rare (5)
     "GLITCHED":     BIOME_CATEGORY_RARE,
     "DREAMSPACE":   BIOME_CATEGORY_RARE,
     "CYBERSPACE":   BIOME_CATEGORY_RARE,
     "SINGULARITY":  BIOME_CATEGORY_RARE,
+    "THE RADIANT FOREST": BIOME_CATEGORY_RARE,
     # Limited / Event
     "PUMPKIN MOON": BIOME_CATEGORY_EVENT,
     "GRAVEYARD":    BIOME_CATEGORY_EVENT,
@@ -569,7 +580,8 @@ BIOME_CATEGORIES: dict[str, str] = {
 }
 
 BIOME_CATEGORY_LABELS: dict[str, str] = {
-    BIOME_CATEGORY_WEATHER: "Normal (Weather)",
+    BIOME_CATEGORY_WEATHER: "Weather",
+    BIOME_CATEGORY_BIOME:   "Biomes",
     BIOME_CATEGORY_RARE:    "Rare",
     BIOME_CATEGORY_EVENT:   "Event (Limited)",
     BIOME_CATEGORY_ADMIN:   "Admin (Dev Event)",

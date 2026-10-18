@@ -80,9 +80,22 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
             loadConfig();
         };
 
+        // Stale-page guard: the macro mutates config/stats in the background
+        // (new biomes, counters, custom messages, webhook settings) without
+        // always emitting a push. Re-pull quietly on tab switches, window
+        // focus and a slow tick — values update in place, so nothing flickers
+        // and no full window reload is needed.
+        const refresh = () => { void loadConfig(); };
+        window.addEventListener("endsol:refresh", refresh);
+        window.addEventListener("focus", refresh);
+        const refreshTimer = window.setInterval(refresh, 30000);
+
         return () => {
             delete (window as any).onConfigUpdated;
             delete (window as any).onStatsUpdated;
+            window.removeEventListener("endsol:refresh", refresh);
+            window.removeEventListener("focus", refresh);
+            window.clearInterval(refreshTimer);
         };
     }, []);
 

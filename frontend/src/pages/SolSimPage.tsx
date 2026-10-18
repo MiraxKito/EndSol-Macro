@@ -17,7 +17,10 @@ import { useT } from "../i18n";
 
 type Data = Record<string, any>;
 
-type DropLogEntry = { name: string; rarity: number; tier: string; biome: string; ts: number };
+type DropLogEntry = { name: string; rarity: number; tier: string; biome: string; ts: number; fx?: string[] };
+
+// Biome history only (no aura drops): what the world rolled and when.
+type BiomeLogEntry = { name: string; ts: number; forced: boolean };
 
 type SimStats = {
   rolls: number;
@@ -27,6 +30,7 @@ type SimStats = {
   biome_visits: Record<string, number>;
   playtime_s: number;
   log: DropLogEntry[];
+  biome_log: BiomeLogEntry[];
 };
 
 type SimSettings = {
@@ -38,6 +42,8 @@ type SimSettings = {
   notify_rare_biomes: boolean;
   discord_enabled: boolean;
   discord_webhook_url: string;
+  vip: boolean;
+  vip_plus: boolean;
 };
 
 type SimSave = {
@@ -47,7 +53,7 @@ type SimSave = {
   gauntlets: { left: string | null; right: string | null; pocket: string | null };
 };
 
-type PoolAura = { name: string; N: number; tier: string; exclusive: boolean; native: boolean; luckExempt: boolean };
+type PoolAura = { name: string; N: number; tier: string; exclusive: boolean; native: boolean; luckExempt: boolean; excl: string[] };
 
 type BiomeRuntime = { name: string; color: string; endsAt: number };
 
@@ -55,6 +61,20 @@ type ClauseEffect = {
   luckPct: number;
   luckMult: number;
   speedPct: number;
+  // Bonus Roll mechanics (the game's every-Nth-roll double-luck roll):
+  bonusCd: number | null;        // "Bonus Roll Countdown ... 10 -> 6"
+  bonusMult: number | null;      // "Bonus Roll Multiplier ... 2x -> 3x" (absolute)
+  bonusMultFactor: number | null; // "x1.3 Bonus Roll Multiplier" (relative)
+  removeBonus: boolean;          // "Removes Bonus Roll"
+  // Periodic luck spikes: "5x Luck every 11 rolls", "Next 10 Rolls grant x2.5
+  // Luck (Every 20th Roll)", "x14 Basic Luck for every 1000th roll".
+  everyN: number | null;
+  everyMult: number | null;
+  everyWindow: number | null;
+  randomPct: number | null;      // "0-30% Luck/Roll Speed (randomized per 10 rolls)"
+  stackCap: number | null;       // "per stack up to 200% at 10 stacks" -> cap value
+  rarityCut: number | null;      // "20% Rarity Decrease on Halloween Auras"
+  bonusAuraBiomes: string[];     // Tide: bonus rolls can hit these auras at native rarity
   cond: { kind: "phase"; phase: "day" | "night" } | { kind: "biomes"; biomes: string[] } | null;
   text: string;
 };
@@ -73,6 +93,17 @@ const describeFx = (e: ClauseEffect): string => {
   if (e.luckPct) parts.push(`${e.luckPct > 0 ? "+" : ""}${e.luckPct}% luck`);
   if (e.luckMult !== 1) parts.push(`x${e.luckMult} luck`);
   if (e.speedPct) parts.push(`${e.speedPct > 0 ? "+" : ""}${e.speedPct}% roll speed`);
+  if (e.bonusCd != null) parts.push(`bonus roll every ${e.bonusCd} rolls`);
+  if (e.bonusMult != null) parts.push(`bonus roll x${e.bonusMult}`);
+  if (e.bonusMultFactor != null) parts.push(`bonus roll multiplier x${e.bonusMultFactor}`);
+  if (e.removeBonus) parts.push("bonus roll removed");
+  if (e.everyN != null && e.everyMult != null) {
+    parts.push(`x${e.everyMult} luck every ${e.everyN} rolls${e.everyWindow && e.everyWindow > 1 ? ` (for ${e.everyWindow} rolls)` : ""}`);
+  }
+  if (e.randomPct != null) parts.push(`randomized 0-${e.randomPct}% luck/speed per 10 rolls`);
+  if (e.stackCap != null) parts.push(`up to +${e.stackCap}% luck (max stacks)`);
+  if (e.rarityCut != null) parts.push(`${e.rarityCut}% rarity cut on matching auras`);
+  if (e.bonusAuraBiomes.length) parts.push(`bonus rolls can hit ${e.bonusAuraBiomes.join(" / ")} auras at native rarity`);
   return parts.join(", ") || e.text;
 };
 
@@ -88,7 +119,13 @@ const parseClause = (raw: string): { effect: ClauseEffect | null; notes: string[
   const text = raw.trim().replace(/^Or\s+/i, "").replace(/^\[[^\]]+\]\s*:\s*/i, "").replace(/\.$/, "");
   if (!text) return { effect: null, notes: [] };
 
-  const effect: ClauseEffect = { luckPct: 0, luckMult: 1, speedPct: 0, cond: null, text };
+  const effect: ClauseEffect = {
+    luckPct: 0, luckMult: 1, speedPct: 0,
+    bonusCd: null, bonusMult: null, bonusMultFactor: null, removeBonus: false,
+    everyN: null, everyMult: null, everyWindow: null,
+    randomPct: null, stackCap: null, rarityCut: null, bonusAuraBiomes: [],
+    cond: null, text,
+  };
   const notes: string[] = [];
   let any = false;
 
@@ -97,7 +134,7 @@ const parseClause = (raw: string): { effect: ClauseEffect | null; notes: string[
   if (phaseM) {
     effect.cond = { kind: "phase", phase: phaseM[1].toLowerCase() === "daytime" ? "day" : "night" };
   } else if (biomeM && !/nighttime|daytime/i.test(biomeM[1])) {
-    const biomes = biomeM[1].split(/\s*,\s*|\s+or\s+/i).map(s => biomeMatchName(s)).filter(Boolean);
+    const biomes = biomeM[1].split(/\s*,\s*|\s+or\s+|\s+and\s+/i).map(s => biomeMatchName(s)).filter(Boolean);
     if (biomes.length) effect.cond = { kind: "biomes", biomes };
   }
 
@@ -113,7 +150,139 @@ const parseClause = (raw: string): { effect: ClauseEffect | null; notes: string[
   }
 
   for (const p of pieces) {
-    if (/per\s+stack|every\s+\d|next\s+\d+\s+rolls|randomized|bonus\s+roll|dark\s+point|duplicate|\bcoins\b|rarity decrease/i.test(p)) {
+    // ── Bonus Roll mechanics (a single wiki piece may carry several at once,
+    //    e.g. Blessed Tide: "Countdown ... -> 6 rolls, Multiplier ... -> 3x") ──
+    if (/bonus\s+roll/i.test(p)) {
+      let parsed = false;
+      if (/removes?\s+bonus\s+roll/i.test(p)) {
+        effect.removeBonus = true;
+        parsed = true;
+      }
+      // "Bonus Roll Countdown is moved from 10 rolls -> 6 rolls"
+      let m2 = p.match(/from\s+[\d.]+\s*rolls?\s*(?:->|to)\s*([\d.]+)\s*rolls?/i);
+      if (m2 && /countdown|cooldown/i.test(p)) {
+        effect.bonusCd = Number(m2[1]);
+        parsed = true;
+      }
+      // "10 -> 5 Bonus Roll Cooldown"
+      m2 = p.match(/([\d.]+)\s*(?:->|to)\s*([\d.]+)\s*bonus\s+roll\s*(?:countdown|cooldown)/i);
+      if (m2) {
+        effect.bonusCd = Number(m2[2]);
+        parsed = true;
+      }
+      if (/multi/i.test(p)) {
+        // "x1.3 Bonus Roll Multiplier on Every Roll" — relative factor first
+        m2 = p.match(/^x\s*([\d.]+)\s*bonus\s+roll\s*multi\w*/i);
+        if (m2) {
+          effect.bonusMultFactor = Number(m2[1]);
+          parsed = true;
+        } else {
+          // "Bonus RollMultiplier isupgraded from 2x -> 3x"
+          m2 = p.match(/from\s+[\d.]+x?\s*(?:->|to)\s*([\d.]+)x/i);
+          if (m2 && /multi/i.test(p)) {
+            effect.bonusMult = Number(m2[1]);
+            parsed = true;
+          }
+          // "2x -> 11x Bonus Roll Multiplier"
+          m2 = p.match(/([\d.]+)x\s*(?:->|to)\s*([\d.]+)x\s*bonus\s+roll\s*multi\w*/i);
+          if (m2) {
+            effect.bonusMult = Number(m2[2]);
+            parsed = true;
+          }
+          // "2 -> 6 Bonus Roll Multiply (Every 10th roll)"
+          m2 = p.match(/([\d.]+)\s*(?:->|to)\s*([\d.]+)\s*bonus\s+roll\s*multi\w*/i);
+          if (m2) {
+            effect.bonusMult = Number(m2[2]);
+            parsed = true;
+          }
+        }
+      }
+      // Tide: "The Bonus Roll allows you to roll Rainy Auras with Native
+      // Rarity regardless of current Biome" — pool-level rule, modeled as a
+      // bonus-roll-only aura pool at native rarity.
+      const rollNative = p.match(/allows?\s+you\s+to\s+roll\s+([a-z][a-z ]*?)\s+auras?\s+with\s+native\s+rarity/i);
+      if (rollNative) {
+        effect.bonusAuraBiomes.push(biomeMatchName(rollNative[1]));
+        parsed = true;
+      }
+      if (parsed) {
+        any = true;
+        continue;
+      }
+      notes.push(p);
+      continue;
+    }
+    // ── Periodic luck spikes ──
+    if (/every\s+\d|next\s+\d+\s+rolls/i.test(p)) {
+      // "Next 10 Rolls grant x2.5 Luck (Every 20th Roll)" and
+      // "Next 100 rolls grant x14 Basic Luck for every 1000th roll"
+      let m2 = p.match(/next\s+(\d+)\s+rolls?\s+grant\s+x([\d.]+)(?:\s*(?:base\s+|basic\s+)?luck)?(?:\s*\(?\s*(?:for\s+)?every\s+(\d+)(?:th)?\s*roll\s*\)?)?/i);
+      if (m2) {
+        effect.everyWindow = Number(m2[1]);
+        effect.everyMult = Number(m2[2]);
+        const ev = p.match(/every\s+(\d+)(?:th)?\s*roll/i);
+        effect.everyN = m2[3] ? Number(m2[3]) : (ev ? Number(ev[1]) : null);
+        any = true;
+        continue;
+      }
+      // "x14 Basic Luck for every 1000th roll"
+      m2 = p.match(/x([\d.]+)\s*(?:base\s+|basic\s+)?luck(?:\s+for)?\s+every\s+(\d+)(?:th)?\s*roll/i);
+      if (m2) {
+        effect.everyMult = Number(m2[1]);
+        effect.everyN = Number(m2[2]);
+        const win = p.match(/next\s+(\d+)\s+rolls?/i);
+        effect.everyWindow = win ? Number(win[1]) : 1;
+        any = true;
+        continue;
+      }
+      // "5x Luck every 11 rolls" / "4x Luck every 6th roll" — multiplier with
+      // a trailing x sits BEFORE the word Luck.
+      m2 = p.match(/([\d.]+)x?\s*(?:base\s+|basic\s+)?luck\s+every\s+(\d+)(?:th)?\s+rolls?/i);
+      if (m2) {
+        effect.everyMult = Number(m2[1]);
+        effect.everyN = Number(m2[2]);
+        effect.everyWindow = 1;
+        any = true;
+        continue;
+      }
+      notes.push(p);
+      continue;
+    }
+    // ── Per-stack caps ("+0.05% Basic Luck per stack up to 250% at 5,000 stacks") ──
+    if (/per\s+stack/i.test(p)) {
+      const m2 = p.match(/up\s+to\s+([\d.]+)%/i);
+      if (m2) {
+        effect.stackCap = Number(m2[1]);
+        any = true;
+        continue;
+      }
+      notes.push(p);
+      continue;
+    }
+    // ── Randomized boosts ("Granting 0-30% Luck/Roll Speed (randomized per 10 rolls)") ──
+    if (/randomized/i.test(p)) {
+      const m2 = p.match(/([\d.]+)\s*-\s*([\d.]+)%/);
+      if (m2) {
+        effect.randomPct = Number(m2[2]);
+        any = true;
+        continue;
+      }
+      notes.push(p);
+      continue;
+    }
+    // ── Rarity decrease ("20% Rarity Decrease on Halloween Auras ...") ──
+    if (/rarity\s+decrease/i.test(p)) {
+      const m2 = p.match(/([\d.]+)%\s*rarity\s+decrease/i);
+      if (m2) {
+        effect.rarityCut = Number(m2[1]);
+        any = true;
+        continue;
+      }
+      notes.push(p);
+      continue;
+    }
+    // Economy-only effects stay descriptive notes.
+    if (/dark\s+point|duplicate|\bcoins\b/i.test(p)) {
       notes.push(p);
       continue;
     }
@@ -178,17 +347,89 @@ const DEFAULT_SETTINGS: SimSettings = {
   speed: 1,
   luck: 1,
   auto_roll: false,
-  notify_aura_min_rarity: 100000,
+  // Panel aura notifications fire only for drops at/above this rarity.
+  // The floor is 99,000,000 on purpose: the panel should not spam about
+  // medium drops (the old default was 100,000).
+  notify_aura_min_rarity: 99000000,
   notify_rare_biomes: true,
   discord_enabled: false,
   discord_webhook_url: "",
+  vip: false,
+  vip_plus: false,
 };
 
 const DEFAULT_SAVE: SimSave = {
   version: 1,
-  stats: { rolls: 0, unique_auras: [], counts: {}, rarest: null, biome_visits: {}, playtime_s: 0, log: [] },
+  stats: { rolls: 0, unique_auras: [], counts: {}, rarest: null, biome_visits: {}, playtime_s: 0, log: [], biome_log: [] },
   settings: { ...DEFAULT_SETTINGS },
   gauntlets: { left: null, right: null, pocket: null },
+};
+
+// ── One-roll potions (Sandbox) ─────────────────────────────────────
+// Values and mechanics verified on Fandom ("Luck" and "Effects" pages):
+// one-roll "special buffs" add FLAT luck AFTER bonus-roll multiplication;
+// Oblivion / Pump King's Blood wipe the other buffs first; stacking the
+// same potion only extends its DURATION, never the boost; Oblivion cannot
+// be used together with a Heavenly Potion (Effects page).
+type PotionKey = "heavenly" | "bound" | "dune" | "red_moon_1" | "red_moon_2" | "oblivion" | "pump_king";
+
+type PotionDef = {
+  key: PotionKey;
+  name: string;
+  effect: string;          // in-game effect name, shown in logs
+  specialLuck: number;     // flat Special Luck (added after the bonus roll)
+  gated?: { name: string; N: number }[];  // fixed, luckless aura rolls
+  wipesOthers?: boolean;   // disables the other buffs while it lasts
+  conflicts?: PotionKey[]; // hard "cannot be used together" pairs
+};
+
+const POTIONS: PotionDef[] = [
+  { key: "heavenly", name: "Heavenly Potion", effect: "Heavenly", specialLuck: 150000, conflicts: ["oblivion"] },
+  { key: "bound", name: "Potion of Bound", effect: "Binding", specialLuck: 50000 },
+  { key: "dune", name: "Potion of the Dune", effect: "Burrower's Gift", specialLuck: 10000, gated: [{ name: "Neferkhaf", N: 1000 }] },
+  { key: "red_moon_1", name: "Red Moon Potion I", effect: "Fragmented Moonlight", specialLuck: 11000, gated: [{ name: "Fragments of the Crimson Moon", N: 1000 }] },
+  { key: "red_moon_2", name: "Red Moon Potion II", effect: "絶滅", specialLuck: 200000, gated: [{ name: "Fragments of the Crimson Moon", N: 100 }] },
+  {
+    key: "oblivion", name: "Oblivion Potion", effect: "Oblivion", specialLuck: 600000, wipesOthers: true, conflicts: ["heavenly"],
+    gated: [{ name: "Oblivion", N: 2000 }, { name: "Memory", N: 100 }],
+  },
+  { key: "pump_king", name: "Pump King's Blood", effect: "BLOOD DREAM", specialLuck: 700000, wipesOthers: true },
+];
+
+type PotionState = Record<PotionKey, number>; // rolls remaining per effect (stacking = duration)
+const EMPTY_POTIONS: PotionState = {
+  heavenly: 0, bound: 0, dune: 0, red_moon_1: 0, red_moon_2: 0, oblivion: 0, pump_king: 0,
+};
+
+/** Per-roll potion resolution: BLOOD DREAM wins over Oblivion, and either of
+ *  those wipes-potions suppresses every other effect for the roll (only gear
+ *  and final-luck multipliers survive — VIP stays, per the Oblivion page). */
+const resolvePotions = (state: PotionState) => {
+  const used: string[] = [];
+  const suppressed: string[] = [];
+  const gated: { name: string; N: number }[] = [];
+  let special = 0;
+  const pkb = state.pump_king > 0;
+  const oblivion = !pkb && state.oblivion > 0;
+  for (const def of POTIONS) {
+    if (state[def.key] <= 0) continue;
+    if ((pkb && def.key !== "pump_king") || (oblivion && def.key !== "oblivion")) {
+      suppressed.push(def.name);
+      continue;
+    }
+    special += def.specialLuck;
+    used.push(def.effect);
+    for (const g of def.gated || []) gated.push(g);
+  }
+  // If both Red Moon tiers are up the aura keeps its BEST fixed chance only.
+  const bestGate = new Map<string, number>();
+  for (const g of gated) bestGate.set(g.name, Math.min(bestGate.get(g.name) ?? Infinity, g.N));
+  return {
+    special,
+    used,
+    suppressed,
+    gated: [...bestGate.entries()].map(([name, N]) => ({ name, N })),
+  };
 };
 
 const TIER_COLORS: Record<string, string> = {
@@ -201,6 +442,23 @@ const TIER_COLORS: Record<string, string> = {
   Glorious: "#C52425",
   Transcendent: "#7EC8FF",
   Event: "#21FF11",
+};
+
+/** GLITCHED's name is never static in-game — shimmer it with random glyphs. */
+const GLITCH_GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@!?<>/\\|0123456789";
+const GlitchLabel = ({ text }: { text: string }) => {
+  const [shown, setShown] = useState(text);
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setShown(text.split("").map(ch =>
+        ch === " " || Math.random() < 0.78
+          ? ch
+          : GLITCH_GLYPHS[Math.floor(Math.random() * GLITCH_GLYPHS.length)],
+      ).join(""));
+    }, 350);
+    return () => window.clearInterval(id);
+  }, [text]);
+  return <>{shown}</>;
 };
 
 const rarityTier = (n: number): string => {
@@ -266,12 +524,19 @@ const biomeMatchName = (raw: string) => String(raw || "").trim().toUpperCase().r
 const EXCLUDED_FLAGS = new Set(["craftable", "limited", "unobtainable", "dev_exclusive", "unreleased", "removed"]);
 const EXCLUDED_TYPES = new Set(["potion", "quest_reward", "unobtainable"]);
 const BOSS_AURAS = new Set(["FRAGMENTS_OF_THE_CRIMSON_MOON", "NEFERKHAF"]); // Red Moon Potion / Potion of the Dune
+// "Halloween Auras" (Vampire Hunter): auras exclusive to the Halloween biomes.
+const HALLOWEEN_BIOMES = new Set(["PUMPKIN MOON", "GRAVEYARD", "BLOOD RAIN"]);
 
 const isSimRollable = (key: string, a: Data): boolean => {
   if (a?.rarity_is_potion) return false;
   const flags: string[] = Array.isArray(a?.flags) ? a.flags : [];
   if (flags.some(f => EXCLUDED_FLAGS.has(String(f).toLowerCase()))) return false;
   if (EXCLUDED_TYPES.has(String(a?.obtainment_type || "").toLowerCase())) return false;
+  // Effect-gated rolls: the aura only rolls while an admin/effect buff is up
+  // (Megaphone during "YG Blessing", Astral : Astrald during "Astrald Luck!").
+  // Without that effect the sim must never drop them — same rule that keeps
+  // seasonal event auras out until their season returns.
+  if (/only rolls while\b.*\bis active/i.test(String(a?.obtainment || ""))) return false;
   const base = String(a?.name || key).split("|")[0].trim().toUpperCase().replace(/\s+/g, "_");
   if (BOSS_AURAS.has(base)) return false;
   return true;
@@ -336,23 +601,40 @@ const buildPool = (auras: Data, biomeName: string | null, blocked: Set<string>):
       exclusive: isExcl,
       native,
       luckExempt: !!a?.luck_exempt,
+      excl: exclAll,
     });
   }
   out.sort((x, y) => y.N - x.N);
   return out;
 };
 
-/** The in-game model: every aura rolls independently at 1 in (N / luck) and
- *  the rarest hit wins; a full miss falls back to the commonest aura (the
- *  game always gives one per roll). Luck-exempt auras (Meta, Illusionary,
- *  Cryogenic) ignore the multiplier. */
-const rollAura = (pool: PoolAura[], luck: number): PoolAura | null => {
-  if (!pool.length) return null;
-  for (const a of pool) {
-    const l = a.luckExempt ? 1 : luck;
-    if (Math.random() < Math.min(1, l / a.N)) return a;
+/** The Fandom "Luck Formula" — Sol's RNG's real roll algorithm:
+ *    Luck = (((1 + Basic Luck) * Bonus Roll Multiplier) + Special Luck) * VIP
+ *    List Value = floor(Base Value / Luck)
+ *  The pool is walked RAREST-FIRST; a random number from 1 to the List Value
+ *  must come up 1 for the aura to drop. Auras whose List Value is 1 (fully
+ *  saturated by luck) leave the walk — the rarest of them is the fallback
+ *  when nothing else hits. Fixed-rarity auras (Illusionary, Meta, Cryogenic
+ *  and potion-gated drops like Neferkhaf) sit at the START of the list and
+ *  roll at their raw 1 in N: luck never touches them. */
+const rollByFormula = (
+  fixed: PoolAura[],
+  pool: PoolAura[],
+  luck: number,
+  nFactor?: (a: PoolAura) => number,
+): PoolAura | null => {
+  const hit = (N: number) => Math.floor(Math.random() * Math.max(1, N)) === 0; // random(1..N) == 1
+  for (const a of fixed) {
+    if (hit(Math.max(1, Math.round(a.N)))) return a;
   }
-  return pool[pool.length - 1];
+  const guaranteed: PoolAura[] = [];
+  for (const a of pool) {
+    const n = Math.max(1, a.N * (nFactor ? Math.max(0.01, nFactor(a)) : 1));
+    const listValue = Math.floor(n / Math.max(1, luck));
+    if (listValue <= 1) { guaranteed.push(a); continue; }
+    if (hit(listValue)) return a;
+  }
+  return guaranteed[0] ?? pool[pool.length - 1] ?? fixed[0] ?? null;
 };
 
 /* In-game style Roll button (Sol's RNG): black plate, grey cooldown fill
@@ -393,6 +675,15 @@ export default function SolSimPage({ active }: { active?: boolean }) {
 
   const [settings, setSettings] = useState<SimSettings>({ ...DEFAULT_SETTINGS });
   const [loadout, setLoadout] = useState<SimSave["gauntlets"]>({ left: null, right: null, pocket: null });
+  // Mirror of settings/loadout for persist(): the save callback must never
+  // capture a stale render's values (see the persist() implementation).
+  const saveStateRef = useRef<{ settings: SimSettings; loadout: SimSave["gauntlets"] }>({ settings, loadout });
+  saveStateRef.current = { settings, loadout };
+  // One-roll potions armed for the next rolls (Sandbox): each key holds the
+  // number of rolls its effect still lasts (stacking = duration, not boost).
+  const [potions, setPotions] = useState<PotionState>({ ...EMPTY_POTIONS });
+  const potionsRef = useRef<PotionState>({ ...EMPTY_POTIONS });
+  potionsRef.current = potions;
   const [statsView, setStatsView] = useState<SimStats>(DEFAULT_SAVE.stats);
   const [lastDrop, setLastDrop] = useState<PoolAura | null>(null);
   const [rollSeq, setRollSeq] = useState(0);
@@ -401,9 +692,14 @@ export default function SolSimPage({ active }: { active?: boolean }) {
     biome: null, phase: "day", phaseEndsAt: Date.now() / 1000 + DAY_LENGTH_S,
   });
   const [forceBiome, setForceBiome] = useState("");
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const statsRef = useRef<SimStats>(structuredClone(DEFAULT_SAVE.stats));
   const saveTimerRef = useRef(0);
+  // Blocks persist() until the previous save file has been READ: the mount
+  // effects used to flush DEFAULT settings over sim_save.json before the
+  // async sim_load_save arrived, wiping the previous run's settings.
+  const hydratedRef = useRef(false);
   const discordGateRef = useRef(0);
   const rollAccRef = useRef(0);
   const cooldownUntilRef = useRef(0);
@@ -412,6 +708,18 @@ export default function SolSimPage({ active }: { active?: boolean }) {
   const doRollRef = useRef<(fromAuto?: boolean) => void>(() => {});
   const worldRef = useRef(world);
   worldRef.current = world;
+  // Randomized gear value (0..randomPct) and the periodic luck-spike windows
+  // ("Next 10 Rolls grant x2.5 Luck (Every 20th Roll)"). Both are mirrored in
+  // refs so the math inside doRoll never sees a stale value mid re-render, and
+  // several gauntlets can hold overlapping spikes at once.
+  const [randFx, setRandFx] = useState(0);
+  const randFxRef = useRef(0);
+  const spikeRef = useRef<{ until: number; mult: number; label: string }[]>([]);
+  // Per-roll technique HUD (bonus-roll countdown, active luck spikes) so the
+  // gear abilities are visible in practice, not just in the chips list.
+  const [fxHud, setFxHud] = useState<{ bonusIn: number | null; spikeMult: number; spikeLeft: number; spikeLabel: string | null }>({
+    bonusIn: null, spikeMult: 1, spikeLeft: 0, spikeLabel: null,
+  });
 
   // ── Load datasets + persisted save ────────────────────────────────
   // The tracker that serves aura/biome data boots in a background thread
@@ -442,19 +750,29 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       if (b && typeof b === "object" && Object.keys(b).length) setBiomes(b);
       if (a && typeof a === "object" && Object.keys(a).length) setAuras(a);
       if (g && typeof g === "object" && Object.keys(g).length) setGauntlets(g);
-      if (!saveApplied && saveVal?.success && saveVal.data && Object.keys(saveVal.data).length) {
+      if (!saveApplied && saveVal?.success && saveVal.data && typeof saveVal.data === "object") {
         saveApplied = true;
+        hydratedRef.current = true;
         const saved = saveVal.data as SimSave;
-        const stats: SimStats = { ...DEFAULT_SAVE.stats, ...(saved.stats || {}) };
-        stats.unique_auras = Array.isArray(stats.unique_auras) ? stats.unique_auras : [];
-        stats.counts = stats.counts && typeof stats.counts === "object" ? stats.counts : {};
-        stats.log = Array.isArray(stats.log) ? stats.log : [];
-        stats.biome_visits = stats.biome_visits && typeof stats.biome_visits === "object" ? stats.biome_visits : {};
-        statsRef.current = stats;
-        setStatsView({ ...stats, unique_auras: [...stats.unique_auras], log: [...stats.log] });
-        setSettings({ ...DEFAULT_SETTINGS, ...(saved.settings || {}) });
-        const gl = saved.gauntlets || {};
-        setLoadout({ left: gl.left ?? null, right: gl.right ?? null, pocket: gl.pocket ?? null });
+        if (Object.keys(saved).length) {
+          const stats: SimStats = { ...DEFAULT_SAVE.stats, ...(saved.stats || {}) };
+          stats.unique_auras = Array.isArray(stats.unique_auras) ? stats.unique_auras : [];
+          stats.counts = stats.counts && typeof stats.counts === "object" ? stats.counts : {};
+          stats.log = Array.isArray(stats.log) ? stats.log : [];
+          stats.biome_log = Array.isArray(stats.biome_log) ? stats.biome_log : [];
+          stats.biome_visits = stats.biome_visits && typeof stats.biome_visits === "object" ? stats.biome_visits : {};
+          statsRef.current = stats;
+          setStatsView({ ...stats, unique_auras: [...stats.unique_auras], log: [...stats.log] });
+          const mergedSettings: SimSettings = { ...DEFAULT_SETTINGS, ...(saved.settings || {}) };
+          // Migration: the old default threshold (100,000) means "never set
+          // by the user" — move such saves onto the new 99,000,000 floor.
+          if (Number(mergedSettings.notify_aura_min_rarity) === 100000) {
+            mergedSettings.notify_aura_min_rarity = DEFAULT_SETTINGS.notify_aura_min_rarity;
+          }
+          setSettings(mergedSettings);
+          const gl = saved.gauntlets || {};
+          setLoadout({ left: gl.left ?? null, right: gl.right ?? null, pocket: gl.pocket ?? null });
+        }
       }
       if (attempt === 0) setLoading(false);
       const ready = a && typeof a === "object" && Object.keys(a).length > 0;
@@ -477,11 +795,15 @@ export default function SolSimPage({ active }: { active?: boolean }) {
   const persist = useCallback((immediate = false) => {
     const flush = () => {
       saveTimerRef.current = 0;
+      if (!hydratedRef.current) return;
+      // Read the LATEST settings/loadout from the mirror ref: a debounced
+      // closure would write the values from the render that scheduled it,
+      // silently reverting any setting changed after that moment.
       const payload: SimSave = {
         version: 1,
         stats: statsRef.current,
-        settings,
-        gauntlets: loadout,
+        settings: saveStateRef.current.settings,
+        gauntlets: saveStateRef.current.loadout,
       };
       void (window.pywebview?.api as any)?.sim_save_state?.(payload);
     };
@@ -492,7 +814,7 @@ export default function SolSimPage({ active }: { active?: boolean }) {
     }
     if (saveTimerRef.current) return;
     saveTimerRef.current = window.setTimeout(flush, 800);
-  }, [settings, loadout]);
+  }, []);
 
   // ── Derived: gauntlet effects, pool, effective rates ──────────────
   const equippedFx = useMemo(() => {
@@ -501,6 +823,15 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       luckPct: 0,
       luckMult: 1,
       speedPct: 0,
+      bonusCd: null as number | null,
+      bonusMult: null as number | null,
+      bonusMultFactor: 1,
+      removeBonus: false,
+      periodic: [] as { everyN: number; everyMult: number; everyWindow: number }[],
+      randomPct: 0,
+      stackCap: 0,
+      rarityCuts: [] as { cut: number; cond: ClauseEffect["cond"] }[],
+      bonusAuraBiomes: [] as string[],
       chips: [] as string[],
       notes: [] as string[],
     };
@@ -508,6 +839,19 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       merged.luckPct += e.luckPct;
       merged.luckMult *= e.luckMult;
       merged.speedPct += e.speedPct;
+      if (e.bonusCd != null) merged.bonusCd = merged.bonusCd == null ? e.bonusCd : Math.min(merged.bonusCd, e.bonusCd);
+      if (e.bonusMult != null) merged.bonusMult = merged.bonusMult == null ? e.bonusMult : Math.max(merged.bonusMult, e.bonusMult);
+      if (e.bonusMultFactor != null) merged.bonusMultFactor *= e.bonusMultFactor;
+      if (e.removeBonus) merged.removeBonus = true;
+      if (e.everyN != null && e.everyMult != null) {
+        merged.periodic.push({ everyN: e.everyN, everyMult: e.everyMult, everyWindow: e.everyWindow || 1 });
+      }
+      if (e.randomPct != null) merged.randomPct = Math.max(merged.randomPct, e.randomPct);
+      if (e.stackCap != null) merged.stackCap += e.stackCap;
+      if (e.rarityCut != null) merged.rarityCuts.push({ cut: e.rarityCut, cond: e.cond });
+      for (const b of e.bonusAuraBiomes) {
+        if (!merged.bonusAuraBiomes.includes(b)) merged.bonusAuraBiomes.push(b);
+      }
       merged.chips.push(`${name}: ${describeFx(e)}${suffix}`);
     };
     for (const key of ["left", "right", "pocket"] as const) {
@@ -536,11 +880,23 @@ export default function SolSimPage({ active }: { active?: boolean }) {
   }, [loadout, gauntlets, world.biome, world.phase]);
 
   const sandbox = settings.mode === "sandbox";
-  const gauntletLuck = (1 + equippedFx.luckPct / 100) * equippedFx.luckMult;
-  const effLuck = Math.max(1, (sandbox ? settings.luck : 1) * gauntletLuck);
+  const gauntletLuck = (1 + (equippedFx.luckPct + equippedFx.stackCap) / 100) * equippedFx.luckMult;
+  // randFx: "0-30% Luck/Roll Speed (randomized per 10 rolls)" — refreshed in
+  // doRoll every 10 rolls and applied to both luck and roll speed.
   // Gear roll-speed is honest and unbounded (Singularity Gauntlet is x3);
   // only the Sandbox speed cheat itself is limited to x5 by design.
-  const effSpeed = Math.max(0.1, (sandbox ? settings.speed : 1) * (1 + equippedFx.speedPct / 100));
+  const effSpeed = Math.max(0.1, (sandbox ? settings.speed : 1) * (1 + equippedFx.speedPct / 100) * (1 + randFx / 100));
+  // VIP / VIP+ (Fandom "Effects"): multiply the FINAL luck — x1.2 for VIP and
+  // x1.2 for VIP+ (x1.3 when VIP is also owned). These are the only buffs that
+  // also multiply the bonus roll / special buffs in the real game.
+  // VIP final multiplier per Fandom (Effects page): x1.2 alone, VIP+ is
+  // x1.2 too and x1.3 when both passes are owned — NOT 1.2 * 1.3.
+  const vipMult = settings.vip && settings.vip_plus ? 1.3 : (settings.vip || settings.vip_plus ? 1.2 : 1);
+  // The luck the NEXT roll would use before its own bonus roll / spike, per
+  // the Fandom formula ((1 + Basic) * Bonus + Special) * VIP — every toggle
+  // and every armed potion must visibly move this number.
+  const potPreview = sandbox ? resolvePotions(potions) : { special: 0, used: [] as string[], suppressed: [] as string[], gated: [] as { name: string; N: number }[] };
+  const rollLuckNow = Math.max(1, ((sandbox ? settings.luck : 1) * gauntletLuck * (1 + randFx / 100) + potPreview.special) * vipMult);
 
   // Biomes that do not exist in the sim: the Limbo dimension, admin biomes
   // and out-of-season events (they return with their seasons).
@@ -554,6 +910,25 @@ export default function SolSimPage({ active }: { active?: boolean }) {
   }, [biomes]);
 
   const pool = useMemo(() => buildPool(auras, world.biome ? world.biome.name : null, blockedBiomes), [auras, world.biome, blockedBiomes]);
+
+  // Tide (Blessed Tide / Tide Gauntlet): Bonus Rolls can also hit the listed
+  // biome-exclusive auras at their native rarity regardless of current biome.
+  const tidePool = useMemo(() => {
+    const names = new Set(equippedFx.bonusAuraBiomes);
+    if (!names.size) return [];
+    const out: PoolAura[] = [];
+    for (const [key, a] of Object.entries(auras)) {
+      if (!isSimRollable(key, a)) continue;
+      const excl = exclusiveRefs(a);
+      if (!excl.some(x => names.has(x))) continue;
+      const nativeN = Number(a?.native_rarity);
+      const globalN = Number(a?.rarity);
+      const N = Number.isFinite(nativeN) && nativeN > 0 ? nativeN : (Number.isFinite(globalN) && globalN > 0 ? globalN : NaN);
+      if (!Number.isFinite(N) || N <= 0) continue;
+      out.push({ name: String(a?.name || key), N, tier: rarityTier(N), exclusive: true, native: true, luckExempt: !!a?.luck_exempt, excl });
+    }
+    return out;
+  }, [auras, equippedFx.bonusAuraBiomes]);
 
   // ── Notifications (in-page banner + optional Discord, never pings) ─
   const notify = useCallback((title: string, body: string, color: string, discord: boolean) => {
@@ -581,12 +956,113 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       setToast({ title: tRef.current("No aura data yet"), body: tRef.current("Game data is still loading — try ↻ Reload data."), color: "#f87171" });
       return;
     }
-    const aura = rollAura(pool, effLuck);
+    const fx = equippedFx;
+    const st = statsRef.current;
+    const rollNo = st.rolls + 1;
+
+    // Randomized gear: a fresh value every 10 rolls applies to the next 10.
+    if (fx.randomPct > 0 && (rollNo - 1) % 10 === 0) {
+      randFxRef.current = Math.random() * fx.randomPct;
+      setRandFx(randFxRef.current);
+    }
+
+    // Bonus Roll (game mechanic): every Nth roll multiplies luck — by default
+    // every 10th roll gives x2. Gauntlets change the cooldown (10 -> 5/6),
+    // the multiplier (2x -> 3x/11x, or x1.3 factor) or remove the roll.
+    const bonusCd = fx.bonusCd ?? 10;
+    const bonusMult = Math.max(1, (fx.bonusMult ?? 2) * fx.bonusMultFactor);
+    const onBonus = !fx.removeBonus && bonusCd > 0 && rollNo % bonusCd === 0;
+
+    // Periodic spikes ("5x Luck every 11 rolls", "Next 100 rolls grant x14
+    // Basic Luck for every 1000th roll"). Several gauntlets may hold
+    // overlapping spikes — keep them all and multiply the active ones.
+    const freshSpike: string[] = [];
+    for (const s of fx.periodic) {
+      if (s.everyN > 0 && rollNo % s.everyN === 0) {
+        const label = `⚡ ${s.everyMult}x luck ×${s.everyWindow} roll${s.everyWindow > 1 ? "s" : ""}`;
+        spikeRef.current = [...spikeRef.current.filter(sp => rollNo <= sp.until),
+          { until: rollNo + Math.max(1, s.everyWindow) - 1, mult: s.everyMult, label }];
+        freshSpike.push(label);
+      }
+    }
+    spikeRef.current = spikeRef.current.filter(sp => rollNo <= sp.until);
+    const spikeMult = spikeRef.current.reduce((acc, sp) => acc * sp.mult, 1);
+
+    // ── The Fandom Luck Formula ─────────────────────────────────────
+    // Luck = (((1 + Basic Luck) * Bonus Roll Multiplier) + Special Luck) * VIP
+    // Basic part: base x Sandbox cheat x gauntlets/stacks x randomized gear.
+    // Bonus roll and Darkshader-style streaks multiply that part. One-roll
+    // potion "Special Luck" is ADDED after the multiplication. VIP then
+    // multiplies the total. Oblivion / Pump King's Blood suppress the other
+    // potion effects for their roll (gear and VIP survive, per the wiki).
+    const pot = sandbox
+      ? resolvePotions(potionsRef.current)
+      : { special: 0, used: [] as string[], suppressed: [] as string[], gated: [] as { name: string; N: number }[] };
+    const liveRand = fx.randomPct > 0 ? randFxRef.current : 0;
+    const basicTerm = Math.max(0, (sandbox ? settings.luck : 1) * gauntletLuck * (1 + liveRand / 100));
+    const bonusTerm = (onBonus ? bonusMult : 1) * spikeMult;
+    const rollLuck = Math.max(1, (basicTerm * bonusTerm + pot.special) * vipMult);
+
+    // Technique markers carried into the drop log, so bonus rolls and luck
+    // spikes are visible in practice instead of silent number changes.
+    const fxTags: string[] = [];
+    if (onBonus) fxTags.push(`🎁 bonus roll ×${bonusMult}`);
+    if (spikeMult > 1) fxTags.push(`⚡ spike ×${spikeMult}`);
+    for (const label of freshSpike) fxTags.push(label);
+    for (const u of pot.used) fxTags.push(`🧪 ${u}`);
+    if (pot.suppressed.length) fxTags.push(`🧪 ${pot.suppressed.length} effect${pot.suppressed.length > 1 ? "s" : ""} suppressed`);
+    setFxHud({
+      bonusIn: fx.removeBonus || bonusCd <= 0 ? null : bonusCd - (rollNo % bonusCd),
+      spikeMult,
+      spikeLeft: spikeRef.current.length
+        ? Math.max(0, Math.min(...spikeRef.current.map(sp => sp.until - rollNo + 1)))
+        : 0,
+      spikeLabel: spikeRef.current.length ? spikeRef.current.map(sp => sp.label).join(" + ") : null,
+    });
+
+    // "20% Rarity Decrease on Halloween Auras" — shrink 1 in N of matching
+    // auras while the clause condition (Halloween biomes / Glitched) holds.
+    const condActive = (cond: ClauseEffect["cond"]): boolean => {
+      if (!cond) return true;
+      return cond.kind === "phase"
+        ? cond.phase === worldRef.current.phase
+        : !!worldRef.current.biome && cond.biomes.includes(biomeMatchName(worldRef.current.biome.name));
+    };
+    const rollPool = onBonus && tidePool.length
+      ? [...pool, ...tidePool.filter(t => !pool.some(p => p.name === t.name))]
+      : pool;
+    // Fixed-chance list first (Fandom formula): luck-exempt auras plus the
+    // auras unlocked by the active one-roll potion effects, rarest-first.
+    const fixedList: PoolAura[] = [];
+    for (const a of rollPool) if (a.luckExempt) fixedList.push(a);
+    for (const g of pot.gated) {
+      fixedList.push({ name: g.name, N: g.N, tier: rarityTier(g.N), exclusive: false, native: false, luckExempt: true, excl: [] });
+    }
+    fixedList.sort((x, y) => y.N - x.N);
+    const scaledPool = rollPool.filter(a => !a.luckExempt);
+    const aura = rollByFormula(fixedList, scaledPool, rollLuck, fx.rarityCuts.length
+      ? (a) => {
+          if (!a.excl.some(x => HALLOWEEN_BIOMES.has(x))) return 1;
+          let f = 1;
+          for (const rc of fx.rarityCuts) {
+            if (condActive(rc.cond)) f *= (1 - rc.cut / 100);
+          }
+          return f;
+        }
+      : undefined);
     if (!aura) return;
     cooldownUntilRef.current = now + cooldownMsRef.current;
     setRollSeq(s => s + 1);
-    const st = statsRef.current;
     st.rolls += 1;
+    // One-roll potions: this roll consumed one charge of every armed effect
+    // (stacking several potions of a kind extends the duration — never the
+    // boost, per the Fandom Effects page).
+    if (sandbox && (pot.used.length || pot.suppressed.length)) {
+      const next = { ...potionsRef.current };
+      for (const key of Object.keys(next) as PotionKey[]) if (next[key] > 0) next[key] -= 1;
+      potionsRef.current = next;
+      setPotions(next);
+    }
     if (!st.unique_auras.includes(aura.name)) st.unique_auras.push(aura.name);
     st.counts[aura.name] = (st.counts[aura.name] || 0) + 1;
     if (!st.rarest || aura.N > st.rarest.rarity) st.rarest = { name: aura.name, rarity: aura.N };
@@ -594,6 +1070,7 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       name: aura.name, rarity: aura.N, tier: aura.tier,
       biome: worldRef.current.biome ? worldRef.current.biome.name : "NORMAL",
       ts: Date.now(),
+      fx: fxTags.length ? fxTags : undefined,
     };
     st.log = [entry, ...st.log].slice(0, 25);
     if (now - lastUiRef.current > 150) {
@@ -603,13 +1080,13 @@ export default function SolSimPage({ active }: { active?: boolean }) {
     if (aura.N >= Math.max(1, settings.notify_aura_min_rarity)) {
       notify(
         `✦ ${aura.name}`,
-        `1 in ${fmtNum(aura.N)} · ${aura.tier} · ${tRef.current("in")} ${entry.biome} (${tRef.current("simulated drop")})`,
+        `1 in ${fmtNum(aura.N)} · ${aura.tier} · ${tRef.current("in")} ${entry.biome} (${tRef.current("simulated drop")})${fxTags.length ? " · " + fxTags.join(" ") : ""}`,
         TIER_COLORS[aura.tier] || "#a78bfa",
         true,
       );
     }
     persist();
-  }, [pool, effLuck, settings.notify_aura_min_rarity, notify, persist]);
+  }, [pool, tidePool, equippedFx, vipMult, gauntletLuck, sandbox, settings.luck, settings.notify_aura_min_rarity, notify, persist]);
 
   useEffect(() => { doRollRef.current = doRoll; });
 
@@ -659,8 +1136,10 @@ export default function SolSimPage({ active }: { active?: boolean }) {
             w.biome = { name, color: String(target.color || "#7c6cff"), endsAt: now + parseDuration(target.duration) };
             const st = statsRef.current;
             st.biome_visits[name] = (st.biome_visits[name] || 0) + 1;
+            st.biome_log.push({ name, ts: Date.now(), forced: false });
+            if (st.biome_log.length > 200) st.biome_log.splice(0, st.biome_log.length - 200);
             const cat = String(target.category || "weather");
-            if (settings.notify_rare_biomes && cat !== "weather") {
+            if (settings.notify_rare_biomes && cat !== "weather" && cat !== "biome") {
               notify(`☁ ${name}`, `${tRef.current("Simulated biome spawn")} · ${String(target.spawn_chance || "")}`, String(target.color || "#7c6cff"), true);
             }
             break;
@@ -683,16 +1162,40 @@ export default function SolSimPage({ active }: { active?: boolean }) {
   }, [launched, visible, persist]);
   useEffect(() => () => { persist(true); }, [persist]);
 
+  // Biomes named by aura data but absent from the wiki Biomes page — right
+  // after a game update (Lost Forest, The Radiant Forest) the aura rows know
+  // them before the biome article is written. Let Sandbox force-spawn them so
+  // their native bonuses are testable here.
+  const extraBiomeNames = useMemo(() => {
+    const out = new Map<string, string>();
+    const consider = (raw: any) => {
+      for (const r of splitBiomeRefs(raw)) {
+        if (r === "NORMAL" || r === "TIME" || r === "DAYTIME" || r === "NIGHTTIME") continue;
+        if (biomes[r] || blockedBiomes.has(r)) continue;
+        out.set(r, r);
+      }
+    };
+    for (const a of Object.values(auras)) {
+      consider(a?.native_biome?.[0]);
+      consider(a?.exclusive_biome?.[0]);
+      if (Array.isArray(a?.exclusive_biomes)) a.exclusive_biomes.forEach(consider);
+    }
+    return out;
+  }, [auras, biomes, blockedBiomes]);
+
   const spawnBiome = useCallback((name: string) => {
-    const b = biomes[name];
-    if (!b) return;
+    const b = biomes[name] as any;
+    const rec = b || (extraBiomeNames.has(name) ? { name, color: "#7c6cff", duration: "5 minutes" } : null);
+    if (!rec) return;
     const w = { ...worldRef.current };
-    w.biome = { name: b.name || name, color: String(b.color || "#7c6cff"), endsAt: Date.now() / 1000 + parseDuration(b.duration) };
+    w.biome = { name: rec.name || name, color: String(rec.color || "#7c6cff"), endsAt: Date.now() / 1000 + parseDuration(rec.duration) };
     const st = statsRef.current;
     st.biome_visits[w.biome.name] = (st.biome_visits[w.biome.name] || 0) + 1;
+    st.biome_log.push({ name: w.biome.name, ts: Date.now(), forced: true });
+    if (st.biome_log.length > 200) st.biome_log.splice(0, st.biome_log.length - 200);
     setWorld(w);
     persist();
-  }, [biomes, persist]);
+  }, [biomes, extraBiomeNames, persist]);
 
   const resetStats = useCallback(() => {
     statsRef.current = structuredClone(DEFAULT_SAVE.stats);
@@ -700,6 +1203,17 @@ export default function SolSimPage({ active }: { active?: boolean }) {
     setLastDrop(null);
     persist(true);
   }, [persist]);
+
+  /** Arm/disarm one-roll potions (Sandbox). Count = how many rolls the effect
+   *  lasts. Hard conflict per Fandom: Oblivion cannot be used with Heavenly. */
+  const applyPotion = useCallback((key: PotionKey, delta: number) => {
+    const next = { ...potionsRef.current };
+    next[key] = Math.max(0, Math.min(99, (next[key] || 0) + delta));
+    if (next[key] > 0 && key === "oblivion") next.heavenly = 0;
+    if (next[key] > 0 && key === "heavenly") next.oblivion = 0;
+    potionsRef.current = next;
+    setPotions(next);
+  }, []);
 
   // ── UI helpers ───────────────────────────────────────────────────
   const gauntletOptions = useMemo(() => {
@@ -713,20 +1227,59 @@ export default function SolSimPage({ active }: { active?: boolean }) {
     return bySlot;
   }, [gauntlets]);
 
-  const biomeList = useMemo(() => Object.entries(biomes)
-    .filter(([key, b]) => key !== "NORMAL" && key !== "TIME" && !["event", "admin"].includes(String(b?.category || "")))
-    .map(([key, b]) => ({ key, name: String(b.name || key), color: String(b.color || "#7c6cff"), category: String(b.category || "weather") }))
-    .sort((a, b) => a.name.localeCompare(b.name)), [biomes]);
+  const biomeList = useMemo(() => {
+    const rows = Object.entries(biomes)
+      .filter(([key, b]) => key !== "NORMAL" && key !== "TIME" && !["event", "admin"].includes(String(b?.category || "")))
+      .map(([key, b]) => ({ key, name: String(b.name || key), color: String(b.color || "#7c6cff"), category: String(b.category || "weather") }));
+    for (const [key, name] of extraBiomeNames) rows.push({ key, name, color: "#7c6cff", category: "new" });
+    return rows.sort((a, b) => a.name.localeCompare(b.name));
+  }, [biomes, extraBiomeNames]);
 
-  const collected = useMemo(() => Object.entries(statsView.counts)
-    .map(([name, count]) => {
-      const info = pool.find(p => p.name === name);
-      return { name, count, N: info?.N ?? 0, tier: info?.tier ?? "Basic" };
-    })
-    .sort((a, b) => b.N - a.N || a.name.localeCompare(b.name)),
-  [statsView.counts, pool]);
+  const collected = useMemo(() => {
+    // Look the aura up in the CURRENT pool first; auras locked to another
+    // biome (Monarch, Hellborn, Astraios…) and fixed-chance ones (Illusionary)
+    // are absent from it — fall back to their global base rarity so the table
+    // never shows an empty chance.
+    const byName = new Map<string, any>();
+    for (const [key, a] of Object.entries(auras)) {
+      const n = String(a?.name || key);
+      if (!byName.has(n)) byName.set(n, a);
+    }
+    return Object.entries(statsView.counts)
+      .map(([name, count]) => {
+        const info = pool.find(p => p.name === name);
+        const rec = byName.get(name);
+        const base = Number(rec?.rarity);
+        const N = info?.N ?? (Number.isFinite(base) && base > 0 ? base : 0);
+        const tier = info?.tier ?? (N > 0 ? rarityTier(N) : "Basic");
+        return { name, count, N, tier, inPool: !!info };
+      })
+      .sort((a, b) => b.N - a.N || a.name.localeCompare(b.name));
+  }, [statsView.counts, pool, auras]);
 
   const worldColor = world.biome ? world.biome.color : "#7c6cff";
+  // Banner art: the biome's Fandom in-game view (preview_url — the rectangular
+  // screenshot) with a dark gradient to the side. The square spawn icon
+  // (thumbnail_url) is never used here — the banner is not an icon slot.
+  const biomeBg = String(
+    (world.biome ? ((biomes[world.biome.name] as any)?.preview_url || "") : "") ||
+    (biomes["NORMAL"] as any)?.preview_url || ""
+  );
+  // Banner art must go through the Python media cache: the Fandom CDN 403s
+  // direct CSS/img requests without a Referer, which is why e.g. the Snowy
+  // banner silently failed while other biomes looked fine.
+  const [bannerSrc, setBannerSrc] = useState("");
+  useEffect(() => {
+    setBannerSrc("");
+    if (!biomeBg) return;
+    let alive = true;
+    (window as any).pywebview?.api?.ensure_media_cached?.(biomeBg).then((res: any) => {
+      if (!alive) return;
+      if (res && res.success && res.local_url) setBannerSrc(String(res.local_url));
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, [biomeBg]);
+  const phaseColor = world.phase === "day" ? "#fbbf24" : "#818cf8";
   // Rare-biome ambience: subtle page-wide effects while the biome lasts
   // (colors follow each biome's own wiki imagery).
   const fxClass = world.biome ? ({
@@ -802,13 +1355,29 @@ export default function SolSimPage({ active }: { active?: boolean }) {
             borderLeft: `4px solid ${worldColor}`,
             background: `linear-gradient(90deg, ${worldColor}14, rgba(15,13,24,0.2))`,
           }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            {/* Biome view background (Fandom in-game screenshot) + a dark
+                gradient that fades out to the right, so the text stays
+                readable while the biome art stays visible. */}
+            {biomeBg && (
+              <div style={{
+                position: "absolute", inset: 0,
+                backgroundImage: `url("${bannerSrc || biomeBg}")`,
+                backgroundSize: "cover", backgroundPosition: "center 40%",
+              }} />
+            )}
+            <div style={{
+              position: "absolute", inset: 0,
+              background: "linear-gradient(90deg, rgba(10,9,18,0.92) 0%, rgba(10,9,18,0.78) 38%, rgba(10,9,18,0.35) 72%, rgba(10,9,18,0.05) 100%)",
+            }} />
+            <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
               <div>
-                <div style={{ fontSize: 11, letterSpacing: ".16em", textTransform: "uppercase", color: "var(--text-secondary)" }}>
-                  <span>{world.phase === "day" ? "☀ Daytime" : "🌙 Nighttime"}</span> · <span>sandbox clock</span>
+                <div style={{ fontSize: 11, letterSpacing: ".16em", textTransform: "uppercase", color: phaseColor, fontWeight: 600 }}>
+                  <span>{world.phase === "day" ? "☀ Daytime" : "🌙 Nighttime"}</span> · <span style={{ color: "var(--text-secondary)", fontWeight: 400 }}>sandbox clock</span>
                 </div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: worldColor }}>
-                  {world.biome ? `☁ ${world.biome.name}` : "NORMAL — no biome active"}
+                <div style={{ fontSize: 20, fontWeight: 700, color: worldColor, textShadow: "0 1px 10px rgba(0,0,0,0.7)" }}>
+                  {world.biome
+                    ? (<>☁ {world.biome.name === "GLITCHED" ? <GlitchLabel text="GLITCHED" /> : world.biome.name}</>)
+                    : "NORMAL"}
                 </div>
                 {world.biome && (
                   <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>
@@ -835,11 +1404,22 @@ export default function SolSimPage({ active }: { active?: boolean }) {
           <div style={{ display: "grid", gridTemplateColumns: "minmax(240px, 1fr) minmax(280px, 1.4fr)", gap: 14, marginBottom: 14 }}>
             <div className="card" style={{ padding: 18, display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
               <div style={{ width: "100%", textAlign: "center" }}>
-                <div style={{ fontSize: 10.5, letterSpacing: ".16em", textTransform: "uppercase", color: "var(--text-secondary)" }}>Current luck</div>
-                <div style={{ fontSize: 27, fontWeight: 700, color: worldColor, lineHeight: 1.2 }}>×{effLuck.toFixed(2)}</div>
+                <div style={{ fontSize: 10.5, letterSpacing: ".16em", textTransform: "uppercase", color: "var(--text-secondary)" }}>Roll luck (next roll)</div>
+                <div style={{ fontSize: 27, fontWeight: 700, color: worldColor, lineHeight: 1.2 }}>×{rollLuckNow.toFixed(2)}</div>
                 <div style={{ fontSize: 10.5, color: "var(--text-secondary)" }}>
-                  <span>base</span> ×1 · <span>gauntlets</span> ×{gauntletLuck.toFixed(2)}{sandbox ? <> · <span>cheat</span> ×{settings.luck}</> : null}
+                  <span>base</span> ×1{sandbox ? <> · <span>cheat</span> ×{fmtNum(settings.luck)}</> : null} · <span>gauntlets</span> ×{gauntletLuck.toFixed(2)}{potPreview.special > 0 ? <> · <span>special</span> +{fmtNum(potPreview.special)}</> : null} · <span>VIP</span> ×{vipMult.toFixed(2)}{equippedFx.randomPct > 0 ? <> · <span>random fx</span> ×{(1 + randFx / 100).toFixed(2)}</> : null}
                 </div>
+                {(fxHud.spikeMult > 1 || fxHud.spikeLabel || fxHud.bonusIn !== null || potPreview.used.length > 0 || potPreview.suppressed.length > 0) && (
+                  <div style={{ fontSize: 10.5, marginTop: 3, color: worldColor }}>
+                    {(potPreview.used.length > 0 || potPreview.suppressed.length > 0) && (
+                      <div>🧪 {potPreview.used.join(" + ")}{potPreview.suppressed.length ? ` · ${potPreview.suppressed.length} effect${potPreview.suppressed.length > 1 ? "s" : ""} suppressed` : ""} · special +{fmtNum(potPreview.special)}</div>
+                    )}
+                    {fxHud.spikeMult > 1 && <div>⚡ {fxHud.spikeLabel || `spike ×${fxHud.spikeMult}`} — {fxHud.spikeLeft} roll{fxHud.spikeLeft === 1 ? "" : "s"} left</div>}
+                    {fxHud.bonusIn !== null && (
+                      <div>🎁 bonus roll ×{Math.max(1, (equippedFx.bonusMult ?? 2) * equippedFx.bonusMultFactor)} in {fxHud.bonusIn} roll{fxHud.bonusIn === 1 ? "" : "s"}{fxHud.spikeMult > 1 ? "" : ` · luck will be ×${(rollLuckNow * Math.max(1, (equippedFx.bonusMult ?? 2) * equippedFx.bonusMultFactor)).toFixed(2)} there`}</div>
+                    )}
+                  </div>
+                )}
               </div>
               <button
                 className="sim-roll-btn"
@@ -868,22 +1448,27 @@ export default function SolSimPage({ active }: { active?: boolean }) {
               {sandbox ? (
                 <div style={{ width: "100%" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: "var(--text-secondary)", marginBottom: 4 }}>
-                    <span>Luck (cheat)</span>
-                    <span>×{effLuck.toFixed(2)}</span>
+                    <span>Luck (cheat, ×1 – ×100M)</span>
+                    <span>final ×{rollLuckNow.toFixed(2)}</span>
                   </div>
-                  <input type="range" min={1} max={100} step={1} value={settings.luck}
-                    onChange={e => { setSettings(s => ({ ...s, luck: Number(e.target.value) })); persist(); }}
-                    style={{ width: "100%", accentColor: worldColor }} />
+                  <input className="form-input" type="number" min={1} max={100000000} step={1}
+                    value={settings.luck}
+                    onChange={e => {
+                      const v = Math.min(100000000, Math.max(1, Math.floor(Number(e.target.value) || 1)));
+                      setSettings(s => ({ ...s, luck: v }));
+                      persist();
+                    }}
+                    style={{ width: "100%", borderRadius: 4 }} />
                 </div>
               ) : (
                 <div style={{ width: "100%", fontSize: 11.5, color: "var(--text-secondary)" }}>
-                  <span>Luck</span> ×{effLuck.toFixed(2)} — <span>gauntlets only in Honest mode. Enable Sandbox for the luck slider and roll-speed cheats.</span>
+                  <span>Luck</span> ×{rollLuckNow.toFixed(2)} — <span>gauntlets and VIP stack in Honest mode too. Enable Sandbox for the luck input and roll-speed cheats.</span>
                 </div>
               )}
               <div style={{ fontSize: 11, color: "var(--text-secondary)", textAlign: "center", lineHeight: 1.5 }}>
                 <span>Effective roll speed</span> ×{effSpeed.toFixed(2)} · <span>pool</span> {fmtNum(pool.length)} <span>auras</span>{world.biome ? " (biome-modified)" : ""}
                 <br />
-                Odds like the game: each aura rolls 1 in (N ÷ luck), the rarest hit wins; a full miss falls back to the commonest aura; luck-exempt auras ignore luck.
+                Odds like the game (Fandom Luck Formula): Luck = (((1 + Basic) × Bonus) + Special) × VIP, each aura's List Value is floor(N ÷ luck) and a random 1..List Value must hit 1, rarest first; fixed-chance auras roll at their raw 1 in N before everything else.
               </div>
             </div>
 
@@ -913,6 +1498,11 @@ export default function SolSimPage({ active }: { active?: boolean }) {
                     <div key={`${d.ts}-${i}`} style={{ display: "flex", gap: 8, alignItems: "center", padding: "2px 0" }}>
                       <span style={{ width: 7, height: 7, borderRadius: "50%", background: TIER_COLORS[d.tier] || "#94a3b8", flex: "0 0 auto" }} />
                       <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.name}</span>
+                      {Array.isArray(d.fx) && d.fx.length > 0 && (
+                        <span style={{ flex: "0 0 auto", fontSize: 10, color: worldColor, cursor: "help" }} title={d.fx.join(" · ")}>
+                          {d.fx.map(t => t.split(" ")[0]).join(" ")}
+                        </span>
+                      )}
                       <span style={{ marginLeft: "auto", opacity: .7, flex: "0 0 auto" }}>1 in {fmtNum(d.rarity)}</span>
                     </div>
                   ))}
@@ -954,7 +1544,7 @@ export default function SolSimPage({ active }: { active?: boolean }) {
             <div className="card" style={{ padding: 18 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                 <h4 style={{ margin: 0, fontSize: 12, letterSpacing: ".12em", textTransform: "uppercase", color: "#a78bfa" }}>📊 Statistics</h4>
-                <button className="btn" style={{ padding: "3px 10px", fontSize: 12 }} onClick={resetStats} title="Clear rolls, unique auras, biome visits and the drop log">🗑 Reset</button>
+                <button className="btn" style={{ padding: "3px 10px", fontSize: 12 }} onClick={() => setConfirmReset(true)} title="Clear rolls, unique auras, biome visits and the drop log">🗑 Reset</button>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, fontSize: 12.5 }}>
                 <div><div style={{ color: "var(--text-secondary)", fontSize: 10.5, textTransform: "uppercase", letterSpacing: ".08em" }}>Rolls</div><b>{fmtNum(statsView.rolls)}</b></div>
@@ -964,10 +1554,25 @@ export default function SolSimPage({ active }: { active?: boolean }) {
                   <b style={{ fontSize: 11.5 }}>{statsView.rarest ? `${statsView.rarest.name} (1 in ${fmtNum(statsView.rarest.rarity)})` : "—"}</b></div>
               </div>
               <div style={{ marginTop: 10, fontSize: 11.5, color: "var(--text-secondary)" }}>
-                {Object.entries(statsView.biome_visits).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([n, c]) => (
-                  <div key={n}>☁ {n}: {fmtNum(c)} <span>visits</span></div>
-                ))}
+                <div style={{ maxHeight: 160, overflow: "auto" }}>
+                  {Object.entries(statsView.biome_visits).sort((a, b) => b[1] - a[1]).map(([n, c]) => (
+                    <div key={n}>☁ {n}: {fmtNum(c)} <span>visits</span></div>
+                  ))}
+                </div>
                 {!Object.keys(statsView.biome_visits).length && <div>No biome visits yet.</div>}
+              </div>
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontSize: 10.5, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: 4 }}>
+                  📜 Biome log{statsView.biome_log.length ? ` (last ${Math.min(50, statsView.biome_log.length)})` : ""}
+                </div>
+                <div style={{ maxHeight: 150, overflow: "auto", fontSize: 11, lineHeight: 1.7, color: "var(--text-secondary)" }}>
+                  {statsView.biome_log.length ? statsView.biome_log.slice(-50).reverse().map((b, i) => (
+                    <div key={`${b.ts}-${i}`}>
+                      ☁ <span style={{ color: "#e2e8f0" }}>{b.name}</span>
+                      {" · "}{new Date(b.ts).toLocaleTimeString()}{b.forced ? " · forced" : ""}
+                    </div>
+                  )) : <div>No biome activity yet.</div>}
+                </div>
               </div>
             </div>
 
@@ -984,7 +1589,7 @@ export default function SolSimPage({ active }: { active?: boolean }) {
                     <div key={row.name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{ width: 7, height: 7, borderRadius: "50%", background: TIER_COLORS[row.tier] || "#94a3b8", flex: "0 0 auto" }} />
                       <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.name}</span>
-                      <span style={{ marginLeft: "auto", opacity: .75, flex: "0 0 auto" }}>×{fmtNum(row.count)}{row.N ? ` · 1 in ${fmtNum(row.N)}` : ""}</span>
+                      <span style={{ marginLeft: "auto", opacity: .75, flex: "0 0 auto" }}>×{fmtNum(row.count)}{row.N ? ` · 1 in ${fmtNum(row.N)}` : ""}{!row.inPool && row.N ? " (base odds)" : ""}</span>
                     </div>
                   ))}
                 </div>
@@ -998,13 +1603,51 @@ export default function SolSimPage({ active }: { active?: boolean }) {
               <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, marginBottom: 10 }}>
                 <input type="checkbox" checked={sandbox}
                   onChange={e => { setSettings(s => ({ ...s, mode: e.target.checked ? "sandbox" : "honest" })); persist(); }} />
-                Sandbox mode (speed ×2/×3/×5, luck slider, forced biomes)
+                Sandbox mode (speed ×2/×3/×5, luck input, forced biomes)
               </label>
+              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, marginBottom: 6 }} title="VIP gamepass — x1.2 final luck (also multiplies bonus rolls / special buffs)">
+                <input type="checkbox" checked={settings.vip}
+                  onChange={e => { setSettings(s => ({ ...s, vip: e.target.checked })); persist(); }} />
+                VIP — ×1.2 final luck
+              </label>
+              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, marginBottom: 10 }} title="VIP+ gamepass — x1.2 final luck, x1.3 when VIP is also owned (Fandom: Effects)">
+                <input type="checkbox" checked={settings.vip_plus}
+                  onChange={e => { setSettings(s => ({ ...s, vip_plus: e.target.checked })); persist(); }} />
+                VIP+ — ×1.2 final luck (×1.3 with VIP)
+              </label>
+              {sandbox && (
+                <div style={{ margin: "10px 0", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(167,139,250,.35)", background: "rgba(167,139,250,.06)" }}>
+                  <div style={{ fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "#a78bfa", marginBottom: 8 }}>
+                    🧪 One-roll potions
+                  </div>
+                  {POTIONS.map(def => {
+                    const count = potions[def.key] || 0;
+                    return (
+                      <div key={def.key} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, marginBottom: 6 }}>
+                        <span style={{ flex: 1, minWidth: 0 }}>
+                          <b>{def.name}</b>{" "}
+                          <span style={{ color: "var(--text-secondary)" }}>
+                            +{fmtNum(def.specialLuck)} luck
+                            {def.gated ? ` · ${def.gated.map(g => `${g.name} 1/${fmtNum(g.N)}`).join(", ")} (fixed)` : ""}
+                            {def.wipesOthers ? " · wipes other buffs" : ""}
+                          </span>
+                        </span>
+                        <button className="btn" style={{ padding: "1px 8px", fontSize: 12 }} onClick={() => applyPotion(def.key, -1)} disabled={count <= 0}>−</button>
+                        <span style={{ width: 22, textAlign: "center" }}>{count}</span>
+                        <button className="btn" style={{ padding: "1px 8px", fontSize: 12 }} onClick={() => applyPotion(def.key, 1)}>+</button>
+                      </div>
+                    );
+                  })}
+                  <div style={{ fontSize: 10.5, color: "var(--text-secondary)", marginTop: 6, lineHeight: 1.6 }}>
+                    Each count = one roll of the effect (stacking extends the duration, never the boost). Oblivion cannot be used with a Heavenly Potion and suppresses other effects while it lasts; Pump King's Blood suppresses everything, including Oblivion. Potion-gated drops roll at fixed odds — luck does not touch them.
+                  </div>
+                </div>
+              )}
               <label style={{ display: "block", fontSize: 12.5, marginBottom: 8 }}>
-                <span style={{ color: "var(--text-secondary)" }}>Alert when aura rarity ≥</span>
-                <input className="form-input" style={{ width: "100%", borderRadius: 4, marginTop: 3 }} type="number" min={1}
+                <span style={{ color: "var(--text-secondary)" }}>Alert when aura rarity ≥ (min 99,000,000)</span>
+                <input className="form-input" style={{ width: "100%", borderRadius: 4, marginTop: 3 }} type="number" min={99000000}
                   value={settings.notify_aura_min_rarity}
-                  onChange={e => { setSettings(s => ({ ...s, notify_aura_min_rarity: Math.max(1, Number(e.target.value) || 1) })); persist(); }} />
+                  onChange={e => { setSettings(s => ({ ...s, notify_aura_min_rarity: Math.max(99000000, Number(e.target.value) || 99000000) })); persist(); }} />
               </label>
               <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, marginBottom: 10 }}>
                 <input type="checkbox" checked={settings.notify_rare_biomes}
@@ -1041,6 +1684,28 @@ export default function SolSimPage({ active }: { active?: boolean }) {
         }}>
           <div style={{ fontSize: 13.5, fontWeight: 700, color: toast.color, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{toast.title}</div>
           <div style={{ fontSize: 11.5, color: "var(--text-secondary)", marginTop: 3 }}>{toast.body}</div>
+        </div>
+      )}
+
+      {/* Reset confirmation: wiping a long honest run must be deliberate */}
+      {confirmReset && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 9600, background: "rgba(0,0,0,.55)", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={() => setConfirmReset(false)}>
+          <div className="card" style={{ width: 370, padding: 18, background: "#12101c", border: "1px solid #7f1d1d" }} onClick={e => e.stopPropagation()}>
+            <h4 style={{ margin: "0 0 8px", fontSize: 14, color: "#f87171" }}>🗑 Reset the simulator statistics?</h4>
+            <div style={{ fontSize: 12.5, color: "var(--text-secondary)", lineHeight: 1.7 }}>
+              This wipes everything earned in Sol's Sim:
+              <div style={{ margin: "8px 0", padding: "8px 10px", borderRadius: 6, background: "rgba(248,113,113,.08)", border: "1px solid rgba(248,113,113,.25)" }}>
+                • <b>{fmtNum(statsView.rolls)}</b> rolls and <b>{fmtNum(statsView.unique_auras.length)}</b> unique auras<br />
+                • biome visits and the rarest drop ({statsView.rarest ? `${statsView.rarest.name} (1 in ${fmtNum(statsView.rarest.rarity)})` : "none yet"})<br />
+                • the drop log
+              </div>
+              Settings, VIP flags and equipped gauntlets are <b>not</b> touched. There is no undo.
+            </div>
+            <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+              <button className="btn" style={{ flex: 1, background: "#7f1d1d", borderColor: "#991b1b" }} onClick={() => { resetStats(); setConfirmReset(false); }}>Yes, wipe it</button>
+              <button className="btn" style={{ flex: 1 }} onClick={() => setConfirmReset(false)}>Keep my data</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

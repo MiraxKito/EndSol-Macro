@@ -2,7 +2,7 @@ from __future__ import annotations
 
 # Keep above every biome_tracker import — base_support reads
 # ENDSOL_MACRO_VERSION at import time (Discord webhook footers).
-current_version = "v1.1.0"
+current_version = "v1.1.1"
 import os as _os
 _os.environ["ENDSOL_MACRO_VERSION"] = current_version
 
@@ -888,9 +888,23 @@ class Api:
             except Exception:
                 continue
 
+    def _media_local_url(self, path) -> str:
+        """A URL the UI can actually load. file:// resources are blocked from
+        an http:// page (Browser/Safe mode), so cached media is served from
+        the local HTTP route whenever the emergency server is up; file:// is
+        only the last-resort fallback."""
+        try:
+            name = os.path.basename(str(path))
+            port = getattr(self, "emergency_port", None)
+            if port:
+                return f"http://127.0.0.1:{port}/media/{urllib.parse.quote(name)}"
+        except Exception:
+            pass
+        return Path(str(path)).as_uri()
+
     def ensure_media_cached(self, url):
         """Download a Fandom media file into the local cache and return a
-        file:// URL the WebView can play reliably (local = no CDN challenges)."""
+        local URL the WebView can play reliably (local = no CDN challenges)."""
         url = str(url or "").strip()
         try:
             from biome_tracker.base_support import _is_fandom_url
@@ -900,18 +914,18 @@ class Api:
             dest = self._media_local_path(url)
             if dest.exists() and dest.stat().st_size > 0:
                 return {"success": True, "cached": True, "size": dest.stat().st_size,
-                        "path": str(dest), "local_url": dest.as_uri()}
+                        "path": str(dest), "local_url": self._media_local_url(dest)}
             with self._media_download_lock:
                 # Double-check after acquiring: another thread may have it.
                 if dest.exists() and dest.stat().st_size > 0:
                     return {"success": True, "cached": True, "size": dest.stat().st_size,
-                            "path": str(dest), "local_url": dest.as_uri()}
+                            "path": str(dest), "local_url": self._media_local_url(dest)}
                 res = self._fetch_media_to(url, dest)
             if not res.get("success"):
                 return res
             self._enforce_media_cache_cap()
             return {"success": True, "cached": False, "size": res.get("size", 0),
-                    "path": str(dest), "local_url": dest.as_uri()}
+                    "path": str(dest), "local_url": self._media_local_url(dest)}
         except Exception as e:
             return {"success": False, "error": str(e)}
 
@@ -957,7 +971,7 @@ class Api:
                     frame.save(str(tmp), "PNG")
                 os.replace(str(tmp), str(thumb))
             return {"success": True, "cached": True, "path": str(thumb),
-                    "local_url": thumb.as_uri(), "full_url": base.get("local_url")}
+                    "local_url": self._media_local_url(thumb), "full_url": base.get("local_url")}
         except Exception as e:
             # Any thumbnail failure falls back to the full cached file.
             if base.get("success") and base.get("local_url"):
@@ -1374,6 +1388,7 @@ class Api:
             if self._tracker and isinstance(getattr(self._tracker, "config", None), dict):
                 self._tracker.config.update(cfg)
             save_config(cfg)
+            self._emit_config_update()
             return {"success": True, "name": safe, "count": len(cfg)}
         except json.JSONDecodeError:
             return {"success": False, "error": "Invalid profile JSON file."}
@@ -1450,6 +1465,11 @@ class Api:
                     self._start_fishing_worker()
                 else:
                     self._stop_fishing_worker()
+                    # Fishing was just turned off: bring the potion-crafting
+                    # loop up the same way set_biome_detection does (it used
+                    # to stay dead until the macro was restarted).
+                    try: self._tracker.start_potion_crafting()
+                    except Exception: pass
 
                 if not prev_anti_afk and self._tracker.config.get("anti_afk", False):
                     try:
@@ -1485,13 +1505,25 @@ class Api:
                 if not isinstance(getattr(self._tracker, "config", None), dict):
                     self._tracker.config = {}
                 self._tracker.config.update(imported)
-                if 'webhook_url' in imported:
-                    self._tracker.webhook_urls = imported['webhook_url']
+                if 'webhook_url' in imported or 'webhook_urls' in imported:
+                    # Normalize to a list - old exports stored a bare string,
+                    # and get_webhook_list() would then fall back to config
+                    # while tracker.webhook_urls kept the wrong type.
+                    raw_urls = imported.get('webhook_url') or imported.get('webhook_urls') or []
+                    if isinstance(raw_urls, str):
+                        try:
+                            raw_urls = json.loads(raw_urls) if raw_urls.strip().startswith('[') else [raw_urls]
+                        except Exception:
+                            raw_urls = [raw_urls]
+                    if not isinstance(raw_urls, list):
+                        raw_urls = []
+                    self._tracker.webhook_urls = [str(u).strip() for u in raw_urls if str(u).strip()]
                 try:
                     if hasattr(self._tracker, "refresh_active_webhook_channels"):
                         self._tracker.refresh_active_webhook_channels(force=True)
                 except Exception: pass
 
+            self._emit_config_update()
             return {"success": True, "config": imported}
         except json.JSONDecodeError:
             return {"success": False, "error": "Invalid JSON file"}
@@ -1552,21 +1584,70 @@ class Api:
         class SafeModeHandler(BaseHTTPRequestHandler):
             api = self
 
+            def _host_ok(self):
+                # DNS-rebinding defense: only accept requests addressed to the
+                # loopback port we are listening on.
+                host = (self.headers.get("Host") or "").strip().lower()
+                return host in ("127.0.0.1:%d" % self.server.server_port,
+                                "localhost:%d" % self.server.server_port)
+
             def do_GET(self):
+                if not self._host_ok():
+                    self.send_response(403)
+                    self.end_headers()
+                    return
                 if self.path == "/health":
                     self.send_response(200)
                     self.end_headers()
                     self.wfile.write(b"OK")
+                elif self.path.startswith("/media/"):
+                    # Cached Fandom media (the Sol's Book gallery/player).
+                    # file:// URLs are blocked from an http:// page — that is
+                    # exactly why every GIF failed to load in Browser/Safe
+                    # mode while the API itself worked fine.
+                    raw_name = self.path.split("?")[0][len("/media/"):]
+                    base_name = os.path.basename(urllib.parse.unquote(raw_name).replace("\\", "/"))
+                    media_root = os.path.realpath(self.api._media_cache_dir())
+                    full = os.path.realpath(os.path.join(media_root, base_name))
+                    if (not base_name or not full.startswith(media_root + os.sep)
+                            or not os.path.isfile(full)):
+                        self.send_response(404)
+                        self.end_headers()
+                        return
+                    ext = os.path.splitext(base_name)[1].lower()
+                    ctype = {
+                        ".gif": "image/gif", ".png": "image/png", ".jpg": "image/jpeg",
+                        ".jpeg": "image/jpeg", ".webp": "image/webp", ".bmp": "image/bmp",
+                        ".svg": "image/svg+xml", ".mp4": "video/mp4", ".webm": "video/webm",
+                        ".mov": "video/quicktime", ".ogv": "video/ogg", ".ogg": "audio/ogg",
+                        ".oga": "audio/ogg", ".mp3": "audio/mpeg", ".wav": "audio/wav",
+                    }.get(ext, "application/octet-stream")
+                    self.send_response(200)
+                    self.send_header("Content-type", ctype)
+                    self.send_header("Cache-Control", "max-age=31536000, immutable")
+                    self.end_headers()
+                    with open(full, "rb") as f:
+                        self.wfile.write(f.read())
                 else:
                     # Serve files from any valid dist directory
                     file_path = self.path.split('?')[0].lstrip('/')
                     if not file_path or file_path == 'index.html':
                         file_path = 'index.html'
-                    
+                    # Path-traversal guard: normalize and stay inside dist dirs.
+                    safe_rel = os.path.normpath(file_path.replace("\\", "/").replace("/", os.sep))
+                    if safe_rel.startswith("..") or os.path.isabs(safe_rel):
+                        self.send_response(404)
+                        self.end_headers()
+                        return
+                    file_path = safe_rel
+
                     found_full_path = None
                     for dist_dir in _get_frontend_dist_dirs():
-                        full_path = os.path.join(dist_dir, file_path)
-                        if os.path.exists(full_path) and os.path.isfile(full_path):
+                        base = os.path.realpath(dist_dir)
+                        full_path = os.path.realpath(os.path.join(base, file_path))
+                        if not (full_path == base or full_path.startswith(base + os.sep)):
+                            continue
+                        if os.path.isfile(full_path):
                             found_full_path = full_path
                             break
                     
@@ -1582,38 +1663,63 @@ class Api:
                         self.send_response(404)
                         self.end_headers()
 
+            # Methods that must never be reachable over plain HTTP (local
+            # failsafe API): they download/execute files, wipe settings,
+            # import arbitrary files, spam webhooks or manage Roblox accounts.
+            _API_HTTP_DENY = {
+                "apply_update", "import_config", "import_calibration_file",
+                "import_theme_file", "reset_config_to_defaults", "close_window",
+                "test_webhook", "sim_notify_discord",
+                "set_remote_access", "restart_remote_bot",
+                "start_remote_bot", "stop_remote_bot",
+                "launcher_start_login", "launcher_launch_account",
+                "launcher_remove_account", "launcher_cancel_login",
+                "launcher_set_own_server",
+            }
+
             def do_POST(self):
+                if not self._host_ok():
+                    self.send_response(403)
+                    self.end_headers()
+                    return
                 if self.path.startswith("/api/"):
                     method_name = self.path.replace("/api/", "")
-                    content_length = int(self.headers['Content-Length'])
-                    post_data = self.rfile.read(content_length)
+                    if method_name.startswith("_") or method_name in self._API_HTTP_DENY:
+                        self.send_response(403)
+                        self.end_headers()
+                        self.wfile.write(b"method not allowed over HTTP")
+                        return
+                    try:
+                        content_length = int(self.headers.get('Content-Length') or 0)
+                    except (TypeError, ValueError):
+                        content_length = 0
+                    post_data = self.rfile.read(content_length) if content_length else b""
                     try:
                         args = json.loads(post_data) if post_data else []
-                    except:
+                    except Exception:
                         args = []
-                    
+
                     method = getattr(self.api, method_name, None)
                     if method and callable(method):
                         try:
                             if isinstance(args, list): result = method(*args)
                             elif isinstance(args, dict): result = method(**args)
                             else: result = method()
-                            
+
                             self.send_response(200)
                             self.send_header('Content-type', 'application/json')
-                            self.send_header('Access-Control-Allow-Origin', '*')
                             self.end_headers()
                             self.wfile.write(json.dumps(result).encode())
                         except Exception as e:
                             self.send_response(500)
                             self.end_headers()
                             self.wfile.write(str(e).encode())
-                
+
             def do_OPTIONS(self):
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', '*')
-                self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-                self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+                # No CORS headers on purpose: the failsafe UI is same-origin
+                # (served by this very server), cross-origin pages must be
+                # blocked (they used to get Access-Control-Allow-Origin: *).
+                self.send_response(403)
                 self.end_headers()
 
             def log_message(self, format, *args): pass
@@ -1920,6 +2026,7 @@ class Api:
         try:
             tracker.config["daily_event_claimed_date"] = ""
             tracker.save_config()
+            self._emit_config_update()
             return {
                 "success": True,
                 "claimed_date": "",
@@ -1979,6 +2086,7 @@ class Api:
                     tracker.stop_remote_bot()
                 except Exception:
                     pass
+            self._emit_config_update()
             return {
                 "success": True,
                 "backup": backup,
@@ -2083,6 +2191,23 @@ class Api:
                 )
             except Exception: pass
             return
+
+        # Rejoin only with a verified connection: killing Roblox just to
+        # relaunch it into a dead line is pointless. No internet -> the macro
+        # switches OFF with a background watcher that restarts and rejoins
+        # once the connection is stable again.
+        try:
+            if not self._tracker._network_is_up():
+                self._tracker.append_log(
+                    "[FishingMode] Failsafe reached but the internet connection is down - "
+                    "switching to offline mode instead of reconnecting."
+                )
+                self._tracker._enter_offline_mode(
+                    "Fishing failsafe timed out and the internet connection is down."
+                )
+                return
+        except Exception as e:
+            print(f"Fishing failsafe network check failed: {e}")
 
         try: self._tracker.terminate_roblox_processes()
         except Exception as e: print(f"Fishing failsafe close Roblox failed: {e}")
@@ -2242,6 +2367,10 @@ class Api:
                     self._start_fishing_worker()
                 else:
                     self._stop_fishing_worker()
+                    # Mirror the non-multi branch: potion crafting runs only
+                    # while fishing is off (it used to never start here).
+                    try: self._tracker.start_potion_crafting()
+                    except Exception: pass
             else:
                 multi_instance.stop_idle_loop()
                 self._stop_fishing_worker()
@@ -2350,7 +2479,7 @@ class Api:
                 def _flash():
                     time.sleep(1.0)
                     try:
-                        hwnd = win32gui.FindWindow(None, f"⚠️ Rare Biome Detected �� {biome} ⚠️")
+                        hwnd = win32gui.FindWindow(None, f"⚠️ Rare Biome Detected \u2014 {biome} ⚠️")
                         if hwnd:
                             win32gui.FlashWindowEx(hwnd, win32con.FLASHW_ALL | win32con.FLASHW_TIMERNOFG, 5, 0)
                     except Exception:
@@ -2471,6 +2600,7 @@ class Api:
         if name and name not in items: items.append(name)
         cfg["custom_auto_pop_buffs"] = items
         self.save_config(cfg)
+        self._emit_config_update()
         return {"success": True, "items": items, "custom": items}
 
     def remove_auto_pop_item(self, name):
@@ -2487,6 +2617,7 @@ class Api:
                 if isinstance(entry, dict) and isinstance(entry.get("buffs"), dict):
                     entry["buffs"].pop(name, None)
         self.save_config(cfg)
+        self._emit_config_update()
         return {"success": True, "items": items, "custom": items}
 
     def get_rare_biome_custom(self):

@@ -14,11 +14,24 @@
     "name": "Biome Randomizer",
     "category": "Tools",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/85/Biome_Randomizer_Inventory.gif/revision/latest?cb=20250711071401",
-    "how_to_get": "Jake’s Workshop",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Undefined, 1x Hades, 1x Poseidon, 1x Galaxy, 1x Astral, 1x Permafrost, 1x Stormal, 1x Divinus: Guardian, 4x Strange Controller",
     "usage": "Allows the player to spawn biomes, regardless of their natural spawnrate.",
     "description": "A Fully Functional Dimension-Manipulating device. Changes the Current Biome Regardless of Natural Spawnrate. *(Except for glitched.) Has a 1/5000 chance to spawn Cyberspace.",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Undefined, 1x Hades, 1x Poseidon, 1x Galaxy, 1x Astral, 1x Permafrost, 1x Stormal, 1x Divinus: Guardian, 4x Strange Controller",
+    "recipe_lines": [
+      "1x Undefined",
+      "1x Hades",
+      "1x Poseidon",
+      "1x Galaxy",
+      "1x Astral",
+      "1x Permafrost",
+      "1x Stormal",
+      "1x Divinus: Guardian",
+      "4x Strange Controller"
     ]
   },
   "Biome Selector": {
@@ -29,7 +42,13 @@
     "usage": "Allows the player to select a Normal Biome to spawn.",
     "description": "A device engineered with [Cyber City]'s advanced technology, it reads the data stored in the Biome Data Drive and recreates the biome in the space around the device.",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Biome Randomizer, 1x Cyber Technology",
+    "recipe_lines": [
+      "1x Biome Randomizer",
+      "1x Cyber Technology"
     ]
   },
   "Coin": {
@@ -59,11 +78,17 @@
     "name": "Diver Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e0/DiverPotTransparent.webp/revision/latest?cb=20250403072824",
-    "how_to_get": "The Diver Potion can be obtained by brewing it at Stella's Cauldron.",
+    "how_to_get": "The Diver Potion can be obtained by brewing it at Stella's Cauldron. | Recipe: 20x Speed Potion, 1x Nautilus",
     "usage": "+40% Roll Speed — lasts 10 minutes",
     "description": "Let's dive into the Water.Gives you 10 minutes of [Dived]",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "20x Speed Potion, 1x Nautilus",
+    "recipe_lines": [
+      "20x Speed Potion",
+      "1x Nautilus"
     ],
     "effects": "Dived"
   },
@@ -108,7 +133,14 @@
     "usage": "+70% Luck, +10% Roll Speed",
     "description": "Gives you 30 minutes of [Forbidden I] +70% Luck and +10% Roll Speed",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "2x Lucky Potion, 1x Speed Potion, 1x Darklight Shard",
+    "recipe_lines": [
+      "2x Lucky Potion",
+      "1x Speed Potion",
+      "1x Darklight Shard"
     ],
     "effects": "Forbidden I"
   },
@@ -120,7 +152,14 @@
     "usage": "+325% Luck, +25% Roll Speed",
     "description": "Gives you 1 hour of [Forbidden II] +325% Luck and +25% Roll Speed",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "20x Lucky Potion, 10x Speed Potion, 1x Darklight Orb",
+    "recipe_lines": [
+      "20x Lucky Potion",
+      "10x Speed Potion",
+      "1x Darklight Orb"
     ],
     "effects": "Forbidden II"
   },
@@ -132,7 +171,14 @@
     "usage": "+1350% Luck, +75% Roll Speed",
     "description": "Gives you 3 hours of [Forbidden III] +1350% Luck and +75% Roll Speed",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "100x Lucky Potion, 65x Speed Potion, 1x Darklight Core",
+    "recipe_lines": [
+      "100x Lucky Potion",
+      "65x Speed Potion",
+      "1x Darklight Core"
     ],
     "effects": "Forbidden III"
   },
@@ -144,7 +190,12 @@
     "usage": "+50% Luck — lasts 300 Seconds",
     "description": "Gives you 5 minutes of [Fortune I]: +50% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "10x Lucky Potion",
+    "recipe_lines": [
+      "10x Lucky Potion"
     ],
     "effects": "Fortune I"
   },
@@ -156,7 +207,12 @@
     "usage": "+75% Luck — lasts 300 Seconds",
     "description": "Gives you 5 minutes of [Fortune II]: +75% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "25x Lucky Potion",
+    "recipe_lines": [
+      "25x Lucky Potion"
     ],
     "effects": "Fortune II"
   },
@@ -168,7 +224,12 @@
     "usage": "+100% Luck — lasts 300 Seconds",
     "description": "Gives you 5 minutes of [Fortune III]: +100% Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "50x Lucky Potion",
+    "recipe_lines": [
+      "50x Lucky Potion"
     ],
     "effects": "Fortune III"
   },
@@ -212,11 +273,19 @@
     "name": "Gear Basing",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0a/Gear_Basing_Inventory.gif/revision/latest?cb=20250711070425",
-    "how_to_get": "Jake’s Workshop",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Common, 1x Uncommon, 1x Good, 1x Rare",
     "usage": "",
     "description": "[Deprecated] Gear Basing is very important item for base crafting. Gives you 20 Lucky Potions.",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Common, 1x Uncommon, 1x Good, 1x Rare",
+    "recipe_lines": [
+      "1x Common",
+      "1x Uncommon",
+      "1x Good",
+      "1x Rare"
     ]
   },
   "Gilded Coin": {
@@ -247,11 +316,19 @@
     "name": "Godlike Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Godlike_pot.webp/revision/latest?cb=20250403075753",
-    "how_to_get": "The Godlike Potion is obtainable through brewing at Stella's Cauldron. However it can also be bought from FischI's daily shop.",
+    "how_to_get": "The Godlike Potion is obtainable through brewing at Stella's Cauldron. However it can also be bought from FischI's daily shop. | Recipe: 1x Godly Potion (Zeus), 1x Godly Potion (Hades), 1x Godly Potion (Poseidon), 600x Lucky Potion",
     "usage": "+40,000,000% Luck (400,000 Luck) — lasts 1 Roll",
     "description": "Drinking this potion blesses you with the power of 3 LORDS. Gives you [Deification]",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Godly Potion (Zeus), 1x Godly Potion (Hades), 1x Godly Potion (Poseidon), 600x Lucky Potion",
+    "recipe_lines": [
+      "1x Godly Potion (Zeus)",
+      "1x Godly Potion (Hades)",
+      "1x Godly Potion (Poseidon)",
+      "600x Lucky Potion"
     ],
     "effects": "Deification"
   },
@@ -259,11 +336,19 @@
     "name": "Godly Potion (Hades)",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ed/GodHadesPotion.png/revision/latest?cb=20250402162426",
-    "how_to_get": "Godly Potion (Hades) is used in brewing with the Cauldron in the cave, and can be used to make the following:",
+    "how_to_get": "Godly Potion (Hades) is used in brewing with the Cauldron in the cave, and can be used to make the following: | Recipe: 50x Lucky Potion, 1x Hades, 6x Diaboli, 6x Bleeding",
     "usage": "+300% Luck, -10% Roll Speed — lasts 4 Hours",
     "description": "Gives you 4 hours of [Lord of Hell]",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "50x Lucky Potion, 1x Hades, 6x Diaboli, 6x Bleeding",
+    "recipe_lines": [
+      "50x Lucky Potion",
+      "1x Hades",
+      "6x Diaboli",
+      "6x Bleeding"
     ],
     "effects": "Lord of the Hell"
   },
@@ -271,11 +356,19 @@
     "name": "Godly Potion (Poseidon)",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b3/GodPoseidonPotion.png/revision/latest?cb=20250402162310",
-    "how_to_get": "Godly Potion (Poseidon) is used in brewing with the Cauldron in the cave, and can be used to make the following:",
+    "how_to_get": "Godly Potion (Poseidon) is used in brewing with the Cauldron in the cave, and can be used to make the following: | Recipe: 50x Speed Potion, 1x Poseidon, 1x Nautilus, 1x Aquatic",
     "usage": "-50% Luck, +75% Roll Speed — lasts 4 Hours",
     "description": "Gives you 4 hours of [Lord of Sea]",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "50x Speed Potion, 1x Poseidon, 1x Nautilus, 1x Aquatic",
+    "recipe_lines": [
+      "50x Speed Potion",
+      "1x Poseidon",
+      "1x Nautilus",
+      "1x Aquatic"
     ],
     "effects": "Lord of the Sea"
   },
@@ -283,11 +376,20 @@
     "name": "Godly Potion (Zeus)",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/60/GodZeusPOT.png/revision/latest?cb=20250402162028",
-    "how_to_get": "Godly Potion (Zeus) is used in brewing with the Cauldron in the cave, and can be used to make the following:",
+    "how_to_get": "Godly Potion (Zeus) is used in brewing with the Cauldron in the cave, and can be used to make the following: | Recipe: 25x Lucky Potion, 25x Speed Potion, 1x Zeus, 1x Stormal, 15x Wind",
     "usage": "+200% Luck, +30% Roll Speed — lasts 4 Hours",
     "description": "Gives you 4 hours of [Lord of Sky]",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "25x Lucky Potion, 25x Speed Potion, 1x Zeus, 1x Stormal, 15x Wind",
+    "recipe_lines": [
+      "25x Lucky Potion",
+      "25x Speed Potion",
+      "1x Zeus",
+      "1x Stormal",
+      "15x Wind"
     ],
     "effects": "Lord of the Sky"
   },
@@ -299,7 +401,12 @@
     "usage": "+20% Roll Speed — lasts 5 Minutes",
     "description": "Gives you 5 minutes of [Haste I]: +20% Roll Speed",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "10x Speed Potion",
+    "recipe_lines": [
+      "10x Speed Potion"
     ],
     "effects": "Haste I"
   },
@@ -311,7 +418,12 @@
     "usage": "+25% Roll Speed — lasts 5 Minutes",
     "description": "Gives you 5 minutes of [Haste II]: +25% Roll Speed",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "25x Speed Potion",
+    "recipe_lines": [
+      "25x Speed Potion"
     ],
     "effects": "Haste II"
   },
@@ -323,7 +435,12 @@
     "usage": "+30% Roll Speed — lasts 5 Minutes",
     "description": "Gives you 5 minutes of [Haste III]: +30% Roll Speed",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "50x Speed Potion",
+    "recipe_lines": [
+      "50x Speed Potion"
     ],
     "effects": "Haste III"
   },
@@ -331,11 +448,20 @@
     "name": "Heavenly Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ea/Heavenly2Potion.png/revision/latest?cb=20240310063930",
-    "how_to_get": "Heavenly Potion can currently be obtained by completing the: \"When is payday??“ Achievement for two, the: \"Perfect Attendance\" Achievement to receive five, #DAY100 Achievement to receive 15, the \"Touch the grass\" Achievement or the \"Eternal time...\" Achievement, or by brewing it in Stella's Cauldron. The cauldron can be found by either entering through a portal to Stella’s cave after finishing her quest, or by entering the cave located inside of the waterfall, and completing the obby, to reach Stella’s hideout. The Heavenly Potion can also be bought from the Jester for 1000P. It can also obtained by completing certain event quests, Previously before the halloween event ended, it can be bought from Jack The Pumpkin costing 500 Pump Tokens It can also be obtained via Potion Gift Boxes, and can also be obtained by collecting it after it spawns in Dreamspace.",
+    "how_to_get": "Heavenly Potion can currently be obtained by completing the: \"When is payday??“ Achievement for two, the: \"Perfect Attendance\" Achievement to receive five, #DAY100 Achievement to receive 15, the \"Touch the grass\" Achievement or the \"Eternal time...\" Achievement, or by brewing it in Stella's Cauldron. The cauldron can be found by either entering through a portal to Stella’s cave after finishing her quest, or by entering the cave located inside of the waterfall, and completing the obby, to reach Stella’s hideout. The Heavenly Potion can also be bought from the Jester for 1000P. It can also obtained by completing certain event quests, Previously before the halloween event ended, it can be bought from Jack The Pumpkin costing 500 Pump Tokens It can also be obtained via Potion Gift Boxes, and can also be obtained by collecting it after it spawns in Dreamspace. | Recipe: 250x Lucky Potion, 2x Celestial, 1x Exotic, 2x Powered, 5x Quartz",
     "usage": "+15,000,000% Luck (150,000 luck) — lasts 1 Roll",
     "description": "Gives you [Heavenly]: +150,000 Luck for Next 1 Roll",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "250x Lucky Potion, 2x Celestial, 1x Exotic, 2x Powered, 5x Quartz",
+    "recipe_lines": [
+      "250x Lucky Potion",
+      "2x Celestial",
+      "1x Exotic",
+      "2x Powered",
+      "5x Quartz"
     ],
     "effects": "Heavenly"
   },
@@ -411,11 +537,22 @@
     "name": "Jewelry Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7b/Jewelry.png/revision/latest?cb=20250402095438",
-    "how_to_get": "The Jewelry Potion can be obtained by brewing it at Stella's Cauldron.",
+    "how_to_get": "The Jewelry Potion can be obtained by brewing it at Stella's Cauldron. | Recipe: 20x Lucky Potion, 1x Aquamarine, 1x Sapphire, 1x Gilded, 1x Emerald, 1x Ruby, 1x Topaz",
     "usage": "+120% Luck — lasts 10 Minutes",
     "description": "A combination of Shiny Jewels, that's more than Golden! Gives you 10 minutes of [Brilliant]",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "20x Lucky Potion, 1x Aquamarine, 1x Sapphire, 1x Gilded, 1x Emerald, 1x Ruby, 1x Topaz",
+    "recipe_lines": [
+      "20x Lucky Potion",
+      "1x Aquamarine",
+      "1x Sapphire",
+      "1x Gilded",
+      "1x Emerald",
+      "1x Ruby",
+      "1x Topaz"
     ],
     "effects": "Brilliant"
   },
@@ -434,7 +571,7 @@
     "name": "Lucky Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b2/LuckyPotion.png/revision/latest?cb=20240121132109",
-    "how_to_get": "The Lucky Potion is the most common spawnable potion. It can be obtained from the following ways:; Found randomly around the map.; Purchased from Mari for 1,000 Coins each.; Bought from the Jester for 1 Dark Point each.; Purchased from Captain Flarg’s shop for 25 Fish Points each.; Can be purchased from FischI's for 100 Coins each.; Obtained from Quest Board.; Obtained from Achievements.; Obtained from Daily Quests.; As a reward from the Memory Match (from 100 to 200 Lucky Potion).; Included in the Starter Pack.; Can be obtained from Potion Chest, Rare Potion Chest and Mega Potion Chest.; As a reward in both the normal and infinite phases of the Season Pass.; By having RIA Points at the end of the 2024 RIA Event (gives 1 for each RIA Points you have).; By using a Gear Basing (gives 20 per use).; Bought from event NPCs.; Can be obtained from Potion Gift Box, Potion Ice Box, Uncommon Potion Ice Box, Legendary Potion Ice Box.",
+    "how_to_get": "The Lucky Potion is the most common spawnable potion. Methods of obtainment include:; Found randomly around the map.; Purchased from Mari for 1,000 Coins each.; Bought from the Jester for 1 Dark Point each.; Purchased from Captain Flarg’s shop for 25 Fish Points each.; Can be purchased from FischI's for 100 Coins or 1 Dark Point each.; Obtained from Quest Board.; Obtained from Achievements.; Obtained from Daily Quests.; As a reward from the Memory Match (from 100 to 200 Lucky Potion).; Included in the Starter Pack.; Can be obtained from Potion Chest, Rare Potion Chest and Mega Potion Chest.; As a reward in both the normal and infinite phases of the Season Pass.; By having RIA Points at the end of the 2024 RIA Event (gives 1 for each RIA Points you have).; By using a Gear Basing (gives 20 per use).; Bought from event NPCs.; Can be obtained from Potion Gift Box, Potion Ice Box, Uncommon Potion Ice Box, Legendary Potion Ice Box.",
     "usage": "+25% Luck — lasts 60 Seconds",
     "description": "Gives you 1 minute of [Lucky]: +25% Luck Total Luck ((1 + Basic Buff) x Bonus Roll + Special Buff) x VIP",
     "flags": [
@@ -515,7 +652,7 @@
   "Mixed Potion": {
     "name": "Mixed Potion",
     "category": "Potions",
-    "thumbnail_url": "",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/43/Mixed_potion.png/revision/latest?cb=20240630100455",
     "how_to_get": "Mixed Potion can be obtained from the traveling merchant, Mari, for 3000 coins per potion.",
     "usage": "+25% Luck & +10% Quick Roll — lasts 180 Seconds",
     "description": "Gives you 3 minutes of [Lucky] and [Quick Roll] [Lucky]: +25% Luck [Quick Roll]: +10% Roll Speed",
@@ -562,11 +699,19 @@
     "name": "Potion of Bound",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a4/Potionofbound.png/revision/latest?cb=20250401162038",
-    "how_to_get": "The Potion of Bound can be obtained by either brewing it at Stella's Cauldron, completing the “Play in Null” Daily Quest, completing \"Finding a person\" quest from a Quest Board, completing the \"A Sincere Person\", \"Waste of Time\" and \"Professional Helper\" achievements, progressing in the Season Pass, buying it from Captain Flarg for 2000 Fish Points, buying it from Jester with 500 Void Points, buying it from Fischl for 75000 coins or 350 Void Points or from the Memory Match.",
+    "how_to_get": "The Potion of Bound can be obtained by either brewing it at Stella's Cauldron, completing the “Play in Null” Daily Quest, completing \"Finding a person\" quest from a Quest Board, completing the \"A Sincere Person\", \"Waste of Time\" and \"Professional Helper\" achievements, progressing in the Season Pass, buying it from Captain Flarg for 2000 Fish Points, buying it from Jester with 500 Void Points, buying it from Fischl for 75000 coins or 350 Void Points or from the Memory Match. | Recipe: 1 in 200,000x Bounded, 1 in 73,500 (1 in 24,500 in Snowy)x Permafrost, 1 in 9,200x Lost Soul, Foundx Lucky Potion",
     "usage": "+5,000,000% Luck (+50,000 Luck) — lasts 1 Roll",
     "description": "A potion that is so Powerful it got BOUNDED. Gives you [Binding]:+50,000 Luck for Next 1 Roll",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1 in 200,000x Bounded, 1 in 73,500 (1 in 24,500 in Snowy)x Permafrost, 1 in 9,200x Lost Soul, Foundx Lucky Potion",
+    "recipe_lines": [
+      "1 in 200,000x Bounded",
+      "1 in 73,500 (1 in 24,500 in Snowy)x Permafrost",
+      "1 in 9,200x Lost Soul",
+      "Foundx Lucky Potion"
     ],
     "effects": "Binding"
   },
@@ -621,11 +766,18 @@
     "name": "Rage Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a7/Ragepotiongif.gif/revision/latest?cb=20250904131918",
-    "how_to_get": "The Rage Potion can be obtained by brewing it at Stella's Cauldron.",
+    "how_to_get": "The Rage Potion can be obtained by brewing it at Stella's Cauldron. | Recipe: Craftedx Speed Potion, 1 in 1004x Diaboli, 1 in 128x Rage",
     "usage": "+35% Roll Speed — lasts 10 minutes",
     "description": "A potion that somehow makes you Angry. Gives you 10 minutes of [Raged]",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "Craftedx Speed Potion, 1 in 1004x Diaboli, 1 in 128x Rage",
+    "recipe_lines": [
+      "Craftedx Speed Potion",
+      "1 in 1004x Diaboli",
+      "1 in 128x Rage"
     ],
     "effects": "Raged"
   },
@@ -931,11 +1083,23 @@
     "name": "Strange Controller",
     "category": "Tools",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3b/Strange_Controller_Inventory.gif/revision/latest?cb=20250711071103",
-    "how_to_get": "Jake's Workshop",
+    "how_to_get": "Jake's Workshop | Recipe: 1x NULL?, 1x Eternal Flame, 1x Piece of Star, 1x Curruptaine, 1x Rainy Bottle, 1x Icicle, 1x Wind Essence, 1x Feather Vial",
     "usage": "Allows the player to spawn biomes, with respect to the biome's natural spawnrate.",
     "description": "A Dimension-Manipulating device, that seems somewhat flimsy. Changes the Current Biome according to Natural Spawnrate. Has a 1/5000 chance to spawn Cyberspace.",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x NULL?, 1x Eternal Flame, 1x Piece of Star, 1x Curruptaine, 1x Rainy Bottle, 1x Icicle, 1x Wind Essence, 1x Feather Vial",
+    "recipe_lines": [
+      "1x NULL?",
+      "1x Eternal Flame",
+      "1x Piece of Star",
+      "1x Curruptaine",
+      "1x Rainy Bottle",
+      "1x Icicle",
+      "1x Wind Essence",
+      "1x Feather Vial"
     ]
   },
   "Strange Potion I": {
@@ -1057,11 +1221,18 @@
     "name": "Zombie Potion",
     "category": "Potions",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e7/Zombiepot.png/revision/latest?cb=20250402101931",
-    "how_to_get": "Zombie Potion can be obtained by brewing it at Stella's Cauldron",
+    "how_to_get": "Zombie Potion can be obtained by brewing it at Stella's Cauldron | Recipe: Foundx Lucky Potion, 1 in 12,000x Undead, 1 in 4,444x Bleeding",
     "usage": "+150% Luck — lasts 10 Minutes",
     "description": "A potion resurrected from Death. Gives you 10 minutes of [Undying]",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "Foundx Lucky Potion, 1 in 12,000x Undead, 1 in 4,444x Bleeding",
+    "recipe_lines": [
+      "Foundx Lucky Potion",
+      "1 in 12,000x Undead",
+      "1 in 4,444x Bleeding"
     ],
     "effects": "Undying"
   },
@@ -1450,11 +1621,24 @@
     "name": "Combinator",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/16/Combinator.gif/revision/latest?cb=20250419173107",
-    "how_to_get": "Jake's Workshop",
+    "how_to_get": "Jake's Workshop | Recipe: 1x Stormal, 1x Hades, 1x Undefined, 1x Permafrost, 1x Galaxy, 1x Poseidon, 1x Hazard: Rays, 1x Gilded, 1x Arcane",
     "usage": "",
     "description": "It is a device developed during a time when wizards and technicians worked together. This device has a very potent power but it took a lot of power to be used...",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Stormal, 1x Hades, 1x Undefined, 1x Permafrost, 1x Galaxy, 1x Poseidon, 1x Hazard: Rays, 1x Gilded, 1x Arcane",
+    "recipe_lines": [
+      "1x Stormal",
+      "1x Hades",
+      "1x Undefined",
+      "1x Permafrost",
+      "1x Galaxy",
+      "1x Poseidon",
+      "1x Hazard: Rays",
+      "1x Gilded",
+      "1x Arcane"
     ]
   },
   "Cursed Crystal": {
@@ -1508,7 +1692,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/55/Darklight_Core.gif/revision/latest?cb=20250618004049",
     "how_to_get": "The Darklight Core is an item that has a very small chance to spawn on the ground while inside The Limbo.",
     "usage": "",
-    "description": "Temporary Description",
+    "description": "A Corroded residue of somethings.",
     "flags": [
       "fandom"
     ]
@@ -1530,7 +1714,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/2/29/Darklight_Shard_%28Gif%29.gif/revision/latest?cb=20250618003123",
     "how_to_get": "The Darklight Shard is an item that has a medium chance of spawning while inside The Limbo.",
     "usage": "",
-    "description": "Temporary Description",
+    "description": "A Corroded residue of somethings.",
     "flags": [
       "fandom"
     ]
@@ -1573,11 +1757,17 @@
     "name": "Glass Candle",
     "category": "Tools",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/3d/GlassCandleInGame.gif/revision/latest?cb=20250615115529",
-    "how_to_get": "[You can only craft this item once]",
+    "how_to_get": "[You can only craft this item once] | Recipe: 1x Stella's Candle, 1x NULL?",
     "usage": "",
     "description": "Not to be confused with , an item with a similar name.",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Stella's Candle, 1x NULL?",
+    "recipe_lines": [
+      "1x Stella's Candle",
+      "1x NULL?"
     ],
     "effects": "Allows you to see the [ Hidden Things ]."
   },
@@ -1612,7 +1802,16 @@
     "usage": "",
     "description": "\"Powerful Magnet!\" Automatically collects items dropped on the map",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Bounded, 1x Aether, 2x Nautilus, 50x Magnetic, 100x Precious",
+    "recipe_lines": [
+      "1x Bounded",
+      "1x Aether",
+      "2x Nautilus",
+      "50x Magnetic",
+      "100x Precious"
     ]
   },
   "Lucky Clover": {
@@ -1631,11 +1830,16 @@
     "name": "Marine Amulet",
     "category": "Materials",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/a/a2/Marine_Amulet.gif/revision/latest?cb=20240803101053",
-    "how_to_get": "From the Summer 2024 \"Hot Summer\" quest, and a Summer 2025 Season I Season Pass reward.",
+    "how_to_get": "From the Summer 2024 \"Hot Summer\" quest, and a Summer 2025 Season I Season Pass reward. | Recipe: 1x Aquamarine",
     "usage": "+30% Base Luck (During the Summer 2024 and Summer 2025 events)",
     "description": "It protects you from the sun and heat. Summer Event.",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Aquamarine",
+    "recipe_lines": [
+      "1x Aquamarine"
     ]
   },
   "Natita's Flask": {
@@ -1713,7 +1917,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0a/PowerBatteryInventory.gif/revision/latest?cb=20260802093248",
     "how_to_get": "Brought from Lime for 100 Summer Points (Max 20).; Obtained from Lime quest reward.; Obtained from Tier 20 of the season pass (normal and premium).; Use code \"BLAZINGSUN\" (Power Battery x1).; Obtained from Memory Match.",
     "usage": "+500 Weapon Power",
-    "description": "[Summer 2026]+ 500 Weapon Power",
+    "description": "[Summer 2026]+ 500 Weapon Power This item can be used in Wepon Control Panel.",
     "flags": [
       "fandom"
     ]
@@ -1746,7 +1950,7 @@
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/19/RandomCandyGiverView.gif/revision/latest?cb=20251222225440",
     "how_to_get": "The Random Candy Giver can be obtained through the Christmas Roulette, and through the Season IV Pass at level 6, 16, 22, 31, 42 and 48 of both the Normal and Premium tracks.",
     "usage": "",
-    "description": "[Christmas 2025] gives you one of the candy items randomly",
+    "description": "[Christmas 2025] Gives you one of the candy items randomly.",
     "flags": [
       "fandom"
     ],
@@ -1768,7 +1972,7 @@
   "Random Rune Chest": {
     "name": "Random Rune Chest",
     "category": "Chests",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/49/Random_Rune_Chest.png/revision/latest?cb=20241110140506",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/6/6e/Runechest_new.png/revision/latest?cb=20250504231430",
     "how_to_get": "",
     "usage": "",
     "description": "The is an item that can be obtained from achievements that are completed for obtaining auras without native rarity. This can also be found in the quest board from the breakthrough quests or from directly collecting them from the water around Sol's Island..",
@@ -1806,11 +2010,20 @@
     "name": "Singularity Catalyst",
     "category": "Tools",
     "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/bb/SingularityCatalyst_ITEM.png/revision/latest?cb=20260426005253",
-    "how_to_get": "Jake’s Workshop",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Gargantua, 2x Sirius, 5x Orion, 5x Galaxy, 30x Comet",
     "usage": "Allows the player to spawn Singularity during Starfall once.",
     "description": "If placed above a sky full of stars, it will devour them all and continue to grow in size. ※Can only be used during Starfall biome",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Gargantua, 2x Sirius, 5x Orion, 5x Galaxy, 30x Comet",
+    "recipe_lines": [
+      "1x Gargantua",
+      "2x Sirius",
+      "5x Orion",
+      "5x Galaxy",
+      "30x Comet"
     ]
   },
   "Snowflake": {
@@ -1880,7 +2093,16 @@
     "usage": "+30,000,000% Luck (300,000 Luck) — lasts 1 Roll",
     "description": "Gives you [Shattered Heart]: +300,000 Luck for Next 1 Roll",
     "flags": [
-      "fandom"
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "50x Darklight Shard, 5x Darklight Orb, 2x Darklight Core, 10x Undefined, 10x Nihility",
+    "recipe_lines": [
+      "50x Darklight Shard",
+      "5x Darklight Orb",
+      "2x Darklight Core",
+      "10x Undefined",
+      "10x Nihility"
     ],
     "effects": "Shattered Heart"
   },
@@ -1918,5 +2140,24 @@
       "fandom"
     ],
     "effects": "Summons Santa"
+  },
+  "Condensed Memory": {
+    "name": "Condensed Memory",
+    "category": "Tools",
+    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/47/Placeholder.png/revision/latest?cb=20240701012621",
+    "how_to_get": "Jake’s Workshop | Recipe: 1x Scattered Condensed Memory, 70x Kyawthuite, 70x Twilight, 150x Jade",
+    "usage": "Allows the player to spawn The Radiant Forest once during Lost Forest with Nighttime.",
+    "description": "\"They\" wanted you to hear this story, one last time... To have a heart to remember, you must journey at night to a place that has a soul to be forgotten.",
+    "flags": [
+      "fandom",
+      "craftable"
+    ],
+    "recipe": "1x Scattered Condensed Memory, 70x Kyawthuite, 70x Twilight, 150x Jade",
+    "recipe_lines": [
+      "1x Scattered Condensed Memory",
+      "70x Kyawthuite",
+      "70x Twilight",
+      "150x Jade"
+    ]
   }
 }

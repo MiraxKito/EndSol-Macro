@@ -1,5 +1,5 @@
 import { useConfig } from "../contexts/ConfigContext";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 type ThemeData = {
   theme_name?: string;
@@ -171,6 +171,9 @@ export default function PanelCustomizationPage() {
   const [theme, setTheme] = useState<ThemeData>(DEFAULT_THEME);
   const [activeSection, setActiveSection] = useState<string>("colors");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  // CSS variables this page applied live — they must be removable again, or
+  // they stay inline forever and override every built-in theme preset.
+  const liveKeysRef = useRef<string[]>([]);
 
   // Load theme on mount
   useEffect(() => {
@@ -228,12 +231,21 @@ export default function PanelCustomizationPage() {
   const applyThemeLive = useCallback(() => {
     const root = document.documentElement;
     const body = document.body;
+    // Drop what the previous preview applied — a cleared color field must
+    // actually disappear from the UI, not linger as an inline style.
+    for (const key of liveKeysRef.current) {
+      root.style.removeProperty(key);
+      body.style.removeProperty(key);
+    }
+    const applied: string[] = [];
     Object.entries(theme.variables || {}).forEach(([key, value]) => {
       if (value) {
         root.style.setProperty(key, value);
         body.style.setProperty(key, value);
+        applied.push(key);
       }
     });
+    liveKeysRef.current = applied;
     const styleId = "endsol-custom-theme-live-css";
     document.getElementById(styleId)?.remove();
     const css = [theme.custom_css, theme.raw_custom_css].filter(Boolean).join("\n");
@@ -250,6 +262,31 @@ export default function PanelCustomizationPage() {
     applyThemeLive();
   }, [applyThemeLive]);
 
+  // Leaving the page must not leave the live preview behind: the leftover
+  // inline styles used to beat body[data-theme], so preset switching only
+  // worked after re-selecting "My Palette". Clean up, then restore the saved
+  // palette if "My Palette" is the active theme.
+  useEffect(() => () => {
+    const root = document.documentElement;
+    const body = document.body;
+    for (const key of liveKeysRef.current) {
+      root.style.removeProperty(key);
+      body.style.removeProperty(key);
+    }
+    liveKeysRef.current = [];
+    document.getElementById("endsol-custom-theme-live-css")?.remove();
+    const saved = (config?.custom_theme_data as any)?.variables;
+    if ((config as any)?.selected_theme === "custom" && saved && typeof saved === "object") {
+      Object.entries(saved).forEach(([key, value]) => {
+        if (typeof value === "string" && value) {
+          root.style.setProperty(key, value);
+          body.style.setProperty(key, value);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const saveTheme = async () => {
     try {
       if (!window.pywebview?.api?.save_theme_file) {
@@ -260,8 +297,11 @@ export default function PanelCustomizationPage() {
       const result = await window.pywebview.api.save_theme_file(json);
       const parsed = typeof result === "string" ? JSON.parse(result) : result;
       if (parsed.success) {
-        if (config) setConfig({ ...config, custom_theme_data: theme });
-        showMessage("success", "Theme saved and applied! Changes will persist after restart.");
+        // Selecting "My Palette" makes the saved palette the ACTIVE theme —
+        // the palette used to bleed over every built-in preset instead, which
+        // made the preset picker look broken.
+        if (config) setConfig({ ...config, custom_theme_data: theme, selected_theme: "custom" });
+        showMessage("success", "Theme saved and applied as \"My Palette\"! Changes will persist after restart.");
       } else {
         showMessage("error", parsed.error || "Failed to save theme");
       }

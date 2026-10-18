@@ -3,6 +3,35 @@ from .coordinates import enable_dpi_awareness
 from .config import normalize_auto_pop_biomes
 
 class LifecycleMixin:
+    # `detection_running` is a generation-aware property. Background loops
+    # spawned by start_detection register their run generation (see the
+    # thread spawner in mixin_detection); after a quick Stop->Start old
+    # (zombie) loop threads from the previous run see False here and exit
+    # instead of silently duplicating their work (this is how Anti-AFK used
+    # to fire 3x per interval after two quick restarts).
+    @property
+    def detection_running(self):
+        if not getattr(self, "_run_flag", False):
+            return False
+        gen = getattr(self, "_thread_gen", {}).get(threading.get_ident())
+        return gen is None or gen == getattr(self, "_detection_gen", 0)
+
+    @detection_running.setter
+    def detection_running(self, value):
+        self._run_flag = bool(value)
+
+    def _register_loop_thread(self):
+        """Mark the CURRENT thread as belonging to the active detection run."""
+        if not hasattr(self, "_thread_gen"):
+            self._thread_gen = {}
+        self._thread_gen[threading.get_ident()] = getattr(self, "_detection_gen", 0)
+
+    def _unregister_loop_thread(self):
+        try:
+            self._thread_gen.pop(threading.get_ident(), None)
+        except Exception:
+            pass
+
     def __init__(self):
         enable_dpi_awareness()
         try:
@@ -93,6 +122,9 @@ class LifecycleMixin:
         self.reconnect_confirm_deadline = None
 
         self.last_position = 0
+        self._run_flag = False
+        self._detection_gen = 0
+        self._thread_gen = {}
         self.detection_running = False
         self._stop_player_logger_thread()
         self.detection_thread = None

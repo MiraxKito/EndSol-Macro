@@ -12,13 +12,36 @@ export default function NoticePage() {
         </a>
       </p>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">🎲</div><div><h3>v1.1.0 — Sol's Sim & Sol's Book media</h3><p>New sandbox minigame and a nicer media experience in the built-in wiki</p></div></div>
+    <div className="card"><div className="card-header"><div className="card-icon">🧪</div><div><h3>v1.1.1 — The Forest Update & Sol's Sim Upgrade</h3><p>One-roll potions, the real luck formula, connection-aware reconnects, and a wave of fixes</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
-        <li><b>Sol's Sim 🎲</b> — a sandbox of Sol's RNG inside the panel: roll auras on the real in-game odds, watch simulated biome spawns, and wear gauntlets whose boosts come straight from the wiki. Play <b>honest</b> (gauntlets only) or switch on <b>Sandbox cheats</b> — roll speed ×2/×3/×5, a luck slider and forced biome spawns. Your stats, aura collection and drop log are saved locally and can be reset; rare drops raise a banner in the panel and can go to Discord without pings.</li>
-        <li><b>Sol's Book media 🎞</b> — media galleries with captions and fullscreen view, ←/→ to flip through, a hero image on every entry, and a music player with volume control and track length. Saving videos and music to disk still works.</li>
+        <li><b>Sol's Sim — one-roll potions 🧪:</b> Heavenly, Oblivion, Potion of Bound, Potion of the Dune, Red Moon Potion I/II and Pump King's Blood, with their real effects and the auras only they unlock (Neferkhaf, Fragments of the Crimson Moon, Oblivion, Memory).</li>
+        <li><b>Sol's Sim — biome log 📜:</b> the statistics panel keeps a history of which biomes appeared and when.</li>
+        <li><b>Sol's Book player 🎵:</b> the track title is always visible and the music can be put on repeat.</li>
+        <li><b>New game content (Radiant Forest update):</b> Lost Forest and The Radiant Forest are known everywhere — Stats, Webhook, Auto-Pop Buffs and Sol's Sim — with the game's own Weather / Biomes / Rare grouping.</li>
+        <li><b>Calibration sharing:</b> a GitHub Discussions template for sharing calibration presets.</li>
       </ul></div>
       <div className="changelog-item"><h4>✨ Improvements</h4><ul>
-        <li>The Sol's Sim page is fully translated into Russian.</li>
+        <li><b>Sol's Sim rolls follow the exact in-game luck formula</b> from the wiki, fixed-chance auras and potion luck included. The luck panel shows a full breakdown (base, cheat, gauntlets, potions, VIP) and the drop log tags bonus rolls and luck spikes.</li>
+        <li><b>Sol's Book:</b> aura entries no longer repeat the same rarity numbers and read naturally; biome previews are wide cinematic strips that unfold while you hold the mouse on them; theme music is available for every biome, Pumpkin Moon and Graveyard included.</li>
+        <li><b>Panel themes work again:</b> built-in presets are no longer overridden by the custom palette, which is now its own <b>My Palette</b> theme in the picker.</li>
+        <li><b>Connection-aware reconnects:</b> after a disconnect the macro waits 2 minutes for the game's own auto-rejoin, then reconnects only with a verified internet connection; with no internet it switches off and restores itself (macro + game) once the line is stable.</li>
+        <li><b>Credits and license updated</b> — including the rule that even partial reuse of the macro requires the author's consent.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
+        <li><b>Sol's Sim settings</b> no longer revert to old values on the next launch.</li>
+        <li><b>VIP+VIP+</b> gives ×1.3 together (it used to stack to ×1.56), and event auras that need an admin effect (Megaphone, Astral : Astrald) no longer drop in the sim.</li>
+        <li><b>Sim odds:</b> biome bonuses and biome-exclusive chances are correct now (some were far too generous); locked auras show their base odds in the statistics; fixed-chance auras ignore luck like in the real game; resetting the stats asks for confirmation first.</li>
+        <li><b>Settings loss on startup</b> fixed for setups without a webhook or username; fishing counters only count real catches; potion-crafting slot files persist again.</li>
+        <li><b>Background stability:</b> a quick Stop→Start no longer duplicates background loops (Anti-AFK could fire several times), and Memory Match / Quest Board wait for other actions instead of clashing with them.</li>
+        <li><b>Remote Control</b> denies every bot command until the owner's Discord ID is configured, and the local API is hardened against outside access.</li>
+        <li><b>Images load reliably:</b> sim banners and Sol's Book media go through the local cache — no more missing pictures.</li>
+        <li><b>Aura webhook thresholds</b> are respected by more aura types; only biome-exclusive, crafted and potion auras always notify.</li>
+      </ul></div>
+    </div>
+    <div className="card"><div className="card-header"><div className="card-icon">🎲</div><div><h3>v1.1.0 — Sol's Sim & Sol's Book media</h3><p>New sandbox minigame and a nicer media experience in the built-in wiki</p></div></div>
+      <div className="changelog-item"><h4>✅ New</h4><ul>
+        <li><b>Sol's Sim 🎲</b> — a sandbox of Sol's RNG inside the panel: roll auras, build a collection and track your stats.</li>
+        <li><b>Sol's Book media 🎞</b> — media galleries with captions and fullscreen view, ←/→ navigation, and a music player with volume and track length.</li>
       </ul></div>
       <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
         <li><b>Sol's Book:</b> biome previews now show the actual biome picture instead of an icon.</li>
