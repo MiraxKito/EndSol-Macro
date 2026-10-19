@@ -2769,8 +2769,14 @@ class DetectionMixin:
             # mislabeled those fixed-chance potion auras as "Crafting" in
             # Sol's Book. They are potion rolls, not crafts.
             potion_obtained = (not craftable) and ("potion" in lowered)
+            # Challenged/Challenged+ auras may not have a numeric 1/N rarity
+            # (e.g. Tomorrow obtained after collecting 7 Radiant Moons). They
+            # still need to be added to the catalogue with rarity_name from
+            # the wiki section header.
             if rarity is None and not (craftable or limited or unobtainable or dev_exclusive or removed or unreleased):
-                continue
+                if sec_cls not in ("Challenged", "Challenged+"):
+                    continue
+                rarity = None  # keep as None; rarity_name carries the tier
 
             # Biome links live in the RAW chance/obtainment markup — clean()
             # strips {{Biome|...}} down to plain text, so a search on the

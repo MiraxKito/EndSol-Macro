@@ -8176,6 +8176,27 @@
     "music_file": "The Weirdos.ogg",
     "cutscene_note": "=== Opening Cutscene ==="
   },
+  "Tomorrow": {
+    "rarity": null,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (cannot be rolled through breakthrough)",
+    "rarity_name": "Challenged+",
+    "description": "",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TommorowCollection.gif",
+    "obtainment_type": "exclusive"
+  },
   "Divinus_Love": {
     "rarity": null,
     "native_rarity": null,
@@ -11563,13 +11584,7 @@
     "native_from_biomes": [
       "CYBERSPACE"
     ],
-    "is_exclusive": false,
-    "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Eggis_cutscene.mp4",
-    "video_file": "Eggis_cutscene.mp4",
-    "video_kind": "opening",
-    "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Camellia_-_We_Magicians_Still_Alive_in_2021.mp3",
-    "music_file": "Camellia - We Magicians Still Alive in 2021.mp3",
-    "cutscene_note": "===Opening Cutscene=== cutscene begins with the player walking in an abyss, before creating a green touchpad with a screen on it in front of them using their arms. then, the player hits the center of the screen, activating the egg themed . The then prepares to fire, before facing the user, and a white flash occurs as t"
+    "is_exclusive": false
   },
   "Yolkegg": {
     "rarity": 1790909090,
