@@ -276,36 +276,6 @@ class ActionsMixin:
                 return ok, text
 
             visible, popup_text = _popup_visible()
-            if not visible and not manual:
-                # Sol's RNG shows the Daily Check-In popup when you JOIN the
-                # game after the daily reset - a session that stays online
-                # through the reset never gets it automatically (the log from
-                # 15/10 shows 7 failed OCR attempts in a row for this reason).
-                # Rejoin ONCE per day so the popup appears, then retry.
-                today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-                deep_links = []
-                try:
-                    deep_links = self._build_reconnect_deep_links(
-                        self.config.get("private_server_link", "")) or []
-                except Exception:
-                    deep_links = []
-                if (self.config.get("daily_rejoin_attempted_date", "") != today
-                        and self.config.get("auto_reconnect", False)
-                        and deep_links):
-                    self.config["daily_rejoin_attempted_date"] = today
-                    self.save_config()
-                    self.append_log(
-                        "[Daily Check-In] Rewards popup is not visible - rejoining the game once "
-                        "so it appears (Sol's RNG shows it on join after the daily reset)."
-                    )
-                    try:
-                        self.fallback_reconnect(1)
-                    except Exception as e:
-                        self.error_logging(e, "Daily Check-In rejoin")
-                    # Let the game settle after the rejoin, then look again.
-                    time.sleep(3.0)
-                    self.activate_roblox_window()
-                    visible, popup_text = _popup_visible()
             if not visible:
                 self.append_log(f"[Daily Check-In] Rewards popup not detected; OCR='{popup_text}'")
                 return {
@@ -3734,6 +3704,8 @@ class ActionsMixin:
                 self._last_position_disconnect = 0
                 self._last_disconnect_time = 0
                 self._disconnect_handled = False
+            if not hasattr(self, "_last_position_join"):
+                self._last_position_join = 0
 
             if self._disconnect_handled: return False
 
@@ -3878,8 +3850,9 @@ class ActionsMixin:
                 time.sleep(0.3)
                 self.Global_MouseClick(reconnect_start_button[0], reconnect_start_button[1])
 
-                # Check if we're now in-game
-                if self.reconnect_logs_state(old_log_file=old_log_file):
+                # Check if we're now in-game (real Start press, not just
+                # entering the place — see reconnect_logs_state).
+                if self.reconnect_logs_state():
                     self.send_webhook_status("Clicked 'Start' button and you are in the game now!!", color=0x4aff65)
                     print("Game has started, exiting click loop.")
                     self.detection_running = True
@@ -3899,22 +3872,27 @@ class ActionsMixin:
     def reconnect_logs_state(self, old_log_file=None):
         try:
             log_file_path = self.get_latest_log_file()
-            if old_log_file and log_file_path == old_log_file:
+            if not log_file_path or not os.path.exists(log_file_path):
                 return False
 
-            log_lines = self.read_full_log_file(log_file_path)
+            # На каждый запуск Roblox создаётся НОВЫЙ .log файл, поэтому
+            # offset-смещение и old_log_file не имеют смысла — читаем весь
+            # актуальный файл целиком.
+            with open(log_file_path, "rb") as f:
+                data = f.read()
+            lines = data.decode("utf-8", errors="ignore").splitlines()
 
-            for line in reversed(log_lines):
-                # Primary marker: BloxstrapRPC rich presence (only written
-                # when fully loaded in-place). NOTE: it requires a
-                # Bloxstrap/Fishstrap-style RPC writer - without one this
-                # line never appears, so the engine-level fallback below is
-                # mandatory for a reliable "we are in the game" signal.
-                if re.search(r'"state":"Equipped', line): return True
-                # Engine-level fallback (present in every client, verified
-                # against the real log): the SessionTransitionFSM
-                # announces the play session right after a successful join.
-                if "[FLog::SessionTransitionFSM] Entered play session." in line: return True
+            for line in reversed(lines):
+                low = (line or "").lower()
+                # "state":"Equipped" (setrichpresence) — появляется ТОЛЬКО
+                # после нажатия кнопки Start. Это надёжный маркер реального
+                # перехода в игру.
+                if re.search(r'"state":"Equipped', line):
+                    return True
+                # "Entered play session." — вход в плейс ДО нажатия Start,
+                # НЕ является признаком успешного нажатия кнопки. НЕ используем.
+                # "[FLog::SessionTransitionFSM] Entered play session." — тоже
+                # вход в плейс, не нажатие Start.
 
         except Exception as e:
             self.error_logging(e, "Error in reconnect_logs_state function.")
