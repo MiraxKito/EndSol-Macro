@@ -1327,11 +1327,44 @@ class DetectionMixin:
                 if not isinstance(src, dict):
                     continue
                 touched = False
-                for field in ("video_url", "video_file", "video_kind", "music_url", "music_file", "cutscene_note"):
+                for field in ("video_url", "video_file", "video_kind",
+                              "music_url", "music_file",
+                              "cutscene_note", "description"):
                     val = src.get(field)
                     if val and not entry.get(field):
                         entry[field] = val
                         touched = True
+                # Challenge auras (e.g. Tomorrow — "Obtained after collecting
+                # the 7 Radiant Moons") have only a descriptive aura_rarity,
+                # no 1/N number. The listing parser falls back to "Exclusive
+                # to X (cannot be rolled through breakthrough)", which the
+                # Book then shows as an inert badge. Replace it with the
+                # descriptive obtention captured from the wiki article.
+                description_obt = str(src.get("obtainment") or "").strip()
+                if description_obt and not description_obt.lower().startswith(
+                    ("exclusive to ", "native to ")
+                ):
+                    if not str(entry.get("obtainment") or "").strip() or \
+                            str(entry.get("obtainment") or "").lower().startswith(
+                                ("exclusive to ", "native to ", "obtainment not verified")):
+                        entry["obtainment"] = description_obt[:600]
+                        touched = True
+                # biome-locked auras with no rolling chance (Tomorrow):
+                # the snapshot's per-article parse can classify them as
+                # exclusive but the listing parse still leaves native_biome
+                # pointing to the lock. Carry over `is_exclusive` truth so
+                # the Book shows the correct "Biome-Exclusive" badge.
+                if src.get("is_exclusive") is True and not entry.get("is_exclusive"):
+                    entry["is_exclusive"] = True
+                    eb = src.get("exclusive_biome")
+                    if isinstance(eb, list) and eb and eb[0] != "None" \
+                            and (not isinstance(entry.get("exclusive_biome"), list)
+                                 or entry["exclusive_biome"][0] == "None"):
+                        entry["exclusive_biome"] = list(eb)
+                        entry["native_biome"] = ["None", 1]
+                    if src.get("obtainment_type") and not entry.get("obtainment_type"):
+                        entry["obtainment_type"] = src["obtainment_type"]
+                    touched = True
                 override = str(src.get("_fandom_title") or "").strip()
                 if override:
                     entry["_fandom_title"] = override
@@ -1341,7 +1374,7 @@ class DetectionMixin:
                 if touched:
                     merged += 1
             if merged:
-                print(f"[Fandom] Merged cutscene/music media for {merged} auras from the audit snapshot")
+                print(f"[Fandom] Merged cutscene/music/obtainment media for {merged} auras from the audit snapshot")
         except Exception as e:
             print(f"Aura media merge skipped: {e}")
         return data
@@ -1764,7 +1797,14 @@ class DetectionMixin:
         info["rarity"] = global_r if global_r is not None else native_r
 
         required_biome = re.sub(r"\s+", " ", clean(required_raw)).upper().replace("SANDSTORM", "SAND STORM")
-        exclusive = bool(re.search(r"\bN/A\b", aura_note, re.I)) or (global_r is None and native_r is not None)
+        # A challenge aura (e.g. Tomorrow "Obtained after collecting the 7
+        # Radiant Moons inside The Radiant Forest") has no rolling chance at
+        # all. When a `required` biome exists, the aura is biome-locked and
+        # must be classified as exclusive — otherwise it leaks as a native
+        # "1 in 0" roll that the Sol's Sim misapplies as an everywhere roll.
+        descriptive_only = global_r is None and native_r is None
+        exclusive = bool(re.search(r"\bN/A\b", aura_note, re.I)) or (global_r is None and native_r is not None) \
+            or (descriptive_only and bool(required_biome) and required_biome not in ("NONE", "N/A", ""))
         # Trust the catalogue: auras locked to one world (e.g. Limbo auras
         # like Anima) must not be described as obtainable "anywhere".
         try:
@@ -1799,6 +1839,17 @@ class DetectionMixin:
         desc = clean(profile.group(1)) if profile else ""
         if desc:
             info["description"] = desc[:1200]
+        # A challenge aura's Profile section IS the obtention (e.g. Tomorrow:
+        # "It can only be obtained after rolling the 7 Radiant Moons inside
+        # The Radiant Forest"). The auto-generated "Exclusive to X (N/A)"
+        # stub must never overwrite it — the first narrative sentence of
+        # Profile carries the real condition.
+        if descriptive_only and desc and not aura_note.lower().startswith(
+                ("1 in", "1/")) and not info.get("obtainment"):
+            first_sent = re.split(r"(?<=[.!?])\s", desc, maxsplit=1)[0].strip()
+            if first_sent and len(first_sent) >= 12:
+                info["obtainment"] = first_sent[:400]
+                info["obtainment_type"] = info.get("obtainment_type") or "exclusive"
 
         if potion_sources or fixed_chance or "crafted" in aura_note.lower():
             info["potion_sources"] = [{"chance": n, "source": s} for n, s in potion_sources]
@@ -2720,6 +2771,13 @@ class DetectionMixin:
             lowered = head.lower()
             if cls is None and "craftable" in lowered:
                 cls = None  # craftable flag, no class
+            # Non-rarity section banners like "Removed Auras",
+            # "Exclusives & Unobtainables" still inherit section context so
+            # rare/obtain flags are captured below.
+            if cls is None and "removed" in lowered:
+                cls = "Removed"
+            if cls is None and ("unobtainable" in lowered or "dev exclusive" in lowered or "exclusives" in lowered):
+                cls = "Unobtainable"
             section_ranges.append((m.start(), m.end(), cls, head))
 
         def section_for(pos):
@@ -2866,6 +2924,27 @@ class DetectionMixin:
                     forced_type = "quest_reward"
                     rarity = None
                     biome = None
+            # Non-rolled challenges: auras whose wiki "chance" is purely
+            # descriptive (no 1/N number — e.g. Tomorrow's "Obtained after
+            # collecting The 7 Radiant Moons", True Jade's "Obtainable after
+            # rolling all Jade variants"). The first narrative line of the
+            # chance field is the real obtention and must not be replaced by
+            # a generic "Exclusive to X" string.
+            if not obtainment and rarity is None:
+                # Require the obtention verb to be followed by a real word
+                # ("Collect all …", "Collecting 7 moons …", "Obtain after …")
+                # rather than a file-name fragment like
+                # "Cell_Asteroides_collect.gif" — the old `[Cc]ollect[ing]*\b`
+                # matched "collect" in such names and ran forward to the
+                # next <br>, leaking raw Aura Box wikitext into obtention.
+                desc_m = re.search(r"[Oo]btain(?:ed|able)\s+(?:after|through|by|from)\s+[A-Za-z][^<\n]*", raw_chance)
+                if not desc_m:
+                    desc_m = re.search(r"[Cc]ollect(?:ing|ion|s|ed)?\s+[A-Za-z][^<\n]*", raw_chance)
+                if desc_m:
+                    desc_raw = desc_m.group(0).strip()
+                    desc_clean = re.sub(r"\s+", " ", clean(desc_raw)).strip(" .,:;-")
+                    if desc_clean and len(desc_clean) >= 6:
+                        obtainment = desc_clean[:400]
             if not obtainment:
                 if unobtainable:
                     obtainment = "Unobtainable (dev/tester only)"
@@ -2873,6 +2952,25 @@ class DetectionMixin:
                     obtainment = "Dev-exclusive"
                 elif limited:
                     obtainment = "Limited (" + clean(chance) + ")"
+                # Biome-exclusive auras carrying a 1/N number ("1/1,750,000,000
+                # (Only in Singularity)") need a real obtention line that
+                # mirrors the wiki — biome name + the roll chance. Without
+                # this they fall through to _repair_known_aura_metadata's
+                # "obtainment not verified" stub, which the Book displays as
+                # a missing field rather than an exact copy of the wiki.
+                elif not native and biome and rarity is not None:
+                    obtainment = (
+                        f"Exclusive to {biome} (1 in {rarity:,}); cannot "
+                        f"be rolled through breakthrough elsewhere."
+                    )
+                    forced_type = "exclusive"
+                # Biome-locked NO-NUMBER auras (e.g. Tomorrow: obtained
+                # after collecting the 7 Radiant Moons inside The Radiant
+                # Forest). The wiki does not publish a roll chance, but the
+                # aura is still biome-locked, so classify it as exclusive
+                # with the descriptive obtention already set above.
+                elif not native and biome and rarity is None:
+                    forced_type = "exclusive"
                 elif potion_obtained and rarity is not None:
                     # Fixed-chance potion aura: extract "From {{Items|X}} (1 in N)"
                     # pairs exactly like the craft branch, but classify the

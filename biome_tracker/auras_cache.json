@@ -1,5 +1,6 @@
 {
   "Nothing": {
+    "name": "Nothing",
     "rarity": 1,
     "native_rarity": null,
     "luck_exempt": false,
@@ -21,6 +22,7 @@
     "obtainment_type": "exclusive"
   },
   "Common": {
+    "name": "Common",
     "rarity": 2,
     "native_rarity": null,
     "luck_exempt": false,
@@ -42,6 +44,7 @@
     "obtainment_type": "standard"
   },
   "Uncommon": {
+    "name": "Uncommon",
     "rarity": 4,
     "native_rarity": null,
     "luck_exempt": false,
@@ -63,6 +66,7 @@
     "obtainment_type": "standard"
   },
   "Good": {
+    "name": "Good",
     "rarity": 5,
     "native_rarity": null,
     "luck_exempt": false,
@@ -84,6 +88,7 @@
     "obtainment_type": "standard"
   },
   "Natural": {
+    "name": "Natural",
     "rarity": 8,
     "native_rarity": null,
     "luck_exempt": false,
@@ -105,6 +110,7 @@
     "obtainment_type": "standard"
   },
   "Rare": {
+    "name": "Rare",
     "rarity": 16,
     "native_rarity": null,
     "luck_exempt": false,
@@ -126,6 +132,7 @@
     "obtainment_type": "standard"
   },
   "Divinus": {
+    "name": "Divinus",
     "rarity": 32,
     "native_rarity": 6,
     "luck_exempt": false,
@@ -151,6 +158,7 @@
     "obtainment_type": "native"
   },
   "Crystallized": {
+    "name": "Crystallized",
     "rarity": 64,
     "native_rarity": null,
     "luck_exempt": false,
@@ -172,6 +180,7 @@
     "obtainment_type": "standard"
   },
   "Dizzy": {
+    "name": "Dizzy",
     "rarity": 123,
     "native_rarity": null,
     "luck_exempt": false,
@@ -193,6 +202,7 @@
     "obtainment_type": "standard"
   },
   "Rage": {
+    "name": "Rage",
     "rarity": 128,
     "native_rarity": null,
     "luck_exempt": false,
@@ -214,6 +224,7 @@
     "obtainment_type": "standard"
   },
   "Topaz": {
+    "name": "Topaz",
     "rarity": 150,
     "native_rarity": null,
     "luck_exempt": false,
@@ -235,6 +246,7 @@
     "obtainment_type": "standard"
   },
   "Ruby": {
+    "name": "Ruby",
     "rarity": 350,
     "native_rarity": null,
     "luck_exempt": false,
@@ -256,6 +268,7 @@
     "obtainment_type": "standard"
   },
   "Forbidden": {
+    "name": "Forbidden",
     "rarity": 403,
     "native_rarity": 202,
     "luck_exempt": false,
@@ -281,6 +294,7 @@
     "obtainment_type": "native"
   },
   "Emerald": {
+    "name": "Emerald",
     "rarity": 500,
     "native_rarity": null,
     "luck_exempt": false,
@@ -302,6 +316,7 @@
     "obtainment_type": "standard"
   },
   "Gilded": {
+    "name": "Gilded",
     "rarity": 512,
     "native_rarity": 128,
     "luck_exempt": false,
@@ -327,6 +342,7 @@
     "obtainment_type": "native"
   },
   "Ink": {
+    "name": "Ink",
     "rarity": 700,
     "native_rarity": null,
     "luck_exempt": false,
@@ -348,6 +364,7 @@
     "obtainment_type": "standard"
   },
   "Jackpot": {
+    "name": "Jackpot",
     "rarity": 777,
     "native_rarity": 194,
     "luck_exempt": false,
@@ -375,6 +392,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Jackpot"
   },
   "Sapphire": {
+    "name": "Sapphire",
     "rarity": 800,
     "native_rarity": null,
     "luck_exempt": false,
@@ -396,6 +414,7 @@
     "obtainment_type": "standard"
   },
   "Aquamarine": {
+    "name": "Aquamarine",
     "rarity": 900,
     "native_rarity": null,
     "luck_exempt": false,
@@ -417,6 +436,7 @@
     "obtainment_type": "standard"
   },
   "Wind": {
+    "name": "Wind",
     "rarity": 900,
     "native_rarity": 300,
     "luck_exempt": false,
@@ -442,6 +462,7 @@
     "obtainment_type": "native"
   },
   "Diaboli": {
+    "name": "Diaboli",
     "rarity": 1004,
     "native_rarity": null,
     "luck_exempt": false,
@@ -467,6 +488,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a light red, and a black-colored slash at the center before eventually revealing ."
   },
   "Penumbra": {
+    "name": "Penumbra",
     "rarity": 1010,
     "native_rarity": null,
     "luck_exempt": false,
@@ -492,6 +514,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Umbra": {
+    "name": "Umbra",
     "rarity": 1010,
     "native_rarity": null,
     "luck_exempt": false,
@@ -517,6 +540,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Precious": {
+    "name": "Precious",
     "rarity": 1024,
     "native_rarity": null,
     "luck_exempt": false,
@@ -542,6 +566,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen will become black, an ominous noise playing in the background before the edges glow a light blue, revealing ."
   },
   "Hydrogen": {
+    "name": "Hydrogen",
     "rarity": 1111,
     "native_rarity": null,
     "luck_exempt": false,
@@ -567,6 +592,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Atomic": {
+    "name": "Atomic",
     "rarity": 1180,
     "native_rarity": null,
     "luck_exempt": false,
@@ -592,6 +618,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Glock": {
+    "name": "Glock",
     "rarity": 1700,
     "native_rarity": null,
     "luck_exempt": false,
@@ -617,6 +644,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise will play in the background before the top edges glow a dark grey, revealing ."
   },
   "Magnetic": {
+    "name": "Magnetic",
     "rarity": 2048,
     "native_rarity": null,
     "luck_exempt": false,
@@ -642,6 +670,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as ominous noise plays in the background. The left edges then glow red, and the right blue, revealing ."
   },
   "Ash": {
+    "name": "Ash",
     "rarity": 2300,
     "native_rarity": null,
     "luck_exempt": false,
@@ -667,6 +696,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black, as an ominous noise plays in the background, before the edges glow light grey, revealing ."
   },
   "Glacier": {
+    "name": "Glacier",
     "rarity": 2304,
     "native_rarity": 768,
     "luck_exempt": false,
@@ -696,6 +726,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as an ominous noise plays in the background. The edges then glow a very light-blue, revealing ."
   },
   "Player": {
+    "name": "Player",
     "rarity": 3000,
     "native_rarity": 1500,
     "luck_exempt": false,
@@ -725,6 +756,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen becomes black as the edges of the screen glow green and expand, revealing ."
   },
   "Flora": {
+    "name": "Flora",
     "rarity": 3700,
     "native_rarity": 1850,
     "luck_exempt": false,
@@ -751,6 +783,7 @@
     "cutscene_note": "The screen will become black as an ominous noise plays in the background before the edges of the player's screen begin to glow green, while the upper left hand corner glows pink, revealing Flora."
   },
   "Cola": {
+    "name": "Cola",
     "rarity": 3999,
     "native_rarity": null,
     "luck_exempt": false,
@@ -776,6 +809,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Sidereum": {
+    "name": "Sidereum",
     "rarity": 4096,
     "native_rarity": null,
     "luck_exempt": false,
@@ -801,6 +835,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black as an ominous noise plays in the background before the edges of the player's screen begin to glow purple, while the upper left hand corner glows yellow revealing ."
   },
   "Bleeding": {
+    "name": "Bleeding",
     "rarity": 4444,
     "native_rarity": null,
     "luck_exempt": false,
@@ -826,6 +861,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a dark red, revealing ."
   },
   "HellFire": {
+    "name": "HellFire",
     "rarity": 4776,
     "native_rarity": 796,
     "luck_exempt": false,
@@ -851,6 +887,7 @@
     "obtainment_type": "native"
   },
   "Flutter": {
+    "name": "Flutter",
     "rarity": 5000,
     "native_rarity": 2500,
     "luck_exempt": false,
@@ -882,6 +919,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Targeted": {
+    "name": "Targeted",
     "rarity": 5000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -907,6 +945,7 @@
     "cutscene_note": "===Opening Cutscene=== starts with a black background and is followed by some red and black stripes fading in 2 seconds later, revealing ."
   },
   "Watcher": {
+    "name": "Watcher",
     "rarity": 5000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -932,6 +971,7 @@
     "obtainment_type": "exclusive"
   },
   ":Flushed:": {
+    "name": ":Flushed:",
     "rarity": 6900,
     "native_rarity": null,
     "luck_exempt": false,
@@ -956,6 +996,7 @@
     "cutscene_note": "The screen will become black, an ominous noise playing in the background before the edges glow yellow, revealing :Flushed:."
   },
   "Hazard": {
+    "name": "Hazard",
     "rarity": 7000,
     "native_rarity": 1400,
     "luck_exempt": false,
@@ -985,6 +1026,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, an ominous drop beat noise playing in the background, before the edges glow a light purple (notably similar to Lunar) revealing . Its breakthough variant, along with the glow from the edges, includes a light purple star that revolves and slowly expands in the center of the"
   },
   "Doodle": {
+    "name": "Doodle",
     "rarity": 7500,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1010,6 +1052,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Rekindle": {
+    "name": "Rekindle",
     "rarity": 5000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1035,6 +1078,7 @@
     "obtainment_type": "exclusive"
   },
   "Quartz": {
+    "name": "Quartz",
     "rarity": 8192,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1060,6 +1104,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, with an ominous noise playing in the background, before the edges of the screen glow a light pink from the top, and white from the bottom, revealing ."
   },
   "Honey": {
+    "name": "Honey",
     "rarity": 8335,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1085,6 +1130,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black, with an ominous noise playing in the background, before the edges of the screen glows yellow from the top and orange from the bottom, revealing ."
   },
   "Lost_Soul": {
+    "name": "Lost Soul",
     "rarity": 9200,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1107,6 +1153,7 @@
     "cutscene_note": "Lost Soul's opening consists of a black screen that has blue light expanding from the sides with white on the top, revealing Lost Soul."
   },
   "Atomic_Ribonucleic": {
+    "name": "Atomic : Ribonucleic",
     "rarity": 9876,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1136,6 +1183,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Atomic_:_Ribonucleic"
   },
   "★": {
+    "name": "★",
     "rarity": 100,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1163,6 +1211,7 @@
     "music_file": "LucidityOSTCyberfantasia.mp3"
   },
   "Undead": {
+    "name": "Undead",
     "rarity": 12000,
     "native_rarity": 2000,
     "luck_exempt": false,
@@ -1192,6 +1241,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, dropbeat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a dark green star, that slowly expands before the edges glow dark green, revealing . It' Native rarity will just feature the black screen"
   },
   "Corrosive": {
+    "name": "Corrosive",
     "rarity": 12000,
     "native_rarity": 2400,
     "luck_exempt": false,
@@ -1221,6 +1271,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, drop beat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a purple star, that slowly expands before the edges glow purple revealing . Its native rarity only features the black screen with no sta"
   },
   "Kawaii": {
+    "name": "Kawaii",
     "rarity": 12300,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1246,6 +1297,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Rage_Heated": {
+    "name": "Rage : Heated",
     "rarity": 12800,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1273,6 +1325,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Rage_:_Heated"
   },
   "Ink_Leak": {
+    "name": "Ink : Leak",
     "rarity": 14000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1300,6 +1353,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Ink_:_Leak"
   },
   "Powered": {
+    "name": "Powered",
     "rarity": 16384,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1325,6 +1379,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, drop beat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a white star, that slowly expands before the edges glow white, revealing ."
   },
   "Gilded_Crowned": {
+    "name": "Gilded : Crowned",
     "rarity": 20000,
     "native_rarity": 5000,
     "luck_exempt": false,
@@ -1356,6 +1411,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Gilded_:_Crowned"
   },
   "Marsh": {
+    "name": "Marsh",
     "rarity": 25000,
     "native_rarity": 12500,
     "luck_exempt": false,
@@ -1385,6 +1441,7 @@
     "cutscene_note": "===Opening Cutscene=== A dark green star appears with a drop beat sound, encapsulating the center of the screen. As it expands, the background turns dark green with a slight black blur across the center of the screen, before revealing ."
   },
   "Copper": {
+    "name": "Copper",
     "rarity": 29000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1410,6 +1467,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen suddenly fades to black. An orange, four-pointed star appears, spinning clockwise. As it expands, the edges glow orange, before revealing ."
   },
   "Watt": {
+    "name": "Watt",
     "rarity": 32768,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1435,6 +1493,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Aquatic": {
+    "name": "Aquatic",
     "rarity": 40000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1460,6 +1519,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a drop beat noise plays, extending the entirety of the cutscene. A light blue star forms in the center, revolving while slowly expanding. The edges then glow light blue, revealing ."
   },
   "Solar": {
+    "name": "Solar",
     "rarity": 50000,
     "native_rarity": 5000,
     "luck_exempt": false,
@@ -1489,6 +1549,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a light orangish-yellow, revealing . Its breakthrough variant, instead of the glow from the edges, includes an orange and yellow star that will slowly expand before revealing ."
   },
   "Lunar": {
+    "name": "Lunar",
     "rarity": 50000,
     "native_rarity": 5000,
     "luck_exempt": false,
@@ -1518,6 +1579,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a light purple, revealing . Its breakthrough variant, instead of the glow from the edges, includes a light purple star that will slowly expand before revealing ."
   },
   "Starlight": {
+    "name": "Starlight",
     "rarity": 50000,
     "native_rarity": 10000,
     "luck_exempt": false,
@@ -1547,6 +1609,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a light blue, revealing . Its breakthrough variant, instead of the glow from the edges, includes a light blue star that will slowly expand before revealing ."
   },
   "StarRider": {
+    "name": "StarRider",
     "rarity": 50000,
     "native_rarity": 10000,
     "luck_exempt": false,
@@ -1576,6 +1639,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow a light orange-ish yellow gradient going into the middle, revealing . Its breakthrough variant, includes a yellowish star spinning clockwise that will slowly expand before revealing ."
   },
   "Pleiades": {
+    "name": "Pleiades",
     "rarity": 65358,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1605,6 +1669,7 @@
     "cutscene_note": "=== Opening Cutscene === A blue star appears in the center of the cutscene. As it expands, the upper half of the background glows blue, before revealing ."
   },
   "Flushed_Lobotomy": {
+    "name": "Flushed : Lobotomy",
     "rarity": 69000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1632,6 +1697,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Flushed_:_Lobotomy"
   },
   "Hazard_Rays": {
+    "name": "Hazard : Rays",
     "rarity": 70000,
     "native_rarity": 14000,
     "luck_exempt": false,
@@ -1663,6 +1729,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Hazard_:_Rays"
   },
   "Nautilus": {
+    "name": "Nautilus",
     "rarity": 70000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1685,6 +1752,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, dropbeat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a light bluish purple star, that slowly expands before the edges glow light blue revealing ."
   },
   "Permafrost": {
+    "name": "Permafrost",
     "rarity": 73500,
     "native_rarity": 24500,
     "luck_exempt": false,
@@ -1714,6 +1782,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, dropbeat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a teal star, that slowly expands before the edges glow light teal, revealing . It still has the same cutscene regardless if it was rolled"
   },
   "Pulsar": {
+    "name": "Pulsar",
     "rarity": 83345,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1743,6 +1812,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Constella": {
+    "name": "Constella",
     "rarity": 86988,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1772,6 +1842,7 @@
     "cutscene_note": "=== Opening Cutscene === A purple star similar to appears. As the star expands, the lower half of the background glows purple, before revealing ."
   },
   "Flow": {
+    "name": "Flow",
     "rarity": 87000,
     "native_rarity": 29000,
     "luck_exempt": false,
@@ -1803,6 +1874,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Stormal": {
+    "name": "Stormal",
     "rarity": 90000,
     "native_rarity": 30000,
     "luck_exempt": false,
@@ -1832,6 +1904,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, dropbeat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a grey star, that slowly expands before the edges glow grey, revealing . It still has the same cutscene regardless if it was rolled at Na"
   },
   "★★": {
+    "name": "★★",
     "rarity": 1000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1863,6 +1936,7 @@
     "cutscene_note": "===Opening Cutscene=== The opening for is very basic. It starts out with the screen fading to black with foreboding music. Shades of pink vignette slowly fades into screen before ending off with a gradient of pink colored flash."
   },
   "Fault": {
+    "name": "Fault",
     "rarity": 3000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1892,6 +1966,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as an ominous noise plays in the background before the edges glow a light green color, revealing ."
   },
   "Content_Deleted": {
+    "name": "Content Deleted",
     "rarity": 4040,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1918,6 +1993,7 @@
     "cutscene_note": "TBA"
   },
   "Exotic": {
+    "name": "Exotic",
     "rarity": 99999,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1945,6 +2021,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen becomes black and a dropbeat plays, extending the entirety of the cutscene. In the center, there is a greenish blue star that slowly expands before the edges glow rainbow revealing after a white cracking screen sequence."
   },
   "Diaboli_Void": {
+    "name": "Diaboli : Void",
     "rarity": 100400,
     "native_rarity": null,
     "luck_exempt": false,
@@ -1972,6 +2049,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Diaboli_:_Void"
   },
   "Comet": {
+    "name": "Comet",
     "rarity": 120000,
     "native_rarity": 24000,
     "luck_exempt": false,
@@ -2003,6 +2081,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a dropbeat noise plays, extending throughout the cutscene. In the center of the screen lies a gray-slate star, which revolves while slowly expanding. The edges of the screen then start to glow the same color, then a white screen cracks, revealing ."
   },
   "Divinus_Angel": {
+    "name": "Divinus : Angel",
     "rarity": 120000,
     "native_rarity": 24000,
     "luck_exempt": false,
@@ -2036,6 +2115,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Divinus_:_Angel"
   },
   "Jade": {
+    "name": "Jade",
     "rarity": 125000,
     "native_rarity": 62500,
     "luck_exempt": false,
@@ -2067,6 +2147,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as dropbeat noise plays, extending the entirety of the cutscene. In the center of the screen lies a green star that revolves while slowly expanding.The edges then glow green, revealing after a white cracking screen sequence."
   },
   "Spectre": {
+    "name": "Spectre",
     "rarity": 140000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2094,6 +2175,7 @@
     "cutscene_note": "=== Opening Cutscene === During opening animation, player's screen turns black with grey and dark blue blue star in the middle, slowly rotating and gaining momentum, eventually getting close to player's screen and the corners of the player's screen start to glow a darkish blue color, eventually cutting the screen to wh"
   },
   "Jazz": {
+    "name": "Jazz",
     "rarity": 160000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2121,6 +2203,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, dropbeat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a yellow star, that slowly expands before the edges glow in a yellow and orange gradient, revealing after a white cracking screen sequenc"
   },
   "Aether": {
+    "name": "Aether",
     "rarity": 180000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2145,6 +2228,7 @@
     "cutscene_note": "Aether has a very similar cutscene to Exotic. The screen turns black and a star revolves, with the colours being almost identical to Exotic's star, but just slightly less saturated. When the star reaches its maximum size, vignette colours show up. The top being blue and the bottom being green. After, the screen cracks, revealing Aether."
   },
   "Bounded": {
+    "name": "Bounded",
     "rarity": 200000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2172,6 +2256,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, as a dropbeat noise plays in the beginning of the cutscene, extending for its entirety, heard in the background. In the center of the screen lies a blue star, which slowly expands, before the edges of the screen start to glow the same color, revealing , after a white crack"
   },
   "Lantern": {
+    "name": "Lantern",
     "rarity": 333333,
     "native_rarity": 166666,
     "luck_exempt": false,
@@ -2203,6 +2288,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Celestial": {
+    "name": "Celestial",
     "rarity": 350000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2230,6 +2316,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, drop beat noise plays in the beginning, extending the entirety of the cutscene, playing in the background. In the center, there is a very light bluish pink star, that slowly expands before the top edges glow pink and the bottom blue, revealing after a white cracking "
   },
   "Vortex": {
+    "name": "Vortex",
     "rarity": 399999,
     "native_rarity": 133333,
     "luck_exempt": false,
@@ -2261,6 +2348,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a dropbeat noise plays, continuing throughout the entirety of the cutscene. A dark purple star revolves in the center of the screen, while slowly expanding, before the edges glow purple, revealing after a white cracking screen sequence."
   },
   "Terror": {
+    "name": "Terror",
     "rarity": 400000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2286,6 +2374,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a dropbeat noise plays, continuing throughout the entirety of the cutscene. A dark pink star revolves in the center of the screen, while slowly expanding, before the edges glow purple, revealing after a white cracking screen sequence."
   },
   "Hope": {
+    "name": "Hope",
     "rarity": 488725,
     "native_rarity": 97745,
     "luck_exempt": false,
@@ -2317,6 +2406,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen becomes black, with a center gold star spinning in place, slowly expanding and a white screen is seen cracking revealing the aura."
   },
   "Raven": {
+    "name": "Raven",
     "rarity": 500000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2344,6 +2434,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, as a dropbeat noise plays in the beginning of the cutscene, extending for its entirety, heard in the background. In the center of the screen lies a gray star, which slowly expands, before the edges of the screen start to glow a dark and light gray gradient, revealing , aft"
   },
   "Artifact": {
+    "name": "Artifact",
     "rarity": 500000,
     "native_rarity": 250000,
     "luck_exempt": false,
@@ -2369,6 +2460,7 @@
     "obtainment_type": "native"
   },
   "Veylune": {
+    "name": "Veylune",
     "rarity": 550000,
     "native_rarity": 277500,
     "luck_exempt": false,
@@ -2394,6 +2486,7 @@
     "obtainment_type": "native"
   },
   "Warlock": {
+    "name": "Warlock",
     "rarity": 666000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2419,6 +2512,7 @@
     "cutscene_note": "=== Opening Cutscene === During opening animation, the screen turns black, with a dark pink star appearing in the middle, slowly rotating and expanding. By the end of the sequence, edges start to glow the same color before the entire screen turns white and cracks, revealing ."
   },
   "Undead_Devil": {
+    "name": "Undead : Devil",
     "rarity": 666666,
     "native_rarity": 111111,
     "luck_exempt": false,
@@ -2450,6 +2544,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Undead_:_Devil"
   },
   "Kyawthuite": {
+    "name": "Kyawthuite",
     "rarity": 850000,
     "native_rarity": 425000,
     "luck_exempt": false,
@@ -2481,6 +2576,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as a dropbeat noise plays, continuing throughout the entirety of the cutscene. A dark purple star revolves in the center of the screen, while slowly expanding, before the edges glow purple, revealing after a white cracking screen sequence."
   },
   "★★★": {
+    "name": "★★★",
     "rarity": 10000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2512,6 +2608,7 @@
     "cutscene_note": "===Opening Cutscene=== ‘s opening starts with a pink star entering the screen along with a black background fading in to the screen. The star spins slowly with foreboding music to accompany it. The opening ends off with the star suddenly growing bigger until a pink-to-white vertical vignette fades in to the screen befo"
   },
   "Arcane": {
+    "name": "Arcane",
     "rarity": 1000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2539,6 +2636,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, jingle noise plays in the beginning, a wind noise extending the entirety of the cutscene, playing in the background. At the bottom is white fog and in the center, there is a light blue eight-pointed star, that slowly expands and rotates quicker before the edges glow "
   },
   "Starlight_Kunzite": {
+    "name": "Starlight : Kunzite",
     "rarity": 1000000,
     "native_rarity": 200000,
     "luck_exempt": false,
@@ -2572,6 +2670,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Starlight_:_Kunzite"
   },
   "Gothic": {
+    "name": "Gothic",
     "rarity": 1000001,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2599,6 +2698,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Magnetic_Reverse_Polarity": {
+    "name": "Magnetic : Reverse Polarity",
     "rarity": 1024000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2628,6 +2728,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Magnetic_:_Reverse_Polarity"
   },
   "Undefined": {
+    "name": "Undefined",
     "rarity": 1111000,
     "native_rarity": 1111,
     "luck_exempt": false,
@@ -2657,6 +2758,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a jingle noise plays, accompanied by wind sounds that continue throughout the cutscene. Grey fog forms at the bottom of the screen, and in the center, a dark grey eight-pointed star revolves while slowly expanding. The edges then glow dark grey, revealing . Its Native ra"
   },
   "Rage_Brawler": {
+    "name": "Rage : Brawler",
     "rarity": 1280000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2686,6 +2788,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Rage_:_Brawler"
   },
   "Symbiosis": {
+    "name": "Symbiosis",
     "rarity": 1331201,
     "native_rarity": 266240,
     "luck_exempt": false,
@@ -2717,6 +2820,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Astral": {
+    "name": "Astral",
     "rarity": 1336000,
     "native_rarity": 267200,
     "luck_exempt": false,
@@ -2748,6 +2852,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, as a quick jingle noise plays; a wind noise extending for the entirety of the cutscene, playing in the background. At the bottom of the screen is a purple fog, and in the center, there is a purple eight-pointed star, slowly expanding before the edges glow light purple, rev"
   },
   "Cosmos": {
+    "name": "Cosmos",
     "rarity": 1520000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2773,6 +2878,7 @@
     "cutscene_note": "=== Opening Cutscene === A pale grey background opens as a very hard to see star like in a very dark navy to purple star opens on the screen. It begins to expand in size while spinning before the background's top is now a dark navy to a lesser dark navy color similar to to then show ."
   },
   "Obsidian": {
+    "name": "Obsidian",
     "rarity": 1750000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2800,6 +2906,7 @@
     "cutscene_note": "=== Opening Cutscene === A dark purple and black 8 pointed star appears in the center of the screen rotating slowly on a black background, then purple shine creeps in on the corners revealing ."
   },
   "Archmage": {
+    "name": "Archmage",
     "rarity": 1766000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2827,6 +2934,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Player_Respawn": {
+    "name": "Player : Respawn",
     "rarity": 1999999,
     "native_rarity": 999999,
     "luck_exempt": false,
@@ -2860,6 +2968,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Player_:_Respawn"
   },
   "Gravitational": {
+    "name": "Gravitational",
     "rarity": 2000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2887,6 +2996,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, as a quick jingle effect plays, a wind noise also playing in the background. Situated at the screen's center is a violet eight-pointed star, a grey fog at the bottom, that revolves, while slowly expanding, before the edges glow violet, revealing ."
   },
   "Bounded_Unbound": {
+    "name": "Bounded : Unbound",
     "rarity": 2000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -2916,6 +3026,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Bounded_:_Unbound"
   },
   "Flutter_Buggify": {
+    "name": "Flutter : Buggify",
     "rarity": 2000000,
     "native_rarity": 1000000,
     "luck_exempt": false,
@@ -2949,6 +3060,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Flutter_:_Buggify"
   },
   "Flowed": {
+    "name": "Flowed",
     "rarity": 2121121,
     "native_rarity": 2121,
     "luck_exempt": false,
@@ -2980,6 +3092,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns gray, as a quick jingle noise plays. Tiny white particles, like sparks, come up from the bottom of the screen. A quiet wind noise plays for the entirety of the cutscene. A white, eight-pointed star revolves in the center of the screen. After a few seconds, the star's rotation spe"
   },
   "Virtual": {
+    "name": "Virtual",
     "rarity": 2500000,
     "native_rarity": 1250000,
     "luck_exempt": false,
@@ -3011,6 +3124,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, as a jingle noise plays, accompanied by a wind noise that continues throughout the cutscene. Grey fog forms at the bottom of the screen, and a cyan eight-pointed star appears at the center, revolving, while slowly expanding. Subsequently, the edges of the screen glow a lig"
   },
   "Vega": {
+    "name": "Vega",
     "rarity": 2580000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3040,6 +3154,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Parasite": {
+    "name": "Parasite",
     "rarity": 3000000,
     "native_rarity": 600000,
     "luck_exempt": false,
@@ -3069,6 +3184,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Orion": {
+    "name": "Orion",
     "rarity": 3000000,
     "native_rarity": 600000,
     "luck_exempt": false,
@@ -3100,6 +3216,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Apatite": {
+    "name": "Apatite",
     "rarity": 3133133,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3127,6 +3244,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Savior": {
+    "name": "Savior",
     "rarity": 3200000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3154,6 +3272,7 @@
     "cutscene_note": "===Opening Cutscene=== An eight-pointed reddish-pink star appears on-screen, while a jingle effect and wind noise play in the background. The background is also covered in a gray fog from the bottom of the screen, whilst small red particles slowly float upwards. The star then slowly expands, before its edges shine a re"
   },
   "Shiftlock": {
+    "name": "Shiftlock",
     "rarity": 3325000,
     "native_rarity": 3325,
     "luck_exempt": false,
@@ -3185,6 +3304,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Evanescent": {
+    "name": "Evanescent",
     "rarity": 3360000,
     "native_rarity": 840000,
     "luck_exempt": false,
@@ -3216,6 +3336,7 @@
     "cutscene_note": "=== Opening Cutscene === A blue and black star appears as a quiet wind sound affect plays, after a few seconds a blue and black screen effect fades in as the cutscene ends and is revealed to be ."
   },
   "Cosmos_Alice": {
+    "name": "Cosmos : Alice",
     "rarity": 3500000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3243,6 +3364,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Cosmos_:_Alice"
   },
   "Crystallized_Bejeweled": {
+    "name": "Crystallized : Bejeweled",
     "rarity": 3600000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3272,6 +3394,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Crystallized_:_Bejeweled"
   },
   "Aquatic_Flame": {
+    "name": "Aquatic : Flame",
     "rarity": 4000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3299,6 +3422,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Aquatic_:_Flame"
   },
   "Poseidon": {
+    "name": "Poseidon",
     "rarity": 4000000,
     "native_rarity": 1000000,
     "luck_exempt": false,
@@ -3330,6 +3454,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen will become black, jingle noise plays in the beginning, a wind noise extending the entirety of the cutscene, playing in the background. At the bottom is grey fog and, in the center, there is a dark blue eight-pointed star, that slowly expands before the edges glow light teal on the b"
   },
   "Metabytes": {
+    "name": "Metabytes",
     "rarity": 4000000,
     "native_rarity": 2000000,
     "luck_exempt": false,
@@ -3361,6 +3486,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Wraith": {
+    "name": "Wraith",
     "rarity": 4100000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3388,6 +3514,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Zeus": {
+    "name": "Zeus",
     "rarity": 4500000,
     "native_rarity": 900000,
     "luck_exempt": false,
@@ -3419,6 +3546,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, jingle noise plays in the beginning, a wind noise extending the entirety of the cutscene, playing in the background. At the bottom is grey fog and in the center, there is a light yellow eight-pointed star, that slowly expands before the left edges glow light yellow a"
   },
   "Solar_Solstice": {
+    "name": "Solar : Solstice",
     "rarity": 5000000,
     "native_rarity": 500000,
     "luck_exempt": false,
@@ -3450,6 +3578,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Solar_:_Solstice"
   },
   "Galaxy": {
+    "name": "Galaxy",
     "rarity": 5000000,
     "native_rarity": 1000000,
     "luck_exempt": false,
@@ -3481,6 +3610,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, and a quick jingle effect plays. A wind noise is also present for the entirety of the cutscene. At the bottom of the screen is a grey and in the center, a purplish blue eight-pointed star revolves while slowly expanding, before the edges glow light blue, revealing . -"
   },
   "Lunar_Full_Moon": {
+    "name": "Lunar : Full Moon",
     "rarity": 5000000,
     "native_rarity": 500000,
     "luck_exempt": false,
@@ -3512,6 +3642,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Lunar_:_Full_Moon"
   },
   "Moonchild": {
+    "name": "Moonchild",
     "rarity": 5000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3537,6 +3668,7 @@
     "obtainment_type": "exclusive"
   },
   "Anima": {
+    "name": "Anima",
     "rarity": 5730000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3562,6 +3694,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Twilight": {
+    "name": "Twilight",
     "rarity": 6000000,
     "native_rarity": 600000,
     "luck_exempt": false,
@@ -3593,6 +3726,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns gray as a quick jingle plays, accompanied by a quiet wind noise that continues throughout the cutscene. There are tiny purple particles floating up from the bottom of the screen, similar to sparks. A purple, eight-pointed star appears in the center, revolving while slowly expandi"
   },
   "Astronaut": {
+    "name": "Astronaut",
     "rarity": 6117186,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3622,6 +3756,7 @@
     "cutscene_note": "=== Opening Cutscene === An 8 pointed star with 3 dark blue points, 2 light blue points, 2 points with an orange-black gradient and 1 fully orange point appears. As the star expands, the upper half of the cutscene turns into a blue-black gradient while the lower half becomes a red-orange-yellow like gradient, before re"
   },
   "Origin": {
+    "name": "Origin",
     "rarity": 6500000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3649,6 +3784,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by wind noises that continue throughout the cutscene. Blue fog forms at the bottom of the screen, and in the center, a navy eight-pointed star revolves while slowly expanding, blue particles rising from the bottom. The edges then glow bl"
   },
   "Hades": {
+    "name": "Hades",
     "rarity": 6666666,
     "native_rarity": 1111111,
     "luck_exempt": false,
@@ -3678,6 +3814,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a wind noise continuing throughout the cutscene in the background. At the bottom of the screen lies a grey fog, and a dark orange eight-pointed star rotates while slowly expanding in the center. Subsequently, the edges glow orange, re"
   },
   "Celestial_Divine": {
+    "name": "Celestial : Divine",
     "rarity": 7000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3707,6 +3844,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Celestial_:_Divine"
   },
   "Anubis": {
+    "name": "Anubis",
     "rarity": 7200000,
     "native_rarity": 1800000,
     "luck_exempt": false,
@@ -3738,6 +3876,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as a quick jingle plays, accompanied by a wind noise extending the entirety of the cutscene, playing in the background. White fog forms at the bottom of the screen, and in the center, a dark maroon eight-pointed star rotates while slowly expanding. The edges then glow dar"
   },
   "Refraction": {
+    "name": "Refraction",
     "rarity": 7242000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3765,6 +3904,7 @@
     "cutscene_note": "=== Opening Cutscene === A quick jingle plays as a white 8-pointed star appears in the center of the screen, with light gray fog behind it. White particles rise from the bottom as the star slowly spins, gradually spinning faster. As the star spins faster, the fog turns white and reveals ."
   },
   "Faith": {
+    "name": "Faith",
     "rarity": 7250000,
     "native_rarity": 1450000,
     "luck_exempt": false,
@@ -3796,6 +3936,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Hyper-Volt": {
+    "name": "Hyper-Volt",
     "rarity": 7500000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3823,6 +3964,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as a quick jingle plays, accompanied by a wind noise extending the entirety of the cutscene, playing in the background. Grey fog forms at the bottom of the screen, and in the center, a purple eight-pointed star rotates while slowly expanding. The edges then glow purple, r"
   },
   "Velocity": {
+    "name": "Velocity",
     "rarity": 7630000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3850,6 +3992,7 @@
     "cutscene_note": "=== Opening Cutscene === The cutscene stars with an eight-sided, orange reddish star, a grey background, a jingle effect and a wind noise. Small orange reddish particles float from the bottom to the top of the screen. At the end of the cutscene the star expands with a orange reddish vignette which is brighter in the ce"
   },
   "Nautilus_Lost": {
+    "name": "Nautilus : Lost",
     "rarity": 7700000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3879,6 +4022,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Nautilus_:_Lost"
   },
   "Divinus_Guardian": {
+    "name": "Divinus : Guardian",
     "rarity": 7777777,
     "native_rarity": 1555555,
     "luck_exempt": false,
@@ -3912,6 +4056,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Divinus_:_Guardian"
   },
   "Outlaw": {
+    "name": "Outlaw",
     "rarity": 8000000,
     "native_rarity": 2000000,
     "luck_exempt": false,
@@ -3943,6 +4088,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen suddenly fades to black. A light-brown star can be seen spinning clockwise. Below, a few white particles rise from the bottom of the screen. The star slowly grows in size, until the edges start glowing light-brown, revealing ."
   },
   "Spectre_Requiem": {
+    "name": "Spectre : Requiem",
     "rarity": 8222000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3972,6 +4118,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Spectre_:_Requiem"
   },
   "Soultorn": {
+    "name": "Soultorn",
     "rarity": 8333333,
     "native_rarity": null,
     "luck_exempt": false,
@@ -3999,6 +4146,7 @@
     "cutscene_note": "=== Opening Cutscene === begins its cutscene with a half black half dark green 8-pointed star in the center, slowly spinning as it expands, before a lighter green/black background unveils, revealing ."
   },
   "Harnessed": {
+    "name": "Harnessed",
     "rarity": 8500000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4024,6 +4172,7 @@
     "cutscene_note": "=== Opening Cutscene === A chime with a blue star similar to 's old star opens, with a pale gray background behind the star. The star begins to spin also. The star then starts to spin faster and expands as a gradient black and blue background opens it, rapidly spinning with the star before showing ."
   },
   "Nihility": {
+    "name": "Nihility",
     "rarity": 9000000,
     "native_rarity": 9000,
     "luck_exempt": false,
@@ -4055,6 +4204,7 @@
     "cutscene_note": "===Opening Cutscene=== An eight-pointed white star appears with white partials. and stats rotating at the center of the player's screen. The star slowly expands, and the background is covered with white color all around the border of the screen before revealing ."
   },
   "Helios": {
+    "name": "Helios",
     "rarity": 9000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4082,6 +4232,7 @@
     "cutscene_note": "===Opening Cutscene=== A jingle plays, as a dark, orange eight-spiked star appears. Tiny particles rise from the bottom. The star rotates faster as the cutscene begins to end, and a white and orange glow covers the screen, as it reveals the aura."
   },
   "Stargazer": {
+    "name": "Stargazer",
     "rarity": 9200000,
     "native_rarity": 1840000,
     "luck_exempt": false,
@@ -4113,6 +4264,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns gray, as a quick jingle noise plays, followed by tiny pink spark-like particles coming up from the bottom of the screen, while quiet wind noises play for the entirety of the cutscene. A black and a pink colored eight-pointed star then revolves in the center of the screen. After a"
   },
   "Jade_Purity": {
+    "name": "Jade : Purity",
     "rarity": 9250000,
     "native_rarity": 4625000,
     "luck_exempt": false,
@@ -4146,6 +4298,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Jade_:_Purity"
   },
   "Amethyst": {
+    "name": "Amethyst",
     "rarity": 9333700,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4173,6 +4326,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Starscourge": {
+    "name": "Starscourge",
     "rarity": 10000000,
     "native_rarity": 2000000,
     "luck_exempt": false,
@@ -4204,6 +4358,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, jingle noise plays in the beginning, a wind noise extending the entirety of the cutscene, playing in the background. At the bottom is white fog and, in the center, there is a reddish white eight-pointed star, that slowly expands before the top edges glow red and the "
   },
   "Sharkyn": {
+    "name": "Sharkyn",
     "rarity": 10000000,
     "native_rarity": 2500000,
     "luck_exempt": false,
@@ -4235,6 +4390,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a hoarse wind noise that continues throughout the cutscene while blue particles float up the screen. The screen also has a navy-blue gradient, accompanied by an 8-pointed blue star, spinning slowly and accelerating near the end, revea"
   },
   "Guardian": {
+    "name": "Guardian",
     "rarity": 10000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4262,6 +4418,7 @@
     "cutscene_note": "=== Opening cutscene ==="
   },
   "Empty": {
+    "name": "Empty",
     "rarity": 11111111,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4293,6 +4450,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Melodic": {
+    "name": "Melodic",
     "rarity": 11300000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4320,6 +4478,7 @@
     "cutscene_note": "===Opening Cutscene=== Currently, 's cutscene is a placeholder, AKA the normal white eight-pointed star, which is similar to ."
   },
   "Sailor": {
+    "name": "Sailor",
     "rarity": 12000000,
     "native_rarity": 3000000,
     "luck_exempt": false,
@@ -4351,6 +4510,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a faint wind noise that continues throughout the cutscene. A white fog appears at the bottom of the screen, and in the center, a light blue eight-pointed star revolves and slowly expands. Subsequently, the screen's edges glow light bl"
   },
   "Graffiti": {
+    "name": "Graffiti",
     "rarity": 12000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4378,6 +4538,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Imaginary": {
+    "name": "Imaginary",
     "rarity": 12200200,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4405,6 +4566,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Stormal_Hurricane": {
+    "name": "Stormal : Hurricane",
     "rarity": 13500000,
     "native_rarity": 4500000,
     "luck_exempt": false,
@@ -4438,6 +4600,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Stormal_:_Hurricane"
   },
   "Sirius": {
+    "name": "Sirius",
     "rarity": 14000000,
     "native_rarity": 2800000,
     "luck_exempt": false,
@@ -4469,6 +4632,7 @@
     "cutscene_note": "===Opening Cutscene=== A jingle plays as an orange and white eight-spiked star forms. Particles rise from the bottom. The star rotates faster as the cutscene begins to end, and a yellow and orange mist covers the screen as it reveals the ."
   },
   "Arcane_Legacy": {
+    "name": "Arcane : Legacy",
     "rarity": 15000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4498,6 +4662,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Arcane_:_Legacy"
   },
   "Icarus": {
+    "name": "Icarus",
     "rarity": 15660000,
     "native_rarity": 3132000,
     "luck_exempt": false,
@@ -4529,6 +4694,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Lullaby": {
+    "name": "Lullaby",
     "rarity": 17000000,
     "native_rarity": 1700000,
     "luck_exempt": false,
@@ -4560,6 +4726,7 @@
     "cutscene_note": "=== Opening Cutscene === A jingle plays as an 8-pointed black star spinning clockwise appears on screen, nearly invisible due to the background. After a few seconds, the star expands while the edges glow dark blue, revealing ."
   },
   "Chromatic": {
+    "name": "Chromatic",
     "rarity": 20000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4587,6 +4754,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns into a black to bright rainbow gradient, an accompanying wind noise extending the entirety of the cutscene playing in the background. Rising rainbow debris forms at the bottom of the screen, and in the centre, a rainbow eight-pointed star revolves while slowly expanding. Subseq"
   },
   "Plasma": {
+    "name": "Plasma",
     "rarity": 20600000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4614,6 +4782,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Oculus": {
+    "name": "Oculus",
     "rarity": 23233340,
     "native_rarity": 4666668,
     "luck_exempt": false,
@@ -4643,6 +4812,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Aviator": {
+    "name": "Aviator",
     "rarity": 24000000,
     "native_rarity": 8000000,
     "luck_exempt": false,
@@ -4674,6 +4844,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a hoarse wind noise. A gold star manifests at the screen's center, rotating whilst slowly expanding. As a fog rolls in, three bronze rectangles obscure the cutscene before revealing ."
   },
   "Ruby_Brimstone": {
+    "name": "Ruby : Brimstone",
     "rarity": 24060000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4703,6 +4874,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Ruby_:_Brimstone"
   },
   "Apotheosis": {
+    "name": "Apotheosis",
     "rarity": 24691356,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4730,6 +4902,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black with a purple bar at the bottom as a quick jingle plays, accompanied by a wind sound that continues throughout the cutscene. Purple fog with numerous black horizontal stripes appears in the center of the screen as purple particles rise up. A purple star with 2 black strip"
   },
   "Centurion": {
+    "name": "Centurion",
     "rarity": 25000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4761,6 +4934,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Blizzard": {
+    "name": "Blizzard",
     "rarity": 27315000,
     "native_rarity": 9105000,
     "luck_exempt": false,
@@ -4792,6 +4966,7 @@
     "cutscene_note": "=== Opening Cutscene === The opening starts up with the screen mostly with a black background with only a blue 8 pointed star in the middle, which slowly spins and expands and the background's corners start turning blue, and then revealing the aura. This cutscene is extremely similar to 's Era 7 cutscene."
   },
   "Arcane_Dark": {
+    "name": "Arcane : Dark",
     "rarity": 30000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4821,6 +4996,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Arcane_:_Dark"
   },
   "Flora_Florest": {
+    "name": "Flora : Florest",
     "rarity": 32800000,
     "native_rarity": 16400000,
     "luck_exempt": false,
@@ -4854,6 +5030,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Flora_:_Florest"
   },
   "Ethereal": {
+    "name": "Ethereal",
     "rarity": 35000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4881,6 +5058,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a faint wind noise that continues throughout the cutscene. A purple-white fog appears at the bottom of the screen, and in the center, a light-purple eight-pointed star revolves and slowly expands. Subsequently, the top edges of the sc"
   },
   "Virtual_Fatal_Error": {
+    "name": "Virtual : Fatal Error",
     "rarity": 40413000,
     "native_rarity": 20206500,
     "luck_exempt": false,
@@ -4914,6 +5092,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Virtual_:_Fatal_Error"
   },
   "Juxtaposition": {
+    "name": "Juxtaposition",
     "rarity": 40440400,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4941,6 +5120,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Overseer": {
+    "name": "Overseer",
     "rarity": 45000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4968,6 +5148,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns a light grey, as a quick jingle plays, accompanied by a wind sound that plays throughout the cutscene. Debris emanates from the bottom of the screen, and at its center lies an eight-pointed star that revolves, while slowly expanding. The edges of the screen then progressively bec"
   },
   "Exotic_Apex": {
+    "name": "Exotic : Apex",
     "rarity": 49999500,
     "native_rarity": null,
     "luck_exempt": false,
@@ -4997,6 +5178,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Exotic_:_Apex"
   },
   "Matrix": {
+    "name": "Matrix",
     "rarity": 50000000,
     "native_rarity": 25000000,
     "luck_exempt": false,
@@ -5028,6 +5210,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a wind noise that continues throughout the cutscene. A greenish fog forms at the bottom of the screen, and a green, eight-pointed star appears in the center, revolving, while slowly expanding. Subsequently, the edges of the screen glo"
   },
   "Runic": {
+    "name": "Runic",
     "rarity": 50000000,
     "native_rarity": 25000000,
     "luck_exempt": false,
@@ -5059,6 +5242,7 @@
     "cutscene_note": "=== Opening Cutscene === A dark green star appears, similar to , which slowly spins throughout the cutscene. Eventually, the star slowly expands and the edges turn green, revealing ."
   },
   "Cor_Lunae": {
+    "name": "Cor Lunae",
     "rarity": 50000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5084,6 +5268,7 @@
     "obtainment_type": "exclusive"
   },
   "Sentinel": {
+    "name": "Sentinel",
     "rarity": 60000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5111,6 +5296,7 @@
     "cutscene_note": "=== Opening Cutscene === 's cutscene starts out with a dark blue star in the center of the screen, slowly spinning and increasing in size, before revealing ."
   },
   "Twilight_Iridescent_Memory": {
+    "name": "Twilight : Iridescent Memory",
     "rarity": 60000000,
     "native_rarity": 6000000,
     "luck_exempt": false,
@@ -5144,6 +5330,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Twilight_:_Iridescent_Memory"
   },
   "Antivirus": {
+    "name": "Antivirus",
     "rarity": 62500000,
     "native_rarity": 31250000,
     "luck_exempt": false,
@@ -5175,6 +5362,7 @@
     "cutscene_note": "===Opening Cutscene=== A quick jingle plays as a white star appears in the center of the screen, accompanied by gray fog that fades to white at the bottom of the screen. The star slowly spins, gaining speed as white particles rise from the bottom of the fog. As the star spins faster, the fog becomes more pronounced and"
   },
   "Dominion": {
+    "name": "Dominion",
     "rarity": 70000000,
     "native_rarity": 14000000,
     "luck_exempt": false,
@@ -5206,6 +5394,7 @@
     "cutscene_note": "=== Opening cutscene=== A quick jingle plays as a multi-barred light yellow and red 8-pointed star appears in the center of the screen, with similarly colored fog in the background. Yellow particles rise from the bottom of the screen as the star rotates, slowly spinning faster. As the star spins faster, the fog behind "
   },
   "Starborn": {
+    "name": "Starborn",
     "rarity": 72000000,
     "native_rarity": 14400000,
     "luck_exempt": false,
@@ -5237,6 +5426,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Melodic_Serenade": {
+    "name": "Melodic : Serenade",
     "rarity": 77000000,
     "native_rarity": 7700000,
     "luck_exempt": false,
@@ -5270,6 +5460,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Melodic_:_Serenade"
   },
   "Sailor_Flying_Dutchman": {
+    "name": "Sailor : Flying Dutchman",
     "rarity": 80000000,
     "native_rarity": 20000000,
     "luck_exempt": false,
@@ -5303,6 +5494,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Sailor_:_Flying_Dutchman"
   },
   "Carriage": {
+    "name": "Carriage",
     "rarity": 80000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5330,6 +5522,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as a quick jingle plays, a light orange eight-pointed star similar to and manifests at the screen's center, rotating whilst slowly expanding. As a fog rolls in, dark orange and brown colors appear on the left and right sides of the screen before revealing ."
   },
   "Aquaria": {
+    "name": "Aquaria",
     "rarity": 80000000,
     "native_rarity": 20000000,
     "luck_exempt": false,
@@ -5361,6 +5554,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Virtual_Full_Control": {
+    "name": "Virtual : Full Control",
     "rarity": 80000000,
     "native_rarity": 40000000,
     "luck_exempt": false,
@@ -5394,6 +5588,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Virtual_:_Full_Control"
   },
   "Virtual_Ultimate": {
+    "name": "Virtual : Ultimate",
     "rarity": 80000000,
     "native_rarity": 40000000,
     "luck_exempt": false,
@@ -5419,6 +5614,7 @@
     "obtainment_type": "native"
   },
   "Harnessed_Elements": {
+    "name": "Harnessed : Elements",
     "rarity": 85000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5446,6 +5642,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Harnessed_:_Elements"
   },
   "Hellbound": {
+    "name": "Hellbound",
     "rarity": 85000000,
     "native_rarity": 14166666,
     "luck_exempt": false,
@@ -5477,6 +5674,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Runic_Wilt": {
+    "name": "Runic : Wilt",
     "rarity": 87388744,
     "native_rarity": 43694372,
     "luck_exempt": false,
@@ -5510,6 +5708,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Runic_:_Wilt"
   },
   "Virtual_WorldWide": {
+    "name": "Virtual : WorldWide",
     "rarity": 87500000,
     "native_rarity": 43750000,
     "luck_exempt": false,
@@ -5541,6 +5740,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Virtual_:_WorldWide"
   },
   "Atomic_Nucleus": {
+    "name": "Atomic : Nucleus",
     "rarity": 92118000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5570,6 +5770,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Atomic_:_Nucleus"
   },
   "Quartz_Rose": {
+    "name": "Quartz : Rose",
     "rarity": 97500000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5599,6 +5800,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Quartz_:_Rose"
   },
   "Chromatic_Genesis": {
+    "name": "Chromatic : Genesis",
     "rarity": 99999999,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5628,6 +5830,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Chromatic_:_Genesis"
   },
   "Starscourge_Radiant": {
+    "name": "Starscourge : Radiant",
     "rarity": 100000000,
     "native_rarity": 20000000,
     "luck_exempt": false,
@@ -5661,6 +5864,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Starscourge_:_Radiant"
   },
   "Spectraflow": {
+    "name": "Spectraflow",
     "rarity": 100000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5688,6 +5892,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Lily": {
+    "name": "Lily",
     "rarity": 112000000,
     "native_rarity": 56000000,
     "luck_exempt": false,
@@ -5719,6 +5924,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Sharkyn_HammerHead": {
+    "name": "Sharkyn : HammerHead",
     "rarity": 120000000,
     "native_rarity": 30000000,
     "luck_exempt": false,
@@ -5752,6 +5958,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Sharkyn_:_HammerHead"
   },
   "Overture": {
+    "name": "Overture",
     "rarity": 150000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5779,6 +5986,7 @@
     "cutscene_note": "===Opening Cutscene=== has a special opening effect. The screen turns black as a low-pitched ticking noises play, along with a gong, slowing down by every tick. Three clock hands move across the screen, with each moving slower, followed by a clock shown behind star that rapidly shows time while spinning clockwise slowl"
   },
   "Bounded_Aichmalotos": {
+    "name": "Bounded : Aichmalotos",
     "rarity": 170000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5808,6 +6016,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Bounded_:_Aichmalotos"
   },
   "Symphony": {
+    "name": "Symphony",
     "rarity": 175000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5835,6 +6044,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as a quick jingle plays, accompanied by a hoarse wind noise that continues throughout the cutscene. The fire-fog appears behind the star, and a bluish white eight-pointed star appears in the center, revolving while slowly expanding. Multiple smaller, tilted white stars fl"
   },
   "Felled": {
+    "name": "Felled",
     "rarity": 180000000,
     "native_rarity": 30000000,
     "luck_exempt": false,
@@ -5866,6 +6076,7 @@
     "cutscene_note": "=== Opening Cutscene === starts with a bright red 8-pointed star that takes the center, with what looks like a slight sight of blood flowing. As the seconds pass, blood appears to flow from the bottom to the top, before pulsating twice, with each pulse flashing a pentagram, before revealing ."
   },
   "Impeached": {
+    "name": "Impeached",
     "rarity": 200000000,
     "native_rarity": 40000000,
     "luck_exempt": false,
@@ -5897,6 +6108,7 @@
     "cutscene_note": "===Opening Cutscene=== A quick jingle plays as a purple star appears in the middle accompanied by a hoarse wind noise that plays throughout the cutscene, a purple swirl effect appears behind the star along with patterns moving from the left to the right of the screen. Multiple small black squares with purple outlines f"
   },
   "Raven_Plague": {
+    "name": "Raven : Plague",
     "rarity": 200000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5924,6 +6136,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Raven_:_Plague"
   },
   "Lumenpool": {
+    "name": "Lumenpool",
     "rarity": 220000000,
     "native_rarity": 55000000,
     "luck_exempt": false,
@@ -5955,6 +6168,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Hyper-Volt_Ever-Storm": {
+    "name": "Hyper-Volt : Ever-Storm",
     "rarity": 225000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -5984,6 +6198,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Hyper-Volt_:_Ever-Storm"
   },
   "Virtual_Memory": {
+    "name": "Virtual Memory",
     "rarity": 232232232,
     "native_rarity": 116116116,
     "luck_exempt": false,
@@ -6015,6 +6230,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Astral_Zodiac": {
+    "name": "Astral : Zodiac",
     "rarity": 267200000,
     "native_rarity": 53400000,
     "luck_exempt": false,
@@ -6048,6 +6264,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Astral_:_Zodiac"
   },
   "Prophecy": {
+    "name": "Prophecy",
     "rarity": 275649430,
     "native_rarity": 55129886,
     "luck_exempt": false,
@@ -6079,6 +6296,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as a quick jingle plays, followed by wind noise that continues throughout the cutscene. Dark gold fog with a black striped gradient appears in the center of the screen with a dark gold 8 pointed star that slowly revolves and gradually spins faster. As the star spins faste"
   },
   "Exotic_Void": {
+    "name": "Exotic : Void",
     "rarity": 299999999,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6108,6 +6326,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Exotic_:_Void"
   },
   "Overture_History": {
+    "name": "Overture : History",
     "rarity": 300000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6137,6 +6356,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Overture_:_History"
   },
   "Bloodlust": {
+    "name": "Bloodlust",
     "rarity": 300000000,
     "native_rarity": 50000000,
     "luck_exempt": false,
@@ -6168,6 +6388,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a faint wind noise that continues throughout the cutscene. The screen is covered in red fog, and in the center, a red eight-pointed star appears, revolving while slowly expanding. Three blood splatter appear on the screen, making an \""
   },
   "Maelstrom": {
+    "name": "Maelstrom",
     "rarity": 309999999,
     "native_rarity": 103333333,
     "luck_exempt": false,
@@ -6199,6 +6420,7 @@
     "cutscene_note": "===Opening Cutscene=== The cutscene begins with a dark teal star, with with a wind-like particle behind it, followed with a symbol that looks like the one in the players back. The symbol is reminiscent of the one that appears similarly in 's cutscene. After this another symbol pops 2 times, before revealing ."
   },
   "Dreamer": {
+    "name": "Dreamer",
     "rarity": 315000000,
     "native_rarity": 31500000,
     "luck_exempt": false,
@@ -6230,6 +6452,7 @@
     "cutscene_note": "=== Opening Cutscene === starts out with a bright blue and black gradient background along with a blue star. There appears to be a bright light coming from the top of the cutscene, along with 4 hanging chains of stars spinning around the bright light, the same as in itself. Many effects can be seen moving throughout th"
   },
   "Perpetual": {
+    "name": "Perpetual",
     "rarity": 315000000,
     "native_rarity": 157500000,
     "luck_exempt": false,
@@ -6261,6 +6484,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Lotusfall": {
+    "name": "Lotusfall",
     "rarity": 320000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6288,6 +6512,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen shows a blue star in a background with a blue ray coming from the lower left corner to the upper right corner, accompanied with petals falling from the top similar to 's feathers. After a short period, an image of a lotus flower appears spinning slowly behind the star. Afterwards, a "
   },
   "Cytokinesis": {
+    "name": "Cytokinesis",
     "rarity": 330400472,
     "native_rarity": 165200236,
     "luck_exempt": false,
@@ -6319,6 +6544,7 @@
     "cutscene_note": "=== Opening Cutscene === starts off with an 8-pointed star in the center of the cutscene, along with the wind noise. The background mostly consists of dark green/light green and dark green auroras and shapes rising from the bottom as the star expands. Two spirals of DNA strips can be seen at the top left and bottom rig"
   },
   "Jazz_Orchestra": {
+    "name": "Jazz : Orchestra",
     "rarity": 336870912,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6348,6 +6574,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Jazz_:_Orchestra"
   },
   "Archangel": {
+    "name": "Archangel",
     "rarity": 350000000,
     "native_rarity": 70000000,
     "luck_exempt": false,
@@ -6379,6 +6606,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as an angelic noise plays, accompanied by a hoarse wind noise and Golden Rain that continues throughout the cutscene. The screen is covered in golden fog in layers, and in the center, a golden eight-pointed star appears, revolving while slowly expanding. The first text ap"
   },
   "Atlas": {
+    "name": "Atlas",
     "rarity": 360000000,
     "native_rarity": 90000000,
     "luck_exempt": false,
@@ -6410,6 +6638,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, as a dull-orange, eight-pointed star appears in the center of the screen, accompanied by a fire-like effect emanating from the star and from the top and bottom of the screen. Stars blink throughout the cutscene and coming out from the bottom of the screen, and an invisible"
   },
   "Flora_Evergreen": {
+    "name": "Flora : Evergreen",
     "rarity": 370073730,
     "native_rarity": 185036865,
     "luck_exempt": false,
@@ -6443,6 +6672,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Flora_:_Evergreen"
   },
   "Chillsear": {
+    "name": "Chillsear",
     "rarity": 375000000,
     "native_rarity": 125000000,
     "luck_exempt": false,
@@ -6474,6 +6704,7 @@
     "cutscene_note": "=== Opening Cutscene === The cutscene starts off with an ice sound effect similar to the purple slashes at the end of 's cutscene and a black and light blue gradient with particles and flames at the top and bottom that are similar to the ones in 's cutscene and a star with white/cyan circular flames around it then a sn"
   },
   "Celestial_Eclipse": {
+    "name": "Celestial : Eclipse",
     "rarity": 384400000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6503,6 +6734,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Celestial_:_Eclipse"
   },
   "Abyssal_Hunter": {
+    "name": "Abyssal Hunter",
     "rarity": 400000000,
     "native_rarity": 100000000,
     "luck_exempt": false,
@@ -6534,6 +6766,7 @@
     "cutscene_note": "===Opening Cutscenes=== The screen turns black as a quick jingle plays, accompanied by a hoarse wind noise that continues throughout the cutscene. The screen is covered in blue fog, and in the center, a blue eight-pointed star revolves while slowly expanding. Multiple small bubbles float up from the bottom of the scree"
   },
   "Twilight_Withering_Grace": {
+    "name": "Twilight : Withering Grace",
     "rarity": 422656000,
     "native_rarity": 42265600,
     "luck_exempt": false,
@@ -6567,6 +6800,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Twilight_:_Withering_Grace"
   },
   "Gargantua": {
+    "name": "Gargantua",
     "rarity": 430000000,
     "native_rarity": 86000000,
     "luck_exempt": false,
@@ -6598,6 +6832,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a hoarse wind noise that continues throughout the cutscene. Orange fog covers the screen, orange particles, and an orange eight-pointed star appears in the center, revolving, while slowly expanding. Huge circles are pulled toward the "
   },
   "Apostolos": {
+    "name": "Apostolos",
     "rarity": 444000000,
     "native_rarity": 222000000,
     "luck_exempt": false,
@@ -6629,6 +6864,7 @@
     "cutscene_note": "===Opening Cutscene=== 's opening cutscene contains the 1M+ star, colored a light grey, red mixture, similar to , with a light amount of fog at the bottom of the screen. Around every second or so, the colors of the cutscene transition from red to blue, with a runic star symbol/sigil from 's floor aura featured, as well"
   },
   "Unknown": {
+    "name": "Unknown",
     "rarity": 444444444,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6656,6 +6892,7 @@
     "cutscene_note": "=== Opening Cutscene === The cutscene begins with a \"light\" turning on, giving it a gray gradient. Then, an eye appears and shakes a little bit with a dialogue appearing saying \"After all of that happened, There was nothing left.\" before changing to \"Who are you?\". After a few seconds, the screen turns into a static ef"
   },
   "Kyawthuite_Remembrance": {
+    "name": "Kyawthuite : Remembrance",
     "rarity": 450000000,
     "native_rarity": 225000000,
     "luck_exempt": false,
@@ -6689,6 +6926,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Kyawthuite_:_Remembrance"
   },
   "Volcanic": {
+    "name": "Volcanic",
     "rarity": 480000000,
     "native_rarity": 80000000,
     "luck_exempt": false,
@@ -6714,6 +6952,7 @@
     "obtainment_type": "native"
   },
   "Hasuen": {
+    "name": "Hasuen",
     "rarity": 485000000,
     "native_rarity": 242500000,
     "luck_exempt": false,
@@ -6739,6 +6978,7 @@
     "obtainment_type": "native"
   },
   "Ruins": {
+    "name": "Ruins",
     "rarity": 500000000,
     "native_rarity": 250000000,
     "luck_exempt": false,
@@ -6770,6 +7010,7 @@
     "cutscene_note": "===Opening Cutscene=== Fire-like effects appear on top and bottom of the screen with a fire-like effect emanating outwards from the star. Green leaves drop down to the left from the top of the screen. A 5-segmented circle appears which dims before connecting to another, similar in shape to a wall. The edges of the scre"
   },
   "Matrix_Overdrive": {
+    "name": "Matrix : Overdrive",
     "rarity": 503000000,
     "native_rarity": 251500000,
     "luck_exempt": false,
@@ -6803,6 +7044,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Matrix_:_Overdrive"
   },
   "Sailor_Admiral": {
+    "name": "Sailor : Admiral",
     "rarity": 540000000,
     "native_rarity": 135000000,
     "luck_exempt": false,
@@ -6836,6 +7078,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Sailor_:_Admiral"
   },
   "Elude": {
+    "name": "Elude",
     "rarity": 555555555,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6863,6 +7106,7 @@
     "cutscene_note": "=== Opening Cutscene === The cutscene starts by showing a spinning white star and white, whirlpool-like effects that move inward. A white, fire-like effect is shown at the top and bottom of the screen as well. The background is dark grey with a foglike effect, white dots move from the bottom of the screen to the top. A"
   },
   "Sophyra": {
+    "name": "Sophyra",
     "rarity": 570000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6890,6 +7134,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen changes to a pink-like color fog with a same colored star in the middle, and then, the background and star changes to a cyan-ish color. Constellations appear often around the star. A sigil appears similar to how they appear in and cutscenes. Afterwards, 4 eye-like symbols pop 2 times, "
   },
   "Matrix_Reality": {
+    "name": "Matrix : Reality",
     "rarity": 601020102,
     "native_rarity": 300510051,
     "luck_exempt": false,
@@ -6923,6 +7168,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Matrix_:_Reality"
   },
   "Sloth": {
+    "name": "Sloth",
     "rarity": 650000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6950,6 +7196,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen darkens as a bright white star appears in the middle. White chains descend from above while streaks of light and glowing particles form around the star. A beam of light shines down onto it as mist spreads across the ground. The star gradually grows brighter, with more energy and ligh"
   },
   "Prologue": {
+    "name": "Prologue",
     "rarity": 666616111,
     "native_rarity": null,
     "luck_exempt": false,
@@ -6977,6 +7224,7 @@
     "cutscene_note": "=== Opening Cutscene === 's opening cutscene starts with the screen fading to black with the signature hoarse wind sound and a dark gray fog, as a white 6-spiked ring would take form in the center of the screen with a glitchy entrance, accompanied soon after by a ring of text in a language known as Tengwar, which was c"
   },
   "Pythios": {
+    "name": "Pythios",
     "rarity": 666666666,
     "native_rarity": 111111111,
     "luck_exempt": false,
@@ -7008,6 +7256,7 @@
     "cutscene_note": "===Opening Cutscene=== A quick jingle plays as a white 16-pointed star with red edges appears in the center of the screen, zooming out to reveal dark red fog accompanied by hoarse wind. The star spins, slowly spinning faster as red streams appear to be sucked into the star, with black and red ash floating up from the b"
   },
   "Sovereign": {
+    "name": "Sovereign",
     "rarity": 750000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7035,6 +7284,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as an unsheathing effect plays, accompanied by a hoarse wind noise that continues throughout the cutscene. A teal and yellow fog covers the screen, and in the center, a golden crown fades in and out with a sound before a blue and yellow eight-pointed star appears, revolving"
   },
   "Ruins_Withered": {
+    "name": "Ruins : Withered",
     "rarity": 800000000,
     "native_rarity": 400000000,
     "luck_exempt": false,
@@ -7068,6 +7318,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Ruins_:_Withered"
   },
   "Aegis": {
+    "name": "Aegis",
     "rarity": 825000000,
     "native_rarity": 412500000,
     "luck_exempt": false,
@@ -7099,6 +7350,7 @@
     "cutscene_note": "===Opening Cutscene=== ''' PREPARING [AEGIS].. ''' ''' POWER LEVEL 100% ''' ''' [DEMOLISHER] CHARGING UP... ''' ''' POWERED AND READY ''' ''' PROTOCOL CODE [AEGIS].. ''' ''' PROTOCOL NUMBER: 501 ''' ''' \"THE SHIELD OF THE SKY\" ''' ''' FACE THE GOD ''' ''' FACE THE CALAMITY ''' ''' FACE THE SKY ''' ''' AND RISE ''' A ho"
   },
   "Eisveil": {
+    "name": "Eisveil",
     "rarity": 830000000,
     "native_rarity": 276666666,
     "luck_exempt": false,
@@ -7130,6 +7382,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Dreamscape": {
+    "name": "Dreamscape",
     "rarity": 850000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7157,6 +7410,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a white star that spins erratically and constantly changes to a grey-ish color appears on screen, dust-like particles come from right to left and from below the cutscene as the screen shakes periodically. Afterwards, the stars pulses once, then the pulsing sound plays mu"
   },
   "Poseidon_Atlantis": {
+    "name": "Poseidon : Atlantis",
     "rarity": 850000000,
     "native_rarity": 212500000,
     "luck_exempt": false,
@@ -7190,6 +7444,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Poseidon_:_Atlantis"
   },
   "Ascendant": {
+    "name": "Ascendant",
     "rarity": 935000000,
     "native_rarity": 187000000,
     "luck_exempt": false,
@@ -7221,6 +7476,7 @@
     "cutscene_note": "=== Opening Cutscene === 's cutscene begins with a quick jingle, accompanied by a unique, soft, ancient-sounding horn that sounds similar to a choir, along with hoarse wind. It shows something similar to a top-down view of the aura itself, being centered on the large eye, with the golden clouds slowly spiraling around "
   },
   "Nyctophobia": {
+    "name": "Nyctophobia",
     "rarity": 1011111010,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7248,6 +7504,7 @@
     "cutscene_note": "=== Opening Cutscene === 's cutscene turns the screen black with static appearing onscreen, with the words \" A Human? \", \" An Object? \", and \" A Monster? \" fading in and out from top-left to bottom-right of the screen, and finally \" What did I just see...? \" on the center. The screen then fades to reveal the place that"
   },
   "PixelationStatic": {
+    "name": "PixelationStatic",
     "rarity": 1073741824,
     "native_rarity": 536870912,
     "luck_exempt": false,
@@ -7269,6 +7526,7 @@
     "obtainment_type": "native"
   },
   "Luminosity": {
+    "name": "Luminosity",
     "rarity": 1200000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7296,6 +7554,7 @@
     "cutscene_note": "===Opening Cutscene=== A text that flash each word saying: \" THE ABSOLUTE RADIANCE \" pulses onto the screen with a sigil appearing, which also has the words \" 神は自分の創造物を恥じていると叫んでいる \" (translated from Japanese to \" God cries out ‎that ‎‎he is ‎‎ashamed of his creation \"). The text fades and a star fades into view. Three "
   },
   "Breakthrough": {
+    "name": "Breakthrough",
     "rarity": 1999999999,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7323,6 +7582,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Breakthrough_(Aura)"
   },
   "Equinox": {
+    "name": "Equinox",
     "rarity": 2500000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7350,6 +7610,7 @@
     "cutscene_note": "=== Opening Cutscene === 's cutscene starts with the screen having two clear black and white sides that swap on beat. It features a star in the middle that is affected by the black and white sides. There are pulse effects, music bars, and vertical lines that appear with the beat of the music, along with smoke and spark"
   },
   "Tree_House": {
+    "name": "Tree House",
     "rarity": 3800000000,
     "native_rarity": 1900000000,
     "luck_exempt": false,
@@ -7375,6 +7636,7 @@
     "obtainment_type": "native"
   },
   "Eclipse": {
+    "name": "Eclipse",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7400,6 +7662,7 @@
     "video_kind": "other"
   },
   "Cell_Asteroides": {
+    "name": "Cell Asteroides",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7424,6 +7687,7 @@
     "music_file": "Richard Philip Birdsall - Jurassic Lands.mp3"
   },
   "Chromatic_Hyper": {
+    "name": "Chromatic : Hyper",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7450,6 +7714,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Chromatic_:_Hyper"
   },
   "Atlas_A.T.L.A.S.Static": {
+    "name": "Atlas : A.T.L.A.S.Static",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7472,6 +7737,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/A.T.L.A.S.COLLECTION.gif"
   },
   "Abyssal_Hunter_Awakened": {
+    "name": "Abyssal Hunter : Awakened",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7501,6 +7767,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Abyssal_Hunter_:_Awakened"
   },
   "Matrix_Steampunk": {
+    "name": "Matrix : Steampunk",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7530,6 +7797,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Matrix_:_Steampunk"
   },
   "MasterHand": {
+    "name": "MasterHand",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7557,6 +7825,7 @@
     "music_file": "Tak mfk – The Essence of Awakening.mp3"
   },
   "Fragments_of_the_Crimson_Moon|紅月の災厄": {
+    "name": "Fragments of the Crimson Moon|紅月の災厄",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7579,6 +7848,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CotcmCollection.gif"
   },
   "True_Jade": {
+    "name": "True Jade",
     "rarity": 125000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7600,6 +7870,7 @@
     "obtainment_type": "exclusive"
   },
   "True_Kyawthuite": {
+    "name": "True Kyawthuite",
     "rarity": 825000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7621,6 +7892,7 @@
     "obtainment_type": "exclusive"
   },
   "True_Twilight": {
+    "name": "True Twilight",
     "rarity": 6000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7642,6 +7914,7 @@
     "obtainment_type": "exclusive"
   },
   "Glitch": {
+    "name": "Glitch",
     "rarity": 12210110,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7673,6 +7946,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as glitching noises begin to play and continue for the duration of the cutscene, playing in the background. The screen is enveloped by grey fog and in the center, a flashing discolored eight-pointed star revolves and slowly expands while discolored glitching effects rapidly"
   },
   "Borealis": {
+    "name": "Borealis",
     "rarity": 13333333,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7704,6 +7978,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black as a quick jingle plays in the beginning, accompanied by a wind noise that continues throughout the cutscene in the background. A dark, almost black pink fog forms at the bottom of the screen, with dark magenta particles appear from the bottom of the screen, rising. In th"
   },
   "Projection": {
+    "name": "Projection",
     "rarity": 197000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7735,6 +8010,7 @@
     "cutscene_note": "=== Opening Cutscene === Current ="
   },
   "Point_Zero": {
+    "name": "Point : Zero",
     "rarity": 521121900,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7768,6 +8044,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Point_:_Zero"
   },
   "Leviathan": {
+    "name": "Leviathan",
     "rarity": 1730400000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7799,6 +8076,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen fades to black, after which the screen fades back in showing the Deep Abyss with two cinematic bars at the top and bottom of the screen. After ~2 seconds, the text below appears in order at the middle of the screen: &quot;SILENCE IS THE ONLY LANGUAGE SPOKEN IN MY DOMAIN. . . &quot; &"
   },
   "Dream_Catcher": {
+    "name": "Dream Catcher",
     "rarity": 2222222222,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7830,6 +8108,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen fades to black before cutting to a shot of the player sleeping inside of a bedroom. It then shows a lamp turning off and then showing the player resting on their side, with the following words showing up on their screen in order: ''i'' ''close'' ''my eyes...'' ''Slowly...'' The camer"
   },
   "Memory": {
+    "name": "Memory",
     "rarity": 100,
     "native_rarity": null,
     "luck_exempt": true,
@@ -7858,6 +8137,7 @@
     "cutscene_note": "===Opening Cutscene=== A purple star appears with only 4 sides similar to . After, a halo appears which is referencing the one in the aura. At the end a symbol pulses twice before revealing the aura . A purple star appears, with a purple fog behind the star. Small purple particles go up before enlarging, a black hue co"
   },
   "Neferkhaf": {
+    "name": "Neferkhaf",
     "rarity": 1000,
     "native_rarity": null,
     "luck_exempt": true,
@@ -7886,6 +8166,7 @@
     "cutscene_note": "===Opening Cutscene=== 's Cutscene is the first aura where, in the opening cutscene, the background colors actually shift positions. You might confuse this with , but in that case, the background itself doesn’t move—only the colors spin in place."
   },
   "Fragments_of_the_Crimson_Moon": {
+    "name": "Fragments of the Crimson Moon",
     "rarity": 1000,
     "native_rarity": null,
     "luck_exempt": true,
@@ -7912,6 +8193,7 @@
     "cutscene_note": "==== ''' Translation: ''' ==== • '''選ばれた'''• You have been chosen. • '''あなたの運命は'''• Your destiny is... • '''すべてを守る？'''• To protect everything? • '''すべてを取り除く'''• To remove everything. • '''「混沌」の残骸'''• The remnants of \"Chaos\" • '''憎しみのこの世界をすべてを全部壊してしまえ'''• Destroy this world of hatred. • '''君の手に握って'''• Hold it all in you"
   },
   "Meta": {
+    "name": "Meta",
     "rarity": 10000,
     "native_rarity": null,
     "luck_exempt": true,
@@ -7943,6 +8225,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Eden": {
+    "name": "Eden",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -7969,6 +8252,7 @@
     "music_file": "Spade - God's Maw.mp3"
   },
   "Oppression": {
+    "name": "Oppression",
     "rarity": 220000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8000,6 +8284,7 @@
     "cutscene_note": "=== Opening Cutscene === When the player rolls , the screen turns into a grey-like color, accompanied by an eerie, hoarse wind that plays in the background, setting a tense and ominous tone. A white heart appears with some spiked halos that are similar to 's surrounding the white heart, then suddenly, gets pierced two "
   },
   "Dreammetric": {
+    "name": "Dreammetric",
     "rarity": 320000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8031,6 +8316,7 @@
     "cutscene_note": "===Opening Cutscene=== 's Cutscene starts with a pink background, and 's music playing, with white plus symbols in the bottom left. There is 4 different parts of text, each time playing a pulse sound and having a unique symbol in the top middle. The texts say: '''01 THE DISTANCE''' '''The farther it moved from you, the"
   },
   "Astraios": {
+    "name": "Astraios",
     "rarity": 1750000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8062,6 +8348,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen slowly fades to black as text appears on the bottom of your screen: I am the one who devours constellations. after which three black holes are shown with a bright star radiating green in the middle along with the text: And you, no matter how great you are, are nothing but my prey. Fr"
   },
   "Hellborn": {
+    "name": "Hellborn",
     "rarity": 2644600640,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8087,6 +8374,7 @@
     "obtainment_type": "exclusive"
   },
   "Monarch": {
+    "name": "Monarch",
     "rarity": 3000000000,
     "native_rarity": 3000000000,
     "luck_exempt": false,
@@ -8118,6 +8406,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen goes black for a second, before purple a dark background appear as a runic ring spins behind two texts with the top being “ Population ‎ Population ‎ \" and the bottom being the number from 3,000,000,000 ‎ 3,000,000,000 ‎ to 0 ‎ 0 ‎ . Whilst that is happening, darker texts (Including "
   },
   "Oblivion": {
+    "name": "Oblivion",
     "rarity": 2000,
     "native_rarity": null,
     "luck_exempt": true,
@@ -8146,6 +8435,7 @@
     "cutscene_note": "===Opening Cutscene=== Initially, the cutscene opens with a purple hue, the Roman numeral for 1 or I is situated at the screen's center. A circle rotates around the numeral, appearing to look like the scriptures that rotate under the ground of the aura. Additionally, one of the multiple quotes appears in the middle of "
   },
   "Illusionary": {
+    "name": "Illusionary",
     "rarity": 10000000,
     "native_rarity": null,
     "luck_exempt": true,
@@ -8177,6 +8467,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Tomorrow": {
+    "name": "Tomorrow",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8198,6 +8489,7 @@
     "obtainment_type": "exclusive"
   },
   "Divinus_Love": {
+    "name": "Divinus : Love",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8222,6 +8514,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Divinus_:_Love"
   },
   "Flushed_Heart_Eye": {
+    "name": "Flushed : Heart Eye",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8246,6 +8539,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Flushed_:_Heart_Eye"
   },
   "Celestial_Cupid": {
+    "name": "Celestial : Cupid",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8272,6 +8566,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Celestial_:_Cupid"
   },
   "Blossom": {
+    "name": "Blossom",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8299,6 +8594,7 @@
     "music_file": "Blossomreworksoundtrack.ogg"
   },
   "Defined": {
+    "name": "Defined",
     "rarity": 2222000,
     "native_rarity": 2222,
     "luck_exempt": false,
@@ -8329,6 +8625,7 @@
     "cutscene_note": "===Opening Cutscene (Native)==="
   },
   "Kromat1k": {
+    "name": "Kromat1k",
     "rarity": 40000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8357,6 +8654,7 @@
     "cutscene_note": "===Opening Cutscene=== has a basic opening effect. Its opening consists of a red star, expanding, as a bright red gradient grows into the middle of the screen, revealing the ."
   },
   "Impeached_i'm_peach": {
+    "name": "Impeached: i'm peach",
     "rarity": 400000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8387,6 +8685,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Impeached_:_i'm_peach"
   },
   "Watermelon": {
+    "name": "Watermelon",
     "rarity": 320000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8415,6 +8714,7 @@
     "cutscene_note": "===Opening Cutscene=== Its opening consists of a pale, red star, with a green tip, expanding, similar to the and the Era 5 cutscene. As the star expands to its largest, the screen fades into white and red, with a green stripe on the bottom. After that, everything turns white as the screen starts to crack, revealing the"
   },
   "StarRider_Starfish": {
+    "name": "StarRider : Starfish",
     "rarity": 250000,
     "native_rarity": 25000,
     "luck_exempt": false,
@@ -8447,6 +8747,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/StarRider_:_Starfish"
   },
   "Shard_Surfer": {
+    "name": "Shard Surfer",
     "rarity": 225000000,
     "native_rarity": 75000000,
     "luck_exempt": false,
@@ -8479,6 +8780,7 @@
     "cutscene_note": "===Opening Cutscene=== has a relatively simple opening. Its cutscene consists of a blue, eight-pointed star, rotating in the center of the screen, accompanied by rising aquamarine particles and a blue and white gradient around it, before the screen expands to reveal the aura itself. This aura is missing the \"pulsing\" e"
   },
   "Surfer": {
+    "name": "Surfer",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8503,6 +8805,7 @@
     "music_file": "Dion Timmer - Shiawase (Monstercat Release).mp3"
   },
   "Innovator": {
+    "name": "Innovator",
     "rarity": 30000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8531,6 +8834,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black, as a quick jingle effect plays, a wind noise also playing in the background. The screen is covered in black gradient from the top to the bottom as well as a very dark shade of purple at the middle, with a star that looks similar to 's. The star slowly expands, a purple/b"
   },
   "Pump": {
+    "name": "Pump",
     "rarity": 200000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8561,6 +8865,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, and an ominous sound effect plays. A white fog forms at the bottom of the screen and in the center, a purplish blue four-pointed star revolves while slowly expanding, before the edges glow light yellow, revealing after a white scene cracking sequence."
   },
   "Lunar_Nightfall": {
+    "name": "Lunar : Nightfall",
     "rarity": 3000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8596,6 +8901,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Lunar_:_Nightfall"
   },
   "Vital": {
+    "name": "Vital",
     "rarity": 6000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8628,6 +8934,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Moonflower": {
+    "name": "Moonflower",
     "rarity": 10000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8660,6 +8967,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen will become black, as chiming noises play in the beginning of the cutscene. A windy noise extending the entirety of the cutscene plays in the background. The bottom of the player’s screen will have faint purple particles emerging from it, and the top is black. In the center there is "
   },
   "Cryptfire": {
+    "name": "Cryptfire",
     "rarity": 21000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8692,6 +9000,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen will become filled with black, purple and green stripes as chiming noises play in the beginning of the cutscene. A windy noise extending the entirety of the cutscene plays in the background. The bottom of the player’s screen will have purple particles emerging from it, In the center "
   },
   "Soul_Hunter": {
+    "name": "Soul Hunter",
     "rarity": 40000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8724,6 +9033,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Dullahan": {
+    "name": "Dullahan",
     "rarity": 72000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8756,6 +9066,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become filled with 3 black stripes, as chiming noises play in the beginning of the cutscene. The 10m+ windy noise extending the entirety of the cutscene plays in the background. The bottom of the player’s screen will have neon green particles emerging from it, which fade as they r"
   },
   "Nightmare_Sky": {
+    "name": "Nightmare Sky",
     "rarity": 190000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8788,6 +9099,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black while a quick jingle plays, and hoarse wind sounds begin playing in the background that last through the cutscene, while a purple 8-pointed star expands and spins throughout the cutscene. Bright purple fog floats through the screen, and purple fire appears around the star"
   },
   "Harvester": {
+    "name": "Harvester",
     "rarity": 666000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8820,6 +9132,7 @@
     "cutscene_note": "===Opening Cutscene=== has a very unique opening cutscene that differs from most auras. A very large red 4-pointed star appears, with the points extended out, covering a large portion of the screen. The star is larger at two ends, which is more noticeable towards the end of the cutscene. Pink/red particles float upward"
   },
   "Apostolos_Veil": {
+    "name": "Apostolos : Veil",
     "rarity": 800000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -8855,6 +9168,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Apostolos_:_Veil"
   },
   "Wonderland": {
+    "name": "Wonderland",
     "rarity": 12000000,
     "native_rarity": 4000000,
     "luck_exempt": false,
@@ -8887,6 +9201,7 @@
     "cutscene_note": "===Opening Cutscene=== Having an opening very similar to , opens with ringing effect, and a faded blue 1/1M+ star with a faded blue background and black fog at the top and bottom of the screen. Blue particles rise up from the bottom, to the top of the screen, where they eventually fade away after a breif moment. Two st"
   },
   "Santa_Frost": {
+    "name": "Santa Frost",
     "rarity": 45000000,
     "native_rarity": 15000000,
     "luck_exempt": false,
@@ -8919,6 +9234,7 @@
     "cutscene_note": "===Opening Cutscene=== A blue eight-pointed star fades into the screen, with its tips a bronze color. A diagonal, faint streak of blue crosses the screen behind the star as blue particles begin to rise up into the cutscene. The star then fades out, revealing ."
   },
   "Winter_Fantasy": {
+    "name": "Winter Fantasy",
     "rarity": 72000000,
     "native_rarity": 24000000,
     "luck_exempt": false,
@@ -8951,6 +9267,7 @@
     "cutscene_note": "=== Opening Cutscene === The opening is similar to and as an eight-pointed star opens up, with a deep dark blue and light blue effect background, the star in the center being light blue and slowly darker on the other sides. Two sides are cut off, similar to . One side that is cut off has a darker blue spot, and one of "
   },
   "Express": {
+    "name": "Express",
     "rarity": 90000000,
     "native_rarity": 30000000,
     "luck_exempt": false,
@@ -8983,6 +9300,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black, as a quick jingle effect plays, a wind noise also playing in the background. At the bottom is a few gold/bronze and blue lines slanted diagonally, but mostly vertical, which is similar to a lot of Christmas auras. Gold particles float upwards and fade away after some time."
   },
   "Abominable": {
+    "name": "Abominable",
     "rarity": 120000000,
     "native_rarity": 40000000,
     "luck_exempt": false,
@@ -9015,6 +9333,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen goes black with light blue particles floating upward as a hoarse wind noise plays throughout the cutscene, reminiscent to that of . 5 cyan stars of various hues show up with a subtle \"dinging\" noise, as they soon fly out over the screen. Bright lines stretch from the bottom of the scre"
   },
   "Atlas_Yuletide": {
+    "name": "Atlas : Yuletide",
     "rarity": 510000000,
     "native_rarity": 170000000,
     "luck_exempt": false,
@@ -9049,6 +9368,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Atlas_:_Yuletide"
   },
   "Blossom_Frozen": {
+    "name": "Blossom : Frozen",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9078,6 +9398,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Blossom_:_Frozen"
   },
   "Frigid": {
+    "name": "Frigid",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9105,6 +9426,7 @@
     "music_file": "Winter Longing (Frigid).mp3"
   },
   "pukeko": {
+    "name": "pukeko",
     "rarity": 3198,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9131,6 +9453,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen will become black, an ominous noise playing in the background before the edges glow white, before eventually revealing ."
   },
   "Flushed_Troll": {
+    "name": "Flushed : Troll",
     "rarity": 1000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9159,6 +9482,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Flushed_:_Troll"
   },
   "Origin_Onion": {
+    "name": "Origin : Onion",
     "rarity": 8000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9189,6 +9513,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Origin_:_Onion"
   },
   "Glock_the_glock_of_the_sky": {
+    "name": "Glock : the glock of the sky",
     "rarity": 170000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9217,6 +9542,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Glock_:_the_glock_of_the_sky"
   },
   "Windy_Egg": {
+    "name": "Windy Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9239,6 +9565,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/WindyEggColl.gif"
   },
   "Snowy_Egg": {
+    "name": "Snowy Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9261,6 +9588,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SnowyEggColl.gif"
   },
   "Rainy_Egg": {
+    "name": "Rainy Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9283,6 +9611,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RainyEggCollection.gif"
   },
   "Sandstorm_Egg": {
+    "name": "Sandstorm Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9307,6 +9636,7 @@
     "music_file": "Sandstormeggtheme.mp3"
   },
   "Hellfire_Egg": {
+    "name": "Hellfire Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9331,6 +9661,7 @@
     "music_file": "DivideAndConquerFixed.mp3"
   },
   "Starfall_Egg": {
+    "name": "Starfall Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9355,6 +9686,7 @@
     "music_file": "TheNightSkyFixed.mp3"
   },
   "Corruption_Egg": {
+    "name": "Corruption Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9379,6 +9711,7 @@
     "music_file": "Insurgent.ogg"
   },
   "Null_Egg": {
+    "name": "Null Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9403,6 +9736,7 @@
     "music_file": "Gaining Ground.ogg"
   },
   "Glitched_Egg": {
+    "name": "Glitched Egg",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9427,6 +9761,7 @@
     "music_file": "Hacker.ogg"
   },
   "Manta": {
+    "name": "Manta",
     "rarity": 300000000,
     "native_rarity": 150000000,
     "luck_exempt": false,
@@ -9459,6 +9794,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen shows a dark-blueish star on a black background that gradually becomes blue at the bottom, with bubbles rising from below, similarly to 's cutscene. After a few seconds, a manta pulses twice before another manta rushes over the screen making a transition between the end of the cutsce"
   },
   "Aegis_Watergun": {
+    "name": "Aegis : Watergun",
     "rarity": 825000000,
     "native_rarity": 412500000,
     "luck_exempt": false,
@@ -9493,6 +9829,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Aegis_:_Watergun"
   },
   "SandBasket": {
+    "name": "SandBasket",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9519,6 +9856,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Bubble": {
+    "name": "Bubble",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9547,6 +9885,7 @@
     "cutscene_note": "===Opening Cutscene=== This cutscene is quite similar to 's cutscene, but a bit less saturated. There is also an obscured bubble image near the star, and another in the top-left corner."
   },
   "Parasol": {
+    "name": "Parasol",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9572,6 +9911,7 @@
     "video_kind": "ability"
   },
   "Bioluminescent": {
+    "name": "Bioluminescent",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9600,6 +9940,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Life_Guard": {
+    "name": "Life Guard",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9628,6 +9969,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Ink_PaintballGun": {
+    "name": "Ink : PaintballGun",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9655,6 +9997,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Ink_:_PaintballGun"
   },
   "Scorpion": {
+    "name": "Scorpion",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9682,6 +10025,7 @@
     "music_file": "ScorpionTheme.mp3"
   },
   "Pump_Trickster": {
+    "name": "Pump : Trickster",
     "rarity": 600000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9716,6 +10060,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Pump_:_Trickster"
   },
   "Celestial_Wicked": {
+    "name": "Celestial : Wicked",
     "rarity": 1500000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9750,6 +10095,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Celestial_:_Wicked"
   },
   "Lunar_Cultist": {
+    "name": "Lunar : Cultist",
     "rarity": 2000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9785,6 +10131,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Lunar_:_Cultist"
   },
   "Headless": {
+    "name": "Headless",
     "rarity": 3200000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9817,6 +10164,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Werewolf": {
+    "name": "Werewolf",
     "rarity": 3600000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9849,6 +10197,7 @@
     "cutscene_note": "===Opening Cutscene === The opening cutscene is extremely similar to with the \"lines\" slightly slanted to the left side."
   },
   "Shucks": {
+    "name": "Shucks",
     "rarity": 4460000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9881,6 +10230,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Oni": {
+    "name": "Oni",
     "rarity": 6666666,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9913,6 +10263,7 @@
     "cutscene_note": "===Opening Cutscene ==="
   },
   "Sinister": {
+    "name": "Sinister",
     "rarity": 15000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9945,6 +10296,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black whilst an eight-pointed star spins in the center. The screen is covered in a black-yellowish gradient from the top to the bottom, similar to the star itself which slowly expands, before spinning rapidly, revealing ."
   },
   "Headless_Horseman": {
+    "name": "Headless : Horseman",
     "rarity": 32000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -9979,6 +10331,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Headless_:_Horseman"
   },
   "Reaper": {
+    "name": "Reaper",
     "rarity": 66000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10011,6 +10364,7 @@
     "cutscene_note": "===Opening Cutscene ==="
   },
   "Accursed": {
+    "name": "Accursed",
     "rarity": 82000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10043,6 +10397,7 @@
     "cutscene_note": "=== Opening Cutscene === The screen turns black whilst a 8-pointed star spins in the center. The screen is covered in a black-to-dark-pinkish-red gradient from the top to the bottom like the star itself that slowly expands, before taking rapidly in speed, revealing ."
   },
   "Bloodgarden": {
+    "name": "Bloodgarden",
     "rarity": 88000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10075,6 +10430,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Grief": {
+    "name": "Grief",
     "rarity": 88250000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10107,6 +10463,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Crimson": {
+    "name": "Crimson",
     "rarity": 120000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10139,6 +10496,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Graveborn": {
+    "name": "Graveborn",
     "rarity": 290000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10169,6 +10527,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Afterparty": {
+    "name": "Afterparty",
     "rarity": 440000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10201,6 +10560,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Phantasma": {
+    "name": "Phantasma",
     "rarity": 462000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10233,6 +10593,7 @@
     "cutscene_note": "===Opening Cutscene=== The cutscene features a light-orange colored star with flames of the same color coming from up, the center of the star, and bottom. It also has dust like particles similar to cutscene. At the end, a smiling spooky face pops two times before the cutscene ends."
   },
   "Apocalypse": {
+    "name": "Apocalypse",
     "rarity": 624000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10265,6 +10626,7 @@
     "cutscene_note": "===Opening Cutscene=== The cutscene features a light-blue 4 pointed star similar to 's old or 's cutscene. It also has dust like particles behind the star and coming from the bottom being light-blue and light-orange. Afterwards, a sigil pops 2 times before the aura is revealed."
   },
   "Wraithlight": {
+    "name": "Wraithlight",
     "rarity": 695000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10295,6 +10657,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Malediction": {
+    "name": "Malediction",
     "rarity": 730000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10325,6 +10688,7 @@
     "cutscene_note": "=== Opening Cutscene === has a special opening effect. The screen fades into a black-to-red gradient as an 8-pointed dark red star appears on the screen, with red flames burning from the bottom and the top. A synchronized red ring rotates along with the star, with small red skulls shifting randomly in the background. A"
   },
   "Banshee": {
+    "name": "Banshee",
     "rarity": 730000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10357,6 +10721,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a hoarse wind sound that continues throughout the cutscene. A smoke like fog appears around the black star as it turns. The star has four points with a static rainbow bordering it. A constant smoke like wind circle flows around the st"
   },
   "Ravage": {
+    "name": "Ravage",
     "rarity": 930000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10389,6 +10754,7 @@
     "cutscene_note": "===Opening Cutscene=== cutscene features a 8 pointed star with medium sized white dust particle effects and fog surrounding the star similar to 's mid opening; furthermore, the star is enclosed in a white sigil that rotates clockwise (in the opposite direction of the star) and the star expels white flames out of it. th"
   },
   "Arachnophobia": {
+    "name": "Arachnophobia",
     "rarity": 940000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10421,6 +10787,7 @@
     "cutscene_note": "===Opening Cutscene=== cutscene features a large 8 pointed red star accompained by spider webs that occasionally appear in the screen with dust-like particles coming from the bottom. At the end a spider icon pops 2 times before the cutscene ends."
   },
   "Lamenthyr": {
+    "name": "Lamenthyr",
     "rarity": 1000000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10453,6 +10820,7 @@
     "cutscene_note": "===Opening Cutscene=== 's cutscene starts with a grey Roblox avatar shattering through a red circular gate, with door-like openings appearing around the \"gate\", each with eyes inside of them, all of them looking around chaotically. Then, a few seconds later, the text \" \"You've seen it, Haven't you?\" \" appears on the bo"
   },
   "Erebus": {
+    "name": "Erebus",
     "rarity": 1200000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10485,6 +10853,7 @@
     "cutscene_note": "===Opening Cutscene=== The cutscene starts as a black screen, reminiscent of . After that, a runic-like structure slightly resembling an eye appears with text saying \" '''\"The last judgement draweth nigh. . .\"''' \" (text saying the same thing also appears in 's cutscene), disappearing shortly after. The screen starts t"
   },
   "Veinweaver": {
+    "name": "Veinweaver",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10509,6 +10878,7 @@
     "music_file": "Infraction - Screamer.mp3"
   },
   "Dreadsea": {
+    "name": "Dreadsea",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10533,6 +10903,7 @@
     "music_file": "Spade - THE FRACTURES WITHIN.mp3"
   },
   "Carousel": {
+    "name": "Carousel",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10557,6 +10928,7 @@
     "music_file": "Marzuku - Valley Of Fools.mp3"
   },
   "Lament": {
+    "name": "Lament",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10585,6 +10957,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen suddenly fades to black. A loud, high pitched sound can be heard, with wind following. A turquoise star pops out, spinning clockwise with moving patterns similar to wind around it. Below, shadows of grass can be seen swaying, while cloudy particles sit above. Multiple coloured particle"
   },
   "Thaneborne": {
+    "name": "Thaneborne",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10609,6 +10982,7 @@
     "music_file": "Head Spinning Lonesome Feeling.mp3"
   },
   "Slaughter": {
+    "name": "Slaughter",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -10636,6 +11010,7 @@
     "music_file": "Slaughter's Trist.mp3"
   },
   "Snowball": {
+    "name": "Snowball",
     "rarity": 10000,
     "native_rarity": 5000,
     "luck_exempt": false,
@@ -10668,6 +11043,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "StarRider_Snowflake": {
+    "name": "StarRider : Snowflake",
     "rarity": 240000,
     "native_rarity": 120000,
     "luck_exempt": false,
@@ -10702,6 +11078,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/StarRider_:_Snowflake"
   },
   "Cryogenic": {
+    "name": "Cryogenic",
     "rarity": 250000,
     "native_rarity": null,
     "luck_exempt": true,
@@ -10734,6 +11111,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Gingerbread": {
+    "name": "Gingerbread",
     "rarity": 3750000,
     "native_rarity": 1875000,
     "luck_exempt": false,
@@ -10766,6 +11144,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Jackfrost": {
+    "name": "Jackfrost",
     "rarity": 4700000,
     "native_rarity": 2350000,
     "luck_exempt": false,
@@ -10798,6 +11177,7 @@
     "cutscene_note": "=== Opening Cutscene === Upon rolling, a eight-pronged blue star cut by two black lines appears in the middle of the screen, gradually getting bigger as well as spinning faster. In the last few frames of the animation, a blue glow with multiple black lines appears across the screen, revealing ."
   },
   "Lost_Soul_Wander": {
+    "name": "Lost Soul : Wander",
     "rarity": 9400000,
     "native_rarity": 4700000,
     "luck_exempt": false,
@@ -10832,6 +11212,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Lost_Soul_:_Wander"
   },
   "Frostwood": {
+    "name": "Frostwood",
     "rarity": 24500000,
     "native_rarity": 12250000,
     "luck_exempt": false,
@@ -10864,6 +11245,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "North_Pole": {
+    "name": "North Pole",
     "rarity": 45000000,
     "native_rarity": 22500000,
     "luck_exempt": false,
@@ -10896,6 +11278,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Sky_Burst": {
+    "name": "Sky Burst",
     "rarity": 60000000,
     "native_rarity": 30000000,
     "luck_exempt": false,
@@ -10928,6 +11311,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Encase": {
+    "name": "Encase",
     "rarity": 230000000,
     "native_rarity": 115000000,
     "luck_exempt": false,
@@ -10957,6 +11341,7 @@
     "cutscene_note": "The screen turns black as a quick jingle noise plays, accompanied by wind noises that continue through the cutscene. In the middle of the screen, dark cyan and black diagonally striped fog appears, whilst dark cyan particles rise from the bottom. In the center of the screen, a dark cyan star with the same gradient slowly revolves while progressively expanding and revolving faster. As the fog in th"
   },
   "CryoFang": {
+    "name": "CryoFang",
     "rarity": 380000000,
     "native_rarity": 190000000,
     "luck_exempt": false,
@@ -10989,6 +11374,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Northern": {
+    "name": "Northern",
     "rarity": 405000000,
     "native_rarity": 202500000,
     "luck_exempt": false,
@@ -11021,6 +11407,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "EveNight": {
+    "name": "EveNight",
     "rarity": 424000000,
     "native_rarity": 212000000,
     "luck_exempt": false,
@@ -11053,6 +11440,7 @@
     "cutscene_note": "==Opening Cutscene== The cutscene starts with the signature hoarse wind sound effect present in most tier cutscenes. A 16-pointed yellow star appears and slowly spins, along with smaller 4-pointed yellow stars flashing constantly in the background, reminiscent of 's and 's old cutscenes. Glowing blue particles and fog "
   },
   "Workshop": {
+    "name": "Workshop",
     "rarity": 700000000,
     "native_rarity": 350000000,
     "luck_exempt": false,
@@ -11085,6 +11473,7 @@
     "cutscene_note": "=== Opening Cutscene === A star appears during the start of the animation, there are also gift boxes on the top and bottom of the cutscene, and glittering stars are scattered around, there are five-pointed stars rising from the bottom. There are also green and red dots. Then, a giftbox symbol appears along with more gl"
   },
   "Parol": {
+    "name": "Parol",
     "rarity": 760000000,
     "native_rarity": 380000000,
     "luck_exempt": false,
@@ -11117,6 +11506,7 @@
     "cutscene_note": "===Opening Cutscene=== The Cutscene starts with a 16-sided multi-color star with mostly red and blue, with a tint of pink. Similar colored small stars flash in the background as the star keeps spinning. Snowflakes drift from the bottom to the top, also multi coloured. As the cutscene comes to an end, a half red, half b"
   },
   "Sovereign_Frostveil": {
+    "name": "Sovereign : Frostveil",
     "rarity": 1000000000,
     "native_rarity": 500000000,
     "luck_exempt": false,
@@ -11151,6 +11541,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Sovereign_:_Frostveil"
   },
   "Winter_Garden": {
+    "name": "Winter Garden",
     "rarity": 1450012025,
     "native_rarity": 725006013,
     "luck_exempt": false,
@@ -11183,6 +11574,7 @@
     "cutscene_note": "===Opening Cutscene=== The player's screen turns black. Then the screen does two faint blue pulses before switching to the view of a lotus flower with 's theme playing along with it, with many light blue-purple particles and snowflakes revolving around. The words Do you see me? appears in the middle of the screen in a "
   },
   "Dream_Traveler": {
+    "name": "Dream Traveler",
     "rarity": 2025012025,
     "native_rarity": 1012506013,
     "luck_exempt": false,
@@ -11215,6 +11607,7 @@
     "cutscene_note": "=== Opening Cutscene === 's cutscene starts of with a train sound effect and a black screen with red and blue fog, snowflakes and stars hovering and flashing over the screen, and text saying either \" '''''\"Why, to the North Pole, of course!\" ‎ ''''' \", \" '''''\"What is your Wish, Dear Fellow\" ‎ ''''' \", \" '''''\"Tell me,"
   },
   "Present": {
+    "name": "Present",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11239,6 +11632,7 @@
     "music_file": "Christmas Evening.mp3"
   },
   "Skyforge": {
+    "name": "Skyforge",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11263,6 +11657,7 @@
     "music_file": "Welcome To The Cyphisonia.mp3"
   },
   "Christmastide": {
+    "name": "Christmastide",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11287,6 +11682,7 @@
     "music_file": "FLOWSTATE.mp3"
   },
   "Reina": {
+    "name": "Reina",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11314,6 +11710,7 @@
     "music_file": "Tn-shi - Hitech Intuition.mp3"
   },
   "Symphony_Bloomed": {
+    "name": "Symphony : Bloomed",
     "rarity": 375000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11344,6 +11741,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Symphony_:_Bloomed"
   },
   "Velvet": {
+    "name": "Velvet",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11369,6 +11767,7 @@
     "video_kind": "other"
   },
   "Blood_Demon": {
+    "name": "Blood Demon",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11393,6 +11792,7 @@
     "music_file": "Derpcat - The Final Battle.mp3"
   },
   "Hatchwarden": {
+    "name": "Hatchwarden",
     "rarity": 40000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11421,6 +11821,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Emperor": {
+    "name": "Emperor",
     "rarity": 80000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11449,6 +11850,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Eggsistance": {
+    "name": "Eggsistance",
     "rarity": 307777777,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11477,6 +11879,7 @@
     "cutscene_note": "===Opening Cutscene=== A small, 4-long pointed star appears in a dark background, with twisted particles quickly emanating from it and the signature hoarse wind sound effect present in cutscenes. Small white particles ascend from the bottom of the screen and hovers around the background, along with faint, grey fog. Sho"
   },
   "Revive": {
+    "name": "Revive",
     "rarity": 645000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11505,6 +11908,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Eggore": {
+    "name": "Eggore",
     "rarity": 700000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11533,6 +11937,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Eostre": {
+    "name": "Eostre",
     "rarity": 1000000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11561,6 +11966,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Eggis": {
+    "name": "Eggis",
     "rarity": 1150000000,
     "native_rarity": 575000000,
     "luck_exempt": false,
@@ -11587,6 +11993,7 @@
     "is_exclusive": false
   },
   "Yolkegg": {
+    "name": "Yolkegg",
     "rarity": 1790909090,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11615,6 +12022,7 @@
     "cutscene_note": "===Opening Cutscene=== starts off with a portal like frame appearing in the center, followed by a text that says: The screen then zooms in the portal, before another text appears: The text twists, and a star appears while the screen starts zooming into the portal at a very fast pace, before revealing ."
   },
   "Sky_Festival": {
+    "name": "Sky Festival",
     "rarity": 2000000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11643,6 +12051,7 @@
     "cutscene_note": "===Opening Cutscene=== The Cutscene starts with the aura appearing, flying above the clouds. Below, text says: '''''Would you believe if there is a Festival going on in the Sky?''''' After, it says '''''Hop on to see if its true!''''' After, it flys into the nightsky and the aura appears."
   },
   "Egger": {
+    "name": "Egger",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11667,6 +12076,7 @@
     "music_file": "When it all falls down.ogg"
   },
   "Easter_Isles": {
+    "name": "Easter Isles",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11691,6 +12101,7 @@
     "music_file": "Flood Escape 2 OST — Sky Sanctuary.mp3"
   },
   "Aeroquest": {
+    "name": "Aeroquest",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11715,6 +12126,7 @@
     "music_file": "DM DOKURO - false paradise.mp3"
   },
   "Rabbit_Invasion": {
+    "name": "Rabbit Invasion",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11739,6 +12151,7 @@
     "music_file": "Action Cop - Memento Mori.mp3"
   },
   "Scavenger": {
+    "name": "Scavenger",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11769,6 +12182,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Scavenger"
   },
   "Burger": {
+    "name": "Burger",
     "rarity": 676767,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11795,6 +12209,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "StarRider_yourdidit": {
+    "name": "StarRider : yourdidit",
     "rarity": 1234567,
     "native_rarity": 246913,
     "luck_exempt": false,
@@ -11827,6 +12242,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/StarRider_:_yourdidit"
   },
   "Bounded_Kidnapped": {
+    "name": "Bounded : Kidnapped",
     "rarity": 2000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11857,6 +12273,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Bounded_:_Kidnapped"
   },
   "Very_Small_Sewage_Rat_That's_About_3.082_Studs_Long": {
+    "name": "Very Small Sewage Rat That's About 3.082 Studs Long",
     "rarity": 20070629,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11885,6 +12302,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Pukeko_Jumping": {
+    "name": "Pukeko : Jumping",
     "rarity": 31980000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11913,6 +12331,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Pukeko_:_Jumping"
   },
   "Aether_Disappointment": {
+    "name": "Aether : Disappointment",
     "rarity": 33333330,
     "native_rarity": 6666666,
     "luck_exempt": false,
@@ -11947,6 +12366,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Aether_:_Disappointment"
   },
   "Bloated.exe": {
+    "name": "Bloated.exe",
     "rarity": 67676767,
     "native_rarity": null,
     "luck_exempt": false,
@@ -11973,6 +12393,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Impeached_Imcrine": {
+    "name": "Impeached : Imcrine",
     "rarity": 250000000,
     "native_rarity": 50000000,
     "luck_exempt": false,
@@ -12003,6 +12424,7 @@
     "cutscene_note": "===Opening Cutscene=== Like , A quick jingle plays as a giant crying emoji instead of a star appears in the middle accompanied by a hoarse wind noise that plays throughout the cutscene, a yellow swirl effect appears behind the emoji along with patterns moving from the left to the right of the screen. Multiple small bla"
   },
   "Doodle_Abyssal_Hunter": {
+    "name": "Doodle : Abyssal Hunter",
     "rarity": 400000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12025,6 +12447,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Doodleabyssalhuntercollection.gif"
   },
   "Surfer_Symphony": {
+    "name": "Surfer : Symphony",
     "rarity": 600000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12051,6 +12474,7 @@
     "cutscene_note": "===Opening Cutscene=== The cutscene starts with a pink, black and yellow tinted star with a rainbow shine around the star, a blue background representing the sky with water-like glitters around and 4 rainbows (2 on the top left corner and 2 on the bottom right corner) while 2 of the rainbows contain notes. Above and be"
   },
   "Lumenpool_Ramenpool": {
+    "name": "Lumenpool : Ramenpool",
     "rarity": 630000000,
     "native_rarity": 157500000,
     "luck_exempt": false,
@@ -12081,6 +12505,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Workshop_System": {
+    "name": "Workshop : System",
     "rarity": 650000000,
     "native_rarity": 325000000,
     "luck_exempt": false,
@@ -12111,6 +12536,7 @@
     "cutscene_note": "===Opening Cutscene=== Like , a star appears during the start of the animation but blue tinted, there are also gift boxes on the top and bottom of the cutscene, and glittering stars are scattered around, there are five-pointed stars rising from the bottom. There are blue dots instead of green and red dots. Then, a gift"
   },
   "Pukeko_P.U.K.E.K.O.G.O.D.": {
+    "name": "Pukeko : P.U.K.E.K.O.G.O.D.",
     "rarity": 1000000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12141,6 +12567,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Pukeko_:_P.U.K.E.K.O.G.O.D."
   },
   "A_Fool's_Experience": {
+    "name": "A Fool's Experience",
     "rarity": 1000000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12169,6 +12596,7 @@
     "cutscene_note": "=== Opening Cutscene === The cutscene starts with a fake loading screen and a fake skip button which doesn't skip no matter how much you press on it. There are also joke Tips Including: \"I am Koffee!\" - Koffee ↓ This button doesn't work LOL ↓ (refers to the skip button that doesn't work) Wait why does this tip exist? *"
   },
   "Equinox_You_Are_An_Idiot": {
+    "name": "Equinox : You Are An Idiot",
     "rarity": 2500000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12191,6 +12619,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Yaai_rework_collect.gif"
   },
   "Zilch": {
+    "name": "Zilch",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12215,6 +12644,7 @@
     "music_file": "SKeinn - it is not my fault and never will be..mp3"
   },
   "Disciple_of_the_Crimson_Moon": {
+    "name": "Disciple of the Crimson Moon",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12237,6 +12667,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DmoonColl.gif"
   },
   "Raft": {
+    "name": "Raft",
     "rarity": 8000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12268,6 +12699,7 @@
     "cutscene_note": "===Opening cutscene==="
   },
   "Buoyant": {
+    "name": "Buoyant",
     "rarity": 32000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12299,6 +12731,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Breeze": {
+    "name": "Breeze",
     "rarity": 80000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12330,6 +12763,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Heatstroke": {
+    "name": "Heatstroke",
     "rarity": 83430,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12361,6 +12795,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Floaty": {
+    "name": "Floaty",
     "rarity": 600000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12392,6 +12827,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Beach_Ball": {
+    "name": "Beach Ball",
     "rarity": 1938000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12425,6 +12861,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Watermelon_Summersnack": {
+    "name": "Watermelon : Summersnack",
     "rarity": 3200000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12455,6 +12892,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Watermelon_:_Summersnack"
   },
   "Vendor": {
+    "name": "Vendor",
     "rarity": 17500000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12486,6 +12924,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Nostalgia": {
+    "name": "Nostalgia",
     "rarity": 20270000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12517,6 +12956,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Coconut": {
+    "name": "Coconut",
     "rarity": 34720000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12548,6 +12988,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "FruitPunch": {
+    "name": "FruitPunch",
     "rarity": 45000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12579,6 +13020,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Goose_Rave": {
+    "name": "Goose Rave",
     "rarity": 50000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12610,6 +13052,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Vacation": {
+    "name": "Vacation",
     "rarity": 58620000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12641,6 +13084,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Bayview": {
+    "name": "Bayview",
     "rarity": 60000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12672,6 +13116,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Bubble_Cascade": {
+    "name": "Bubble : Cascade",
     "rarity": 110000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12703,6 +13148,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Life_Guard_On-Duty": {
+    "name": "Life Guard : On-Duty",
     "rarity": 600000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12730,6 +13176,7 @@
     "is_exclusive": true
   },
   "Tropical_Isles": {
+    "name": "Tropical Isles",
     "rarity": 730000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12760,6 +13207,7 @@
     "cutscene_note": "TBA"
   },
   "Pool_Party": {
+    "name": "Pool Party",
     "rarity": 972000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12791,6 +13239,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Crabtropica": {
+    "name": "Crabtropica",
     "rarity": 1334221000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12818,6 +13267,7 @@
     "is_exclusive": true
   },
   "Taverna|OSTERIA": {
+    "name": "Taverna|OSTERIA",
     "rarity": 1444444444,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12840,6 +13290,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/OsteriaCollection.gif"
   },
   "Centaurus": {
+    "name": "Centaurus",
     "rarity": 3000000000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12873,6 +13324,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Alohaoe": {
+    "name": "Alohaoe",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12897,6 +13349,7 @@
     "music_file": "George Kulokahai and His Island Serenaders - Aloha Oe.mp3"
   },
   "Prowler": {
+    "name": "Prowler",
     "rarity": 540000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12928,6 +13381,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Clockwork": {
+    "name": "Clockwork",
     "rarity": 530000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12959,6 +13413,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Attorney": {
+    "name": "Attorney",
     "rarity": 270000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -12990,6 +13445,7 @@
     "cutscene_note": "===Opening Cutscene=== The screen turns black as a quick jingle plays, accompanied by a wind noise that continues throughout the cutscene. A yellowish gold fog forms with smaller stars moving upward, and a black, four-pointed star appears in the center, revolving, while slowly expanding. Subsequently, the edges of the "
   },
   "Verdict": {
+    "name": "Verdict",
     "rarity": 700000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13021,6 +13477,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Observer_of_the_Crimson_Moon": {
+    "name": "Observer of the Crimson Moon",
     "rarity": 444444,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13052,6 +13509,7 @@
     "cutscene_note": "==Opening Cutscene=="
   },
   "Seeker_of_the_Crimson_Moon": {
+    "name": "Seeker of the Crimson Moon",
     "rarity": 666666,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13083,6 +13541,7 @@
     "cutscene_note": "==Opening Cutscene=="
   },
   "Megaphone": {
+    "name": "Megaphone",
     "rarity": 5000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13110,6 +13569,7 @@
     "cutscene_note": "=== Opening Cutscene ==="
   },
   "Astral_Astrald": {
+    "name": "Astral : Astrald",
     "rarity": 267000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13139,6 +13599,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Astral_:_Astrald"
   },
   "Lightning": {
+    "name": "Lightning",
     "rarity": 40000,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13166,6 +13627,7 @@
     "cutscene_note": "=== Opening Cutscene === This aura has a basic opening effect. Its opening consists of a light blue star in the middle of the screen, with a dark blue gradient growing from the top, and a light blue color growing from the bottom of the screen, expanding into . Credits: @The_Arminator (The Thinker) Roblox Username: The_"
   },
   "Sol": {
+    "name": "Sol",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13195,6 +13657,7 @@
     "cutscene_note": "===Opening Cutscene=== has a simple opening effect. Its opening consists of a white star, expanding until the screen turns white, revealing . 's opening appears the same as 's, but without the screen cracking. Please note that this cutscene video is from Era 5, meaning it is outdated."
   },
   "Prowler|Another_Realm": {
+    "name": "Prowler|Another Realm",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13218,6 +13681,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/XYZ_Another_Realm.png"
   },
   "Red_Full_Moon": {
+    "name": "Red Full Moon",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13247,6 +13711,7 @@
     "cutscene_note": "===Opening Cutscene=== A black background with faint fog that has a dark shade of red appears, the words \" \", which translates from Japanese to appears and fades away letter after letter, after that, a halo forms that is similar to the one possesses in-game, shortly after, a sigil with the word \" \" appears, meaning to "
   },
   "Mastermind": {
+    "name": "Mastermind",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13275,6 +13740,7 @@
     "music_file": "Bermuda_Δ_Triangle_-_Camellia.mp3"
   },
   "Edict": {
+    "name": "Edict",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13300,6 +13766,7 @@
     "music_file": "Camellia - Parallel Universe Shifter.mp3"
   },
   "Abomination": {
+    "name": "Abomination",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13323,6 +13790,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Abominationera8collection.gif"
   },
   "Cruel": {
+    "name": "Cruel",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13348,6 +13816,7 @@
     "music_file": "ProSoundEffects - Afterworld Ambience Weird Rumbling Ambience 4.ogg"
   },
   "yuyo": {
+    "name": "yuyo",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13371,6 +13840,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/YuyoClearerImage.png"
   },
   "Find_the_probability_of_this_aura.": {
+    "name": "Find the probability of this aura.",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13394,6 +13864,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/ftpoa.png"
   },
   "Samgong": {
+    "name": "Samgong",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13417,6 +13888,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Samgong_collection.jpeg"
   },
   "Rare|THE_RAREST_AURA": {
+    "name": "Rare|THE RAREST AURA",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13440,6 +13912,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/tra.png"
   },
   "Kanade": {
+    "name": "Kanade",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13463,6 +13936,7 @@
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/KanadeCollection.gif"
   },
   "Sapphire_Peace": {
+    "name": "Sapphire : Peace",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13491,6 +13965,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Sapphire_:_Peace"
   },
   "Godslayer": {
+    "name": "Godslayer",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13518,6 +13993,7 @@
     "music_file": "Devel Sullivan - Dream Pursuer.mp3"
   },
   "Chromatic_Exotic": {
+    "name": "Chromatic : Exotic",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13545,6 +14021,7 @@
     "cutscene_note": "===Opening Cutscene=== This aura had a semi-basic special opening effect; the cutscene began with a red star with the 1M+ star sound, (10M+ star sound in Era 5). The star spun faster and faster, revealing the aura. This aura had the same cutscene as the aura in Era 5."
   },
   "Astral_Legendarium": {
+    "name": "Astral : Legendarium",
     "rarity": 267200000,
     "native_rarity": 53440000,
     "luck_exempt": false,
@@ -13576,6 +14053,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Astral_:_Legendarium"
   },
   "The_Rock": {
+    "name": "The Rock",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13599,6 +14077,7 @@
     "obtainment_type": "unobtainable"
   },
   "ConstraintTest": {
+    "name": "ConstraintTest",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13622,6 +14101,7 @@
     "obtainment_type": "unobtainable"
   },
   "Layers": {
+    "name": "Layers",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13647,6 +14127,7 @@
     "music_file": "KoraiiLayersCut.mp3"
   },
   "Kyawthuite_Iridescent_Memory": {
+    "name": "Kyawthuite : Iridescent Memory",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13670,6 +14151,7 @@
     "obtainment_type": "unobtainable"
   },
   "Twilight_Viridescent_Memory": {
+    "name": "Twilight : Viridescent Memory",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13693,6 +14175,7 @@
     "obtainment_type": "unobtainable"
   },
   "Stardust": {
+    "name": "Stardust",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13716,6 +14199,7 @@
     "obtainment_type": "unobtainable"
   },
   "Therma": {
+    "name": "Therma",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13743,6 +14227,7 @@
     "cutscene_note": "===Opening Cutscene==="
   },
   "Sirius_unob": {
+    "name": "Sirius_unob",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13766,6 +14251,7 @@
     "obtainment_type": "unobtainable"
   },
   "Lunatic": {
+    "name": "Lunatic",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13789,6 +14275,7 @@
     "obtainment_type": "unobtainable"
   },
   "Hallucination": {
+    "name": "Hallucination",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13812,6 +14299,7 @@
     "obtainment_type": "unobtainable"
   },
   "Duke": {
+    "name": "Duke",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13835,6 +14323,7 @@
     "obtainment_type": "unobtainable"
   },
   "Galaxy_Contact": {
+    "name": "Galaxy Contact",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13858,6 +14347,7 @@
     "obtainment_type": "unobtainable"
   },
   "Stella": {
+    "name": "Stella",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13883,6 +14373,7 @@
     "fandom_page": "https://sol-rng.fandom.com/wiki/Stella_(Aura)"
   },
   "Deepwoken": {
+    "name": "Deepwoken",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13906,6 +14397,7 @@
     "obtainment_type": "unobtainable"
   },
   ":smiro:": {
+    "name": ":smiro:",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13929,6 +14421,7 @@
     "obtainment_type": "unobtainable"
   },
   "Road_Trip": {
+    "name": "Road Trip",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
@@ -13954,6 +14447,7 @@
     "music_file": "Peepee song.mp3"
   },
   "Stellar": {
+    "name": "Stellar",
     "rarity": null,
     "native_rarity": null,
     "luck_exempt": false,
