@@ -5,6 +5,11 @@ from __future__ import annotations
 current_version = "v1.1.1"
 import os as _os
 _os.environ["ENDSOL_MACRO_VERSION"] = current_version
+# The release this build belongs to. A fix release keeps the macro version
+# but gets its own tag, so the build has to know the tag to recognise that
+# the newest release is the one it already is.
+current_release_tag = "v1.1.1-fix"
+_os.environ["ENDSOL_RELEASE_TAG"] = current_release_tag
 
 # Fields the Sol's Book aura LIST needs. The long wiki text (description,
 # appearance, ability, lore) and the media gallery are delivered per entry

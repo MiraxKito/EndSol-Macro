@@ -104,6 +104,17 @@ if exist dist\EndSolMacro.exe del /q dist\EndSolMacro.exe
 if errorlevel 1 goto :fail
 if not exist dist\EndSolMacro.exe goto :fail_no_exe
 
+rem The build carries the release tag it belongs to. Without it the update
+rem check compares the newest release tag with the macro version, they never
+rem match for a fix release and the panel keeps offering an update to the
+rem build that IS the update.
+echo.
+echo Build info:
+findstr /C:"current_version =" main.py
+findstr /C:"current_release_tag =" main.py
+echo   Publish this EXE under exactly that release tag.
+echo.
+
 echo.
 echo SUCCESS: dist\EndSolMacro.exe
 pause

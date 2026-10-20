@@ -681,6 +681,8 @@ class ActionsMixin:
             latest_version = str(latest_release.get("tag_name", "")).strip()
             if not latest_version or self._is_same_version(latest_version, current_ver):
                 return False
+            if self._is_this_build_the_release(latest_version):
+                return False
             if self._release_already_applied(latest_version):
                 return False
 
@@ -699,6 +701,38 @@ class ActionsMixin:
             print(f"Startup auto-update failed: {e}")
             return False
 
+    def _is_this_build_the_release(self, release_tag):
+        """True when the newest release IS the build that is running.
+
+        A fix release keeps the macro version but is published under its own
+        tag ("v1.1.1-fix"). The build carries that tag, so it can tell that
+        the newest release is the one it already is — otherwise the update
+        prompt would show up on the very build that is the update.
+        """
+        if not release_tag:
+            return False
+        tag = str(release_tag).strip()
+        if not tag:
+            return False
+        try:
+            build_tag = str(current_release_tag or "").strip()
+        except Exception:
+            build_tag = ""
+        if build_tag and self._is_same_version(tag, build_tag):
+            return True
+        # A build without its own tag (older EXE) can still be recognised by
+        # the release it was made from.
+        applied = ""
+        try:
+            cfg = getattr(self, "config", None)
+            if isinstance(cfg, dict):
+                applied = str(cfg.get("last_applied_release") or "")
+        except Exception:
+            applied = ""
+        if applied and self._is_same_version(tag, applied):
+            return True
+        return False
+
     def check_for_updates(self):
         current_version = current_ver
 
@@ -709,6 +743,8 @@ class ActionsMixin:
 
             latest_version = str(latest_release.get("tag_name", "")).strip()
             if latest_version and not self._is_same_version(latest_version, current_version):
+                if self._is_this_build_the_release(latest_version):
+                    return
                 if self._release_already_applied(latest_version):
                     return
                 asset_name, download_url = self._pick_update_exe_asset(latest_release)

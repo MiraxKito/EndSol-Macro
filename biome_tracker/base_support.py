@@ -18,6 +18,14 @@ import json, requests, time, os, threading, re, webbrowser, random, keyboard, py
 current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.1.1")
 current_version = current_ver
 
+# The release this build belongs to. A fix release is published under its
+# own tag ("v1.1.1-fix") while the macro version stays "v1.1.1" — without
+# the tag the update check compares the release tag with the macro version,
+# they never match and the "update available" prompt shows up on the very
+# build that IS the update. The build carries its own tag, so it can tell
+# that the newest release is the one it already is.
+current_release_tag = os.environ.get("ENDSOL_RELEASE_TAG", "v1.1.1-fix")
+
 rare_biomes = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY", "THE RADIANT FOREST"]
 admin_biomes = ["THE HYPERSPACE REALM", "赤い満月", "THE NULL'S EXISTENCE", "THE CITADEL OF ORDERS"]
 special_message_biomes = set(rare_biomes + admin_biomes)
