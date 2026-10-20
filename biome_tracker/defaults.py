@@ -8,6 +8,17 @@
 
 # Master default config. Keep in sync with ConfigVar definitions in
 # mixin_lifecycle.py / mixin_config.py / mixin_legacy_ui_fallback.py.
+
+def _default_biome_overrides() -> dict:
+    """Default biome icon overrides (colors + CDN icon URLs).
+
+    Kept in `biome_icons.py` so the icons, their colors and the URL
+    migration always come from one place.
+    """
+    from .biome_icons import default_biome_overrides
+    return default_biome_overrides()
+
+
 DEFAULT_CONFIG: dict = {
     # ── Webhook / Private server (user must fill) ────────────────────
     "webhook_urls": [],                 # list[str] — Discord webhook URLs
@@ -454,7 +465,16 @@ DEFAULT_CONFIG: dict = {
     "player_log_send_delay": 2.0,
     "auto_update_biome_data": True,
     "auto_update_biome_aura_data": True,
-    "custom_biome_overrides": {},
+    "custom_biome_overrides": _default_biome_overrides(),
+    # Built-in music player: starred tracks, the playlist for the background
+    # loop, the repeat mode, the volume and whether it plays on panel start.
+    "music_player": {
+        "favorites": [],
+        "playlist": [],
+        "repeat": "all",
+        "volume": 0.5,
+        "autoplay": False,
+    },
     "purchase_amount_button": [1044, 611],
     "purchase_button": [982, 666],
     "potion_file2": "",
@@ -485,7 +505,7 @@ DEFAULT_CONFIG.setdefault("memory_match_cell_height", 76)
 DEFAULT_CONFIG.setdefault("memory_match_close_x", None)
 DEFAULT_CONFIG.setdefault("memory_match_close_y", None)
 
-# 20 слотов по умолчанию (сетка 5 колонок x 4 ряда)
+# 20 slots by default (a 5-column x 4-row grid)
 if "memory_match_cells" not in DEFAULT_CONFIG or len(DEFAULT_CONFIG["memory_match_cells"]) != 20:
     DEFAULT_CONFIG["memory_match_cells"] = [[0, 0] for _ in range(20)]
 DEFAULT_CONFIG.setdefault("memory_match_min_icon_pixels", 40)

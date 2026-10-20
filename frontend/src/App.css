@@ -1617,6 +1617,63 @@ body {
    Frames and panels follow the app design language: flat backgrounds, sharp
    corners, bracket corner accents (same L-shaped gradients as .card/.btn).
    Per-element accent color is passed with --panel-corner. */
+/* Sol's Book is drawn as a bound tome: a leather cover with a spine on
+   the left, a page block inside it and a gutter shadow where the pages
+   meet the spine. The frame lives on the COVER, so pictures inside the
+   book can never break it. */
+.book-tome {
+  position: relative;
+  border: 1px solid rgba(167, 139, 250, 0.26);
+  border-radius: 5px;
+  background:
+    linear-gradient(90deg, rgba(76, 29, 149, 0.22) 0, rgba(76, 29, 149, 0.05) 34px, rgba(76, 29, 149, 0) 74px),
+    linear-gradient(180deg, rgba(28, 24, 44, 0.96) 0%, rgba(14, 12, 24, 0.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.10),
+    0 20px 48px -26px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(167, 139, 250, 0.10);
+  overflow: hidden;
+}
+
+/* The spine: a darker band on the left edge with a lit inner edge. */
+.book-tome::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 26px;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      rgba(8, 6, 16, 0.96) 0%,
+      rgba(26, 20, 48, 0.86) 46%,
+      rgba(167, 139, 250, 0.16) 84%,
+      rgba(167, 139, 250, 0) 100%);
+  border-right: 1px solid rgba(167, 139, 250, 0.18);
+  z-index: 2;
+}
+
+/* The page block: everything the tome holds, padded clear of the spine
+   and lit from the left so the fold reads as paper. */
+.book-tome__page {
+  position: relative;
+  margin-left: 26px;
+  min-height: 100%;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.34) 0, rgba(0, 0, 0, 0) 46px),
+    linear-gradient(180deg, rgba(22, 19, 38, 0.72) 0%, rgba(13, 11, 22, 0.86) 100%);
+}
+
+/* The title page keeps the app's corner accents but adds the gilt line
+   a book cover carries. */
+.book-titlepage {
+  border-bottom: 1px solid rgba(167, 139, 250, 0.14);
+  background:
+    linear-gradient(90deg, rgba(167, 139, 250, 0.10) 0, rgba(167, 139, 250, 0) 320px),
+    linear-gradient(180deg, rgba(30, 27, 46, 0.7) 0%, rgba(18, 16, 28, 0.9) 100%) !important;
+}
+
 .book-panel {
   --panel-corner: var(--corner-color);
   background:
@@ -1630,6 +1687,9 @@ body {
     linear-gradient(to top, var(--panel-corner), var(--panel-corner)) no-repeat bottom right / 2px 14px,
     var(--bg-input);
   border: 1px solid var(--border);
+  /* The inner panels stay plain: the book frame belongs to the cover
+     (.book-tome), so a picture inside a panel can never cut the frame. */
+  box-shadow: inset 0 0 26px rgba(124, 58, 237, 0.06);
 }
 
 .book-panel--active {

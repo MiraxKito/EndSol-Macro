@@ -33,7 +33,7 @@ export const RU_P3: Record<string, string> = {
     "Overwrite Calibrations?": "Перезаписать калибровки?",
     "This will overwrite your current calibrations with the": "Это перезапишет текущие калибровки",
     "Macro Calibrations Preset": "Пресет калибровок",
-    "Reference presets only. For Windowed 1920×1080, verify the Roblox client rectangle and use Custom Calibrations for exact values.": "Только референсные пресеты. Для окна 1920×1080 сверьте прямоугольник клиента Roblox и задайте точные значения в Custom Calibrations.",
+    "Reference presets only. The bundled one is Fullscreen 1920×1080 at 100% on the reference monitor — for any other resolution, scale or window mode use a shared preset or your own Custom Calibrations.": "Только референсные пресеты. Встроенный — Fullscreen 1920×1080 при 100% на эталонном мониторе; для другого разрешения, масштаба или режима окна используйте общий пресет или свои Custom Calibrations.",
     "Apply Preset": "Применить пресет",
     "Failed to apply preset:": "Ошибка применения пресета:",
     "Export calibration file": "Экспорт калибровок",

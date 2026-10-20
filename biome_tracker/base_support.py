@@ -133,7 +133,7 @@ def roblox_top_windows() -> list[dict]:
     return [dict(w) for w in out]
 
 
-# в”Ђв”Ђ Discord webhook helpers в”Ђв”Ђ
+# ── Discord webhook helpers ────────────────────────────────
 def discord_timestamp() -> str:
     """
     Build an ISO-8601 timestamp string Discord will accept.
@@ -168,7 +168,7 @@ def discord_color(value) -> int:
         return 0xFFFFFF
 
 
-# в”Ђв”Ђ Keyboard layout helpers в”Ђв”Ђ
+# ── Keyboard layout helpers ──────────────────────────────
 # Macro actions that send literal characters (e.g. "/aura", chat commands)
 # only produce the expected keys when the active Windows input language is
 # English. We auto-switch on macro start so symbols are never typed in the
@@ -290,7 +290,7 @@ def switch_to_english_layout() -> dict:
     return result
 
 
-# в”Ђв”Ђ Safe HTTP request helper в”Ђв”Ђ
+# ── Safe HTTP request helper ──────────────────────────────
 # This machine's network blocks/breaks standard SSL for some hosts.
 # Use verify=False + longer timeouts + retry on transient failures so fetch
 # works reliably whether GitHub is slow, the SSL handshake hangs, or there's
@@ -529,7 +529,7 @@ def is_network_available(hosts: list = None) -> bool:
             continue
     return False
 
-# в”Ђв”Ђ Biome category classification (based on Sol's RNG wiki data) в”Ђв”Ђ
+# ── Biome category classification (based on Sol's RNG wiki data) ──
 # The wiki itself splits the regular world into "Weather" (Windy/Snowy/Rainy
 # — the Sound Tracks page's Weather tab) and "Biomes" (Sandstorm, Hell,
 # Starfall, Heaven, Corruption, Null, …). Rare/event/admin stay separate.

@@ -1,5 +1,12 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { useMusicPlayer } from "../contexts/MusicPlayerContext";
+import { claimAudio, onAudioOwnerChange, releaseAudio } from "../utils/audioLock";
+
+// Owners of the single audio slot. Every sound source claims it when it
+// starts, so nothing ever plays on top of anything else.
+const VIDEO_OWNER = "solbook-video";
+const BOOK_MUSIC_OWNER = "solbook-music";
 
 type Entry = Record<string, any>;
 type MapData = Record<string, Entry>;
@@ -268,9 +275,9 @@ const biomeStory = (e: Entry, name: string) => {
 /** Archive notes fallback — honest and varied instead of one canned line. */
 const archiveNotes = (e: Entry, name: string) =>
   String(e?.description || e?.notes || "").trim() || pick([
-    "The wiki keeps no description for this one yet — the numbers above are everything the reference data carries.",
-    "No lore has been written for it so far; the rarity and the source are all that is verified.",
-    "Nothing beyond the stats is documented yet — when the wiki grows a page, it will appear here.",
+    "Nothing has been written about this one yet — the numbers above are all that is known.",
+    "No notes so far. The rarity and the source are all that is confirmed.",
+    "No description yet — it will appear here as soon as one is written.",
   ], name);
 
 const rarityClassFull = (rarityName: string | undefined, value: any) => {
@@ -294,16 +301,16 @@ const entryDisplayName = (key: any, info: Entry | null | undefined) => {
 };
 
 const SOURCE_LABELS: Record<string, string> = {
-  fandom: "Sol's RNG Fandom Wiki",
-  fandom_article: "Sol's RNG Fandom Wiki",
-  fandom_cache: "Sol's RNG Fandom Wiki",
-  fandom_snapshot: "Sol's RNG Fandom Wiki",
-  fandom_detail: "Sol's RNG Fandom Wiki",
+  fandom: "Wiki",
+  fandom_article: "Wiki",
+  fandom_cache: "Cached",
+  fandom_snapshot: "Offline copy",
+  fandom_detail: "Wiki",
 };
 
 const sourceLabel = (value: any) => {
   const key = String(value ?? "");
-  return SOURCE_LABELS[key] || "Sol's RNG Fandom Wiki";
+  return SOURCE_LABELS[key] || "Wiki";
 };
 
 /** Rarity fact: the GLOBAL odds only. The in-biome odds live in the biome
@@ -447,9 +454,17 @@ export default function SolsBookPage({ active }: { active?: boolean }) {
     const push = (url: any, caption?: string) => {
       if (typeof url === "string" && url.length > 0) out.push({ url, caption });
     };
-    if (Array.isArray(entry.image_urls)) entry.image_urls.forEach((u: any) => push(u));
+    // The wiki's own pictures of the aura come first: the collection icon
+    // is the aura's face, the in-game shot is the second best preview.
+    // Everything else (gallery art) follows.
     push(entry.image_collection_url, "Collection icon");
     push(entry.image_ingame_url, "In-game preview");
+    if (Array.isArray(entry.image_urls)) {
+      entry.image_urls.forEach((item: any) => {
+        if (typeof item === "string") push(item);
+        else if (item && typeof item.url === "string") push(item.url, typeof item.caption === "string" ? item.caption : undefined);
+      });
+    }
     const seen = new Set<string>();
     return out.filter(item => {
       // One file can arrive through several URLs — dedupe by file name so the
@@ -531,17 +546,20 @@ export default function SolsBookPage({ active }: { active?: boolean }) {
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "flex-start" }}>
         <div>
           <h2 style={{ letterSpacing: "0.04em" }}>✦ Sol’s Book</h2>
-          <p>Official Field Almanac of Sol’s RNG — Biomes, Auras, Items, Gauntlets, and Achievements straight from the Fandom Wiki.</p>
+          <p>Every biome, aura and relic of Sol’s RNG.</p>
         </div>
         <button className="btn" onClick={() => void load()} disabled={loading}>{loading ? "Updating…" : "↻ Refresh"}</button>
       </div>
     </div>
 
-    <div className="card" style={{ padding: 0, overflow: "hidden", borderRadius: "6px" }}>
-      <div className="book-panel" style={{ padding: "20px 24px", background: "linear-gradient(180deg, rgba(30, 27, 46, 0.7) 0%, rgba(18, 16, 28, 0.9) 100%)" }}>
+    <div className="book-tome">
+      <div className="book-tome__page">
+      <div className="book-panel book-titlepage" style={{ padding: "22px 26px", background: "linear-gradient(180deg, rgba(30, 27, 46, 0.7) 0%, rgba(18, 16, 28, 0.9) 100%)" }}>
         <div style={{ color: "#a78bfa", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", fontWeight: 600 }}>The EndSol Reference Archive</div>
         <h3 style={{ fontSize: 24, margin: "6px 0 4px", fontWeight: 700 }}>The Almanac of Chance</h3>
-        <div style={{ color: "#94a3b8", maxWidth: 760, lineHeight: 1.5, fontSize: 13 }}>Explore in-game entries loaded directly from the Sol's RNG Fandom Wiki.</div>
+        <div style={{ color: "#94a3b8", maxWidth: 760, lineHeight: 1.6, fontSize: 13 }}>
+          Biomes, auras, items and gauntlets — everything the RNG has rolled into the world.
+        </div>
         
         <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
           <div className="book-chip" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
@@ -560,7 +578,7 @@ export default function SolsBookPage({ active }: { active?: boolean }) {
             <b style={{ color: "#fbbf24" }}>{Object.keys(achievements).length}</b> achievements
           </div>
           <div className="book-chip" style={{ background: "rgba(34, 197, 94, 0.1)", border: "1px solid rgba(34, 197, 94, 0.2)", color: "#86efac", padding: "5px 12px", borderRadius: "4px", fontSize: 12 }}>
-            ✓ Sol's RNG Fandom Verified
+            ✓ Verified data
           </div>
         </div>
       </div>
@@ -609,7 +627,7 @@ export default function SolsBookPage({ active }: { active?: boolean }) {
                   {section === "gauntlets" && entry.limited && <span className="book-badge" style={{ color: "#21FF11" }}>Event / Limited</span>}
                   {section === "items" && entry.category && <span className="book-badge" style={{ color: "#38bdf8" }}>{entry.category}</span>}
                 </div>
-                <div style={{ color: "#94a3b8", fontSize: 12 }}>{sourceLabel(entry._metadata_source || entry.metadata_source)}{detailLoading ? " · loading Fandom article…" : ""}</div>
+                <div style={{ color: "#94a3b8", fontSize: 12 }}>{sourceLabel(entry._metadata_source || entry.metadata_source)}{detailLoading ? " · loading…" : ""}</div>
               </div>
             </div>
 
@@ -621,9 +639,9 @@ export default function SolsBookPage({ active }: { active?: boolean }) {
             )}
 
             {detailTab === "media" && section === "auras" ? (
-              <AuraMediaViewer images={auraImages} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
+              <AuraMediaViewer images={auraImages} videoUrl={auraVideoUrl} videoKind={auraVideoKind} cutsceneNote={auraCutsceneNote} musicUrl={auraMusicUrl} musicFile={auraMusicFile} name={entryDisplayName(selected, entry)} accent={accent} source="aura" />
             ) : detailTab === "media" && section === "biomes" ? (
-              <AuraMediaViewer images={biomeImages} videoUrl={biomeVideoUrl} videoKind={biomeVideoKind} cutsceneNote={biomeCutsceneNote} musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={entryDisplayName(selected, entry)} accent={accent} />
+              <AuraMediaViewer images={biomeImages} videoUrl={biomeVideoUrl} videoKind={biomeVideoKind} cutsceneNote={biomeCutsceneNote} musicUrl={biomeMusicUrl} musicFile={biomeMusicFile} name={entryDisplayName(selected, entry)} accent={accent} source="biome" />
             ) : section === "gauntlets" ? <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 16 }}>
                 <Fact label="Gear Slot" value={entry.slot || entry.hand || "Right Hand"} />
@@ -703,14 +721,14 @@ export default function SolsBookPage({ active }: { active?: boolean }) {
                 <Fact label="Biome Message" value={entry.chat_message || "Doesn't post a chat message on spawn"} />
               </div>
               <Section title="Chronicle"><p style={{ lineHeight: 1.7, color: "var(--text-secondary)", fontSize: 13 }}>{entry.description || entry.how_to_get || pick([
-                "The wiki writes no story for this biome yet — the spawn odds and the chat line above are everything the reference carries.",
-                "No lore page so far. What is verified: how it spawns, how long it stays, and what it says when it arrives.",
-                "Beyond the mechanics above, the reference data is silent — a proper chronicle lands here once the wiki writes one.",
+                "No story has been written for this biome yet — the spawn odds and the chat line above are everything there is.",
+                "No lore so far. What is known: how it spawns, how long it stays, and what it says when it arrives.",
+                "Beyond the mechanics above, nothing has been written down yet.",
               ], String(entry.name || entry.spawn_chance || "biome"))}</p></Section>
               {/* Full media (GIFs, videos, music) lives in the Media tab; the Info
                   page carries only the one hero banner above — inline GIF galleries
                   here used to fail loading and kept the page heavy. */}
-              {entry.music_url && <Section title="🎵 Theme music"><AudioPlayer url={String(entry.music_url)} accent={accent} /></Section>}
+              {entry.music_url && <Section title="🎵 Theme music"><AudioPlayer url={String(entry.music_url)} accent={accent} source="biome" sourceName={String(entry.name || selected || "")} /></Section>}
               {entry.exclusive_auras && <Section title="Exclusive auras"><p style={{ color: "var(--text-secondary)", fontSize: 13 }}>{Array.isArray(entry.exclusive_auras) ? entry.exclusive_auras.join(", ") : String(entry.exclusive_auras)}</p></Section>}
             </> : section === "achievements" ? <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
@@ -730,6 +748,15 @@ export default function SolsBookPage({ active }: { active?: boolean }) {
               </div>
             </> : <>
               {auraImages.length > 0 && <HeroMedia item={auraImages[0]} />}
+              {entry.lore && (
+                <div style={{
+                  marginBottom: 14, padding: "10px 16px", borderLeft: "2px solid rgba(167,139,250,0.5)",
+                  background: "linear-gradient(90deg, rgba(124,58,237,0.10), rgba(56,189,248,0.04) 60%, transparent)",
+                  color: "#c4b5fd", fontSize: 13.5, fontStyle: "italic", lineHeight: 1.6,
+                }}>
+                  “{String(entry.lore)}”
+                </div>
+              )}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 18 }}>
                 <Fact label="Rarity class" value={rarityClassFull(entry.rarity_name, entry.rarity)} />
                 <Fact label="Rarity" value={auraRarityText(entry)} />
@@ -740,10 +767,21 @@ export default function SolsBookPage({ active }: { active?: boolean }) {
                 </p>
               </Section>
               <Section title="Archive notes"><p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{archiveNotes(entry, entryDisplayName(selected, entry))}</p></Section>
+              {entry.appearance && (
+                <Section title="Appearance">
+                  <p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{String(entry.appearance)}</p>
+                </Section>
+              )}
+              {entry.ability && (
+                <Section title="Abilities">
+                  <p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: 13 }}>{String(entry.ability)}</p>
+                </Section>
+              )}
               {(auraImages.length > 0 || auraVideoUrl) && <div className="form-hint" style={{ marginTop: 10 }}>🖼 {auraImages.length + (auraVideoUrl ? 1 : 0)} media file(s) available — open the <b>Media</b> tab to view them without slowing the book down.</div>}
             </>}
           </>}
         </div>
+      </div>
       </div>
     </div>
   </div>;
@@ -863,7 +901,13 @@ const AUDIO_VOL_CSS = `
 .audio-vol::-moz-range-thumb{width:10px;height:12px;border-radius:2px;background:var(--audio-accent,#a78bfa);border:none;cursor:pointer}
 `;
 
-function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: string; accent?: string }) {
+function AudioPlayer({ url, fileLabel, accent, source, sourceName }: {
+  url: string;
+  fileLabel?: string;
+  accent?: string;
+  source?: string;
+  sourceName?: string;
+}) {
   const { src, state } = useCachedMedia(url);
   const audioSrc = src || url;
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -876,6 +920,9 @@ function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: stri
   // Track title: the wiki file name when the entry carries none — the player
   // used to show an empty header whenever music_file was missing.
   const title = fileLabel ? prettyName(fileLabel) : prettyName(mediaFileName(url));
+  // The built-in player: the track can be added to it from here.
+  const player = useMusicPlayer();
+  const ownerId = `${BOOK_MUSIC_OWNER}:${url}`;
 
   // A tab/entry switch swaps the src under the same element: the browser
   // silently stops playback while the old "playing" flag survived, so the
@@ -913,6 +960,17 @@ function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: stri
   };
   const progress = duration > 0 ? Math.min(100, (current / duration) * 100) : 0;
 
+  // Only one sound at a time: when the built-in player starts, this one
+  // stops — otherwise the book music and the player music overlap.
+  useEffect(() => onAudioOwnerChange((id) => {
+    if (!id || id === ownerId) return;
+    const el = audioRef.current;
+    if (el && !el.paused) {
+      try { el.pause(); } catch { /* ignore */ }
+    }
+    setPlaying(false);
+  }), []);
+
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
@@ -922,8 +980,25 @@ function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: stri
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, fontSize: 12, color: "var(--text-secondary)" }}>
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "55%" }}>🎵 {title}</span>
         <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, opacity: .75 }}>
-          {state === "loading" ? "Fetching from wiki…" : state === "ready" ? "✓ Cached" : state === "failed" ? "Wiki stream" : ""}
+          {state === "loading" ? "Fetching…" : state === "ready" ? "✓ Cached" : state === "failed" ? "Streaming" : ""}
           {saveState ? <span>{saveState}</span> : null}
+          <button
+            className="btn"
+            style={{ padding: "3px 10px", fontSize: 12, borderRadius: "4px" }}
+            onClick={() => {
+              const id = fileLabel || url;
+              if (player.isFavorite(id)) {
+                setSaveState("Already in the player");
+              } else {
+                player.addTrack({ id, title: title || fileLabel || url, url, source, source_name: sourceName });
+                setSaveState("Added to the player");
+              }
+              setTimeout(() => setSaveState(""), 2500);
+            }}
+            title="Add this track to the music player"
+          >
+            ＋
+          </button>
           <button className="btn" style={{ padding: "3px 10px", fontSize: 12, borderRadius: "4px" }} onClick={() => void saveMedia(url, setSaveState)} title="Save music to disk">💾</button>
         </span>
       </div>
@@ -975,9 +1050,9 @@ function AudioPlayer({ url, fileLabel, accent }: { url: string; fileLabel?: stri
         ref={audioRef}
         src={audioSrc}
         preload="metadata"
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onEnded={() => { setPlaying(false); setCurrent(0); }}
+        onPlay={() => { setPlaying(true); claimAudio(ownerId); }}
+        onPause={() => { setPlaying(false); releaseAudio(ownerId); }}
+        onEnded={() => { setPlaying(false); setCurrent(0); releaseAudio(ownerId); }}
         onTimeUpdate={(e) => {
           setCurrent(e.currentTarget.currentTime);
           if (e.currentTarget.duration && Number.isFinite(e.currentTarget.duration)) setDuration(e.currentTarget.duration);
@@ -1059,11 +1134,22 @@ function BiomePreview({ item }: { item: ImageItem }) {
   );
 }
 
-function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, musicFile, name, accent }: { images: ImageItem[]; videoUrl?: string; videoKind?: string; cutsceneNote?: string; musicUrl?: string; musicFile?: string; name: string; accent: string }) {
+function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, musicFile, name, accent, source }: { images: ImageItem[]; videoUrl?: string; videoKind?: string; cutsceneNote?: string; musicUrl?: string; musicFile?: string; name: string; accent: string; source?: string }) {
   type MediaItem = { kind: "image" | "video"; url: string; remoteUrl?: string; role: MediaRole; caption: string };
   const videoCached = useCachedMedia(videoUrl || undefined);
   const [videoFallback, setVideoFallback] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const videoSrc = (!videoFallback && videoCached.src) ? videoCached.src : (videoUrl || "");
+
+  // The cutscene takes the single audio slot: when it starts, the music
+  // player of the book and the built-in player stop.
+  useEffect(() => onAudioOwnerChange((id) => {
+    if (!id || id === VIDEO_OWNER) return;
+    const el = videoRef.current;
+    if (el && !el.paused) {
+      try { el.pause(); } catch { /* ignore */ }
+    }
+  }), []);
   const items: MediaItem[] = [
     ...images.map(im => {
       const role = mediaRole(im.url);
@@ -1141,6 +1227,9 @@ function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, 
       src={active.url}
       controls
       preload="metadata"
+      ref={(el) => { videoRef.current = el; }}
+      onPlay={() => { claimAudio(VIDEO_OWNER); }}
+      onPause={() => { releaseAudio(VIDEO_OWNER); }}
       onError={() => { if (!videoFallback && videoCached.src) setVideoFallback(true); }}
       style={{ width: "100%", height: "100%", objectFit: "contain", background: "rgba(0,0,0,.4)" }}
     />
@@ -1211,9 +1300,9 @@ function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, 
 
       {videoUrl && (
         <div style={{ marginTop: 6, fontSize: 12, color: "var(--text-secondary)" }}>
-          {videoCached.state === "loading" ? "⏳ Preparing the video from the wiki (cached for reliable playback)…"
-            : videoCached.state === "ready" ? "✓ Playing from local cache — works offline"
-            : videoCached.state === "failed" ? "⚠ Could not cache — playing directly from the wiki"
+          {videoCached.state === "loading" ? "⏳ Preparing the video (cached for reliable playback)…"
+            : videoCached.state === "ready" ? "✓ Playing from the local cache — works offline"
+            : videoCached.state === "failed" ? "⚠ Could not cache — playing directly"
             : ""}
           {saveState ? ` · ${saveState}` : ""}
         </div>
@@ -1227,7 +1316,7 @@ function AuraMediaViewer({ images, videoUrl, videoKind, cutsceneNote, musicUrl, 
 
       {musicUrl && (
         <div className="book-panel" style={{ marginTop: 12, padding: "10px 12px", borderRadius: 0 } as React.CSSProperties}>
-          <AudioPlayer url={musicUrl} fileLabel={musicFile} accent={accent} />
+          <AudioPlayer url={musicUrl} fileLabel={musicFile} accent={accent} source={source} sourceName={String(name || "")} />
         </div>
       )}
 

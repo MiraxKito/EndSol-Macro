@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, memo, useCallback } from "react";
 import "./App.css";
 import { useConfig } from "./contexts/ConfigContext";
 import { ToastProvider } from "./contexts/ToastContext";
+import { MusicPlayerProvider } from "./contexts/MusicPlayerContext";
+import MusicPlayerPanel from "./components/MusicPlayerPanel";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Sidebar from "./components/Sidebar";
 import HeaderBar from "./components/HeaderBar";
@@ -580,7 +582,10 @@ function App() {
     <ToastProvider>
       <I18nDom />
       <ErrorBoundary>
-        {appContent}
+        <MusicPlayerProvider>
+          {appContent}
+          <MusicPlayerPanel />
+        </MusicPlayerProvider>
       </ErrorBoundary>
     </ToastProvider>
   );

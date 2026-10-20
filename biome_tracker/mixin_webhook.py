@@ -1,4 +1,5 @@
 from .base_support import *
+from .biome_icons import MACRO_FOOTER_ICON_URL
 
 CUSTOM_WEBHOOK_MESSAGE_LIMIT = 300
 # SINGULARITY and THE RADIANT FOREST are rare biomes but keep their webhook
@@ -208,7 +209,7 @@ class WebhookMixin:
             urls = self.get_webhook_list()
             if not urls:
                 return
-            icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
+            icon_url = MACRO_FOOTER_ICON_URL
             embed = {
                 "description": f"> ## {title}",
                 "color": 0xffffff,
@@ -782,7 +783,7 @@ class WebhookMixin:
         content = built["content"]
         biome_info = self.biome_data.get(biome, {})
         current_utc_time = discord_timestamp()
-        icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
+        icon_url = MACRO_FOOTER_ICON_URL
         embed = {
             "description": description,
             "color": embed_color,
@@ -898,7 +899,7 @@ class WebhookMixin:
             ping_enabled = False
         content = f"<@{ping_id}>" if (source in ('logs', 'ocr') and ping_enabled and ping_id) else ""
         ps_link = self.config.get("private_server_link", "").replace("\n", "")
-        icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
+        icon_url = MACRO_FOOTER_ICON_URL
         current_utc_time = discord_timestamp()
         embed = {
             "description": f"> ## {merchant_name} has arrived!\n> ### [Join Server]({ps_link})",
@@ -1030,7 +1031,7 @@ class WebhookMixin:
         if not urls:
             self.append_log("Webhook URL is missing/not included in the config")
             return
-        icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
+        icon_url = MACRO_FOOTER_ICON_URL
         ping_minimum = int(self.config.get("ping_minimum", "100000"))
 
         force_ping_auras = str(self.config.get("force_ping_auras", "") or "").lower()
@@ -1197,7 +1198,7 @@ class WebhookMixin:
                 return
             default_color = 3066993 if "started" in status.lower() else 15158332
             embed_color = color if color is not None else default_color
-            icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
+            icon_url = MACRO_FOOTER_ICON_URL
             if "started" in status.lower():
                 n = len(urls)
                 status = f"{status} ({n} webhook{'s' if n != 1 else ''} active)"
@@ -1239,7 +1240,7 @@ class WebhookMixin:
             urls = self.get_webhook_list()
             if not urls:
                 return
-            icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
+            icon_url = MACRO_FOOTER_ICON_URL
             current_utc_time = discord_timestamp()
             embed = {
                 "title": "== 🌟 Macro Status 🌟 ==",
@@ -1271,7 +1272,7 @@ class WebhookMixin:
         try:
             urls = self.get_webhook_list()
             if not urls: return
-            icon_url = "https://i.postimg.cc/rsXpGncL/Noteab-Biome-Tracker.png"
+            icon_url = MACRO_FOOTER_ICON_URL
             eden_thumbnail = "https://i.postimg.cc/q7jFZVMp/eden.png"
             current_utc_time = discord_timestamp()
 
@@ -1313,24 +1314,34 @@ class WebhookMixin:
         """
         Download a biome thumbnail from a URL and save it locally.
         Returns the local file path on success, None on failure.
+
+        The icon is attached to the webhook as a file, so the picture never
+        depends on Discord being able to reach the host. If the primary
+        CDN is unreachable the public mirrors of the same file are tried
+        before giving up.
         """
         if not thumb_url or not isinstance(thumb_url, str):
             return None
-        try:
-            # Use safe_get with timeout to download the thumbnail
-            from biome_tracker.base_support import safe_get
-            response = safe_get(thumb_url, timeout=10)
-            if not response or not response.ok:
-                return None
-            # Save to a temporary file
-            import tempfile
-            import os
-            ext = os.path.splitext(thumb_url)[1]
-            if not ext:
-                ext = ".png"
-            with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
-                tmp.write(response.content)
-                return tmp.name
-        except Exception as e:
-            self.append_log(f"Failed to download thumbnail for {biome}: {e}")
-            return None
+        from biome_tracker.base_support import safe_get
+        from biome_tracker.biome_icons import icon_url_mirrors
+        last_error = None
+        for candidate in icon_url_mirrors(thumb_url):
+            try:
+                response = safe_get(candidate, timeout=10)
+                if not response or not response.ok:
+                    last_error = f"HTTP {getattr(response, 'status_code', '?')}"
+                    continue
+                import tempfile
+                import os
+                ext = os.path.splitext(candidate.split("?")[0])[1]
+                if not ext or len(ext) > 5:
+                    ext = ".png"
+                with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
+                    tmp.write(response.content)
+                    return tmp.name
+            except Exception as e:
+                last_error = e
+                continue
+        if last_error:
+            self.append_log(f"Failed to download thumbnail for {biome}: {last_error}")
+        return None

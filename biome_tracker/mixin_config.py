@@ -1,7 +1,11 @@
 """Config load/save/import logic. Handles merging defaults, legacy compat, etc."""
 
 from .base_support import *
-from .config import load_config as core_load_config, save_config as core_save_config
+from .config import (
+    load_config as core_load_config,
+    save_config as core_save_config,
+    _default_biome_icon_overrides,
+)
 
 class ConfigMixin:
     def save_config(self):
@@ -41,6 +45,10 @@ class ConfigMixin:
             "macro_last_start": macro_last_start_val,
             "selected_theme": self.root.style.theme.name if hasattr(self, "root") and self.root is not None and hasattr(self.root, "style") else self.config.get("selected_theme", "solar"),
             "update_notifications_disabled": self.config.get("update_notifications_disabled", False),
+            # Tag of the release that is installed — a fix release can carry a
+            # different tag than the macro version, so the update prompt uses
+            # this instead of comparing versions.
+            "last_applied_release": self.config.get("last_applied_release", ""),
             "auto_update_enabled": self.auto_update_enabled_var.get() if hasattr(self, "auto_update_enabled_var") else self.config.get("auto_update_enabled", True),
             "auto_update_biome_data": self.config.get("auto_update_biome_data", True),
             "auto_update_biome_aura_data": self.config.get("auto_update_biome_aura_data", True),
@@ -392,32 +400,13 @@ class ConfigMixin:
                 # header). The info-page PREVIEW (rectangular in-game view)
                 # uses the separate `preview_url` field built in
                 # load_biome_data from the Fandom snapshot.
-                "custom_biome_overrides": {
-                    "AURORA": { "color": "0x0047ab", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/aurora.png" },
-                    "CORRUPTION": { "color": "0x6d32a8", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/corruption.png" },
-                    "CYBERSPACE": { "color": "0x0A1A3D", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/cyberspace.png" },
-                    "DREAMSPACE": { "color": "0xea9dda", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/dreamspace.png" },
-                    "EGGLAND": { "color": "0xd4fc8d", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/eggland.png" },
-                    "GLITCHED": { "color": "0xbfff00", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/glitched.png" },
-                    "HEAVEN": { "color": "0xFFE8A0", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/heaven.png" },
-                    "HELL": { "color": "0xff4719", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/hell.png" },
-                    "NORMAL": { "color": "0xffffff", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/normal.png" },
-                    "NULL": { "color": "0x838383", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/unknown_biome.png" },
-                    "RAINY": { "color": "0x027cbd", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/windy.png" },
-                    "SAND STORM": { "color": "0x8F7057", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/sand%20storm.png" },
-                    "SINGULARITY": { "color": "0xcf4023", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/singularity.png" },
-                    "SNOWY": { "color": "0xDceff9", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/snowy.png" },
-                    "STARFALL": { "color": "0x011ab7", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/starfall.png" },
-                    "WINDY": { "color": "0xF2F6FF", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/windy.png" },
-                    "BLAZING SUN": { "color": "0xFF6B00", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/blazing%20sun.png" },
-                    "PUMPKIN MOON": { "color": "0xFF6600", "thumbnail_url": "https://raw.githubusercontent.com/xVapure/Noteab-Macro/main/images/pumpkin_moonv2.png" },
-                    "GRAVEYARD": { "color": "0x4A4A4A", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/graveyard.png" },
-                    "BLOOD RAIN": { "color": "0xCC0000", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/blood%20rain.png" },
-                    "THE NULL'S EXISTENCE": { "color": "0x1a1a2e", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/unknown_biome.png" },
-                    "THE HYPERSPACE REALM": { "color": "0x9b59b6", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/the%20hyperspace%20realm.png" },
-                    "赤い満月": { "color": "0xcc0000", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/unknown_biome.png" },
-                    "THE CITADEL OF ORDERS": { "color": "0xc0a030", "thumbnail_url": "https://raw.githubusercontent.com/vexsyx/OysterDetector/main/assets/the%20citadel%20of%20orders.png" }
-                },
+                #
+                # The icons ship with this repository (assets/biome_icons/) and
+                # are served through the project's own CDN — see
+                # biome_tracker/biome_icons.py for the map and the fallback
+                # hosts. The admin-only Red Full Moon has no icon in the
+                # repository yet, so it keeps the OysterDetector copy.
+                "custom_biome_overrides": _default_biome_icon_overrides(),
                 "cyberspace_only_warp": False,
                 "update_notifications_disabled": False,
                 "auto_update_enabled": False,

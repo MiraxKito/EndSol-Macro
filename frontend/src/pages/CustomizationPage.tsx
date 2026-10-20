@@ -23,6 +23,48 @@ type RareCustom = {
     desc_end: string;
 };
 
+// ── Thumbnail URL health check ───────────────────────────────────────────
+// Discord fetches every embed thumbnail on its own. A few hosts are known
+// to be dead (they answer 403/404 to Discord's crawler), so a biome icon
+// hosted there silently shows up as a broken embed.
+//   - broken: maxstellar's old image host, Fandom / Wikia CDN
+//   - trusted: this project's own repository (jsDelivr / Statically / raw)
+//     and the OysterDetector repository, which is still a valid source
+const BROKEN_THUMBNAIL_HOSTS = [
+    "maxstellar",
+    "fandom.com",
+    "wikia.nocookie.net",
+    "static.wikia",
+    "fandomusercontent",
+];
+const TRUSTED_THUMBNAIL_HOSTS = [
+    "cdn.jsdelivr.net/gh/MiraxKito/EndSol-Macro",
+    "cdn.statically.io/gh/MiraxKito/EndSol-Macro",
+    "raw.githubusercontent.com/MiraxKito/EndSol-Macro",
+    "cdn.jsdelivr.net/gh/vexsyx/OysterDetector",
+    "cdn.statically.io/gh/vexsyx/OysterDetector",
+    "raw.githubusercontent.com/vexsyx/OysterDetector",
+];
+
+type ThumbnailCheck = { level: "ok" | "warn" | "error"; message: string };
+
+function checkBiomeThumbnail(url: string): ThumbnailCheck {
+    const text = (url || "").trim().toLowerCase();
+    if (!text) {
+        return { level: "warn", message: "⚠ No thumbnail URL set — Discord will show the biome name instead of an icon." };
+    }
+    if (BROKEN_THUMBNAIL_HOSTS.some((host) => text.includes(host))) {
+        return {
+            level: "error",
+            message: "⚠ This URL host is known to be broken. Use this project's CDN (cdn.jsdelivr.net/gh/MiraxKito/EndSol-Macro) or a working OysterDetector URL instead.",
+        };
+    }
+    if (TRUSTED_THUMBNAIL_HOSTS.some((host) => text.includes(host))) {
+        return { level: "ok", message: "✓ URL points at a known working host (this repository's CDN or OysterDetector)." };
+    }
+    return { level: "ok", message: "✓ URL looks valid (not from a known broken host)" };
+}
+
 export default function CustomizationPage() {
     const { config, saveConfig } = useConfig();
     const [biomes, setBiomes] = useState<Record<string, BiomeData>>({});
@@ -200,6 +242,7 @@ export default function CustomizationPage() {
 
     if (!config) return <div>Loading...</div>;
     const currentBiomeData = biomes[selectedBiome] || { color: "#ffffff", thumbnail_url: "" };
+    const biomeThumbnailCheck = checkBiomeThumbnail(currentBiomeData.thumbnail_url);
     const rawColor = typeof currentBiomeData.color === "string" ? currentBiomeData.color : String(currentBiomeData.color ?? "#ffffff");
     const cssColor = rawColor.startsWith("0x") ? "#" + rawColor.slice(2) : rawColor;
 
@@ -522,10 +565,8 @@ export default function CustomizationPage() {
                             placeholder="https://..."
                         />
                         {currentBiomeData.thumbnail_url && (
-                            <div style={{ marginTop: "8px", fontSize: "11px", color: currentBiomeData.thumbnail_url.includes("maxstellar") || currentBiomeData.thumbnail_url.includes("fandom") || currentBiomeData.thumbnail_url.includes("wikia") ? "#ef4444" : "#22c55e" }}>
-                                {currentBiomeData.thumbnail_url.includes("maxstellar") || currentBiomeData.thumbnail_url.includes("fandom") || currentBiomeData.thumbnail_url.includes("wikia")
-                                    ? "⚠ This URL host is known to be broken. Use a working OysterDetector URL instead."
-                                    : "✓ URL looks valid (not from a known broken host)"}
+                            <div style={{ marginTop: "8px", fontSize: "11px", color: biomeThumbnailCheck.level === "error" ? "#ef4444" : biomeThumbnailCheck.level === "warn" ? "#eab308" : "#22c55e" }}>
+                                {biomeThumbnailCheck.message}
                             </div>
                         )}
                     </div>

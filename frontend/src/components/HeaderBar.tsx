@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useMusicPlayer } from "../contexts/MusicPlayerContext";
 
 interface HeaderBarProps {
     isRunning: boolean;
@@ -45,6 +46,7 @@ const SEARCH_INDEX = [
     { title: "Instructions", tab: "instructions", keywords: ["guide", "how to", "setup", "help", "start", "tutorial", "getting started"] },
     { title: "Credits", tab: "credits", keywords: ["credits", "contributors", "about"] },
     { title: "Donations <3", tab: "donations", keywords: ["donate", "donations", "boosty", "support the project"] },
+    { title: "Music player", tab: "music", keywords: ["music", "player", "playlist", "track", "song", "audio", "favourite", "favorite", "repeat", "background music", "volume"] },
 ];
 
 export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, isGlitching, setActiveTab, hasCustomPalette }: HeaderBarProps) {
@@ -57,6 +59,9 @@ export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, i
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
+    // The built-in music player is opened from the header.
+    const music = useMusicPlayer();
+    const setOpenMusic = music.setOpen;
 
     const toggleAlwaysOnTop = async () => {
         const next = !alwaysOnTop;
@@ -107,7 +112,10 @@ export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, i
     };
 
     const handleSearchSelect = (result: typeof SEARCH_INDEX[0]) => {
-        if (setActiveTab) {
+        if (result.tab === "music") {
+            // The music player is a window of its own, not a page tab.
+            setOpenMusic(true);
+        } else if (setActiveTab) {
             setActiveTab(result.tab);
             setTimeout(() => {
                 if ((window as any).find && searchQuery.trim().length >= 3) {
@@ -268,6 +276,21 @@ export default function HeaderBar({ isRunning, onToggle, theme, onThemeChange, i
                     }}
                 >
                     {isImporting ? "Importing..." : "Import Config"}
+                </button>
+
+                <button
+                    className="btn"
+                    onClick={() => setOpenMusic(true)}
+                    title="Music player"
+                    style={{
+                        fontSize: "13px",
+                        padding: "3px 9px",
+                        marginRight: "10px",
+                        whiteSpace: "nowrap",
+                        flexShrink: 0
+                    }}
+                >
+                    🎵
                 </button>
 
                 <span style={{ fontSize: "12px", color: "var(--text-secondary)", marginRight: "6px" }}>

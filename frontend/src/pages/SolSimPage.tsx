@@ -19,6 +19,9 @@ type Data = Record<string, any>;
 
 type DropLogEntry = { name: string; rarity: number; tier: string; biome: string; ts: number; fx?: string[] };
 
+// How many rolls the luck sparkline keeps.
+const LUCK_HISTORY_MAX = 60;
+
 // Biome history only (no aura drops): what the world rolled and when.
 type BiomeLogEntry = { name: string; ts: number; forced: boolean };
 
@@ -651,15 +654,45 @@ const SIM_ROLL_CSS = `
 .sim-roll-btn__corner--bl{bottom:3px;left:3px;border-bottom-width:1.5px;border-left-width:1.5px}
 .sim-roll-btn__corner--br{bottom:3px;right:3px;border-bottom-width:1.5px;border-right-width:1.5px}
 .sim-roll-btn__text{position:relative;z-index:2;color:#fff;font-weight:800;font-size:25px;line-height:1;user-select:none;font-family:"Segoe UI","Arial Black",system-ui,sans-serif}
-.sim-fx{position:fixed;inset:0;pointer-events:none;z-index:9000}
-.sim-fx-glitch{background:repeating-linear-gradient(0deg,rgba(255,0,80,.05) 0 2px,transparent 2px 5px);animation:simFxGlitch 1.1s steps(2) infinite;mix-blend-mode:screen}
-@keyframes simFxGlitch{0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}50%{transform:translate(2px,-1px)}75%{transform:translate(-1px,2px)}}
-.sim-fx-dream{background:radial-gradient(55% 45% at 18% 12%,rgba(217,70,239,.15),transparent 60%),radial-gradient(50% 40% at 85% 85%,rgba(168,85,247,.13),transparent 60%);animation:simFxDream 9s ease-in-out infinite alternate}
-@keyframes simFxDream{from{opacity:.55}to{opacity:1}}
-.sim-fx-cyber{background:repeating-linear-gradient(0deg,rgba(34,211,238,.06) 0 1px,transparent 1px 6px),radial-gradient(45% 35% at 50% 0%,rgba(34,211,238,.10),transparent 70%);animation:simFxCyber 4s linear infinite}
-@keyframes simFxCyber{from{background-position:0 0,0 0}to{background-position:0 48px,0 0}}
-.sim-fx-sing{background:radial-gradient(65% 50% at 50% 18%,rgba(239,68,68,.13),transparent 65%),radial-gradient(35% 28% at 50% 26%,rgba(251,146,60,.10),transparent 60%);animation:simFxSing 5s ease-in-out infinite}
-@keyframes simFxSing{0%,100%{opacity:.55}50%{opacity:1}}
+.sim-fx{position:fixed;inset:0;pointer-events:none;z-index:9000;contain:strict}
+/* Rare-biome ambience. Every biome gets the look its own wiki entry
+   describes (Glitched corrupts the screen, Hell burns from below, The
+   Radiant Forest falls with stars and moons). Only gradients and
+   transform/opacity are animated, so the panel stays light. */
+/* Glitched: the client tears itself apart. No colour fields at the edges —
+   the whole frame breaks up: horizontal slice offsets, a torn scanline roll,
+   blocky RGB separation in the middle of the screen and a hard flicker. */
+.sim-fx-glitch{background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);mix-blend-mode:multiply;animation:simFxGlitch 0.9s steps(2) infinite}
+.sim-fx-glitch::before{content:"";position:absolute;left:0;right:0;top:0;height:100%;background:repeating-linear-gradient(0deg,transparent 0 14px,rgba(255,0,90,.22) 14px 16px,transparent 16px 28px,rgba(0,225,255,.20) 28px 30px,transparent 30px 46px);mix-blend-mode:screen;animation:simFxGlitchA 1.4s steps(6) infinite}
+.sim-fx-glitch::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,0,90,.26) 0 6%,transparent 6% 26%,rgba(0,225,255,.26) 44% 50%,transparent 50% 72%,rgba(255,0,90,.22) 88% 94%,transparent 94%),repeating-linear-gradient(90deg,rgba(255,255,255,.10) 0 2px,transparent 2px 26px);mix-blend-mode:screen;animation:simFxGlitchB 0.75s steps(5) infinite}
+@keyframes simFxGlitch{0%,100%{transform:translate(0,0)}20%{transform:translate(-4px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-2px,-3px)}80%{transform:translate(3px,3px)}}
+@keyframes simFxGlitchA{0%,100%{transform:translateY(0)}20%{transform:translateY(-26px)}40%{transform:translateY(18px)}60%{transform:translateY(-9px)}80%{transform:translateY(31px)}}
+@keyframes simFxGlitchB{0%,100%{transform:translateX(0) scaleY(1)}20%{transform:translateX(-9%) scaleY(1.012)}40%{transform:translateX(12%) scaleY(.99)}60%{transform:translateX(-4%) scaleY(1.006)}80%{transform:translateX(7%) scaleY(.995)}}
+/* Dreamspace: a soft violet haze with slow drifting lights. */
+.sim-fx-dream{background:radial-gradient(55% 45% at 18% 12%,rgba(217,70,239,.24),transparent 60%),radial-gradient(50% 40% at 85% 85%,rgba(168,85,247,.20),transparent 60%);animation:simFxDream 9s ease-in-out infinite alternate}
+.sim-fx-dream::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(255,255,255,.16) 0 2px,transparent 3px),radial-gradient(circle at 70% 65%,rgba(255,255,255,.13) 0 2px,transparent 3px);background-size:180px 180px,240px 240px;animation:simFxDreamB 16s linear infinite}
+@keyframes simFxDream{from{opacity:.6}to{opacity:1}}
+@keyframes simFxDreamB{from{transform:translateY(0)}to{transform:translateY(-180px)}}
+/* Cyberspace: a cyan data grid that scrolls over the panel. */
+.sim-fx-cyber{background:repeating-linear-gradient(0deg,rgba(34,211,238,.09) 0 1px,transparent 1px 6px),repeating-linear-gradient(90deg,rgba(34,211,238,.07) 0 1px,transparent 1px 6px),radial-gradient(45% 35% at 50% 0%,rgba(34,211,238,.16),transparent 70%);animation:simFxCyber 4s linear infinite}
+@keyframes simFxCyber{from{background-position:0 0,0 0,0 0}to{background-position:0 48px,48px 0,0 0}}
+/* Singularity: a real gravitational well — a dark core, a rotating
+   accretion disk with a hole in the middle, a bright photon ring on the
+   event horizon and a shockwave that falls inward. */
+.sim-fx-sing{background:radial-gradient(34% 34% at 50% 44%,rgba(0,0,0,.9) 0 42%,rgba(88,8,8,.42) 68%,transparent 84%),radial-gradient(78% 62% at 50% 48%,rgba(239,68,68,.12),transparent 72%);animation:simFxSing 6.5s ease-in-out infinite}
+.sim-fx-sing::before{content:"";position:absolute;left:50%;top:44%;width:min(56vmin,62%);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:conic-gradient(from 0deg,rgba(255,196,110,0) 0deg,rgba(255,150,50,.78) 42deg,rgba(196,32,20,.86) 96deg,rgba(255,196,110,0) 160deg,rgba(126,72,255,.34) 226deg,rgba(255,150,50,.7) 300deg,rgba(255,196,110,0) 360deg);-webkit-mask:radial-gradient(circle,transparent 33%,#000 45%,#000 76%,transparent 87%);mask:radial-gradient(circle,transparent 33%,#000 45%,#000 76%,transparent 87%);animation:simFxSingA 7.5s linear infinite}
+.sim-fx-sing::after{content:"";position:absolute;left:50%;top:44%;width:min(56vmin,62%);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,transparent 0 20%,rgba(255,228,190,.28) 31%,rgba(255,158,72,.16) 44%,transparent 62%);box-shadow:0 0 0 1px rgba(255,214,160,.45),0 0 26px 6px rgba(255,120,40,.22);animation:simFxSingB 3.6s cubic-bezier(.4,0,.6,1) infinite}
+@keyframes simFxSing{0%,100%{opacity:.7}50%{opacity:1}}
+@keyframes simFxSingA{from{transform:translate(-50%,-50%) rotate(0deg) scale(1)}to{transform:translate(-50%,-50%) rotate(360deg) scale(1.05)}}
+@keyframes simFxSingB{0%{transform:translate(-50%,-50%) scale(1.22);opacity:0}25%{opacity:.95}100%{transform:translate(-50%,-50%) scale(.82);opacity:0}}
+/* The Radiant Forest: a violet night, stars falling from the sky and the
+   row of seven radiant moons that light up as auras are rolled. */
+.sim-fx-radiant{background:radial-gradient(30% 24% at 50% 6%,rgba(216,110,255,.26),transparent 72%),linear-gradient(180deg,rgba(138,72,168,.26),rgba(26,14,44,.14) 48%,transparent 78%);animation:simFxRadiant 7s ease-in-out infinite alternate}
+.sim-fx-radiant::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 12%,rgba(255,255,255,.75) 0 1px,transparent 2px),radial-gradient(circle at 46% 26%,rgba(255,224,255,.60) 0 1px,transparent 2px),radial-gradient(circle at 78% 8%,rgba(255,255,255,.70) 0 1px,transparent 2px),radial-gradient(circle at 90% 44%,rgba(214,190,255,.55) 0 1px,transparent 2px),radial-gradient(circle at 28% 52%,rgba(255,255,255,.50) 0 1px,transparent 2px);background-size:100% 100%;animation:simFxRadiantB 6s linear infinite}
+.sim-fx-radiant::after{content:"";position:absolute;left:50%;top:14px;width:230px;height:9px;margin-left:-115px;background:radial-gradient(circle at 8px 50%,rgba(255,190,255,.85) 0 3px,transparent 4px),radial-gradient(circle at 42px 50%,rgba(190,190,255,.75) 0 3px,transparent 4px),radial-gradient(circle at 76px 50%,rgba(255,220,255,.80) 0 3px,transparent 4px),radial-gradient(circle at 110px 50%,rgba(180,200,255,.70) 0 3px,transparent 4px),radial-gradient(circle at 144px 50%,rgba(255,200,255,.78) 0 3px,transparent 4px),radial-gradient(circle at 178px 50%,rgba(200,220,255,.68) 0 3px,transparent 4px),radial-gradient(circle at 212px 50%,rgba(255,230,255,.80) 0 3px,transparent 4px);animation:simFxRadiantC 3.2s ease-in-out infinite}
+@keyframes simFxRadiant{from{opacity:.62}to{opacity:1}}
+@keyframes simFxRadiantB{from{transform:translateY(-26px)}to{transform:translateY(26px)}}
+@keyframes simFxRadiantC{0%,100%{opacity:.35}50%{opacity:.95}}
 `;
 
 export default function SolSimPage({ active }: { active?: boolean }) {
@@ -720,6 +753,9 @@ export default function SolSimPage({ active }: { active?: boolean }) {
   const [fxHud, setFxHud] = useState<{ bonusIn: number | null; spikeMult: number; spikeLeft: number; spikeLabel: string | null }>({
     bonusIn: null, spikeMult: 1, spikeLeft: 0, spikeLabel: null,
   });
+  // Luck history for the sparkline: the effective luck of the last rolls
+  // plus the markers of the bonus rolls and the luck spikes.
+  const [luckHistory, setLuckHistory] = useState<{ roll: number; luck: number; bonus: boolean; spike: number }[]>([]);
 
   // ── Load datasets + persisted save ────────────────────────────────
   // The tracker that serves aura/biome data boots in a background thread
@@ -1073,6 +1109,18 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       fx: fxTags.length ? fxTags : undefined,
     };
     st.log = [entry, ...st.log].slice(0, 25);
+    // Luck history: the effective luck of every roll, so the bonus rolls
+    // and the luck spikes are visible as a curve instead of a silent
+    // number change.
+    setLuckHistory(prev => [
+      ...prev,
+      {
+        roll: rollNo,
+        luck: rollLuck,
+        bonus: onBonus,
+        spike: spikeMult > 1 ? spikeMult : 0,
+      },
+    ].slice(-LUCK_HISTORY_MAX));
     if (now - lastUiRef.current > 150) {
       lastUiRef.current = now;
       setLastDrop(aura);
@@ -1131,7 +1179,12 @@ export default function SolSimPage({ active }: { active?: boolean }) {
           const mult = equippedFx.biomeMult[biomeMatchName(b.name || key)] || 1;
           if (Math.random() < base * mult) {
             let name = b.name || key;
+            // Two biomes are not rolled on their own — they replace another
+            // one: Singularity takes the place of Starfall, The Radiant
+            // Forest takes the place of Lost Forest (1 in 20, so it shows up
+            // now and then, never guaranteed).
             if (biomeMatchName(name) === "STARFALL" && Math.random() < 0.01) name = "SINGULARITY";
+            if (biomeMatchName(name) === "LOST FOREST" && Math.random() < 1 / 20) name = "THE RADIANT FOREST";
             const target = biomes[name] || b;
             w.biome = { name, color: String(target.color || "#7c6cff"), endsAt: now + parseDuration(target.duration) };
             const st = statsRef.current;
@@ -1280,13 +1333,16 @@ export default function SolSimPage({ active }: { active?: boolean }) {
     return () => { alive = false; };
   }, [biomeBg]);
   const phaseColor = world.phase === "day" ? "#fbbf24" : "#818cf8";
-  // Rare-biome ambience: subtle page-wide effects while the biome lasts
-  // (colors follow each biome's own wiki imagery).
+  // Rare-biome ambience: page-wide effects while the biome lasts. Only the
+  // five biomes the wiki groups as "Rare" get one (Glitched, Dreamspace,
+  // Cyberspace, Singularity, The Radiant Forest) — each looks the way its
+  // own wiki entry describes.
   const fxClass = world.biome ? ({
     GLITCHED: "sim-fx-glitch",
     DREAMSPACE: "sim-fx-dream",
     CYBERSPACE: "sim-fx-cyber",
     SINGULARITY: "sim-fx-sing",
+    "THE RADIANT FOREST": "sim-fx-radiant",
   } as Record<string, string>)[biomeMatchName(world.biome.name)] || "" : "";
   const biomeLeft = world.biome ? Math.max(0, Math.round(world.biome.endsAt - Date.now() / 1000)) : 0;
 
@@ -1538,6 +1594,45 @@ export default function SolSimPage({ active }: { active?: boolean }) {
                   <div style={{ textTransform: "uppercase", letterSpacing: ".08em", fontSize: 9.5, opacity: .85 }}>Techniques (shown, not simulated)</div>
                   {equippedFx.notes.map((n, i) => <div key={i}>• {n}</div>)}
                 </div>
+              )}
+            </div>
+
+            <div className="card" style={{ padding: 18 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                <h4 style={{ margin: 0, fontSize: 12, letterSpacing: ".12em", textTransform: "uppercase", color: "#a78bfa" }}>📈 Luck history</h4>
+                <span style={{ fontSize: 10.5, color: "var(--text-secondary)" }}>
+                  {luckHistory.length ? `last ${luckHistory.length} rolls` : "no rolls yet"}
+                </span>
+              </div>
+              {luckHistory.length > 0 ? (
+                <>
+                  <div style={{ display: "flex", alignItems: "flex-end", gap: 1, height: 74, padding: "6px 0 0", borderBottom: "1px solid rgba(255,255,255,.08)" }}>
+                    {luckHistory.map((h, i) => {
+                      const maxLuck = Math.max(...luckHistory.map(x => x.luck), 1);
+                      const hgt = Math.max(6, Math.round((h.luck / maxLuck) * 100));
+                      const color = h.bonus ? "#fbbf24" : h.spike > 1 ? "#a78bfa" : "#38bdf8";
+                      return (
+                        <div
+                          key={`${h.roll}-${i}`}
+                          title={`Roll #${h.roll} · luck ×${h.luck.toFixed(2)}${h.bonus ? " · bonus roll" : ""}${h.spike > 1 ? ` · spike ×${h.spike}` : ""}`}
+                          style={{
+                            flex: "1 1 0", minWidth: 2, height: `${hgt}%`,
+                            background: color, opacity: h.bonus || h.spike > 1 ? 1 : 0.55,
+                            borderRadius: "1px 1px 0 0", boxShadow: h.bonus ? `0 0 6px ${color}` : "none",
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div style={{ display: "flex", gap: 12, marginTop: 8, fontSize: 10.5, color: "var(--text-secondary)", flexWrap: "wrap" }}>
+                    <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#38bdf8", marginRight: 4 }} />normal roll</span>
+                    <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#fbbf24", marginRight: 4 }} />bonus roll</span>
+                    <span><i style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#a78bfa", marginRight: 4 }} />luck spike</span>
+                    <span style={{ marginLeft: "auto" }}>peak ×{Math.max(...luckHistory.map(x => x.luck)).toFixed(2)}</span>
+                  </div>
+                </>
+              ) : (
+                <div className="form-hint">The effective luck of every roll appears here — bonus rolls and luck spikes are highlighted.</div>
               )}
             </div>
 

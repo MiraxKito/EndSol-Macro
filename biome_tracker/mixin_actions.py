@@ -370,6 +370,45 @@ class ActionsMixin:
     def _is_same_version(self, a, b):
         return self._normalize_version(a) == self._normalize_version(b)
 
+    def _release_already_applied(self, version):
+        """True when this exact release was already installed.
+
+        The macro version and the release tag are two different things: a
+        fix release can ship under a new tag ("v1.1.1-fix") while the macro
+        itself keeps its version ("v1.1.1"). Comparing only the macro
+        version would then show the update prompt forever, because the two
+        never become equal. The tag of the applied release is stored in the
+        config instead, so the prompt appears once per release.
+        """
+        if not version:
+            return False
+        applied = ""
+        try:
+            cfg = getattr(self, "config", None)
+            if isinstance(cfg, dict):
+                applied = str(cfg.get("last_applied_release") or "")
+        except Exception:
+            applied = ""
+        if not applied:
+            return False
+        return self._normalize_version(applied) == self._normalize_version(version)
+
+    def _mark_release_applied(self, version):
+        """Remember the release tag that was just installed."""
+        if not version:
+            return
+        try:
+            cfg = getattr(self, "config", None)
+            if not isinstance(cfg, dict):
+                return
+            if self._normalize_version(cfg.get("last_applied_release")) == \
+                    self._normalize_version(version):
+                return
+            cfg["last_applied_release"] = str(version)
+            self.save_config()
+        except Exception as e:
+            print(f"Could not store the applied release tag: {e}")
+
     def _fetch_latest_release(self):
         try:
             response = safe_get(self._get_update_api_url(), timeout=12)
@@ -501,7 +540,7 @@ class ActionsMixin:
                 pass
             raise RuntimeError("Downloaded update failed sha256 verification")
 
-    def _download_and_stage_exe_update(self, download_url, asset_name="EndSolMacro.exe"):
+    def _download_and_stage_exe_update(self, download_url, asset_name="EndSolMacro.exe", version=""):
         download_url = self._validate_update_download_url(download_url)
         expected_sha256 = self._expected_update_sha256(download_url)
         if not getattr(sys, "frozen", False):
@@ -539,6 +578,10 @@ class ActionsMixin:
         ]
         if not self._spawn_detached_exe(temp_exe, args):
             raise RuntimeError("Failed to launch downloaded update executable")
+        # The release tag is remembered so the update prompt does not come
+        # back for a release that is already installed (a fix release can
+        # carry a different tag than the macro version).
+        self._mark_release_applied(version)
         return True
 
     def _is_pid_alive(self, pid):
@@ -638,6 +681,8 @@ class ActionsMixin:
             latest_version = str(latest_release.get("tag_name", "")).strip()
             if not latest_version or self._is_same_version(latest_version, current_ver):
                 return False
+            if self._release_already_applied(latest_version):
+                return False
 
             asset_name, download_url = self._pick_update_exe_asset(latest_release)
             if not download_url:
@@ -645,7 +690,8 @@ class ActionsMixin:
                 return False
 
             print("Downloading EndSol Macro update...")
-            if self._download_and_stage_exe_update(download_url, asset_name=asset_name):
+            if self._download_and_stage_exe_update(download_url, asset_name=asset_name,
+                                                   version=latest_version):
                 print(f"Update {latest_version} downloaded. Restarting into the new executable...")
                 return True
             return False
@@ -663,6 +709,8 @@ class ActionsMixin:
 
             latest_version = str(latest_release.get("tag_name", "")).strip()
             if latest_version and not self._is_same_version(latest_version, current_version):
+                if self._release_already_applied(latest_version):
+                    return
                 asset_name, download_url = self._pick_update_exe_asset(latest_release)
                 if not download_url:
                     return
@@ -685,7 +733,8 @@ class ActionsMixin:
 
             guessed_name = os.path.basename(str(download_url).split("?", 1)[0]) or "EndSolMacro.exe"
             if getattr(sys, "frozen", False):
-                self._download_and_stage_exe_update(download_url, asset_name=guessed_name)
+                self._download_and_stage_exe_update(download_url, asset_name=guessed_name,
+                                                   version=version)
 
                 if hasattr(self, "on_update_status") and callable(self.on_update_status):
                     self.on_update_status("done|restarting")
@@ -708,6 +757,7 @@ class ActionsMixin:
 
                 if hasattr(self, "on_update_status") and callable(self.on_update_status):
                     self.on_update_status(f"done|{os.path.basename(downloaded_path)}")
+                self._mark_release_applied(version)
                 return True
         except Exception as e:
             print(f"Failed to download/apply update: {e}")
@@ -2789,9 +2839,9 @@ class ActionsMixin:
     # ── SIMPLE craft mode (new Eon 1-23 crafting UI) ───────────────
     #
     # The game's Auto button has THREE states that CYCLE on every click:
-    # 1) автодобавление (ON, green) ->
-    # 2) автодобавление + автокрафт (ON+CRAFT, dark turquoise) ->
-    # 3) ВЫКЛ (OFF, dark neutral) -> back to 1. Clicking an already-active
+    # 1) auto-add (ON, green) ->
+    # 2) auto-add + auto-craft (ON+CRAFT, dark turquoise) ->
+    # 3) OFF (dark neutral) -> back to 1. Clicking an already-active
     # state eventually turns it OFF, so the macro never clicks blindly:
     # the current state is classified from the calibrated
     # `potion_auto_state_region` (median color; rule-based, with the
@@ -3875,24 +3925,24 @@ class ActionsMixin:
             if not log_file_path or not os.path.exists(log_file_path):
                 return False
 
-            # На каждый запуск Roblox создаётся НОВЫЙ .log файл, поэтому
-            # offset-смещение и old_log_file не имеют смысла — читаем весь
-            # актуальный файл целиком.
+            # Every Roblox launch creates a NEW .log file, so an offset and
+            # old_log_file make no sense here — the whole current file is
+            # read.
             with open(log_file_path, "rb") as f:
                 data = f.read()
             lines = data.decode("utf-8", errors="ignore").splitlines()
 
             for line in reversed(lines):
                 low = (line or "").lower()
-                # "state":"Equipped" (setrichpresence) — появляется ТОЛЬКО
-                # после нажатия кнопки Start. Это надёжный маркер реального
-                # перехода в игру.
+                # "state":"Equipped" (setrichpresence) appears ONLY after the
+                # Start button was pressed. It is the reliable marker of a
+                # real transition into the game.
                 if re.search(r'"state":"Equipped', line):
                     return True
-                # "Entered play session." — вход в плейс ДО нажатия Start,
-                # НЕ является признаком успешного нажатия кнопки. НЕ используем.
-                # "[FLog::SessionTransitionFSM] Entered play session." — тоже
-                # вход в плейс, не нажатие Start.
+                # "Entered play session." is the entry into the place BEFORE
+                # Start is pressed and is NOT proof of a successful Start
+                # click, so it is not used here. The same goes for
+                # "[FLog::SessionTransitionFSM] Entered play session.".
 
         except Exception as e:
             self.error_logging(e, "Error in reconnect_logs_state function.")

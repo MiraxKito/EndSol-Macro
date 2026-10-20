@@ -1,6 +1,14 @@
 from .base_support import *
 from .config import APPDATA_BASE
 
+# Wiki media that are videos or audio, never a still picture. ".mov" and
+# ".ogv" are included on purpose: Arachnophobia's opening is a .mov file and
+# it used to be picked as the aura's picture.
+AURA_VIDEO_EXT = (
+    ".mp4", ".webm", ".ogg", ".oga", ".wav", ".mp3", ".mov", ".ogv",
+    ".m4v", ".mkv", ".avi", ".flv", ".3gp",
+)
+
 class DetectionMixin:
     def load_logs(self):
         log_path = APPDATA_BASE / "logs" / "macro_logs.txt"
@@ -1329,7 +1337,9 @@ class DetectionMixin:
                 touched = False
                 for field in ("video_url", "video_file", "video_kind",
                               "music_url", "music_file",
-                              "cutscene_note", "description"):
+                              "cutscene_note", "description",
+                              "appearance", "ability", "lore",
+                              "image_collection_url", "image_ingame_url"):
                     val = src.get(field)
                     if val and not entry.get(field):
                         entry[field] = val
@@ -1729,7 +1739,9 @@ class DetectionMixin:
             return [part.replace("\x00", "|") for part in parts]
 
         info = {}
-        box = find_template("Aura Infobox")
+        # The wiki uses two spellings of the same template: "{{Aura Infobox}}"
+        # and "{{Aura_Infobox}}" (the newer pages use the underscore).
+        box = find_template("Aura Infobox") or find_template("Aura_Infobox")
         fields = {}
         if box:
             for part in split_params(box[2:-2]):
@@ -1838,7 +1850,70 @@ class DetectionMixin:
         profile = re.search(r"(?m)^=+\s*Profile\s*=+\s*\n(.*?)(?=\n=+\s*[^=\n]+\s*=+|\Z)", text, re.I | re.S)
         desc = clean(profile.group(1)) if profile else ""
         if desc:
-            info["description"] = desc[:1200]
+            info["description"] = desc[:3000]
+        # The wiki writes more than the Profile line for most auras: an
+        # "Appearance" paragraph (how the aura looks in game) and sometimes an
+        # "Ability: X" section. Both are real reference text and belong in
+        # the book, so they are read into their own fields.
+        placeholder = {"tba", "tbd", "empty", "none", "???", "...", "-", "n/a"}
+
+        def _usable(value):
+            v = str(value or "").strip()
+            return bool(v) and v.lower() not in placeholder and len(v) >= 8
+
+        appearance = re.search(
+            r"(?m)^=+\s*Appearance\s*=+\s*\n(.*?)(?=\n=+\s*[^=\n]+\s*=+|\Z)", text, re.I | re.S)
+        if appearance:
+            app_text = clean(appearance.group(1))
+            if _usable(app_text):
+                info["appearance"] = app_text[:4000]
+
+        ability_parts = []
+        for m in re.finditer(
+                r"(?m)^=+\s*(Abilit(?:y|ies)(?:\s*[:|][^=\n]*)?)\s*=+\s*\n(.*?)(?=\n=+\s*[^=\n]+\s*=+|\Z)",
+                text, re.I | re.S):
+            head = clean(m.group(1)).strip()
+            body_raw = m.group(2)
+            # "Abilities" holds a <tabber>: one "|-| Label [X]=" block per
+            # ability, each with its own description.
+            entries = re.split(r"\|-+\|", body_raw)
+            found = False
+            for entry in entries:
+                if "=" not in entry:
+                    continue
+                label_raw, desc_raw = entry.split("=", 1)
+                label = clean(label_raw)
+                desc = clean(desc_raw)
+                if not _usable(desc):
+                    continue
+                ability_parts.append(f"{label} — {desc}" if label else desc)
+                found = True
+            if found:
+                continue
+            # Plain prose instead of a tabber: "Tree House has 5 abilities:
+            # Enchanted Shockwave, Nature's Guard, ...". The whole
+            # paragraph IS the ability text.
+            prose = clean(body_raw)
+            if _usable(prose):
+                prose = re.sub(r"^\s*\S.*?\bhas\s+\d+\s+abilit(?:y|ies)\s*:\s*", "", prose, flags=re.I)
+                ability_parts.append(prose)
+        if ability_parts:
+            info["ability"] = " | ".join(ability_parts)[:4000]
+
+        # The {{Quote|1=...|2=Description}} template at the top of the article
+        # is the wiki's own flavour text for the aura.
+        quote = find_template("Quote")
+        if quote:
+            # The template head is "{{Quote" (sometimes followed by a newline
+            # before the first "|"), so the name is cut off before splitting.
+            inner = quote[2:-2]
+            sep = inner.find("|")
+            q_parts = split_params(inner[sep + 1:]) if sep >= 0 else []
+            q_raw = q_parts[0] if q_parts else ""
+            q_raw = re.sub(r"^\s*1\s*=\s*", "", q_raw)
+            q_text = clean(q_raw)
+            if _usable(q_text):
+                info["lore"] = q_text[:2500]
         # A challenge aura's Profile section IS the obtention (e.g. Tomorrow:
         # "It can only be obtained after rolling the 7 Radiant Moons inside
         # The Radiant Forest"). The auto-generated "Exclusive to X (N/A)"
@@ -1898,19 +1973,6 @@ class DetectionMixin:
 
         video_ext = (".mp4", ".webm", ".ogg", ".wav", ".mp3")
         gallery_files = [f.strip() for f in re.findall(r"\[\[File:([^|\]]+)", text)]
-        collection = None
-        for m3 in re.finditer(r"\[\[File:([^|\]]+)\|([^\]]*)\]\]", text):
-            cap = (m3.group(2) or "").lower()
-            name = m3.group(1).strip()
-            if "collection" in cap or "collection" in name.lower():
-                if not name.lower().endswith(video_ext):
-                    collection = name
-                    break
-        if collection is None:
-            for name in gallery_files:
-                if not name.lower().endswith(video_ext):
-                    collection = name
-                    break
 
         # "Opening Cutscene" videos: [[File:DreamcatcherCutscene.mp4]] —
         # resolved via Special:FilePath (follows the wiki redirect to the CDN
@@ -1966,19 +2028,113 @@ class DetectionMixin:
             if note and note.lower() != "none":
                 info["cutscene_note"] = note[:400]
 
-        urls = []
+        # ── Images of the aura ─────────────────────────────────────────
+        # The wiki stores the aura pictures in the infobox as a gallery:
+        #   |image1=<gallery>
+        #   ReworkedLumiColl.gif|Collection
+        #   ReworkedLumiInGame.gif|In-game
+        #   </gallery>
+        # The "File:" prefix is optional there, so a plain [[File:...]]
+        # scan never sees them — the collection icon used to fall back to
+        # "the first file on the page", which is an inventory screenshot or
+        # even a video (Arachnophobia's .mov opening). The captions are the
+        # reliable source, so the galleries are parsed and classified.
+        def _gallery_entries(raw):
+            """Entries of the infobox image1 field.
+
+            The wiki uses three shapes here: a <gallery> with captions
+            ("ReworkedLumiColl.gif|Collection"), a single file name
+            ("image1=Stellaaura.jpg") and the same with the "File:" prefix
+            ("image1=File:Duke_Ingame.png"). A single file without a caption
+            IS the aura's own picture.
+            """
+            raw = str(raw or "").strip()
+            if not raw:
+                return []
+            inner = re.sub(r"</?gallery[^>]*>", " ", raw).strip()
+            out = []
+            for line in inner.splitlines():
+                s = line.strip()
+                if not s or s.startswith("|-") or s.startswith("=") or s.startswith("{{"):
+                    continue
+                m = re.match(r"(?:File:)?([^|\n]+?)\s*\|\s*(.*)$", s)
+                if m:
+                    name = m.group(1).strip()
+                    caption = re.sub(r"\{\{[^{}]*\}\}", "", m.group(2)).strip()
+                elif re.match(r"[^|\n]+\.(?:png|gif|jpe?g|webp|bmp|svg)$", s, re.I):
+                    name = re.sub(r"^File:", "", s, flags=re.I).strip()
+                    caption = ""
+                else:
+                    continue
+                if not name or name.lower().endswith(AURA_VIDEO_EXT):
+                    continue
+                # The wiki uses "Placeholder.png" for auras whose picture is
+                # not made yet — it must never become the preview.
+                if "placeholder" in name.lower():
+                    continue
+                out.append((name, caption))
+            return out
+
+        def _pick(entries, *keywords):
+            for name, caption in entries:
+                low = (caption or "").lower()
+                if any(k in low for k in keywords):
+                    return name
+            for name, caption in entries:
+                low = (name or "").lower()
+                if any(k in low for k in keywords):
+                    return name
+            return ""
+
+        infobox_entries = _gallery_entries(fields.get("image1", ""))
+        gallery_sec = re.search(
+            r"(?m)^=+\s*Gallery\s*=+\s*\n(.*?)(?=\n=+\s*[^=\n]+\s*=+|\Z)", text, re.I | re.S)
+        gallery_entries = _gallery_entries(gallery_sec.group(1) if gallery_sec else "")
+
+        collection = _pick(infobox_entries, "collection") or _pick(gallery_entries, "collection")
+        in_game = (_pick(infobox_entries, "in-game", "ingame", "in game")
+                   or _pick(gallery_entries, "in-game", "ingame", "in game"))
+        if not collection and not in_game and infobox_entries:
+            # A single unnamed file in image1 is the aura's own picture.
+            in_game = infobox_entries[0][0]
         if collection:
-            urls.append("https://sol-rng.fandom.com/wiki/Special:FilePath/" + collection.replace(" ", "_"))
+            info["image_collection_url"] = "https://sol-rng.fandom.com/wiki/Special:FilePath/" + collection.replace(" ", "_")
+            info["image_collection_file"] = collection
+        if in_game:
+            info["image_ingame_url"] = "https://sol-rng.fandom.com/wiki/Special:FilePath/" + in_game.replace(" ", "_")
+            info["image_ingame_file"] = in_game
+
+        urls = []
+        seen_files = set()
+
+        def _add(file_name, caption=None):
+            if not file_name:
+                return
+            key = file_name.lower()
+            if key in seen_files:
+                return
+            seen_files.add(key)
+            urls.append({
+                "url": "https://sol-rng.fandom.com/wiki/Special:FilePath/" + file_name.replace(" ", "_"),
+                "caption": caption or "",
+            })
+
+        # Order matters: the collection icon is the aura's face, the in-game
+        # shot is the second best preview, everything else is gallery art.
+        _add(collection, "Collection icon")
+        _add(in_game, "In-game preview")
+        for name, caption in infobox_entries:
+            _add(name, caption)
+        for name, caption in gallery_entries:
+            _add(name, caption)
         for u in re.findall(r"https?://static\.wikia\.nocookie\.net/[^\s\)\]\|]+", text):
             # Raw video URLs belong to the player, not the image gallery.
-            # Only used when the page has NO Opening Cutscene section at all,
-            # so an Ability clip can never pose as a cutscene.
-            if re.search(r"\.(?:mp4|webm|ogg|mov)(?:\?|$)", u, re.I):
+            if re.search(r"\.(?:mp4|webm|ogg|mov|ogv)(?:\?|$)", u, re.I):
                 if not info.get("video_url") and cs_sec is None:
                     info["video_url"] = u
                 continue
-            if u not in urls:
-                urls.append(u)
+            if u not in [i["url"] for i in urls]:
+                urls.append({"url": u, "caption": ""})
         if urls:
             info["image_urls"] = urls[:8]
         info["fandom_page"] = "https://sol-rng.fandom.com/wiki/" + str(aura_name or "").replace("_", " ").replace(" ", "_")
@@ -2005,7 +2161,7 @@ class DetectionMixin:
                     src = self._get_default_auras_data()
                 except Exception:
                     src = {}
-            entry = (src or {}).get(name) or {}
+            entry = (src or {}).get(name) or (src or {}).get(spaced) or (src or {}).get(name.replace(" ", "_")) or {}
             override = str(entry.get("_fandom_title") or "").strip()
             if override and override not in page_names:
                 page_names.insert(0, override)
@@ -2017,9 +2173,44 @@ class DetectionMixin:
         cached = detail_cache.get(name)
         if isinstance(cached, dict) and cached and not cached.get("error"):
             return cached
+        # The bundled snapshot already carries the full wiki text and the
+        # media of every aura, so the entry can be shown RIGHT AWAY. The
+        # live page is still fetched afterwards in the background to keep
+        # the numbers fresh — without making the user wait for Fandom on
+        # every click.
+        snapshot_entry = {}
+        try:
+            src = getattr(self, "auras_data", None)
+            if not isinstance(src, dict) or not src:
+                src = self._get_default_auras_data()
+            snapshot_entry = {}
+            for key in (name, spaced, name.replace(" ", "_"), name.replace("_", " ")):
+                if not key:
+                    continue
+                found = (src or {}).get(key)
+                if isinstance(found, dict) and found:
+                    snapshot_entry = found
+                    break
+        except Exception:
+            snapshot_entry = {}
+        if isinstance(snapshot_entry, dict) and (
+                snapshot_entry.get("description")
+                or snapshot_entry.get("image_collection_url")
+                or snapshot_entry.get("image_ingame_url")
+                or snapshot_entry.get("appearance")):
+            result = dict(snapshot_entry)
+            result.setdefault("name", name)
+            result["_metadata_source"] = result.get("_metadata_source") or "fandom_snapshot"
+            self._schedule_aura_detail_refresh(name, page_names)
+            return result
         last_error = "Fandom aura page unavailable"
         for page_name in dict.fromkeys(page_names):
-            url = "https://sol-rng.fandom.com/api.php?action=parse&page=" + quote(page_name) + "&prop=wikitext&format=json"
+            # redirects=1: several auras are plain redirects ("Defined" ->
+            # "Undefined : Defined", "Kromat1k" -> "Chromatic : Kromat1k");
+            # without it the API returns the one-line redirect stub and the
+            # aura has no picture, no profile and no abilities.
+            url = ("https://sol-rng.fandom.com/api.php?action=parse&page=" + quote(page_name)
+                   + "&prop=wikitext&format=json&redirects=1")
             try:
                 response = fandom_get(url, timeout=20)
                 if response is None or not response.ok:
@@ -2033,7 +2224,12 @@ class DetectionMixin:
                     data["fandom_page"] = "https://sol-rng.fandom.com/wiki/" + page_name.replace(" ", "_")
                 except Exception:
                     pass
-                if data.get("rarity") is not None or data.get("is_exclusive") or data.get("native_rarity") is not None:
+                if (data.get("rarity") is not None or data.get("is_exclusive")
+                        or data.get("native_rarity") is not None
+                        or data.get("rarity_name")
+                        or data.get("image_collection_url")
+                        or data.get("image_ingame_url")
+                        or data.get("description")):
                     detail_cache[name] = data
                     self._fandom_aura_detail_cache = detail_cache
                     return data
@@ -2041,6 +2237,62 @@ class DetectionMixin:
             except Exception:
                 last_error = "Fandom aura page could not be parsed"
         return {"error": last_error}
+
+    def _schedule_aura_detail_refresh(self, aura_name, page_names):
+        """Refresh one aura's live page in the background.
+
+        The book shows the bundled snapshot immediately; this keeps the
+        cache up to date so the NEXT visit of that entry already carries
+        the fresh wiki numbers.
+        """
+        import threading
+        key = f"_aura_refresh_thread_{aura_name}"
+        thread = getattr(self, key, None)
+        if thread is not None and getattr(thread, "is_alive", lambda: False)():
+            return
+        def _run():
+            try:
+                self._fetch_fandom_aura_detail(aura_name, list(page_names), refresh_only=True)
+            except Exception:
+                pass
+        t = threading.Thread(target=_run, daemon=True, name=f"aura-refresh-{aura_name}")
+        try:
+            setattr(self, key, t)
+            t.start()
+        except Exception:
+            pass
+
+    def _fetch_fandom_aura_detail(self, name, page_names, refresh_only=False):
+        """Fetch one aura article and cache it. Returns the parsed data."""
+        detail_cache = getattr(self, "_fandom_aura_detail_cache", None)
+        if not isinstance(detail_cache, dict):
+            detail_cache = {}
+        for page_name in dict.fromkeys(page_names):
+            url = ("https://sol-rng.fandom.com/api.php?action=parse&page=" + quote(page_name)
+                   + "&prop=wikitext&format=json&redirects=1")
+            try:
+                response = fandom_get(url, timeout=20)
+                if response is None or not response.ok:
+                    continue
+                raw = response.json()
+                wikitext = (((raw.get("parse") or {}).get("wikitext") or {}).get("*") if isinstance(raw, dict) else "")
+                data = self._parse_fandom_aura_page(wikitext, name)
+                try:
+                    data["fandom_page"] = "https://sol-rng.fandom.com/wiki/" + page_name.replace(" ", "_")
+                except Exception:
+                    pass
+                if (data.get("rarity") is not None or data.get("is_exclusive")
+                        or data.get("native_rarity") is not None
+                        or data.get("rarity_name")
+                        or data.get("image_collection_url")
+                        or data.get("image_ingame_url")
+                        or data.get("description")):
+                    detail_cache[name] = data
+                    self._fandom_aura_detail_cache = detail_cache
+                    return data
+            except Exception:
+                continue
+        return {}
 
     def load_fandom_biome_detail(self, biome_name):
         """Collect a biome's real wiki images as a gallery (like THE LIMBO).
@@ -2487,7 +2739,45 @@ class DetectionMixin:
                 entry["music_url"] = self._FANDOM_WIKI_URL + "Special:FilePath/" + _song.replace(" ", "_")
                 break
 
-            prose = re.split(r"(?:\n\*|It also spawns|The song used|Limited Auras)", body)[0]
+            # Prose = every paragraph of the section, in order. The aura
+            # lists, tables and the "Limited Auras" block are not prose and
+            # the song lines are captured separately as music_file, so they
+            # are dropped here. Cutting the text at the first bullet (as an
+            # earlier version did) threw away everything the wiki writes
+            # AFTER the aura list — item drops, effects and achievements.
+            body_main = re.split(
+                r"'''\s*Limited Auras\s*'''|^\s*Limited Auras\s*$", body, flags=re.I | re.M)[0]
+            prose_lines = []
+            after_list = False
+            for raw_line in body_main.splitlines():
+                s = raw_line.strip()
+                if not s:
+                    continue
+                if s[0] in "*|!=":
+                    after_list = True
+                    continue
+                low_line = s.lower()
+                if "song used" in low_line:
+                    continue
+                if re.match(r"^\(?\s*[\w \-]*mp3[\w \-]*\)?\s*$", low_line):
+                    continue
+                if re.match(r"^\[.*\]$", s):
+                    continue
+                # A line that only carries the in-game chat message (its
+                # <font> block) is shown separately as "Biome Message".
+                if re.match(r"^'?<?font\b.*$", s, re.I) and "</font>" in s.lower() \
+                        and not re.sub(r"<[^>]+>", "", s).strip("'").strip():
+                    continue
+                # Bold-only lines ("'''Special Auras'''") are list headers.
+                if s.startswith("'''") and s.endswith("'''") and s.count("'''") == 2:
+                    continue
+                if after_list and prose_lines and prose_lines[-1].endswith(":"):
+                    # The sentence introduced the aura list that was just
+                    # removed, so the dangling colon becomes a full stop.
+                    prose_lines[-1] = prose_lines[-1][:-1].rstrip() + "."
+                after_list = False
+                prose_lines.append(s)
+            prose = " ".join(prose_lines)
             # The chat line "<font ...>[Starfall]: ...</font>" must never leak
             # into the description/how_to_get text.
             prose = re.sub(r"<font[^>]*>.*?</font>", " ", prose, flags=re.S)
@@ -2504,7 +2794,13 @@ class DetectionMixin:
                 low = sentence.lower()
                 if ("someone add a desc" in low or "im too lazy" in low
                         or "[link here]" in low or "[artist here]" in low
-                        or "[platform here]" in low or "[mp3 of" in low):
+                        or "[platform here]" in low or "[mp3 of" in low
+                        or low.startswith("for more uses of")
+                        or low.startswith("see also")):
+                    continue
+                if not re.search(r"[A-Za-z]", sentence):
+                    # Non-Latin text (the wiki sometimes shows the raw
+                    # in-game message next to its English translation).
                     continue
                 kept.append(sentence)
             prose = re.sub(r"\s+", " ", " ".join(kept)).strip(" .:-,")
@@ -3063,7 +3359,15 @@ class DetectionMixin:
         return results
 
     def _get_default_auras_data(self):
-        """Bundled Fandom snapshot fallback (real wiki data captured offline)."""
+        """Bundled Fandom snapshot fallback (real wiki data captured offline).
+
+        The file is over a megabyte of JSON, so the parsed result is kept
+        in memory — the book asks for it on every click and re-reading it
+        each time made the page feel like it was hanging.
+        """
+        cached = getattr(self, "_default_auras_data_cache", None)
+        if isinstance(cached, dict) and cached:
+            return cached
         path = os.path.join(os.path.dirname(__file__), "auras_fandom.json")
         try:
             with open(path, "r", encoding="utf-8") as f:
@@ -3072,6 +3376,10 @@ class DetectionMixin:
                 for item in data.values():
                     if isinstance(item, dict):
                         item.setdefault("_metadata_source", "fandom_snapshot")
+                try:
+                    self._default_auras_data_cache = data
+                except Exception:
+                    pass
                 return data
         except Exception as exc:
             print(f"Could not load bundled Fandom aura snapshot: {exc}")

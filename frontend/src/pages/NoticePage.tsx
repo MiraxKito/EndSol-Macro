@@ -12,6 +12,19 @@ export default function NoticePage() {
         </a>
       </p>
     </div>
+    <div className="card"><div className="card-header"><div className="card-icon">🩹</div><div><h3>v1.1.1-fix — Full wiki text, own biome icons, music player</h3><p>Sol's Book stops cutting the wiki short, the rare biomes look like themselves, and the panel gets a music player</p></div></div>
+      <div className="changelog-item"><h4>✅ New</h4><ul>
+        <li><b>Music player 🎵:</b> a built-in player with starred tracks, a playlist and repeat modes — it can play in the background after the panel starts. The button sits in the header next to the theme.</li>
+        <li><b>Sol's Book — full entries 📖:</b> the wiki's own <b>Appearance</b> and <b>Ability</b> text is shown next to the rarity, and the flavour quote opens the entry.</li>
+        <li><b>Own biome icons 📦:</b> the biome icons ship with the macro and come from this repository's CDN.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
+        <li><b>Sol's Book — nothing cut short 📄:</b> biome descriptions run to the end, every aura shows its own picture (not an inventory screenshot or a cutscene), and auras behind a redirect now load properly.</li>
+        <li><b>Sol's Book — no more hanging ⏱:</b> the page loads the list and the entries much faster.</li>
+        <li><b>Sol's Sim — rare biomes ✨:</b> Glitched tears the screen apart, Singularity became a real black hole, and The Radiant Forest can now replace Lost Forest (1 in 20).</li>
+        <li><b>Update prompt:</b> a fix release under a new tag reaches everyone who already has the macro.</li>
+      </ul></div>
+    </div>
     <div className="card"><div className="card-header"><div className="card-icon">🧪</div><div><h3>v1.1.1 — The Forest Update & Sol's Sim Upgrade</h3><p>One-roll potions, the real luck formula, connection-aware reconnects, and a wave of fixes</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
         <li><b>Sol's Sim — one-roll potions 🧪:</b> Heavenly, Oblivion, Potion of Bound, Potion of the Dune, Red Moon Potion I/II and Pump King's Blood, with their real effects and the auras only they unlock (Neferkhaf, Fragments of the Crimson Moon, Oblivion, Memory).</li>

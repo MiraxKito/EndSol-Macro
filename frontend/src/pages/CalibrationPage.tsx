@@ -306,7 +306,7 @@ export default function CalibrationPage() {
     const [presets, setPresets] = useState<any[]>([]);
     const [selectedRes, setSelectedRes] = useState("1920x1080");
     const [selectedScale, setSelectedScale] = useState("100%");
-    const [selectedMode, setSelectedMode] = useState("Windowed");
+    const [selectedMode, setSelectedMode] = useState("Fullscreen");
     const [showPresetModal, setShowPresetModal] = useState(false);
     const [pendingPreset, setPendingPreset] = useState<any>(null);
     const [presetStatus, setPresetStatus] = useState<string>("");
@@ -427,6 +427,9 @@ export default function CalibrationPage() {
 
     const uniqueResolutions = Array.from(new Set(presets.map(p => p.resolution)));
     const availableScales = Array.from(new Set(presets.filter(p => p.resolution === selectedRes).map(p => p.scale)));
+    // Every mode a preset carries is offered — users share calibrations for
+    // their own window mode, and the bundled presets only cover fullscreen
+    // so far.
     const availableModes = Array.from(new Set(presets.filter(p => p.resolution === selectedRes && p.scale === selectedScale).map(p => p.mode)));
 
     const handleApplyClick = () => {
@@ -470,6 +473,12 @@ export default function CalibrationPage() {
                             This will overwrite your current calibrations with the
                             <br />
                             <strong style={{ color: "var(--text-primary)" }}>{pendingPreset.resolution} ({pendingPreset.scale} {pendingPreset.mode})</strong> preset.
+                            {pendingPreset.monitor && (
+                                <>
+                                    <br />
+                                    <span style={{ color: "var(--text-muted)", fontSize: "0.9em" }}>Calibrated for: {pendingPreset.monitor}</span>
+                                </>
+                            )}
                             <br /><br />
                             <span style={{ color: "var(--text-muted)", fontSize: "0.85em" }}>This action cannot be undone.</span>
                         </p>
@@ -563,7 +572,7 @@ export default function CalibrationPage() {
                     <div className="card-icon">⚡</div>
                     <div style={{ flex: 1 }}>
                         <h3>Macro Calibrations Preset</h3>
-                        <p>Reference presets only. For Windowed 1920×1080, verify the Roblox client rectangle and use Custom Calibrations for exact values.</p>
+                        <p>Reference presets only. The bundled one is Fullscreen 1920×1080 at 100% on the reference monitor — for any other resolution, scale or window mode use a shared preset or your own Custom Calibrations.</p>
                     </div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr auto", gap: "10px", alignItems: "end", marginTop: "12px" }}>

@@ -98,4 +98,24 @@ export const RU_P4: Record<string, string> = {
     "requires Auto Reconnect and should be tested with a private server.": "требует Auto Reconnect и проверяется на приватном сервере.",
     "Requires the macro to be running.": "Требуется запущенный макрос.",
     "Only works if fishing mode, potion crafting, auto obby pathing is OFF!": "Работает только если выключены рыбалка, крафт зелий и авто-obby!",
+
+    // ── Instructions: Sol's Book + Sol's Sim ──
+    "Sol's Sim": "Sol's Sim",
+    "Sol's Sim is a calculator for the game, not a game client: it never touches Roblox and never moves the mouse. It models the roll odds of a biome so you can compare paths before you play them.":
+        "Sol's Sim — калькулятор, а не игровой клиент: он не трогает Roblox и не двигает мышь. Он моделирует шансы ролла в биоме, чтобы можно было сравнить маршруты до игры.",
+    "Honest mode": "Честный режим",
+    "Honest mode uses the real rarity and boost values from the wiki. Sandbox mode adds a speed multiplier for quick comparisons — it is a simulation aid, never a prediction of a real roll.":
+        "Честный режим берёт реальные значения редкости и бустов из вики. Песочница добавляет множитель скорости для быстрых сравнений — это помощник симуляции, а не прогноз реального ролла.",
+    "Glove (gauntlet) effects are read from the wiki and applied in the simulation; the ones with real in-game timing are listed separately and are not simulated.":
+        "Эффекты перчаток читаются из вики и применяются в симуляции; те, у которых есть реальная игровая механика, вынесены отдельно и не симулируются.",
+    "Rare biomes add their own ambience while they are selected, so you can see which world you are comparing.":
+        "Редкие биомы добавляют своё оформление, пока выбраны, — видно, какой мир вы сравниваете.",
+    "The result tells you the expected rarity of a roll, the luck multiplier, and which buffs are active at that moment.":
+        "Результат показывает ожидаемую редкость ролла, множитель удачи и то, какие баффы активны в этот момент.",
+    "Sol's Sim never sends input to the game — it is safe to keep it open next to a running macro.":
+        "Sol's Sim не отправляет ввод в игру — его можно держать открытым рядом с работающим макросом.",
+    "An aura entry carries the wiki's own Appearance and Ability text next to its rarity and obtainment; the Media tab holds the gallery, cutscenes and theme music of that entry.":
+        "В записи ауры рядом с редкостью и способом получения показаны тексты Appearance и Ability из вики; на вкладке Media лежат галерея, катсцены и музыка записи.",
+    "Biome icons are served from this project's own repository, so a broken icon link in Discord Webhook Customization is reported next to the field — the URL check accepts this repository's CDN and OysterDetector, and flags hosts Discord cannot fetch.":
+        "Иконки биомов раздаются из репозитория самого проекта, поэтому в «Кастомизации Discord-вебхука» рядом с полем показывается проверка ссылки — принимаются CDN этого репозитория и OysterDetector, а хосты, недоступные Discord, помечаются как битые.",
 };

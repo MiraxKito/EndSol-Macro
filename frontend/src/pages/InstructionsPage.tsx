@@ -73,7 +73,13 @@ export default function InstructionsPage() {
 
       <Section icon="📖" title="Sol's Book">
         <p><b>Sol's Book</b> is the built-in encyclopedia of biomes and auras. Data comes directly from the Sol's RNG Fandom wiki: spawn chances, durations, breakthrough multipliers, chat colors, native and exclusive auras, rarities, and obtainment paths.</p>
-        <ul><li>While the macro runs it refreshes the data from Fandom automatically; the last verified copy is cached locally for offline use.</li><li>The source badge on the page shows whether you are viewing live Fandom data, the local cache, or the bundled offline snapshot.</li><li>Biome and aura statistics used by webhooks come from the same dataset.</li></ul>
+        <ul><li>While the macro runs it refreshes the data from Fandom automatically; the last verified copy is cached locally for offline use.</li><li>The source badge on the page shows whether you are viewing live Fandom data, the local cache, or the bundled offline snapshot.</li><li>Biome and aura statistics used by webhooks come from the same dataset.</li><li>An aura entry carries the wiki's own <b>Appearance</b> and <b>Ability</b> text next to its rarity and obtainment; the <b>Media</b> tab holds the gallery, cutscenes and theme music of that entry.</li><li>Biome icons are served from this project's own repository, so a broken icon link in <b>Discord Webhook Customization</b> is reported next to the field — the URL check accepts this repository's CDN and OysterDetector, and flags hosts Discord cannot fetch.</li></ul>
+      </Section>
+
+      <Section icon="🎲" title="Sol's Sim">
+        <p><b>Sol's Sim</b> is a calculator for the game, not a game client: it never touches Roblox and never moves the mouse. It models the roll odds of a biome so you can compare paths before you play them.</p>
+        <ul><li><b>Honest mode</b> uses the real rarity and boost values from the wiki. <b>Sandbox mode</b> adds a speed multiplier for quick comparisons — it is a simulation aid, never a prediction of a real roll.</li><li>Glove (gauntlet) effects are read from the wiki and applied in the simulation; the ones with real in-game timing are listed separately and are not simulated.</li><li>Rare biomes add their own ambience while they are selected, so you can see which world you are comparing.</li><li>The result tells you the expected rarity of a roll, the luck multiplier, and which buffs are active at that moment.</li></ul>
+        <Tip>Sol's Sim never sends input to the game — it is safe to keep it open next to a running macro.</Tip>
       </Section>
 
       <Section icon="🎁" title="Daily Rewards">

@@ -6,6 +6,19 @@ current_version = "v1.1.1"
 import os as _os
 _os.environ["ENDSOL_MACRO_VERSION"] = current_version
 
+# Fields the Sol's Book aura LIST needs. The long wiki text (description,
+# appearance, ability, lore) and the media gallery are delivered per entry
+# by get_aura_detail — sending them with the list made the book page
+# download and parse more than a megabyte of JSON on every visit.
+AURA_LIST_FIELDS = frozenset({
+    "name", "rarity", "rarity_name", "native_rarity", "color", "category",
+    "flags", "limited", "luck_exempt", "is_exclusive", "obtainment_type",
+    "rarity_is_potion", "exclusive_biome", "native_biome", "spawn_chance",
+    "duration", "image_collection_url", "image_ingame_url", "video_url",
+    "video_file", "video_kind", "music_url", "music_file", "fandom_page",
+    "_fandom_title", "_metadata_source", "_metadata_quality",
+})
+
 import traceback
 import json
 import threading
@@ -120,10 +133,9 @@ except Exception as e:
         raise
 
 
-# i added this so we can easily change macro version upon releases without having to change multiple back-end & front-end behaviours
-# for future people that is reading the open source code, hello :p
-# (current_version / ENDSOL_MACRO_VERSION are set at the very top of this
-# file, before any biome_tracker import — do not move them back down)
+# The macro version is defined once, at the very top of this file, so a
+# release only needs one edit. (current_version / ENDSOL_MACRO_VERSION are
+# set before any biome_tracker import — do not move them back down)
 from biome_tracker.config import GITHUB_RELEASES_API, GITHUB_RAW_BASE
 UPDATE_LATEST_RELEASE_API_URL = GITHUB_RELEASES_API
 os.environ["ENDSOL_UPDATE_API_URL"] = UPDATE_LATEST_RELEASE_API_URL
@@ -1224,12 +1236,28 @@ class Api:
         return _sbd.load_gauntlet_detail(gauntlet_name, current=current)
 
     def get_full_aura_data(self):
+        """Compact aura list for Sol's Book.
+
+        The full aura dataset carries the wiki text of every aura
+        (description, appearance, ability, lore) plus its media gallery —
+        more than a megabyte of JSON. The list only needs the tier, the
+        color and the flags, and the long text arrives with
+        `get_aura_detail`, so the panel does not download megabytes of
+        wiki text just to draw a list.
+        """
         if self._tracker:
             data = getattr(self._tracker, "auras_data", None)
             if not isinstance(data, dict) or not data:
                 try: data = self._tracker.load_auras_json()
                 except Exception: data = {}
-            return data if isinstance(data, dict) else {}
+            if not isinstance(data, dict):
+                return {}
+            out = {}
+            for name, entry in data.items():
+                if not isinstance(entry, dict):
+                    continue
+                out[name] = {k: v for k, v in entry.items() if k in AURA_LIST_FIELDS}
+            return out
         return {}
 
     def open_appdata(self):

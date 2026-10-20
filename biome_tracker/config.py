@@ -466,7 +466,7 @@ def load_config() -> dict[str, Any]:
 
         # If primary is valid and has user data, use it (with backfill)
         if current and _looks_like_user_data(current):
-            return _backfill_and_normalize(current)
+            return _backfill_and_normalize(current, persist=True)
 
         # If primary is missing/empty/invalid → try to recover from backups
         # BEFORE doing anything that might overwrite them.
@@ -491,7 +491,7 @@ def load_config() -> dict[str, Any]:
             # Preserve backup files; only write primary
             _safe_backup(config_file, ".recovered_from_backup")
             _write_config(config_file, merged)
-            return _backfill_and_normalize(merged)
+            return _backfill_and_normalize(merged, persist=True)
 
         # Case B: primary is empty/broken but exists, AND we have a backup
         if current is not None and recovered is not None:
@@ -499,7 +499,7 @@ def load_config() -> dict[str, Any]:
             _safe_backup(config_file, ".broken_preserved")
             merged = _merge_user_data_into_defaults(recovered, current, defaults)
             _write_config(config_file, merged)
-            return _backfill_and_normalize(merged)
+            return _backfill_and_normalize(merged, persist=True)
 
         # Case C: no primary, no backup with user data → use defaults
         if current is None and recovered is None:
@@ -512,14 +512,21 @@ def load_config() -> dict[str, Any]:
         # returning bare defaults here silently reset those settings on
         # every start for users without webhooks or finished onboarding.
         if not _looks_like_user_data(current):
-            return _backfill_and_normalize(current)
+            return _backfill_and_normalize(current, persist=True)
 
         # Fallback: should not reach here
-        return _backfill_and_normalize(current if current else defaults)
+        return _backfill_and_normalize(current if current else defaults, persist=True)
 
 
-def _backfill_and_normalize(data: dict) -> dict:
-    """Add missing defaults while preserving legacy user settings."""
+def _backfill_and_normalize(data: dict, *, persist: bool = False) -> dict:
+    """Add missing defaults while preserving legacy user settings.
+
+    `persist` controls whether the normalized result is written back to the
+    user's config file. It is OFF by default ON PURPOSE: this helper is also
+    used with throw-away data (defaults, imported profiles, test harnesses),
+    and writing that back would overwrite the user's real config. Only
+    `load_config` — which reads the actual file — may persist.
+    """
     if not isinstance(data, dict):
         return {}
     retired_removed = _remove_retired_config_keys(data)
@@ -561,12 +568,185 @@ def _backfill_and_normalize(data: dict) -> dict:
         _merge_new_biome_notifier_entries(data)
     except Exception:
         pass
-    if retired_removed:
-        try:
-            _write_config(get_config_file(), data)
-        except Exception:
-            pass
+    # Biome spawn icons now ship with this repository (assets/biome_icons/)
+    # and are served from the project's own CDN. Configs saved before the
+    # switch still point at OysterDetector / Noteab-Macro, so those URLs are
+    # rewritten here. A URL the user typed themselves is never touched.
+    icons_migrated = False
+    try:
+        from .biome_icons import migrate_legacy_icon_urls
+        overrides = data.get("custom_biome_overrides")
+        if not isinstance(overrides, dict):
+            # No overrides at all (fresh config or an old one that stored
+            # nothing) — start from the shipped defaults.
+            overrides = {}
+            data["custom_biome_overrides"] = overrides
+            icons_migrated = True
+        if migrate_legacy_icon_urls(overrides):
+            icons_migrated = True
+            # Biomes added after the user's config was written (Incinerator,
+            # Lost Forest, The Radiant Forest) have no override entry yet —
+            # without one they would fall back to the Fandom image host,
+            # which Discord cannot fetch. Existing entries are never
+            # overwritten, so a hand-tuned icon stays.
+            for biome_name, entry in _default_biome_icon_overrides().items():
+                if biome_name in overrides:
+                    continue
+                overrides[biome_name] = dict(entry)
+                icons_migrated = True
+    except Exception:
+        pass
+    try:
+        if _migrate_music_player_favorites(data):
+            icons_migrated = True
+    except Exception:
+        pass
+    if retired_removed or icons_migrated:
+        if persist:
+            try:
+                _write_config(get_config_file(), data)
+            except Exception:
+                pass
+    # Migration bookkeeping: every applied migration bumps the revision, so
+    # the log tells which changes a given config already went through.
+    try:
+        if _apply_config_migration_revision(data):
+            if persist:
+                try:
+                    _write_config(get_config_file(), data)
+                except Exception:
+                    pass
+    except Exception:
+        pass
     return data
+
+
+def _migrate_music_player_favorites(data: dict) -> bool:
+    """Older builds stored only the file id of a starred track. The player
+    needs the whole track (title + url) to play it, so the id is resolved
+    against the bundled wiki snapshot. Unknown ids are dropped.
+    """
+    player = data.get("music_player")
+    if not isinstance(player, dict):
+        return False
+    favorites = player.get("favorites")
+    if not isinstance(favorites, list):
+        return False
+    changed = False
+    # Older builds stored only the file id of a starred track. The player
+    # needs the whole track (title + url) to play it, so the id is resolved
+    # against the bundled wiki snapshot. Unknown ids are dropped.
+    if favorites and not all(isinstance(item, dict) and item.get("url") for item in favorites):
+        catalogue = _music_track_catalogue()
+        resolved = []
+        for item in favorites:
+            if isinstance(item, dict) and item.get("url"):
+                resolved.append(item)
+                continue
+            track = catalogue.get(str(item or "").strip())
+            if track:
+                resolved.append(track)
+            changed = True
+        player["favorites"] = resolved
+        favorites = resolved
+    # The playlist may only contain tracks the user actually collected.
+    known = {t.get("id") for t in favorites if isinstance(t, dict)}
+    playlist = player.get("playlist")
+    if isinstance(playlist, list):
+        wanted = [str(i) for i in playlist]
+        cleaned = [i for i in wanted if i in known]
+        if cleaned != wanted:
+            player["playlist"] = cleaned
+            changed = True
+    return changed
+
+
+def _music_track_catalogue() -> dict:
+    """file id -> track, built from the bundled wiki snapshot."""
+    import os as _os
+    base = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)))
+    out: dict = {}
+    for fn, source in (("auras_fandom.json", "aura"), ("biomes_fandom.json", "biome")):
+        path = _os.path.join(base, fn)
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            continue
+        for key, entry in (data or {}).items():
+            if not isinstance(entry, dict):
+                continue
+            url = entry.get("music_url")
+            if not url:
+                continue
+            file_name = str(entry.get("music_file") or entry.get("music_name") or "").strip()
+            if not file_name:
+                continue
+            out.setdefault(file_name, {
+                "id": file_name,
+                "title": file_name,
+                "url": url,
+                "source": source,
+                "source_name": str(entry.get("name") or key),
+            })
+    return out
+
+
+#: Config migrations, oldest first. The number is the revision the config
+#: carries afterwards; a config that already has it is left alone.
+CONFIG_MIGRATIONS: tuple[tuple[int, str], ...] = (
+    (1, "webhook_url -> webhook_urls"),
+    (2, "retired keys removed"),
+    (3, "biome icon URLs moved to the project CDN"),
+    (4, "biome overrides completed with the new biomes"),
+    (5, "last_applied_release (update prompt)"),
+    (6, "music player favourites carry the whole track"),
+)
+
+#: Key that holds the revision of the last applied migration.
+CONFIG_MIGRATION_KEY = "config_migration_revision"
+
+
+def _apply_config_migration_revision(data: dict) -> bool:
+    """Record the migration revision in the config. Returns True on change."""
+    if not isinstance(data, dict):
+        return False
+    try:
+        current = int(data.get(CONFIG_MIGRATION_KEY) or 0)
+    except (TypeError, ValueError):
+        current = 0
+    latest = CONFIG_MIGRATIONS[-1][0] if CONFIG_MIGRATIONS else 0
+    if current >= latest:
+        return False
+    notes = [note for rev, note in CONFIG_MIGRATIONS if rev > current]
+    data[CONFIG_MIGRATION_KEY] = latest
+    try:
+        print(f"[Config] Applied migration revision {current} -> {latest}: " + "; ".join(notes))
+    except Exception:
+        pass
+    return True
+
+
+def _config_migration_notes() -> list[str]:
+    """Human readable list of the migrations a config has gone through."""
+    try:
+        path = get_config_file()
+        if not path.exists():
+            return []
+        current = int(json.loads(path.read_text(encoding="utf-8")).get(CONFIG_MIGRATION_KEY) or 0)
+    except Exception:
+        current = 0
+    return [note for rev, note in CONFIG_MIGRATIONS if rev <= current]
+
+
+def _default_biome_icon_overrides() -> dict:
+    """Default biome icon overrides (colors + CDN icon URLs).
+
+    Lives here instead of in `mixin_config.py` so `config.py` stays free of
+    import cycles (`mixin_config` imports `config`).
+    """
+    from .biome_icons import default_biome_overrides
+    return default_biome_overrides()
 
 
 # Default biome notifier entries — all biomes the macro knows about.
