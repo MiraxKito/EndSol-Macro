@@ -2,9 +2,11 @@ import os
 import time
 import json
 import threading
-import autoit
+from .input_proxy import autoit
 import keyboard
 import mouse
+
+from .coordinates import get_client_rect_screen
 
 class RecorderMixin:
     # ── Camera alignment ─────────────────────────────────────────────
@@ -132,8 +134,13 @@ class RecorderMixin:
         os.makedirs(save_dir, exist_ok=True)
         filepath = os.path.join(save_dir, f"{filename}.json")
         try:
+            # The client area the recording was made on. When the path is
+            # replayed on another resolution the mouse moves are moved onto the
+            # client area of that screen.
+            rect = get_client_rect_screen()
+            meta = {"client_rect": list(rect)} if rect else {}
             with open(filepath, "w", encoding="utf-8") as f:
-                json.dump({"events": self._recorded_events}, f, indent=4)
+                json.dump({"meta": meta, "events": self._recorded_events}, f, indent=4)
             return "OK"
         except Exception as e:
             return str(e)

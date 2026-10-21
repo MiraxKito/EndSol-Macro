@@ -29,7 +29,7 @@ import os
 import json
 from datetime import datetime, timedelta
 
-import autoit
+from .input_proxy import autoit
 
 
 # Quest type registry. Each group maps to a config preference key stored in

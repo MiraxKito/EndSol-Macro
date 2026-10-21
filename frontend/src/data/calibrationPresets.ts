@@ -4,6 +4,15 @@ export const BUILTIN_CALIBRATION_PRESETS = [
     "scale": "100%",
     "mode": "Fullscreen",
     "monitor": "1920x1080 (16:9) - the reference monitor",
+    // The client area the coordinates were measured on. The macro re-projects
+    // them onto the client area of the machine that applies the preset, so the
+    // same file works on another resolution, scale or window mode.
+    "client_rect": [
+      0,
+      0,
+      1920,
+      1080
+    ],
     "calibrations": {
       "amount_box": [
         566,

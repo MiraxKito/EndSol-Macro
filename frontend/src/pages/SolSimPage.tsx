@@ -374,7 +374,7 @@ const DEFAULT_SAVE: SimSave = {
 // Oblivion / Pump King's Blood wipe the other buffs first; stacking the
 // same potion only extends its DURATION, never the boost; Oblivion cannot
 // be used together with a Heavenly Potion (Effects page).
-type PotionKey = "heavenly" | "bound" | "dune" | "red_moon_1" | "red_moon_2" | "oblivion" | "pump_king";
+type PotionKey = "heavenly" | "bound" | "dune" | "red_moon_1" | "red_moon_2" | "oblivion" | "pump_king" | "popping" | "godlike";
 
 type PotionDef = {
   key: PotionKey;
@@ -387,11 +387,13 @@ type PotionDef = {
 };
 
 const POTIONS: PotionDef[] = [
-  { key: "heavenly", name: "Heavenly Potion", effect: "Heavenly", specialLuck: 150000, conflicts: ["oblivion"] },
-  { key: "bound", name: "Potion of Bound", effect: "Binding", specialLuck: 50000 },
+  { key: "popping", name: "Popping Potion", effect: "Popping Blessing", specialLuck: 10000 },
   { key: "dune", name: "Potion of the Dune", effect: "Burrower's Gift", specialLuck: 10000, gated: [{ name: "Neferkhaf", N: 1000 }] },
   { key: "red_moon_1", name: "Red Moon Potion I", effect: "Fragmented Moonlight", specialLuck: 11000, gated: [{ name: "Fragments of the Crimson Moon", N: 1000 }] },
+  { key: "bound", name: "Potion of Bound", effect: "Binding", specialLuck: 50000 },
+  { key: "heavenly", name: "Heavenly Potion", effect: "Heavenly", specialLuck: 150000, conflicts: ["oblivion"] },
   { key: "red_moon_2", name: "Red Moon Potion II", effect: "絶滅", specialLuck: 200000, gated: [{ name: "Fragments of the Crimson Moon", N: 100 }] },
+  { key: "godlike", name: "Godlike Potion", effect: "Deification", specialLuck: 400000 },
   {
     key: "oblivion", name: "Oblivion Potion", effect: "Oblivion", specialLuck: 600000, wipesOthers: true, conflicts: ["heavenly"],
     gated: [{ name: "Oblivion", N: 2000 }, { name: "Memory", N: 100 }],
@@ -402,6 +404,7 @@ const POTIONS: PotionDef[] = [
 type PotionState = Record<PotionKey, number>; // rolls remaining per effect (stacking = duration)
 const EMPTY_POTIONS: PotionState = {
   heavenly: 0, bound: 0, dune: 0, red_moon_1: 0, red_moon_2: 0, oblivion: 0, pump_king: 0,
+  popping: 0, godlike: 0,
 };
 
 /** Per-roll potion resolution: BLOOD DREAM wins over Oblivion, and either of
@@ -444,6 +447,10 @@ const TIER_COLORS: Record<string, string> = {
   Exalted: "#3F62D8",
   Glorious: "#C52425",
   Transcendent: "#7EC8FF",
+  // The wiki publishes the tier names but not tier colours, so these two are
+  // the panel's own shades for the challenged auras.
+  Challenged: "#FF4D6D",
+  "Challenged+": "#00E5FF",
   Event: "#21FF11",
 };
 
@@ -464,6 +471,210 @@ const GlitchLabel = ({ text }: { text: string }) => {
   return <>{shown}</>;
 };
 
+/** Glitched ambience: small coloured blocks that appear in random places and
+ *  are gone again a moment later. */
+const GlitchSquares = () => {
+    const ref = useRef<HTMLCanvasElement | null>(null);
+    useEffect(() => {
+        const canvas = ref.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        const COLORS = ["#ff3b6b", "#ffd93d", "#3ddc97", "#4fc3f7", "#c77dff", "#ff8a3d", "#ffffff", "#00ffc8"];
+        type Block = { x: number; y: number; w: number; h: number; age: number; life: number; color: string };
+        const blocks: Block[] = [];
+        let width = 0;
+        let height = 0;
+        let frame = 0;
+        const resize = () => {
+            const dpr = Math.min(2, window.devicePixelRatio || 1);
+            width = canvas.clientWidth || window.innerWidth;
+            height = canvas.clientHeight || window.innerHeight;
+            canvas.width = Math.max(1, Math.floor(width * dpr));
+            canvas.height = Math.max(1, Math.floor(height * dpr));
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        resize();
+        window.addEventListener("resize", resize);
+        const spawn = () => {
+            const size = 8 + Math.random() * 30;
+            const life = 6 + Math.floor(Math.random() * 14);
+            blocks.push({
+                x: Math.random() * Math.max(1, width - size),
+                y: Math.random() * Math.max(1, height - size),
+                w: size,
+                h: size * (0.35 + Math.random() * 1.3),
+                age: 0,
+                life,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            });
+        };
+        let raf = 0;
+        const tick = () => {
+            raf = requestAnimationFrame(tick);
+            frame++;
+            ctx.clearRect(0, 0, width, height);
+            // A handful of blocks, and a new one popping up every few frames.
+            const wanted = 10 + Math.floor(Math.random() * 12);
+            while (blocks.length < wanted) spawn();
+            if (frame % 3 === 0) spawn();
+            for (let i = blocks.length - 1; i >= 0; i--) {
+                const b = blocks[i];
+                b.age++;
+                if (b.age >= b.life) { blocks.splice(i, 1); continue; }
+                // Fade in and out again - a block that just appears looks
+                // like a glitch, a block that grows in and dissolves does not.
+                const t = b.age / b.life;
+                const fade = t < 0.25 ? t / 0.25 : (1 - (t - 0.25) / 0.75);
+                ctx.globalAlpha = 0.55 * Math.max(0, fade);
+                ctx.fillStyle = b.color;
+                ctx.fillRect(b.x, b.y, b.w, b.h);
+            }
+            ctx.globalAlpha = 1;
+        };
+        raf = requestAnimationFrame(tick);
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener("resize", resize);
+        };
+    }, []);
+    return <canvas ref={ref} className="sim-fx sim-fx-glitch-squares" />;
+};
+
+/** The moon phases of the Radiant Forest, from the new moon to the old one.
+ *  illum is the lit part of the disc, waxing tells which side is lit.
+ *  The row is mirrored around the full moon: the last three are the
+ *  reflections of the first three. */
+const RADIANT_MOONS: { illum: number; waxing: boolean }[] = [
+    { illum: 0.02, waxing: true },   // new moon
+    { illum: 0.25, waxing: true },   // waxing crescent
+    { illum: 0.5, waxing: true },    // first quarter
+    { illum: 0.98, waxing: true },   // full moon - the middle of the row
+    { illum: 0.5, waxing: false },   // last quarter - mirror of the first quarter
+    { illum: 0.25, waxing: false },  // waning crescent - mirror of the waxing crescent
+    { illum: 0.02, waxing: false },  // old moon - mirror of the new moon
+];
+
+/** The Radiant Forest: stars that fall and dissolve at the bottom, and a row
+ *  of moon phases from the new moon to the old one. */
+const RadiantForest = () => {
+    const ref = useRef<HTMLCanvasElement | null>(null);
+    useEffect(() => {
+        const canvas = ref.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        type Star = { x: number; y: number; r: number; speed: number; bright: number };
+        let stars: Star[] = [];
+        let width = 0;
+        let height = 0;
+        const seedStars = () => {
+            stars = [];
+            const count = Math.max(18, Math.round((width * height) / 22000));
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: 0.5 + Math.random() * 1.6,
+                    speed: 14 + Math.random() * 40,
+                    bright: 0.35 + Math.random() * 0.5,
+                });
+            }
+        };
+        const resize = () => {
+            const dpr = Math.min(2, window.devicePixelRatio || 1);
+            width = canvas.clientWidth || window.innerWidth;
+            height = canvas.clientHeight || window.innerHeight;
+            canvas.width = Math.max(1, Math.floor(width * dpr));
+            canvas.height = Math.max(1, Math.floor(height * dpr));
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            seedStars();
+        };
+        resize();
+        window.addEventListener("resize", resize);
+
+        const NIGHT = "rgba(34, 20, 62, 0.92)";
+        const LIT = "rgba(240, 233, 255, 0.92)";
+        const drawMoon = (cx: number, cy: number, r: number, illum: number, waxing: boolean) => {
+            // The night side.
+            ctx.fillStyle = NIGHT;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.fill();
+            // The lit half.
+            ctx.fillStyle = LIT;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, waxing ? -Math.PI / 2 : Math.PI / 2, waxing ? Math.PI / 2 : Math.PI * 1.5);
+            ctx.fill();
+            // The terminator: the ellipse carves the crescent out of the lit
+            // half, or adds the bulge of a gibbous. It is only skipped when
+            // it collapses into a straight line (the quarter phases).
+            const a = r * Math.abs(1 - 2 * illum);
+            if (a > 0.01) {
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, a, r, 0, 0, Math.PI * 2);
+                ctx.fillStyle = illum <= 0.5 ? NIGHT : LIT;
+                ctx.fill();
+            }
+        };
+
+        let raf = 0;
+        let last = performance.now();
+        const tick = (now: number) => {
+            raf = requestAnimationFrame(tick);
+            const dt = Math.min(0.05, (now - last) / 1000);
+            last = now;
+            ctx.clearRect(0, 0, width, height);
+
+            // The stars fall and dissolve before they reach the bottom, so
+            // the reset at the top is never visible.
+            for (const s of stars) {
+                s.y += s.speed * dt;
+                if (s.y > height + 4) {
+                    s.y = -4 - Math.random() * 30;
+                    s.x = Math.random() * width;
+                }
+                const fade = Math.min(1, Math.max(0, (height - s.y) / (height * 0.3)));
+                const alpha = s.bright * fade;
+                if (alpha <= 0.01) continue;
+                ctx.fillStyle = `rgba(255, 250, 255, ${alpha.toFixed(3)})`;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // The row of moons: new moon first, old moon last. A soft band of
+            // light travels along the row and wraps around.
+            const count = RADIANT_MOONS.length;
+            const r = 9;
+            const gap = 26;
+            const stripW = (count - 1) * gap;
+            const cx0 = width / 2 - stripW / 2;
+            const cy = 18 + r;
+            const bandX = ((now / 4200) % 1) * (width + 240) - 120;
+            for (let i = 0; i < count; i++) {
+                const phase = RADIANT_MOONS[i];
+                const cx = cx0 + i * gap;
+                const near = Math.max(0, 1 - Math.abs(cx - bandX) / 150);
+                const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 3.2);
+                glow.addColorStop(0, `rgba(214, 170, 255, ${(0.10 + near * 0.30).toFixed(3)})`);
+                glow.addColorStop(1, "rgba(214, 170, 255, 0)");
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r * 3.2, 0, Math.PI * 2);
+                ctx.fill();
+                drawMoon(cx, cy, r, phase.illum, phase.waxing);
+            }
+        };
+        raf = requestAnimationFrame(tick);
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener("resize", resize);
+        };
+    }, []);
+    return <canvas ref={ref} className="sim-fx sim-fx-canvas" />;
+};
+
 const rarityTier = (n: number): string => {
   if (!Number.isFinite(n)) return "Basic";
   if (n >= 1_000_000_000) return "Transcendent";
@@ -474,6 +685,29 @@ const rarityTier = (n: number): string => {
   if (n >= 10_000) return "Unique";
   if (n >= 1_000) return "Epic";
   return "Basic";
+};
+
+/** The tier names the wiki uses. Everything outside this list is a leftover
+ *  label that must not be shown as a tier. */
+const KNOWN_TIERS = new Set([
+  "basic", "epic", "unique", "legendary", "mythic", "exalted", "glorious",
+  "transcendent", "challenged", "challenged+",
+]);
+
+/** The tier of an aura. The wiki's own rarity name wins — it is the only
+ *  source that knows about the Challenged / Challenged+ tiers, which sit on
+ *  top of the normal bands (Monarch, Hellborn, Illusionary, Meta, …). The
+ *  numeric bands are the fallback for auras whose entry has no name. */
+const auraTier = (a: any, n: number): string => {
+  const raw = String(a?.rarity_name || "").trim();
+  if (raw) {
+    const key = raw.toLowerCase();
+    if (KNOWN_TIERS.has(key)) {
+      if (key === "challenged+") return "Challenged+";
+      return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+    }
+  }
+  return rarityTier(n);
 };
 
 const fmtNum = (n: any) => {
@@ -527,14 +761,28 @@ const biomeMatchName = (raw: string) => String(raw || "").trim().toUpperCase().r
 const EXCLUDED_FLAGS = new Set(["craftable", "limited", "unobtainable", "dev_exclusive", "unreleased", "removed"]);
 const EXCLUDED_TYPES = new Set(["potion", "quest_reward", "unobtainable"]);
 const BOSS_AURAS = new Set(["FRAGMENTS_OF_THE_CRIMSON_MOON", "NEFERKHAF"]); // Red Moon Potion / Potion of the Dune
+/** The wiki lists Breakthrough as the one aura that is unobtainable in a
+ *  biome — it drops in every biome except Null. */
+const NULL_EXCLUDED_AURAS = new Set(["BREAKTHROUGH"]);
 // "Halloween Auras" (Vampire Hunter): auras exclusive to the Halloween biomes.
 const HALLOWEEN_BIOMES = new Set(["PUMPKIN MOON", "GRAVEYARD", "BLOOD RAIN"]);
+
+/** Rarity names of auras that are not rollable in the current game state.
+ *  "Event" covers the seasonal event auras (they only exist while their
+ *  event runs), "Dev Exclusive" was never released to players and "Removed"
+ *  was taken out again. The flags above already catch most of them, this is
+ *  the second line of defence — a new event aura that arrives without the
+ *  "limited" flag still must not drop in the simulator.
+ *  Flip "event" out of this set when an event is live and its auras should
+ *  be rollable again. */
+const EXCLUDED_TIERS = new Set(["event", "dev exclusive", "removed"]);
 
 const isSimRollable = (key: string, a: Data): boolean => {
   if (a?.rarity_is_potion) return false;
   const flags: string[] = Array.isArray(a?.flags) ? a.flags : [];
   if (flags.some(f => EXCLUDED_FLAGS.has(String(f).toLowerCase()))) return false;
   if (EXCLUDED_TYPES.has(String(a?.obtainment_type || "").toLowerCase())) return false;
+  if (EXCLUDED_TIERS.has(String(a?.rarity_name || "").trim().toLowerCase())) return false;
   // Effect-gated rolls: the aura only rolls while an admin/effect buff is up
   // (Megaphone during "YG Blessing", Astral : Astrald during "Astrald Luck!").
   // Without that effect the sim must never drop them — same rule that keeps
@@ -585,6 +833,7 @@ const buildPool = (auras: Data, biomeName: string | null, blocked: Set<string>):
     if (rawRefs.length > 0 && rawRefs.every(r => blocked.has(r))) continue;
     const exclAllowed = exclAll.filter(r => !blocked.has(r));
     const isExcl = !!a?.is_exclusive || exclAll.length > 0;
+    if (biomeKey === "NULL" && NULL_EXCLUDED_AURAS.has(name.trim().toUpperCase().replace(/\s+/g, "_"))) continue;
     let N = Number.isFinite(globalN) && globalN > 0 ? globalN : NaN;
     let native = false;
     if (biomeKey && nativeBiome && nativeBiome === biomeKey
@@ -600,7 +849,7 @@ const buildPool = (auras: Data, biomeName: string | null, blocked: Set<string>):
     out.push({
       name,
       N,
-      tier: rarityTier(N),
+      tier: auraTier(a, N),
       exclusive: isExcl,
       native,
       luckExempt: !!a?.luck_exempt,
@@ -659,20 +908,17 @@ const SIM_ROLL_CSS = `
    describes (Glitched corrupts the screen, Hell burns from below, The
    Radiant Forest falls with stars and moons). Only gradients and
    transform/opacity are animated, so the panel stays light. */
-/* Glitched: the client tears itself apart. No colour fields at the edges —
-   the whole frame breaks up: horizontal slice offsets, a torn scanline roll,
-   blocky RGB separation in the middle of the screen and a hard flicker. */
-.sim-fx-glitch{background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);mix-blend-mode:multiply;animation:simFxGlitch 0.9s steps(2) infinite}
-.sim-fx-glitch::before{content:"";position:absolute;left:0;right:0;top:0;height:100%;background:repeating-linear-gradient(0deg,transparent 0 14px,rgba(255,0,90,.22) 14px 16px,transparent 16px 28px,rgba(0,225,255,.20) 28px 30px,transparent 30px 46px);mix-blend-mode:screen;animation:simFxGlitchA 1.4s steps(6) infinite}
-.sim-fx-glitch::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,0,90,.26) 0 6%,transparent 6% 26%,rgba(0,225,255,.26) 44% 50%,transparent 50% 72%,rgba(255,0,90,.22) 88% 94%,transparent 94%),repeating-linear-gradient(90deg,rgba(255,255,255,.10) 0 2px,transparent 2px 26px);mix-blend-mode:screen;animation:simFxGlitchB 0.75s steps(5) infinite}
-@keyframes simFxGlitch{0%,100%{transform:translate(0,0)}20%{transform:translate(-4px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-2px,-3px)}80%{transform:translate(3px,3px)}}
-@keyframes simFxGlitchA{0%,100%{transform:translateY(0)}20%{transform:translateY(-26px)}40%{transform:translateY(18px)}60%{transform:translateY(-9px)}80%{transform:translateY(31px)}}
-@keyframes simFxGlitchB{0%,100%{transform:translateX(0) scaleY(1)}20%{transform:translateX(-9%) scaleY(1.012)}40%{transform:translateX(12%) scaleY(.99)}60%{transform:translateX(-4%) scaleY(1.006)}80%{transform:translateX(7%) scaleY(.995)}}
+/* Glitched: the client tears itself apart — small coloured blocks pop up in
+   random places and are gone again a moment later. They are drawn on a
+   canvas, a repeating background cannot place them. */
+.sim-fx-glitch-squares{width:100%;height:100%}
 /* Dreamspace: a soft violet haze with slow drifting lights. */
 .sim-fx-dream{background:radial-gradient(55% 45% at 18% 12%,rgba(217,70,239,.24),transparent 60%),radial-gradient(50% 40% at 85% 85%,rgba(168,85,247,.20),transparent 60%);animation:simFxDream 9s ease-in-out infinite alternate}
-.sim-fx-dream::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(255,255,255,.16) 0 2px,transparent 3px),radial-gradient(circle at 70% 65%,rgba(255,255,255,.13) 0 2px,transparent 3px);background-size:180px 180px,240px 240px;animation:simFxDreamB 16s linear infinite}
+/* Both light layers share one tile size and the drift covers exactly one
+   tile, so the loop closes without a jump. */
+.sim-fx-dream::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(255,255,255,.16) 0 2px,transparent 3px),radial-gradient(circle at 70% 65%,rgba(255,255,255,.13) 0 2px,transparent 3px);background-size:200px 200px;animation:simFxDreamB 16s linear infinite}
 @keyframes simFxDream{from{opacity:.6}to{opacity:1}}
-@keyframes simFxDreamB{from{transform:translateY(0)}to{transform:translateY(-180px)}}
+@keyframes simFxDreamB{from{transform:translateY(0)}to{transform:translateY(-200px)}}
 /* Cyberspace: a cyan data grid that scrolls over the panel. */
 .sim-fx-cyber{background:repeating-linear-gradient(0deg,rgba(34,211,238,.09) 0 1px,transparent 1px 6px),repeating-linear-gradient(90deg,rgba(34,211,238,.07) 0 1px,transparent 1px 6px),radial-gradient(45% 35% at 50% 0%,rgba(34,211,238,.16),transparent 70%);animation:simFxCyber 4s linear infinite}
 @keyframes simFxCyber{from{background-position:0 0,0 0,0 0}to{background-position:0 48px,48px 0,0 0}}
@@ -685,14 +931,10 @@ const SIM_ROLL_CSS = `
 @keyframes simFxSing{0%,100%{opacity:.7}50%{opacity:1}}
 @keyframes simFxSingA{from{transform:translate(-50%,-50%) rotate(0deg) scale(1)}to{transform:translate(-50%,-50%) rotate(360deg) scale(1.05)}}
 @keyframes simFxSingB{0%{transform:translate(-50%,-50%) scale(1.22);opacity:0}25%{opacity:.95}100%{transform:translate(-50%,-50%) scale(.82);opacity:0}}
-/* The Radiant Forest: a violet night, stars falling from the sky and the
-   row of seven radiant moons that light up as auras are rolled. */
-.sim-fx-radiant{background:radial-gradient(30% 24% at 50% 6%,rgba(216,110,255,.26),transparent 72%),linear-gradient(180deg,rgba(138,72,168,.26),rgba(26,14,44,.14) 48%,transparent 78%);animation:simFxRadiant 7s ease-in-out infinite alternate}
-.sim-fx-radiant::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 12%,rgba(255,255,255,.75) 0 1px,transparent 2px),radial-gradient(circle at 46% 26%,rgba(255,224,255,.60) 0 1px,transparent 2px),radial-gradient(circle at 78% 8%,rgba(255,255,255,.70) 0 1px,transparent 2px),radial-gradient(circle at 90% 44%,rgba(214,190,255,.55) 0 1px,transparent 2px),radial-gradient(circle at 28% 52%,rgba(255,255,255,.50) 0 1px,transparent 2px);background-size:100% 100%;animation:simFxRadiantB 6s linear infinite}
-.sim-fx-radiant::after{content:"";position:absolute;left:50%;top:14px;width:230px;height:9px;margin-left:-115px;background:radial-gradient(circle at 8px 50%,rgba(255,190,255,.85) 0 3px,transparent 4px),radial-gradient(circle at 42px 50%,rgba(190,190,255,.75) 0 3px,transparent 4px),radial-gradient(circle at 76px 50%,rgba(255,220,255,.80) 0 3px,transparent 4px),radial-gradient(circle at 110px 50%,rgba(180,200,255,.70) 0 3px,transparent 4px),radial-gradient(circle at 144px 50%,rgba(255,200,255,.78) 0 3px,transparent 4px),radial-gradient(circle at 178px 50%,rgba(200,220,255,.68) 0 3px,transparent 4px),radial-gradient(circle at 212px 50%,rgba(255,230,255,.80) 0 3px,transparent 4px);animation:simFxRadiantC 3.2s ease-in-out infinite}
-@keyframes simFxRadiant{from{opacity:.62}to{opacity:1}}
-@keyframes simFxRadiantB{from{transform:translateY(-26px)}to{transform:translateY(26px)}}
-@keyframes simFxRadiantC{0%,100%{opacity:.35}50%{opacity:.95}}
+/* The Radiant Forest: a violet night. The stars and the row of moon phases
+   are drawn on a canvas - they have to fade out and wrap around smoothly. */
+.sim-fx-radiant{background:radial-gradient(30% 24% at 50% 6%,rgba(216,110,255,.26),transparent 72%),linear-gradient(180deg,rgba(138,72,168,.26),rgba(26,14,44,.14) 48%,transparent 78%)}
+.sim-fx-canvas{width:100%;height:100%}
 `;
 
 export default function SolSimPage({ active }: { active?: boolean }) {
@@ -947,6 +1189,18 @@ export default function SolSimPage({ active }: { active?: boolean }) {
 
   const pool = useMemo(() => buildPool(auras, world.biome ? world.biome.name : null, blockedBiomes), [auras, world.biome, blockedBiomes]);
 
+  // Auras by their display name — the potion effects hand out auras that are
+  // not part of the pool (Neferkhaf, Oblivion, …) and those still need their
+  // wiki tier for the log line.
+  const auraByName = useMemo(() => {
+    const m = new Map<string, any>();
+    for (const a of Object.values(auras)) {
+      const nm = String((a as any)?.name || "").trim().toLowerCase();
+      if (nm) m.set(nm, a);
+    }
+    return m;
+  }, [auras]);
+
   // Tide (Blessed Tide / Tide Gauntlet): Bonus Rolls can also hit the listed
   // biome-exclusive auras at their native rarity regardless of current biome.
   const tidePool = useMemo(() => {
@@ -961,7 +1215,7 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       const globalN = Number(a?.rarity);
       const N = Number.isFinite(nativeN) && nativeN > 0 ? nativeN : (Number.isFinite(globalN) && globalN > 0 ? globalN : NaN);
       if (!Number.isFinite(N) || N <= 0) continue;
-      out.push({ name: String(a?.name || key), N, tier: rarityTier(N), exclusive: true, native: true, luckExempt: !!a?.luck_exempt, excl });
+      out.push({ name: String(a?.name || key), N, tier: auraTier(a, N), exclusive: true, native: true, luckExempt: !!a?.luck_exempt, excl });
     }
     return out;
   }, [auras, equippedFx.bonusAuraBiomes]);
@@ -1072,7 +1326,8 @@ export default function SolSimPage({ active }: { active?: boolean }) {
     const fixedList: PoolAura[] = [];
     for (const a of rollPool) if (a.luckExempt) fixedList.push(a);
     for (const g of pot.gated) {
-      fixedList.push({ name: g.name, N: g.N, tier: rarityTier(g.N), exclusive: false, native: false, luckExempt: true, excl: [] });
+      const rec = auraByName.get(String(g.name || "").trim().toLowerCase());
+      fixedList.push({ name: g.name, N: g.N, tier: auraTier(rec, g.N), exclusive: false, native: false, luckExempt: true, excl: [] });
     }
     fixedList.sort((x, y) => y.N - x.N);
     const scaledPool = rollPool.filter(a => !a.luckExempt);
@@ -1134,7 +1389,7 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       );
     }
     persist();
-  }, [pool, tidePool, equippedFx, vipMult, gauntletLuck, sandbox, settings.luck, settings.notify_aura_min_rarity, notify, persist]);
+  }, [pool, tidePool, equippedFx, vipMult, gauntletLuck, sandbox, settings.luck, settings.notify_aura_min_rarity, notify, persist, auraByName]);
 
   useEffect(() => { doRollRef.current = doRoll; });
 
@@ -1304,7 +1559,7 @@ export default function SolSimPage({ active }: { active?: boolean }) {
         const rec = byName.get(name);
         const base = Number(rec?.rarity);
         const N = info?.N ?? (Number.isFinite(base) && base > 0 ? base : 0);
-        const tier = info?.tier ?? (N > 0 ? rarityTier(N) : "Basic");
+        const tier = info?.tier ?? (N > 0 ? auraTier(rec, N) : "Basic");
         return { name, count, N, tier, inPool: !!info };
       })
       .sort((a, b) => b.N - a.N || a.name.localeCompare(b.name));
@@ -1337,13 +1592,16 @@ export default function SolSimPage({ active }: { active?: boolean }) {
   // five biomes the wiki groups as "Rare" get one (Glitched, Dreamspace,
   // Cyberspace, Singularity, The Radiant Forest) — each looks the way its
   // own wiki entry describes.
-  const fxClass = world.biome ? ({
-    GLITCHED: "sim-fx-glitch",
+  const biomeKey = world.biome ? biomeMatchName(world.biome.name) : "";
+  const fxClass = ({
     DREAMSPACE: "sim-fx-dream",
     CYBERSPACE: "sim-fx-cyber",
     SINGULARITY: "sim-fx-sing",
-    "THE RADIANT FOREST": "sim-fx-radiant",
-  } as Record<string, string>)[biomeMatchName(world.biome.name)] || "" : "";
+  } as Record<string, string>)[biomeKey] || "";
+  // Glitched and The Radiant Forest are drawn on a canvas instead of using a
+  // CSS overlay - they need real positions and smooth fades.
+  const isGlitched = biomeKey === "GLITCHED";
+  const isRadiant = biomeKey === "THE RADIANT FOREST";
   const biomeLeft = world.biome ? Math.max(0, Math.round(world.biome.endsAt - Date.now() / 1000)) : 0;
 
   if (loading) {
@@ -1768,7 +2026,14 @@ export default function SolSimPage({ active }: { active?: boolean }) {
       )}
 
       {/* Rare-biome ambience */}
-      {launched && fxClass && <div className={`sim-fx ${fxClass}`} />}
+      {launched && isGlitched && <GlitchSquares />}
+      {launched && isRadiant && (
+        <>
+          <div className="sim-fx sim-fx-radiant" />
+          <RadiantForest />
+        </>
+      )}
+      {launched && !isGlitched && !isRadiant && fxClass && <div className={`sim-fx ${fxClass}`} />}
 
       {/* In-page drop banner (never a Windows notification) */}
       {toast && (

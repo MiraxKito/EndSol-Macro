@@ -4,7 +4,13 @@
     "label": "stella_cave_path",
     "created": "2026-10-03T00:28:55.996887+00:00",
     "speed_multiplier": 1.0,
-    "recorded_nonvip": false
+    "recorded_nonvip": false,
+    "client_rect": [
+      0,
+      0,
+      1920,
+      1080
+    ]
   },
   "events": [
     {

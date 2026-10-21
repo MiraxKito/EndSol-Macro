@@ -216,6 +216,40 @@ export default function CustomizationPage() {
     // messages and the Join Server link all match 1:1. Unsaved UI edits are
     // passed as overrides so the preview updates while typing.
     const [preview, setPreview] = useState<{ description: string; color: number; content: string } | null>(null);
+    // Aura embeds use the same builder as the real send, so the preview is
+    // what Discord actually receives.
+    const [auraPreviewName, setAuraPreviewName] = useState("");
+    const [auraPreview, setAuraPreview] = useState<{ title: string; description: string; color: number } | null>(null);
+    const [auraPreviewError, setAuraPreviewError] = useState("");
+
+    useEffect(() => {
+        const name = auraPreviewName.trim();
+        if (!name) {
+            setAuraPreview(null);
+            setAuraPreviewError("");
+            return;
+        }
+        const api = (window as any).pywebview?.api;
+        if (!api?.preview_aura_webhook) return;
+        let cancelled = false;
+        const timer = setTimeout(async () => {
+            try {
+                const res = await api.preview_aura_webhook(name);
+                const parsed = typeof res === "string" ? JSON.parse(res) : res;
+                if (cancelled) return;
+                if (parsed?.error) {
+                    setAuraPreview(null);
+                    setAuraPreviewError(parsed.error);
+                } else {
+                    setAuraPreview(parsed);
+                    setAuraPreviewError("");
+                }
+            } catch (e) {
+                if (!cancelled) setAuraPreviewError(String(e));
+            }
+        }, 350);
+        return () => { cancelled = true; clearTimeout(timer); };
+    }, [auraPreviewName]);
     useEffect(() => {
         if (!config || !selectedBiome) return;
         const api = (window as any).pywebview?.api;
@@ -496,6 +530,47 @@ export default function CustomizationPage() {
                             ⭐ This biome has a custom rare message — preview shows real Discord output.
                         </div>
                     )}
+                </div>
+
+                {/* Aura embed preview — its own card, so the native dropdown of
+                    the biome select can never cover the input. */}
+                <div className="card" style={{ marginTop: "10px" }}>
+                    <div className="card-header">
+                        <div className="card-icon">✨</div>
+                        <div>
+                            <h3>Aura Embed Preview</h3>
+                            <p>See how an aura announcement looks in Discord</p>
+                        </div>
+                    </div>
+                    <div style={{ padding: "0 16px 16px" }}>
+                        <label className="form-label" style={{ display: "block", marginBottom: "6px" }}>Aura name</label>
+                        <input
+                            className="form-input"
+                            value={auraPreviewName}
+                            placeholder="Type an aura name, e.g. Monsoon"
+                            autoComplete="off"
+                            onChange={(e) => setAuraPreviewName(e.target.value)}
+                        />
+                        {auraPreview && (
+                            <div style={{
+                                backgroundColor: "#2b2d31",
+                                borderLeft: `4px solid ${"#" + (auraPreview.color & 0xffffff).toString(16).padStart(6, "0")}`,
+                                borderRadius: "4px",
+                                padding: "10px 12px",
+                                marginTop: "8px",
+                            }}>
+                                <div style={{ color: "#F2F3F5", fontSize: "13px", fontWeight: "600", marginBottom: "4px" }}>
+                                    {auraPreview.title}
+                                </div>
+                                <div style={{ fontSize: "12.5px", color: "#DBDEE1", lineHeight: "1.35", whiteSpace: "pre-wrap" }}>
+                                    {String(auraPreview.description || "").replace(/^>\s?/gm, "")}
+                                </div>
+                            </div>
+                        )}
+                        {auraPreviewError && (
+                            <div style={{ color: "#f87171", fontSize: "12px", marginTop: "6px" }}>{auraPreviewError}</div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Test Webhook Send */}

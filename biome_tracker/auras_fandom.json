@@ -2029,7 +2029,7 @@
     "video_kind": "opening",
     "description": "Rekindle is a Epic tier aura that was added in the Radiant Forest Update. It can only be rolled inside the The Radiant Forest with a chance of 1 in 7,500.",
     "fandom_page": "https://sol-rng.fandom.com/wiki/Rekindle",
-    "rarity": 5000,
+    "rarity": 7500,
     "rarity_name": "Epic",
     "native_rarity": null,
     "exclusive_biome": [
@@ -14794,7 +14794,7 @@
     "music_file": "Windows96 - Yujia Forest.mp3",
     "description": "True Jade is a Challenged tier aura that was added in the Radiant Forest Update. It is rollable with a 1/125,000 chance only after first rolling Jade and Jade : Purity.",
     "fandom_page": "https://sol-rng.fandom.com/wiki/True_Jade",
-    "rarity": 125000,
+    "rarity": 10250000,
     "rarity_name": "Challenged",
     "native_rarity": null,
     "exclusive_biome": [

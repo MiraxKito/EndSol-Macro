@@ -38,7 +38,7 @@ const SEARCH_INDEX = [
     { title: "Movements", tab: "movements", keywords: ["move", "walk", "jump", "obby", "macro", "path", "record", "replay"] },
     { title: "Custom Paths", tab: "custompaths", keywords: ["custom path", "record walk", "replay path", "memory match path", "quest board path", "waypoints"] },
     { title: "Potion Crafting", tab: "potioncraft", keywords: ["craft", "potion", "cauldron", "stella", "brew", "ingredients"] },
-    { title: "Other Features", tab: "otherfeatures", keywords: ["anti", "afk", "idle", "reset character", "glitch effect", "player logger", "system settings", "rare biome actions"] },
+    { title: "Other Features", tab: "otherfeatures", keywords: ["anti", "afk", "idle", "reset character", "glitch effect", "system settings", "rare biome actions"] },
     { title: "Multiple-Instances", tab: "multiinstances", keywords: ["multiple instances", "multi instance", "multiaccount", "windows", "avaluate", "multiplerobloxinstances", "anti-afk", "accounts", "second roblox", "main window", "secondary windows", "instance alerts", "biome alerts", "aura alerts", "disconnect alerts", "main pid"] },
     { title: "Discord Webhook Customization", tab: "customization", keywords: ["custom", "background", "image", "theme", "webhook", "discord", "embed", "biome preview", "aura preview", "title", "description", "color"] },
     { title: "Panel Customization", tab: "panelcustomization", keywords: ["panel", "customization", "theme", "colors", "tabs", "font", "background", "gradient", "css", "title", "custom labels"] },

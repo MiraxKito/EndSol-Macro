@@ -797,7 +797,6 @@ class DetectionMixin:
             except Exception:
                 print(f"[start_detection] KB switch warning: {err}")
 
-        self._start_player_logger_thread()
         self.start_time = now
         self.current_session = 0
         self.has_started_once = True
@@ -998,7 +997,6 @@ class DetectionMixin:
         print(stop_reason)
 
         now = datetime.now()
-        self._stop_player_logger_thread()
         if getattr(self, "timer_paused_by_disconnect", False):
             elapsed_time = 0
             self.timer_paused_by_disconnect = False
@@ -1063,6 +1061,24 @@ class DetectionMixin:
                 continue
         if latest_file is None:
             raise FileNotFoundError("No valid Roblox log files found")
+        # Account-aware: with several accounts running, the newest log can
+        # belong to a different account than the configured one. The account
+        # is read from the log itself (cached), so this only scans once.
+        target = self._get_target_roblox_username()
+        if target:
+            try:
+                from . import multi_instance
+                candidates = sorted(
+                    (f for f in files if os.path.exists(f)),
+                    key=lambda f: os.path.getmtime(f),
+                    reverse=True,
+                )[:6]
+                for f in candidates:
+                    name = str(multi_instance._log_username(f) or "").strip().lower()
+                    if name and name == target:
+                        return f
+            except Exception:
+                pass
         return latest_file
 
     def _get_target_roblox_username(self):
@@ -1088,6 +1104,32 @@ class DetectionMixin:
             if not match:
                 return ""
             return str(match.group(1) or "").strip().lower()
+        except Exception:
+            return ""
+
+    def _extract_log_account_username(self, line):
+        """The account behind a log line, taken from Roblox's own client line.
+
+        The game_join_loadtime report ([FLog::GameJoinLoadTime]) carries the
+        client's own userid; the username comes from the Roblox users API. It
+        exists in every place, so the guard does not depend on the game.
+
+        The TutorialCursor warning is a Sol's RNG PLACE script (the game waits
+        for a "TutorialCursor" object in the PlayerGui) and is only a shortcut
+        for the name - the client line above is the actual source.
+
+        The RBXEventTrackerV2 cookie is an analytics cookie and NOT an account
+        marker - it survives a session change and can name a different account,
+        so it is never used to identify the account.
+        """
+        try:
+            if not line or "game_join_loadtime" not in line:
+                return ""
+            m = re.search(r"userid:(\d+)", line)
+            if not m:
+                return ""
+            from .multi_instance import _username_for_userid
+            return str(_username_for_userid(str(m.group(1))) or "").strip().lower()
         except Exception:
             return ""
 
@@ -1174,6 +1216,11 @@ class DetectionMixin:
             for line in (lines_to_scan or []):
                 found_username = self._extract_tutorial_cursor_username(line)
                 if not found_username:
+                    # The current client build does not write the
+                    # TutorialCursor warning any more - the cookie line
+                    # carries the account id instead.
+                    found_username = self._extract_log_account_username(line)
+                if not found_username:
                     continue
                 if found_username == target_username:
                     state_map[log_file_path] = "accepted"
@@ -1182,7 +1229,7 @@ class DetectionMixin:
                 state_map[log_file_path] = "rejected"
                 try:
                     self.append_log(
-                        f"[Log Guard] Ignoring log file due to TutorialCursor username mismatch. "
+                        f"[Log Guard] Ignoring log file due to username mismatch. "
                         f"Expected '{target_username}', got '{found_username}'."
                     )
                 except Exception:
@@ -3917,71 +3964,6 @@ class DetectionMixin:
             if getattr(self, "detection_running", False):
                 self.reconnecting_state = False
 
-    def _start_player_logger_thread(self):
-        if hasattr(self, "player_logger_thread") and self.player_logger_thread and self.player_logger_thread.is_alive():
-            return
-        self.player_logger_running = True
-        self._start_player_log_sender_thread()
-        self.player_logger_thread = threading.Thread(target=self._player_logger_loop, daemon=True)
-        self.player_logger_thread.start()
-
-    def _stop_player_logger_thread(self):
-        self.player_logger_running = False
-        self._stop_player_log_sender_thread()
-
-    def _start_player_log_sender_thread(self):
-        if hasattr(self,
-                   "player_log_sender_thread") and self.player_log_sender_thread and self.player_log_sender_thread.is_alive():
-            return
-        self.player_log_sender_running = True
-        if not hasattr(self, "player_log_queue") or self.player_log_queue is None:
-            self.player_log_queue = queue.Queue()
-        self.player_log_sender_thread = threading.Thread(target=self._player_log_sender_loop, daemon=True)
-        self.player_log_sender_thread.start()
-
-    def _stop_player_log_sender_thread(self):
-        self.player_log_sender_running = False
-        try:
-            if hasattr(self, "player_log_queue"):
-                self.player_log_queue.put(None)
-        except Exception:
-            pass
-
-    def _player_log_sender_loop(self):
-        while getattr(self, "player_log_sender_running", False):
-            try:
-                embed = self.player_log_queue.get(timeout=1)
-            except Exception:
-                continue
-            if embed is None:
-                continue
-            urls = self.get_webhook_list()
-            if not urls:
-                continue
-            payload = {"embeds": [embed]}
-            for webhook_url in urls:
-                try:
-                    r = safe_post(webhook_url, json=payload, timeout=10)
-                    if r is not None and getattr(r, "status_code", None) == 429:
-                        retry_after = r.headers.get("Retry-After")
-                        try:
-                            retry = int(retry_after)
-                        except Exception:
-                            retry = 5
-                        time.sleep(retry)
-                        try:
-                            safe_post(webhook_url, json=payload, timeout=10)
-                        except Exception:
-                            pass
-                except Exception:
-                    pass
-            delay = getattr(self, "player_log_send_delay", 2.0)
-            start = time.time()
-            while (time.time() - start) < delay:
-                if not getattr(self, "player_log_sender_running", False):
-                    break
-                time.sleep(0.1)
-
     def _find_latest_log_file(self):
         try:
             if not os.path.isdir(self.logs_dir):
@@ -3993,111 +3975,6 @@ class DetectionMixin:
             return max(files, key=os.path.getmtime)
         except:
             return None
-
-    def _biome_at(self, ts):
-        try:
-            if not hasattr(self, "biome_history") or not self.biome_history:
-                return self.current_biome
-            try:
-                ts_utc = ts.astimezone(timezone.utc)
-            except Exception:
-                try:
-                    ts_utc = ts.replace(tzinfo=timezone.utc)
-                except Exception:
-                    ts_utc = ts
-            last = None
-            for bt, b in self.biome_history:
-                try:
-                    bt_utc = bt.astimezone(timezone.utc)
-                except Exception:
-                    try:
-                        bt_utc = bt.replace(tzinfo=timezone.utc)
-                    except Exception:
-                        bt_utc = bt
-                if bt_utc <= ts_utc:
-                    last = b
-                else:
-                    break
-            return last if last is not None else self.current_biome
-        except Exception:
-            return self.current_biome
-
-    def _player_logger_loop(self):
-        last_file = None
-        last_pos = 0
-        sessions = {}
-        while getattr(self, "player_logger_running", False):
-            if not getattr(self, "player_logger_var", None) or not self.player_logger_var.get():
-                time.sleep(0.5)
-                continue
-            path = self._find_latest_log_file()
-            if not path:
-                time.sleep(0.5)
-                continue
-            if path != last_file:
-                last_file = path
-                try:
-                    last_pos = os.path.getsize(path)
-                except:
-                    last_pos = 0
-            if not self._consume_log_username_validation(path):
-                time.sleep(0.3)
-                continue
-            try:
-                with open(path, "r", encoding="utf-8", errors="ignore") as f:
-                    f.seek(last_pos)
-                    line = f.readline()
-                    if not line:
-                        time.sleep(0.2)
-                        continue
-                    last_pos = f.tell()
-            except:
-                time.sleep(0.5)
-                continue
-            if not self._consume_log_username_validation(path):
-                continue
-            # Roblox/Bloxstrap client versions do not always include the
-            # historical ExpChat prefix. The player event itself is the
-            # stable part, so accept it independently of the subsystem tag.
-            if "Player added:" in line or "Player removed:" in line:
-                ts_str = line.split(",", 1)[0].strip()
-                ts = self._parse_iso_ts(ts_str)
-                if "Player added:" in line:
-                    m = re.search(r"Player added:\s+(\S+)\s+(\d+)", line)
-                    if m:
-                        name, pid = m.group(1), m.group(2)
-                        join_biome = self._biome_at(ts)
-                        sessions[pid] = {"ts": ts, "biome": join_biome}
-                        self.logs.append(f"[Player] Joined {name} ({pid})")
-                        self.save_logs()
-                        ts_iso = ts.astimezone(timezone.utc).isoformat()
-                        embed = self._make_player_embed("join", name, pid, ts_iso, None, join_biome)
-                        self._enqueue_player_embed(embed)
-                elif "Player removed:" in line:
-                    m = re.search(r"Player removed:\s+(\S+)\s+(\d+)", line)
-                    if m:
-                        name, pid = m.group(1), m.group(2)
-                        joined = sessions.pop(pid, None)
-                        left_biome = self._biome_at(ts)
-                        if joined and isinstance(joined, dict) and joined.get("ts"):
-                            joined_ts = joined.get("ts")
-                            joined_biome = joined.get("biome")
-                            secs = int((ts - joined_ts).total_seconds())
-                            h = secs // 3600
-                            m_ = (secs % 3600) // 60
-                            s_ = secs % 60
-                            dur = f"{h:02d}:{m_:02d}:{s_:02d}"
-                            self.logs.append(f"[Player] Left {name} ({pid}) after {dur}")
-                            self.save_logs()
-                            ts_iso = ts.astimezone(timezone.utc).isoformat()
-                            embed = self._make_player_embed("leave", name, pid, ts_iso, dur, joined_biome, left_biome)
-                            self._enqueue_player_embed(embed)
-                        else:
-                            self.logs.append(f"[Player] Left {name} ({pid})")
-                            self.save_logs()
-                            ts_iso = ts.astimezone(timezone.utc).isoformat()
-                            embed = self._make_player_embed("leave", name, pid, ts_iso, None, None, left_biome)
-                            self._enqueue_player_embed(embed)
 
     def auto_biome_change(self):
         if self.is_fishing_mode_enabled():

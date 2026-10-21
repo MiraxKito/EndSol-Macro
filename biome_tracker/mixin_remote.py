@@ -4,6 +4,108 @@ class RemoteMixin:
     # Live state for the panel: True while the Discord gateway is connected.
     _remote_bot_running = False
 
+    # The features the remote bot can switch. The key is the config entry,
+    # the name is what the user types in Discord.
+    REMOTE_TOGGLE_FEATURES = {
+        "fishing": "fishing_mode",
+        "dryrun": "dry_run",
+        "idle": "enable_idle_mode",
+        "potion": "enable_potion_crafting",
+        "reconnect": "auto_reconnect",
+        "aura": "enable_aura_detection",
+        "record": "enable_aura_record",
+        "obby": "enable_obby_path",
+        "snowman": "enable_snowman_path",
+        "autopop_glitched": "auto_pop_glitched",
+        "autopop_cyberspace": "auto_pop_cyberspace",
+        "autopop_dreamspace": "auto_pop_dreamspace",
+        "buff_glitched": "enable_buff_glitched",
+        "roll": "auto_roll_biome_enabled",
+        "failsafe": "enable_ocr_failsafe",
+        "glitchfx": "enable_glitch_effect",
+    }
+
+    def remote_set_feature(self, name, state):
+        """Switch a macro feature from the remote bot.
+
+        state=None flips the switch, True/False set it.
+        Returns (ok, message).
+        """
+        wanted = str(name or "").strip().lower()
+        key = self.REMOTE_TOGGLE_FEATURES.get(wanted)
+        if not key:
+            known = ", ".join(sorted(self.REMOTE_TOGGLE_FEATURES))
+            return False, f"Unknown feature '{name}'. Known: {known}"
+        try:
+            current = bool(self.config.get(key, False))
+        except Exception:
+            current = False
+        new = (not current) if state is None else bool(state)
+        self.config[key] = new
+        try:
+            from .config import save_config as core_save_config
+            core_save_config({key: new})
+        except Exception:
+            try:
+                self.save_config()
+            except Exception:
+                pass
+        # The dry-run switch lives in the input layer, not in the config only.
+        if key == "dry_run":
+            try:
+                from .input_proxy import set_dry_run
+                set_dry_run(new)
+            except Exception:
+                pass
+        # Some features are read through a ConfigVar — keep it in step.
+        var = getattr(self, f"{key}_var", None)
+        if var is not None and hasattr(var, "set"):
+            try:
+                var.set(new)
+            except Exception:
+                pass
+        return True, f"{wanted} is now {'ON' if new else 'OFF'}"
+
+    def remote_log_tail(self, count=20):
+        """The last lines of the macro log, newest last."""
+        try:
+            from .config import APPDATA_BASE
+            path = os.path.join(APPDATA_BASE, "logs", "macro_logs.txt")
+            if not os.path.exists(path):
+                return []
+            with open(path, "r", encoding="utf-8", errors="ignore") as fh:
+                lines = fh.read().splitlines()
+            return [ln for ln in lines[-count:] if ln.strip()]
+        except Exception:
+            try:
+                log = list(getattr(self, "logs", []) or [])
+                return [str(ln) for ln in log[-count:]]
+            except Exception:
+                return []
+
+    def remote_daily_stats(self):
+        """The counters the macro collects during the day."""
+        try:
+            payload = self._daily_load()
+            day_key = self._daily_day_key()
+            entry = (payload.get("days") or {}).get(day_key)
+            if not isinstance(entry, dict):
+                return {}
+            out = {}
+            for key, value in entry.items():
+                if isinstance(value, (dict, list)):
+                    continue
+                if key == "playtime_seconds":
+                    try:
+                        out["Playtime"] = str(datetime.timedelta(seconds=int(value or 0)))
+                    except Exception:
+                        out["Playtime"] = str(value)
+                    continue
+                out[str(key).replace("_", " ").title()] = value
+            return out
+        except Exception:
+            return {}
+
     def get_remote_bot_status(self):
         """Status for the React panel: running now / enabled in config."""
         return {
@@ -298,6 +400,105 @@ class RemoteMixin:
                         pass
                         
                     await ctx.response.send_message(embed=embed)
+                except Exception:
+                    pass
+
+            @bot.tree.command(name="toggle", description="Turn a macro feature on or off")
+            async def toggle_feature(ctx: discord.Interaction, feature: str, state: str = "toggle"):
+                try:
+                    if not _check_auth(ctx):
+                        await _safe_respond(ctx, "Unauthorized", ephemeral=True)
+                        return
+                    want = None
+                    if str(state).strip().lower() in ("on", "true", "1", "yes", "enable"):
+                        want = True
+                    elif str(state).strip().lower() in ("off", "false", "0", "no", "disable"):
+                        want = False
+                    ok, message = self.remote_set_feature(feature, want)
+                    color = 0x00FF00 if ok and "ON" in message else (0xFF0000 if not ok else 0xFFAA00)
+                    embed = discord.Embed(title="Feature Switch", description=message, color=color)
+                    await ctx.response.send_message(embed=embed)
+                except Exception:
+                    pass
+
+            @bot.tree.command(name="logs", description="Send the last lines of the macro log")
+            async def show_logs(ctx: discord.Interaction, lines: str = "20"):
+                try:
+                    if not _check_auth(ctx):
+                        await _safe_respond(ctx, "Unauthorized", ephemeral=True)
+                        return
+                    try:
+                        count = max(1, min(80, int(str(lines).strip() or 20)))
+                    except (TypeError, ValueError):
+                        count = 20
+                    tail = self.remote_log_tail(count)
+                    embed = discord.Embed(title=f"== Macro Log (last {len(tail)} lines) ==", color=0x5865F2)
+                    body = "\n".join(tail) if tail else "The log is empty."
+                    if len(body) > 3800:
+                        body = "…\n" + body[-3800:]
+                    embed.description = "```\n" + body + "\n```"
+                    await ctx.response.send_message(embed=embed)
+                except Exception:
+                    pass
+
+            @bot.tree.command(name="biome", description="Show the current biome and what was rolled")
+            async def biome_info(ctx: discord.Interaction):
+                try:
+                    if not _check_auth(ctx):
+                        await _safe_respond(ctx, "Unauthorized", ephemeral=True)
+                        return
+                    embed = discord.Embed(title="== Current Biome ==", color=0x00AAFF)
+                    embed.add_field(name="Biome", value=str(getattr(self, "current_biome", "None") or "None"), inline=True)
+                    last = getattr(self, "last_aura_found", "") or "None yet"
+                    embed.add_field(name="Last Aura", value=str(last), inline=True)
+                    running = getattr(self, "detection_running", False)
+                    embed.add_field(name="Macro", value="Running" if running else "Stopped", inline=True)
+                    counts = {k: v for k, v in (getattr(self, "biome_counts", {}) or {}).items() if v}
+                    if counts:
+                        top = sorted(counts.items(), key=lambda x: x[1], reverse=True)[:8]
+                        embed.add_field(
+                            name="Biome Counts",
+                            value="\n".join(f"{k.title()}: {v}" for k, v in top),
+                            inline=False,
+                        )
+                    await ctx.response.send_message(embed=embed)
+                except Exception:
+                    pass
+
+            @bot.tree.command(name="stats", description="Show today's macro stats")
+            async def stats_today(ctx: discord.Interaction):
+                try:
+                    if not _check_auth(ctx):
+                        await _safe_respond(ctx, "Unauthorized", ephemeral=True)
+                        return
+                    embed = discord.Embed(title="== Stats ==", color=0x00AAFF)
+                    try:
+                        stats = self.remote_daily_stats()
+                    except Exception:
+                        stats = {}
+                    if stats:
+                        for key, value in stats.items():
+                            embed.add_field(name=str(key).replace("_", " ").title(), value=str(value), inline=True)
+                    else:
+                        embed.description = "No stats collected yet today."
+                    await ctx.response.send_message(embed=embed)
+                except Exception:
+                    pass
+
+            @bot.tree.command(name="restart_macro", description="Stop and start the macro again")
+            async def restart_macro(ctx: discord.Interaction):
+                try:
+                    if not _check_auth(ctx):
+                        await _safe_respond(ctx, "Unauthorized", ephemeral=True)
+                        return
+                    embed = discord.Embed(title="Restarting the macro", color=0xFFAA00)
+                    await ctx.response.send_message(embed=embed)
+                    if getattr(self, "on_remote_stop", None):
+                        self.on_remote_stop()
+                    import time as _time
+                    _time.sleep(3.0)
+                    if getattr(self, "on_remote_start", None):
+                        self.on_remote_start()
                 except Exception:
                     pass
 

@@ -167,7 +167,7 @@ const colorGroups: { label: string; keys: string[] }[] = [
 ];
 
 export default function PanelCustomizationPage() {
-  const { config, setConfig } = useConfig();
+  const { config, setConfig, saveConfig } = useConfig();
   const [theme, setTheme] = useState<ThemeData>(DEFAULT_THEME);
   const [activeSection, setActiveSection] = useState<string>("colors");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -199,11 +199,25 @@ export default function PanelCustomizationPage() {
   };
 
   const resetToDefaults = () => {
+    switchToMyPalette();
     setTheme({ ...DEFAULT_THEME, variables: { ...DEFAULT_THEME.variables }, custom_labels: {}, custom_icons: {} });
     showMessage("success", "Theme reset to defaults. Save it to keep the change.");
   };
 
+  // The built-in presets cannot be edited — everything the user changes here
+  // belongs to "My Palette". As soon as the first value is changed the panel
+  // switches to that theme, otherwise the user would keep editing a preset
+  // that stays untouched.
+  const switchToMyPalette = useCallback(() => {
+    if (!config) return;
+    if ((config as any).selected_theme === "custom") return;
+    const next = { ...config, selected_theme: "custom" } as any;
+    setConfig(next);
+    saveConfig(next);
+  }, [config, setConfig, saveConfig]);
+
   const updateVariable = (key: string, value: string) => {
+    switchToMyPalette();
     setTheme(prev => ({
       ...prev,
       variables: { ...prev.variables, [key]: value }
@@ -211,10 +225,12 @@ export default function PanelCustomizationPage() {
   };
 
   const updateThemeField = <K extends keyof ThemeData>(field: K, value: ThemeData[K]) => {
+    switchToMyPalette();
     setTheme(prev => ({ ...prev, [field]: value }));
   };
 
   const updateLabel = (tab: string, value: string) => {
+    switchToMyPalette();
     setTheme(prev => ({
       ...prev,
       custom_labels: { ...prev.custom_labels, [tab]: value }
@@ -222,6 +238,7 @@ export default function PanelCustomizationPage() {
   };
 
   const updateIcon = (tab: string, value: string) => {
+    switchToMyPalette();
     setTheme(prev => ({
       ...prev,
       custom_icons: { ...prev.custom_icons, [tab]: value }
@@ -300,7 +317,14 @@ export default function PanelCustomizationPage() {
         // Selecting "My Palette" makes the saved palette the ACTIVE theme —
         // the palette used to bleed over every built-in preset instead, which
         // made the preset picker look broken.
-        if (config) setConfig({ ...config, custom_theme_data: theme, selected_theme: "custom" });
+        if (config) {
+          const next = { ...config, custom_theme_data: theme, selected_theme: "custom" } as any;
+          setConfig(next);
+          // The setting has to be written to the config as well, otherwise the
+          // panel starts on the default preset after a restart and the saved
+          // colours are nowhere to be seen.
+          saveConfig(next);
+        }
         showMessage("success", "Theme saved and applied as \"My Palette\"! Changes will persist after restart.");
       } else {
         showMessage("error", parsed.error || "Failed to save theme");

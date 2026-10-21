@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import ToggleSwitch from "../components/ToggleSwitch";
+import { useConfig } from "../contexts/ConfigContext";
 
 export default function PotionCraftPage() {
+    // The shared config is the source of truth. The page used to keep its own
+    // snapshot, which was taken when the page opened — a setting that changed
+    // somewhere else in the meantime was then written back as it was before.
+    const { config, saveConfig: saveSharedConfig } = useConfig();
     // State
     const [enableCrafting, setEnableCrafting] = useState(false);
     const [selectedPotion, setSelectedPotion] = useState("");
@@ -23,11 +28,23 @@ export default function PotionCraftPage() {
     const [autoTarget, setAutoTarget] = useState("on");
     const [autoStateInfo, setAutoStateInfo] = useState<string>("");
     const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
-    const configSnapshotRef = useRef<any>(null);
 
     useEffect(() => {
         refreshFiles();
         loadConfig();
+    }, []);
+
+    // The backend changes the config on its own now and then (the macro
+    // writes its counters, the remote bot flips a switch). The page follows
+    // those changes instead of showing a stale copy.
+    useEffect(() => {
+        const handler = () => { loadConfig(); };
+        window.addEventListener("endsol:refresh", handler);
+        const timer = window.setInterval(handler, 30000);
+        return () => {
+            window.removeEventListener("endsol:refresh", handler);
+            window.clearInterval(timer);
+        };
     }, []);
 
     const refreshFiles = async () => {
@@ -44,22 +61,21 @@ export default function PotionCraftPage() {
     const loadConfig = async () => {
         try {
             if (window.pywebview && window.pywebview.api) {
-                const config: any = await window.pywebview.api.get_config();
-                if (config) {
-                    configSnapshotRef.current = config;
-                    if (typeof config.enable_potion_crafting === 'boolean') setEnableCrafting(config.enable_potion_crafting);
-                    setSelectedPotion(config.selected_potion_file ?? "");
-                    if (typeof config.enable_potion_switching === 'boolean') setEnableSwitching(config.enable_potion_switching);
-                    setSwitchInterval(Number(config.potion_switch_interval ?? 60));
-                    setPotion1(config.potion_file_1 ?? "");
-                    setPotion2(config.potion_file_2 ?? "");
-                    setPotion3(config.potion_file_3 ?? "");
-                    setCraftMode(config.potion_craft_mode === "simple" ? "simple" : "recording");
-                    setPotionName(config.potion_simple_name ?? "");
-                    setOccupancy(config.potion_occupancy === "partial" ? "partial" : "full");
-                    setPartialInterval(Number(config.potion_partial_interval_min ?? 60));
-                    setPartialDuration(Number(config.potion_partial_duration_min ?? 10));
-                    setAutoTarget(config.potion_auto_target_state === "on_craft" ? "on_craft" : "on");
+                const cfg: any = await window.pywebview.api.get_config();
+                if (cfg) {
+                    if (typeof cfg.enable_potion_crafting === 'boolean') setEnableCrafting(cfg.enable_potion_crafting);
+                    setSelectedPotion(cfg.selected_potion_file ?? "");
+                    if (typeof cfg.enable_potion_switching === 'boolean') setEnableSwitching(cfg.enable_potion_switching);
+                    setSwitchInterval(Number(cfg.potion_switch_interval ?? 60));
+                    setPotion1(cfg.potion_file_1 ?? "");
+                    setPotion2(cfg.potion_file_2 ?? "");
+                    setPotion3(cfg.potion_file_3 ?? "");
+                    setCraftMode(cfg.potion_craft_mode === "simple" ? "simple" : "recording");
+                    setPotionName(cfg.potion_simple_name ?? "");
+                    setOccupancy(cfg.potion_occupancy === "partial" ? "partial" : "full");
+                    setPartialInterval(Number(cfg.potion_partial_interval_min ?? 60));
+                    setPartialDuration(Number(cfg.potion_partial_duration_min ?? 10));
+                    setAutoTarget(cfg.potion_auto_target_state === "on_craft" ? "on_craft" : "on");
                 }
             }
         } catch (e) {
@@ -67,15 +83,12 @@ export default function PotionCraftPage() {
         }
     };
 
+    // The saves are chained so two quick changes cannot overwrite each other.
     const saveConfig = (key: string, value: any) => {
         saveQueueRef.current = saveQueueRef.current
             .then(async () => {
-                if (window.pywebview && window.pywebview.api) {
-                    const baseConfig: any = configSnapshotRef.current ?? await window.pywebview.api.get_config();
-                    const newConfig = { ...(baseConfig || {}), [key]: value };
-                    configSnapshotRef.current = newConfig;
-                    await window.pywebview.api.save_config(newConfig);
-                }
+                const base: any = config ?? await window.pywebview?.api?.get_config?.();
+                await saveSharedConfig({ ...(base || {}), [key]: value } as any);
             })
             .catch((e) => {
                 console.error("Failed to save config:", e);
@@ -192,7 +205,8 @@ export default function PotionCraftPage() {
                             className="form-input"
                             value={potionName}
                             placeholder="e.g. Lucky Potion"
-                            onChange={(e) => { setPotionName(e.target.value); saveConfig("potion_simple_name", e.target.value); }}
+                            onChange={(e) => setPotionName(e.target.value)}
+                            onBlur={() => saveConfig("potion_simple_name", potionName)}
                         />
                         <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: 6 }}>
                             The macro types this name into the crafting search bar and selects the potion — no recipe file required.
@@ -347,7 +361,8 @@ export default function PotionCraftPage() {
                             className="form-input"
                             value={potion1}
                             placeholder="e.g. Lucky Potion"
-                            onChange={(e) => { setPotion1(e.target.value); saveConfig("potion_file_1", e.target.value); }}
+                            onChange={(e) => setPotion1(e.target.value)}
+                            onBlur={() => saveConfig("potion_file_1", potion1)}
                         />
                     ) : (
                         <PotionDropdown
@@ -365,7 +380,8 @@ export default function PotionCraftPage() {
                             className="form-input"
                             value={potion2}
                             placeholder="e.g. Lucky Potion"
-                            onChange={(e) => { setPotion2(e.target.value); saveConfig("potion_file_2", e.target.value); }}
+                            onChange={(e) => setPotion2(e.target.value)}
+                            onBlur={() => saveConfig("potion_file_2", potion2)}
                         />
                     ) : (
                         <PotionDropdown
@@ -383,7 +399,8 @@ export default function PotionCraftPage() {
                             className="form-input"
                             value={potion3}
                             placeholder="e.g. Lucky Potion"
-                            onChange={(e) => { setPotion3(e.target.value); saveConfig("potion_file_3", e.target.value); }}
+                            onChange={(e) => setPotion3(e.target.value)}
+                            onBlur={() => saveConfig("potion_file_3", potion3)}
                         />
                     ) : (
                         <PotionDropdown

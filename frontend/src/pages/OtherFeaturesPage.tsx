@@ -159,27 +159,6 @@ export default function OtherFeaturesPage() {
 
             <div className="card">
                 <div className="card-header">
-                    <div className="card-icon">👥</div>
-                    <div>
-                        <h3>Player Logger</h3>
-                        <p>Track players joining and leaving the current server</p>
-                    </div>
-                </div>
-
-                <ToggleSwitch
-                    label="Player Logger"
-                    description="Reads Roblox logs, records join/leave events and sends player embeds to the configured Discord webhook"
-                    checked={config.player_logger !== false}
-                    onChange={(val) => updateConfig("player_logger", val)}
-                    disabled={true}
-                />
-                <p className="form-hint" style={{ padding: "0 20px 14px", color: "#f87171" }}>
-                    ⚠️ Deprecated: this feature relies on legacy Roblox log entries that no longer exist in the current game. It cannot be improved anymore and is kept non-interactive for compatibility.
-                </p>
-            </div>
-
-            <div className="card">
-                <div className="card-header">
                     <div className="card-icon">🛠️</div>
                     <div>
                         <h3>System Settings</h3>

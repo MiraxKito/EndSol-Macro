@@ -222,9 +222,15 @@ class ExtrasMixin:
     # ── dry-run mode ────────────────────────────────────────────────────
     def dry_run_active(self):
         try:
-            return bool(self.config.get("dry_run", False))
+            active = bool(self.config.get("dry_run", False))
         except Exception:
-            return False
+            active = False
+        try:
+            from .input_proxy import set_dry_run
+            set_dry_run(active)
+        except Exception:
+            pass
+        return active
 
     def dry_run_log(self, action):
         try:

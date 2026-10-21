@@ -36,7 +36,8 @@ import time
 import numpy as np
 from datetime import datetime, timedelta
 
-import autoit
+from .input_proxy import autoit
+from .base_support import PREP_MOUSE_EXTRA_DELAY
 
 try:
     from .config import APPDATA_BASE
@@ -1151,7 +1152,7 @@ class MemoryMatchMixin:
                     self.Global_MouseClick(collections_button[0], collections_button[1])
                 except Exception:
                     pass
-            if not self._mm_sleep(0.3):
+            if not self._mm_sleep(0.3 + PREP_MOUSE_EXTRA_DELAY):
                 return
         if exit_collections_button and exit_collections_button[0]:
             try:
@@ -1161,7 +1162,7 @@ class MemoryMatchMixin:
                     self.Global_MouseClick(exit_collections_button[0], exit_collections_button[1])
                 except Exception:
                     pass
-            if not self._mm_sleep(0.3):
+            if not self._mm_sleep(0.3 + PREP_MOUSE_EXTRA_DELAY):
                 return
         # Camera adjustment: press right mouse button and drag down 75 px
         start_x = int(exit_collections_button[0]) if exit_collections_button and exit_collections_button[0] else 500

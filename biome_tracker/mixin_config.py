@@ -163,9 +163,6 @@ class ConfigMixin:
             "use_float_aura": self.config.get("use_float_aura", False),
             "float_aura_name": self.config.get("float_aura_name", ""),
 
-            # ── Player Logger ──
-            "player_logger": self.player_logger_var.get(),
-
             # ── Quest System ──
             "auto_claim_daily_quests": self.auto_claim_quests_var.get() if hasattr(self, "auto_claim_quests_var") else self.config.get("auto_claim_daily_quests", False),
             "auto_claim_interval": self.auto_claim_interval_var.get() if hasattr(self, "auto_claim_interval_var") else self.config.get("auto_claim_interval", "30"),
@@ -569,7 +566,6 @@ class ConfigMixin:
                 "enable_obby_path": False,
                 "obby_claim_interval": "15",
                 "merchant_close_button": [1809, 346],
-                "player_logger": True,  
                 "webhook_url": [],
                 "non_vip_movement_path": False,
                 "azerty_mode": False,
@@ -769,7 +765,6 @@ class ConfigMixin:
             if hasattr(self, "auto_merchant_in_limbo_var"):
                 self.auto_merchant_in_limbo_var.set(config.get("auto_merchant_in_limbo", False))
             self.auto_reconnect_var.set(config.get("auto_reconnect", False))
-            self.player_logger_var.set(config.get("player_logger", True))
             self.anti_afk_var.set(config.get("anti_afk", True))
             if hasattr(self, "rare_biome_screenshot_var"): self.rare_biome_screenshot_var.set(config.get("rare_biome_screenshot", False))
             if hasattr(self, "auto_roblox_fullscreen_var"): self.auto_roblox_fullscreen_var.set(config.get("auto_roblox_fullscreen", False))

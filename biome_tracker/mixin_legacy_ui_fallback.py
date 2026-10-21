@@ -388,11 +388,6 @@ class GuiMixin:
         txt.config(state="disabled")
 
     def create_other_features_tab(self, frame):
-        self.player_logger_var = ttk.BooleanVar(value=self.config.get("player_logger", True))
-        c = ttk.Checkbutton(frame,
-                            text="Player logger",
-                            variable=self.player_logger_var, command=self.save_config)
-        c.pack(anchor="w", padx=10, pady=10)
         self.anti_afk_var = ttk.BooleanVar(value=self.config.get("anti_afk", True))
         anti_afk_check = ttk.Checkbutton(frame,
                                         text="Anti-AFK (prevents Roblox disconnection even when Roblox isn't focused)",

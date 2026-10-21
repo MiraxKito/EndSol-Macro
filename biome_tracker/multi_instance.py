@@ -58,11 +58,39 @@ _JUMP_LOCK = threading.Lock()
 # written by every client version / disconnect type, so a small conservative
 # set of alternatives is matched case-insensitively.
 DISCONNECT_LOG_PATTERNS = (
+    "client:disconnect",
     "connection lost",
     "lost connection",
     "id_connection_lost",
     "sending disconnect with reason",
+    "connection terminated",
+    "disconnected from server",
 )
+
+# Roblox writes the connection failure into the client log. "Error Code 277"
+# is the mid-game drop ("Lost connection to the game server"), "Error Code 279"
+# (ID 17) is the failed join ("Failed to connect to the Game"). Both mean the
+# client is NOT in the game - a disconnect that only shows up as one of these
+# lines used to pass by unnoticed.
+ROBLOX_CONNECTION_ERROR_PATTERNS = (
+    "error code 262",
+    "error code: 262",
+    "error code 266",
+    "error code: 266",
+    "error code 273",
+    "error code: 273",
+    "error code 277",
+    "error code: 277",
+    "error code 279",
+    "error code: 279",
+    "error code 280",
+    "error code: 280",
+    "failed to connect to the game",
+    "connection attempt failed",
+    "lost connection to the game server",
+)
+
+DISCONNECT_LOG_PATTERNS = DISCONNECT_LOG_PATTERNS + ROBLOX_CONNECTION_ERROR_PATTERNS
 
 # Tracker flags that mean "the main window is mid-action; do NOT steal its
 # focus right now". This mirrors the same conflict checks the main loops use
@@ -1117,14 +1145,30 @@ _STICKY_MAIN: dict[str, Any] = {"pid": None, "username": ""}
 
 
 def _log_username(path: str) -> str:
-    """Roblox username found in the log's TutorialCursor line ('' unknown).
+    """Roblox username found in the CLIENT's own log ('' unknown).
 
-    Same pattern the main detector's Log Guard uses. The file is scanned
-    INCREMENTALLY: every call reads at most ~1MB starting where the previous
-    attempt stopped, so even a multi-hundred-MB log of a long-running client
-    is covered within a minute WITHOUT multi-megabyte read bursts that lagged
-    the panel and kept Antimalware Service Executable busy. A hit is cached for the file's lifetime; new tail data
-    written later (a client joining the game) is scanned as it appears."""
+    Two sources, in order of how cheap they are:
+      1. the TutorialCursor warning — the name is written out, so no API call.
+         That line comes from a Sol's RNG PLACE script (the game waits for a
+         "TutorialCursor" object in the PlayerGui), so it only exists while
+         the client is in that place. It is a shortcut, not a dependency.
+      2. the game_join_loadtime report — Roblox's OWN client line
+         ([FLog::GameJoinLoadTime]), it carries the client's userid and
+         exists in every place. The username comes from the Roblox users API.
+
+    The tracker cookie is NOT used: RBXEventTrackerV2 is an analytics cookie
+    that survives a session change and can name a different account.
+
+    Every source comes from the Roblox client log in
+    %LOCALAPPDATA%\\Roblox\\logs - the official client, Bloxstrap and
+    Fishstrap all write it, so nothing here depends on the launcher.
+
+    The file is scanned INCREMENTALLY: every call reads at most ~1MB starting
+    where the previous attempt stopped, so even a multi-hundred-MB log of a
+    long-running client is covered within a minute WITHOUT multi-megabyte read
+    bursts that lagged the panel and kept Antimalware Service Executable
+    busy. A hit is cached for the file's lifetime; new tail data written
+    later (a client joining the game) is scanned as it appears."""
     if not path:
         return ""
     try:
@@ -1164,21 +1208,28 @@ def _log_username(path: str) -> str:
         with open(path, "rb") as f:
             f.seek(read_from)
             data = f.read(new_pos - read_from)
-        m = pattern.search(data.decode("utf-8", errors="ignore"))
+        text = data.decode("utf-8", errors="ignore")
+        m = pattern.search(text)
         if m:
             name = str(m.group(1) or "").strip().lower()
         else:
             # Fallback (same identification Avaluate's MultipleRobloxInstances
-            # uses): the game_join_loadtime line carries the client's
+            # uses): the game_join_loadtime line is Roblox's own client
+            # report ([FLog::GameJoinLoadTime]) and carries the client's
             # universeid/userid; the username comes from the Roblox users
-            # API. Covers Bloxstrap-launched clients whose log has no
-            # TutorialCursor guard line.
+            # API. The line appears once the client joined a game - before
+            # that the account is simply not known yet.
             m2 = _re.search(
                 r"game_join_loadtime.*universeid:(\d+),.*userid:(\d+)",
-                data.decode("utf-8", errors="ignore"),
+                text,
             )
             if m2:
                 userid = str(m2.group(2) or "")
+            # NOTE: the RBXEventTrackerV2 cookie is NOT an account marker - it
+            # is an analytics cookie that survives a session change, so it can
+            # name a completely different account. Never guess the account
+            # from it: a wrong name is worse than no name, because it is
+            # cached and sticks.
     except Exception:
         name = ""
     if not name and userid:
@@ -1225,7 +1276,10 @@ def _username_for_userid(userid: str) -> str:
     with _LOCK:
         if len(_USERID_NAME_CACHE) > 500:
             _USERID_NAME_CACHE.clear()
-        _USERID_NAME_CACHE[userid] = name
+        # Only a hit is cached - a failed lookup has to be retried on the next
+        # scan pass instead of sticking for the whole session.
+        if name:
+            _USERID_NAME_CACHE[userid] = name
     return name
 
 
@@ -1933,8 +1987,16 @@ def state() -> dict[str, Any]:
     try:
         if enabled and _LAST_WINDOWS:
             _mapping = _map_logs_to_pids([w["pid"] for w in _LAST_WINDOWS])
+            try:
+                from . import instance_launcher as _il
+            except Exception:
+                _il = None
             for _wpid, _path in _mapping.items():
-                _u = _log_username(_path)
+                # The launcher knows the account of every client it started -
+                # the log only names it once the client joined the game.
+                _u = str(_il.launched_pid_account(int(_wpid)) or "") if _il else ""
+                if not _u:
+                    _u = _log_username(_path)
                 if _u:
                     username_by_pid[int(_wpid)] = _u
     except Exception:

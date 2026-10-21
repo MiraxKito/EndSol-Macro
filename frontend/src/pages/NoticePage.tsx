@@ -12,24 +12,40 @@ export default function NoticePage() {
         </a>
       </p>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">🩹</div><div><h3>v1.1.1-fix — Full wiki text, own biome icons, music player</h3><p>Sol's Book stops cutting the wiki short, the rare biomes look like themselves, and the panel gets a music player</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>v1.1.2 — Calibrations that follow your screen, a calmer music player, more remote controls</h3><p>The macro adapts to your resolution and window size, the music behaves, and Dry mode really keeps its hands off the game</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
-        <li><b>Music player 🎵:</b> a built-in player with starred tracks, a playlist and repeat modes — it can play in the background after the panel starts. The button sits in the header next to the theme.</li>
-        <li><b>Sol's Book — full entries 📖:</b> the wiki's own <b>Appearance</b> and <b>Ability</b> text is shown next to the rarity, and the flavour quote opens the entry.</li>
-        <li><b>Own biome icons 📦:</b> the biome icons ship with the macro and come from this repository's CDN.</li>
+        <li><b>Calibrations follow your screen:</b> the points you calibrate now stay where they belong when you change the resolution, the window size or the Windows scaling. A calibration file or preset from someone else is fitted to your own screen when you import it.</li>
+        <li><b>Remote Control gets new commands:</b> <code>/toggle</code> switches a feature on or off (fishing, Dry mode, potion crafting, …), <code>/logs</code> sends the last lines of the macro log, <code>/biome</code> shows the current biome and the last aura, <code>/stats</code> shows today's totals and <code>/restart_macro</code> restarts the macro without closing Roblox.</li>
+        <li><b>Aura preview in the webhook page:</b> type an aura name in Discord Webhook Customization and see exactly how the announcement will look in Discord before it ever fires.</li>
+        <li><b>Sol's Sim — two more one-roll potions:</b> Popping Potion and Godlike Potion are in the sandbox with their real luck values.</li>
       </ul></div>
       <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
-        <li><b>Sol's Book — nothing cut short 📄:</b> biome descriptions run to the end, every aura shows its own picture (not an inventory screenshot or a cutscene), and auras behind a redirect now load properly.</li>
+        <li><b>The music player keeps its place:</b> pausing and resuming continues where it stopped, switching tracks works, and the book's music no longer plays on top of the panel player.</li>
+        <li><b>Dry mode is now really dry:</b> with Dry mode on the macro does not click or press anything in the game — the merchant, fishing, crafting, quests and Memory Match stay untouched.</li>
+        <li><b>Potion crafting switches potions for real:</b> in Simple mode the macro now crafts the potions one after another, and in Partial mode the recorded recipe is actually played back instead of falling back to the simple routine.</li>
+        <li><b>Your panel theme survives a restart:</b> "My Palette" is saved properly and is picked up when the panel starts again; editing the palette switches to it right away.</li>
+        <li><b>A disconnect that does not heal itself:</b> when the game cannot get back into the server on its own (the client ends up on error 277 or 279), the macro notices it and reconnects for you instead of waiting forever.</li>
+        <li><b>The Player Logger was removed:</b> it relied on log lines the game no longer writes, so it could not work. The button is gone instead of sitting there broken.</li>
+      </ul></div>
+    </div>
+    <div className="card"><div className="card-header"><div><h3>v1.1.1-fix — Full wiki text, own biome icons, music player</h3><p>Sol's Book stops cutting the wiki short, the rare biomes look like themselves, and the panel gets a music player</p></div></div>
+      <div className="changelog-item"><h4>✅ New</h4><ul>
+        <li><b>Music player:</b> a built-in player with starred tracks, a playlist and repeat modes — it can play in the background after the panel starts. The button sits in the header next to the theme.</li>
+        <li><b>Sol's Book — full entries:</b> the wiki's own <b>Appearance</b> and <b>Ability</b> text is shown next to the rarity, and the flavour quote opens the entry.</li>
+        <li><b>Own biome icons:</b> the biome icons ship with the macro and come from this repository's CDN.</li>
+      </ul></div>
+      <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
+        <li><b>Sol's Book — nothing cut short:</b> biome descriptions run to the end, every aura shows its own picture (not an inventory screenshot or a cutscene), and auras behind a redirect now load properly.</li>
         <li><b>Sol's Book — no more hanging ⏱:</b> the page loads the list and the entries much faster.</li>
-        <li><b>Sol's Sim — rare biomes ✨:</b> Glitched tears the screen apart, Singularity became a real black hole, and The Radiant Forest can now replace Lost Forest (1 in 20).</li>
+        <li><b>Sol's Sim — rare biomes:</b> Glitched tears the screen apart, Singularity became a real black hole, and The Radiant Forest can now replace Lost Forest (1 in 20).</li>
         <li><b>Update prompt:</b> a fix release under a new tag reaches everyone who already has the macro.</li>
       </ul></div>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">🧪</div><div><h3>v1.1.1 — The Forest Update & Sol's Sim Upgrade</h3><p>One-roll potions, the real luck formula, connection-aware reconnects, and a wave of fixes</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>v1.1.1 — The Forest Update & Sol's Sim Upgrade</h3><p>One-roll potions, the real luck formula, connection-aware reconnects, and a wave of fixes</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
-        <li><b>Sol's Sim — one-roll potions 🧪:</b> Heavenly, Oblivion, Potion of Bound, Potion of the Dune, Red Moon Potion I/II and Pump King's Blood, with their real effects and the auras only they unlock (Neferkhaf, Fragments of the Crimson Moon, Oblivion, Memory).</li>
-        <li><b>Sol's Sim — biome log 📜:</b> the statistics panel keeps a history of which biomes appeared and when.</li>
-        <li><b>Sol's Book player 🎵:</b> the track title is always visible and the music can be put on repeat.</li>
+        <li><b>Sol's Sim — one-roll potions:</b> Heavenly, Oblivion, Potion of Bound, Potion of the Dune, Red Moon Potion I/II and Pump King's Blood, with their real effects and the auras only they unlock (Neferkhaf, Fragments of the Crimson Moon, Oblivion, Memory).</li>
+        <li><b>Sol's Sim — biome log:</b> the statistics panel keeps a history of which biomes appeared and when.</li>
+        <li><b>Sol's Book player:</b> the track title is always visible and the music can be put on repeat.</li>
         <li><b>New game content (Radiant Forest update):</b> Lost Forest and The Radiant Forest are known everywhere — Stats, Webhook, Auto-Pop Buffs and Sol's Sim — with the game's own Weather / Biomes / Rare grouping.</li>
         <li><b>Calibration sharing:</b> a GitHub Discussions template for sharing calibration presets.</li>
       </ul></div>
@@ -51,10 +67,10 @@ export default function NoticePage() {
         <li><b>Aura webhook thresholds</b> are respected by more aura types; only biome-exclusive, crafted and potion auras always notify.</li>
       </ul></div>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">🎲</div><div><h3>v1.1.0 — Sol's Sim & Sol's Book media</h3><p>New sandbox minigame and a nicer media experience in the built-in wiki</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>v1.1.0 — Sol's Sim & Sol's Book media</h3><p>New sandbox minigame and a nicer media experience in the built-in wiki</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
-        <li><b>Sol's Sim 🎲</b> — a sandbox of Sol's RNG inside the panel: roll auras, build a collection and track your stats.</li>
-        <li><b>Sol's Book media 🎞</b> — media galleries with captions and fullscreen view, ←/→ navigation, and a music player with volume and track length.</li>
+        <li><b>Sol's Sim</b> — a sandbox of Sol's RNG inside the panel: roll auras, build a collection and track your stats.</li>
+        <li><b>Sol's Book media</b> — media galleries with captions and fullscreen view, ←/→ navigation, and a music player with volume and track length.</li>
       </ul></div>
       <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
         <li><b>Sol's Book:</b> biome previews now show the actual biome picture instead of an icon.</li>
@@ -62,9 +78,9 @@ export default function NoticePage() {
         <li><b>Daily Rewards:</b> "Collect Daily Event Check-in" renamed to <b>Daily Check-In</b>.</li>
       </ul></div>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">🏆</div><div><h3>v1.0.9 — Achievements, new Potion Crafting, Multi-Instances QoL</h3><p>Sol's Book Achievements, Potion Crafting rebuilt for the new UI, MI close buttons, lag fixes</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>v1.0.9 — Achievements, new Potion Crafting, Multi-Instances QoL</h3><p>Sol's Book Achievements, Potion Crafting rebuilt for the new UI, MI close buttons, lag fixes</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
-        <li><b>Sol's Book — Achievements 🏆:</b> a new section with every in-game achievement — icon, description, how to obtain it and the reward — searchable and filtered by category, auto-updated from the wiki.</li>
+        <li><b>Sol's Book — Achievements:</b> a new section with every in-game achievement — icon, description, how to obtain it and the reward — searchable and filtered by category, auto-updated from the wiki.</li>
         <li><b>Potion Crafting rebuilt for the new crafting UI:</b> <b>Simple mode</b> drives the Auto button safely (the current state is detected and switched with verification) and clicks Add Everything + Craft; <b>Full / Partial occupancy</b> — in Partial mode the macro walks to the crafting station on a schedule (a walk path is bundled), crafts for the set duration, then resets back to spawn.</li>
         <li><b>Multiple-Instances:</b> a <b>Close</b> button on every running window in the process list (graceful close, force-kill fallback; the main window is protected while the macro runs), and the mode can now be turned off while a single client is still running.</li>
         <li><b>Required Roblox username:</b> the macro refuses to start without a valid username (format + online check on the Webhook page) — log reading, stats and multi-instance resolution depend on it.</li>
@@ -80,7 +96,7 @@ export default function NoticePage() {
         <li>Rare-biome webhook texts refreshed (Glitched, Dreamspace, Singularity and others).</li>
       </ul></div>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">🖥️</div><div><h3>v1.0.8 — Multiple-Instances: Main Window & Secondary Windows</h3><p>Play on several Roblox windows at once, cleaner settings, a new Status page and start/stop sounds</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>v1.0.8 — Multiple-Instances: Main Window & Secondary Windows</h3><p>Play on several Roblox windows at once, cleaner settings, a new Status page and start/stop sounds</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
         <li><b>Multiple windows:</b> pick your main Roblox window — the macro plays fully on it (fishing, quests, Memory Match, merchant), while your other windows stay logged in and send biome, aura and disconnect alerts to Discord.</li>
         <li><b>Smart Anti-AFK for other windows:</b> they only jump when the main window isn't busy, your current window gets its focus back right after, and jumps got more reliable on slower PCs.</li>
@@ -96,11 +112,11 @@ export default function NoticePage() {
         <li><b>Reliability:</b> reconnects no longer close your other Roblox windows, and background tasks recover from errors on their own.</li>
       </ul></div>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">📖</div><div><h3>v1.0.7 — Memory Match, Sol's Book (Items & Gauntlets), Optimization & UI Polish</h3><p>Fixed Memory Match tile matching; added Items & Gauntlets tabs to Sol's Book; FPS optimization; UI styling</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>v1.0.7 — Memory Match, Sol's Book (Items & Gauntlets), Optimization & UI Polish</h3><p>Fixed Memory Match tile matching; added Items & Gauntlets tabs to Sol's Book; FPS optimization; UI styling</p></div></div>
       <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
         <li><b>Memory Match:</b> fixed tile matching and tolerance thresholds so matching items are correctly paired and not prematurely discarded.</li>
         <li><b>Donation link:</b> fixed Boosty URL to end in /donate.</li>
-        <li><b>Sol's Book media saving:</b> fixed saving cutscene videos (the save button passed a local cache path instead of the wiki URL) and added a 💾 Save button to theme music players — music and media can be downloaded again.</li>
+        <li><b>Sol's Book media saving:</b> fixed saving cutscene videos (the save button passed a local cache path instead of the wiki URL) and added a Save button to theme music players — music and media can be downloaded again.</li>
         <li><b>Auto-Start after inactivity:</b> the idle timeout was silently clamped to a 5-minute minimum, so shorter values (e.g. 2 minutes) never triggered. The configured timeout is now honored (1–1440 minutes).</li>
         <li><b>Sol's Book performance:</b> removed mini GIF icons from all selection lists (Items, Gauntlets, Auras, Biomes) — lists now render instantly as text with rarity color dots; previews remain only in the detail pane and Media tab as static thumbnails.</li>
       </ul></div>
@@ -113,7 +129,7 @@ export default function NoticePage() {
         <li><b>Discord Webhooks:</b> updated version metadata and footers across all webhook notifications.</li>
       </ul></div>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">📖</div><div><h3>v1.0.6 — Memory Match, Sol's Book & new extras</h3><p>Memory Match reads quantities reliably; The Limbo added to Sol's Book; new optional automations and tools</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>v1.0.6 — Memory Match, Sol's Book & new extras</h3><p>Memory Match reads quantities reliably; The Limbo added to Sol's Book; new optional automations and tools</p></div></div>
       <div className="changelog-item"><h4>🛠️ Fixed</h4><ul>
         <li><b>Memory Match:</b> no longer gets stuck flipping the same two tiles when items look identical but have different quantities. Quantities are detected with a new image-processing pipeline (binarized text, upscaled reads) and compared pixel-wise, so unreadable text can no longer create false pairs.</li>
         <li><b>Custom paths:</b> custom Eden Path recordings are now used during Eden pathing (previously only the bundled route played).</li>
@@ -131,7 +147,7 @@ export default function NoticePage() {
         <li>The macro now uses its own GitHub repository for updates and data files.</li>
       </ul></div>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">📖</div><div><h3>v1.0.5 — Soft-disconnect reconnect, Memory Match & Quest Board fixes, localization</h3><p>Reconnects on silent internet drops; smarter Memory Match matching; Quest Board accepts damaged OCR names; EN/RU panel language</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>v1.0.5 — Soft-disconnect reconnect, Memory Match & Quest Board fixes, localization</h3><p>Reconnects on silent internet drops; smarter Memory Match matching; Quest Board accepts damaged OCR names; EN/RU panel language</p></div></div>
       <div className="changelog-item"><h4>✅ New</h4><ul>
         <li><b>Panel localization (EN / RU)</b> with a language switcher in Other Features → System Settings.</li>
         <li><b>Reconnect on silent internet drops</b> and a Remote Access help panel with bot setup steps.</li>
@@ -142,7 +158,7 @@ export default function NoticePage() {
         <li><b>Memory Match</b> matching made reliable on semi-transparent tiles: background-normalized signatures, smarter candidate choice, and multi-attempt quantity OCR.</li>
       </ul></div>
     </div>
-    <div className="card"><div className="card-header"><div className="card-icon">📋</div><div><h3>Supported features</h3><p>EndSol Macro functionality outside Multiple-Instances mode</p></div></div>
+    <div className="card"><div className="card-header"><div><h3>Supported features</h3><p>EndSol Macro functionality outside Multiple-Instances mode</p></div></div>
       <div className="changelog-item"><ul><li>Biome and aura detection</li><li>Discord webhook notifications</li><li>Fishing automation and potion crafting</li><li>Auto-pop buff system per biome</li><li>Resolution/DPI-aware calibration</li><li>Remote control and screen capture</li></ul></div>
     </div>
   </>;

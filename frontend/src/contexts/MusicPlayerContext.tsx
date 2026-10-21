@@ -116,6 +116,10 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
     const [time, setTime] = useState(0);
     const [duration, setDuration] = useState(0);
+    // Bumped when the current track has to start from the top again. The
+    // loader effect only watches the track id, so restarting the same track
+    // needs a second signal.
+    const [reloadToken, setReloadToken] = useState(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const ownerId = "music-player";
 
@@ -146,23 +150,20 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
 
     const current = currentId ? (trackById.get(currentId) || null) : null;
 
-    /** Start a track. The previous one is stopped right away — otherwise it
-     *  keeps playing while the new file is still being fetched. */
+    /** Start a track from the top. The previous one is stopped right away —
+     *  otherwise it keeps playing while the new file is still being fetched. */
     const playTrack = useCallback((id: string) => {
         const track = trackById.get(id);
         if (!track) return;
-        setCurrentId(id);
-        setPlaying(true);
         const el = audioRef.current;
         if (el) {
-            try {
-                el.pause();
-                el.removeAttribute("src");
-                el.load();
-            } catch { /* ignore */ }
-            setTime(0);
-            setDuration(0);
+            try { el.pause(); } catch { /* ignore */ }
         }
+        setCurrentId(id);
+        setPlaying(true);
+        // The loader only reacts to a changed track, so the same track has to
+        // ask for a restart on its own.
+        setReloadToken((t) => t + 1);
     }, [trackById]);
 
     const stop = useCallback(() => {
@@ -173,12 +174,29 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
         }
     }, []);
 
+    /** Pause and resume. A paused track keeps its position and picks up
+     *  where it left off — only a track that was never loaded (or whose file
+     *  is gone) starts from the top. */
     const togglePlay = useCallback(() => {
-        if (playing) stop();
-        else {
-            const id = currentId || settings.playlist[0] || tracks[0]?.id;
-            if (id) playTrack(id);
+        if (playing) { stop(); return; }
+        const id = currentId || settings.playlist[0] || tracks[0]?.id;
+        if (!id) return;
+        const el = audioRef.current;
+        if (currentId && el && el.src) {
+            try {
+                const p = el.play();
+                if (p && typeof (p as any).then === "function") {
+                    (p as Promise<void>)
+                        .then(() => { setPlaying(true); claimAudio(ownerId); })
+                        .catch(() => { setPlaying(false); });
+                } else {
+                    setPlaying(true);
+                    claimAudio(ownerId);
+                }
+                return;
+            } catch { /* fall through and start the track over */ }
         }
+        playTrack(id);
     }, [playing, stop, currentId, settings.playlist, tracks, playTrack]);
 
     const playlistTracks = useMemo(
@@ -241,14 +259,23 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
         el.volume = Math.min(1, Math.max(0, settings.volume));
     }, [settings.volume]);
 
-    // Load the file through the local media cache and start it. Only a
-    // change of the track restarts the playback.
+    // Load the file through the local media cache and start it. It only runs
+    // when the track changes, or when the same track is restarted on purpose.
     useEffect(() => {
         const el = audioRef.current;
         if (!el || !currentId) return;
         const track = trackByIdRef.current.get(currentId);
         if (!track) return;
         let alive = true;
+        // Drop the previous file so the old track cannot keep playing while
+        // the new one is still being fetched.
+        try {
+            el.pause();
+            el.removeAttribute("src");
+            el.load();
+        } catch { /* ignore */ }
+        setTime(0);
+        setDuration(0);
         void (async () => {
             let src = track.url;
             try {
@@ -261,7 +288,7 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
             try { await el.play(); } catch { setPlaying(false); }
         })();
         return () => { alive = false; };
-    }, [currentId]);
+    }, [currentId, reloadToken]);
 
     /** Move the playhead of the current track (0..1). */
     const seekTo = useCallback((ratio: number) => {

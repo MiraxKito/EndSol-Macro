@@ -2,13 +2,14 @@ from __future__ import annotations
 
 # Keep above every biome_tracker import — base_support reads
 # ENDSOL_MACRO_VERSION at import time (Discord webhook footers).
-current_version = "v1.1.1"
+current_version = "v1.1.2"
 import os as _os
 _os.environ["ENDSOL_MACRO_VERSION"] = current_version
 # The release this build belongs to. A fix release keeps the macro version
-# but gets its own tag, so the build has to know the tag to recognise that
-# the newest release is the one it already is.
-current_release_tag = "v1.1.1-fix"
+# but gets its own tag (e.g. "v1.1.2-fix" while the version stays "v1.1.2"),
+# so the build has to know the tag to recognise that the newest release is
+# the one it already is.
+current_release_tag = "v1.1.2"
 _os.environ["ENDSOL_RELEASE_TAG"] = current_release_tag
 
 # Fields the Sol's Book aura LIST needs. The long wiki text (description,
@@ -47,7 +48,8 @@ import socket
 import random
 from pathlib import Path
 from biome_tracker.config import APPDATA_BASE
-from biome_tracker.coordinates import apply_calibrations, get_client_rect_screen, record_calibration, enable_dpi_awareness
+from biome_tracker.coordinates import (apply_calibrations, get_client_rect_screen, record_calibration,
+                                       enable_dpi_awareness, preset_reference_rect, normalize_calibration_values)
 from biome_tracker import multi_instance
 
 enable_dpi_awareness()
@@ -793,6 +795,50 @@ class Api:
         key = hashlib.sha1(url.encode("utf-8")).hexdigest()
         return self._media_cache_dir() / (key + self._media_ext(url))
 
+    @staticmethod
+    def _media_cache_key(url: str) -> str:
+        import hashlib
+        return hashlib.sha1(str(url).encode("utf-8")).hexdigest()
+
+    def _media_source_path(self, url: str) -> Path:
+        """Sidecar that remembers the direct CDN link of a cached file.
+
+        The cache is keyed by the url the wiki handed us, but the download
+        needs the resolved CDN link. Remembering it means the file is found
+        even when the wiki cannot be reached, and that a file that was
+        trimmed from the cache can be fetched again without a wiki request.
+        """
+        return self._media_cache_dir() / (self._media_cache_key(url) + ".src")
+
+    def _media_source_url(self, url: str) -> str:
+        """The direct link of a media file: the remembered one, or a fresh
+        resolution through the wiki."""
+        saved = ""
+        try:
+            sidecar = self._media_source_path(url)
+            if sidecar.exists():
+                saved = sidecar.read_text(encoding="utf-8").strip()
+        except Exception:
+            saved = ""
+        if not saved:
+            saved = self._resolve_media_url(url)
+            try:
+                self._media_source_path(url).write_text(saved, encoding="utf-8")
+            except Exception:
+                pass
+        # One-time migration: files that were downloaded while the cache was
+        # keyed by the RESOLVED link live under that name. Move them over
+        # instead of downloading them a second time. The remembered link is
+        # enough for this - the migration does not need the wiki.
+        try:
+            old = self._media_local_path(saved)
+            new = self._media_local_path(url)
+            if old.exists() and old.stat().st_size > 0 and not new.exists():
+                os.replace(str(old), str(new))
+        except Exception:
+            pass
+        return saved
+
     def _resolve_media_url(self, url: str) -> str:
         """Resolve Special:FilePath links to the direct CDN URL.
 
@@ -890,7 +936,8 @@ class Api:
                 except Exception:
                     pass
             entries = [(p.stat().st_mtime, p.stat().st_size, p)
-                       for p in self._media_cache_dir().iterdir() if p.is_file()]
+                       for p in self._media_cache_dir().iterdir()
+                       if p.is_file() and p.suffix.lower() != ".src"]
         except Exception:
             return
         total = sum(size for _, size, _ in entries)
@@ -902,8 +949,27 @@ class Api:
             try:
                 total -= size
                 p.unlink()
+                # The sidecar and the thumbnail belong to the file that just
+                # went away - they would only take space.
+                for extra in list(p.parent.glob(p.stem + ".*")):
+                    try:
+                        extra.unlink()
+                    except Exception:
+                        pass
             except Exception:
                 continue
+        # Sidecars whose file is gone are dead weight as well.
+        try:
+            media = {p.stem for p in self._media_cache_dir().iterdir()
+                     if p.is_file() and p.suffix.lower() != ".src"}
+            for p in self._media_cache_dir().glob("*.src"):
+                if p.stem not in media:
+                    try:
+                        p.unlink()
+                    except Exception:
+                        pass
+        except Exception:
+            pass
 
     def _media_local_url(self, path) -> str:
         """A URL the UI can actually load. file:// resources are blocked from
@@ -927,17 +993,39 @@ class Api:
             from biome_tracker.base_support import _is_fandom_url
             if not url or not _is_fandom_url(url):
                 return {"success": False, "error": "Not a Fandom media URL"}
-            url = self._resolve_media_url(url)
+            # The cache is keyed by the url the wiki gave us, NOT by the
+            # resolved CDN link: resolving needs the network, and a file that
+            # is already cached has to be found even when the wiki is
+            # unreachable (offline use of an already loaded tab).
             dest = self._media_local_path(url)
             if dest.exists() and dest.stat().st_size > 0:
+                # Touch it: the cache is trimmed oldest-first, so a file that
+                # is still in use must not look like the oldest one.
+                try:
+                    os.utime(str(dest), None)
+                except Exception:
+                    pass
                 return {"success": True, "cached": True, "size": dest.stat().st_size,
                         "path": str(dest), "local_url": self._media_local_url(dest)}
             with self._media_download_lock:
                 # Double-check after acquiring: another thread may have it.
                 if dest.exists() and dest.stat().st_size > 0:
+                    try:
+                        os.utime(str(dest), None)
+                    except Exception:
+                        pass
                     return {"success": True, "cached": True, "size": dest.stat().st_size,
                             "path": str(dest), "local_url": self._media_local_url(dest)}
-                res = self._fetch_media_to(url, dest)
+                source = self._media_source_url(url)
+                # The migration above may have brought the file over.
+                if dest.exists() and dest.stat().st_size > 0:
+                    try:
+                        os.utime(str(dest), None)
+                    except Exception:
+                        pass
+                    return {"success": True, "cached": True, "size": dest.stat().st_size,
+                            "path": str(dest), "local_url": self._media_local_url(dest)}
+                res = self._fetch_media_to(source, dest)
             if not res.get("success"):
                 return res
             self._enforce_media_cache_cap()
@@ -1478,6 +1566,13 @@ class Api:
             cfg["fishing_failsafe_rejoin"] = False
 
         save_config(cfg)
+        # The dry-run mode lives in the input layer, so the switch has to be
+        # pushed down as soon as the setting changes.
+        try:
+            from biome_tracker.input_proxy import set_dry_run
+            set_dry_run(bool(cfg.get("dry_run", False)))
+        except Exception:
+            pass
         if self._tracker:
             if not isinstance(getattr(self._tracker, "config", None), dict):
                 self._tracker.config = {}
@@ -1830,7 +1925,6 @@ class Api:
                 "Auto Reconnect": {"active": det and _cfg_bool(cfg, "auto_reconnect"), "enabled": _cfg_bool(cfg, "auto_reconnect")},
                 "OCR Failsafe": {"active": det and _cfg_bool(cfg, "enable_ocr_failsafe"), "enabled": _cfg_bool(cfg, "enable_ocr_failsafe")},
                 "Remote Control (Discord)": {"active": bool(getattr(t, "_remote_bot_running", False)), "enabled": _cfg_bool(cfg, "remote_access_enabled")},
-                "Player Logger": {"active": det and _cfg_bool(cfg, "player_logger", True), "enabled": _cfg_bool(cfg, "player_logger", True)},
                 "Discord Webhooks": {"active": det and bool(getattr(t, "webhook_urls", [])), "enabled": bool(getattr(t, "webhook_urls", []))},
                 "Auto Start on Idle": {"active": det and _cfg_bool(cfg, "auto_start_on_idle"), "enabled": _cfg_bool(cfg, "auto_start_on_idle")},
                 "Auto Roll In Biome": {"active": det and _cfg_bool(cfg, "auto_roll_biome_enabled"), "enabled": _cfg_bool(cfg, "auto_roll_biome_enabled")},
@@ -2716,6 +2810,26 @@ class Api:
         except Exception as e:
             return _json.dumps({"error": str(e)})
 
+    def preview_aura_webhook(self, aura_name):
+        """Build the exact aura embed for the customization preview.
+
+        Uses the same builder as the real send path, so the preview matches
+        Discord output 1:1.
+        """
+        import json as _json
+        if not self._tracker or not hasattr(self._tracker, "build_aura_webhook_description"):
+            return _json.dumps({"error": "tracker not ready"})
+        try:
+            built = self._tracker.build_aura_webhook_description(aura_name, None, "")
+            return _json.dumps({
+                "title": built.get("title", ""),
+                "description": built.get("description", ""),
+                "color": int(built.get("color", 0xffffff)),
+                "content": "",
+            })
+        except Exception as e:
+            return _json.dumps({"error": str(e)})
+
     def toggle_idle_monitor(self, enabled):
         # Keep the setting synchronized; the existing lifecycle loop owns the
         # actual auto-start behavior and remains the single source of truth.
@@ -2758,6 +2872,10 @@ class Api:
             theme_path.write_text(json.dumps(theme, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
             cfg = dict(self.get_config())
             cfg["custom_theme_data"] = theme
+            # The saved theme IS the working theme — it is the "My Palette"
+            # preset. Without this the panel would start on the default
+            # preset and the user's own colours would be missing.
+            cfg["selected_theme"] = "custom"
             self.save_config(cfg)
             return {"success": True, "path": str(theme_path), "theme": theme}
         except Exception as e:
@@ -3015,8 +3133,10 @@ class Api:
                  if not isinstance(value, (list, tuple)):
                      value = [data.get(k) for k in keys]
                  if all(isinstance(v, (int, float)) for v in value):
-                     self._tracker.config[self._pending_calibration_key] = list(value)
-                     save_config(self._tracker.config)
+                     # The normalized metadata is what makes a calibration
+                    # survive a different resolution, scale or window mode.
+                    record_calibration(self._tracker.config, self._pending_calibration_key, list(value))
+                    save_config(self._tracker.config)
              except Exception as e:
                  print(f"[Calibration] Failed to persist result: {e}")
          if self._window:
@@ -3025,6 +3145,15 @@ class Api:
                  f"if(window.onCalibrationResult) window.onCalibrationResult({js_data});"
                  f"if(window.onCalibrationResultMisc) window.onCalibrationResultMisc({js_data});"
              )
+
+    def get_client_rect(self):
+        """The Roblox client area on screen — the anchor every calibration
+        value is measured against."""
+        try:
+            rect = get_client_rect_screen()
+            return {"success": True, "client_rect": list(rect) if rect else None}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
 
     def create_calibration_window(self, key="unknown", window_type="point"):
         self._pending_calibration_key = key
@@ -3201,9 +3330,11 @@ class Api:
                 return {"success": False, "error": "Recording contains only mouse actions — nothing to save for a walk path."}
             # Stamp the walk-speed mode that was active while recording, so
             # playback compensates when the Non-VIP setting differs.
+            rect = get_client_rect_screen()
             path_id = save_recording_as_custom(
                 events, name, feature,
                 recorded_nonvip=self.get_config().get("non_vip_movement_path", False),
+                client_rect=list(rect) if rect else None,
             )
             return {"success": True, "path_id": path_id}
         except Exception as e:
@@ -3215,12 +3346,14 @@ class Api:
             if not clean:
                 return {"success": False, "error": "Enter a calibration name."}
             path = self._calibrations_dir() / f"{clean}.json"
+            rect = get_client_rect_screen()
             payload = {
                 "name": clean,
                 "saved_at": datetime.now(timezone.utc).isoformat(),
                 "resolution": self.get_config().get("calibration_preset_resolution", ""),
                 "scale": self.get_config().get("calibration_preset_scale", ""),
                 "mode": self.get_config().get("calibration_preset_mode", ""),
+                "client_rect": list(rect) if rect else None,
                 "calibrations": self._calibration_payload(),
             }
             path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -3265,8 +3398,23 @@ class Api:
             if not result: return {"success": False, "error": "Export cancelled"}
             path = result[0] if isinstance(result, (list, tuple)) else result
             payload = self._calibration_payload()
-            Path(path).write_text(json.dumps({"format": "EndSolMacroCalibration", "version": 1, "saved_at": datetime.now(timezone.utc).isoformat(), "calibrations": payload}, indent=2, ensure_ascii=False), encoding="utf-8")
-            return {"success": True, "path": str(path), "count": len(payload)}
+            # The file carries the display it was made on, so the person who
+            # imports it can tell whether the coordinates fit their setup and
+            # the macro can re-project them onto their own client area.
+            rect = get_client_rect_screen()
+            meta = {
+                "format": "EndSolMacroCalibration",
+                "version": 2,
+                "saved_at": datetime.now(timezone.utc).isoformat(),
+                "resolution": self.get_config().get("calibration_preset_resolution", ""),
+                "scale": self.get_config().get("calibration_preset_scale", ""),
+                "mode": self.get_config().get("calibration_preset_mode", ""),
+                "client_rect": list(rect) if rect else None,
+                "calibrations": payload,
+            }
+            Path(path).write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
+            return {"success": True, "path": str(path), "count": len(payload),
+                    "resolution": meta["resolution"], "scale": meta["scale"], "mode": meta["mode"]}
         except Exception as e: return {"success": False, "error": str(e)}
 
     def import_calibration_file(self):
@@ -3281,11 +3429,82 @@ class Api:
             valid = {k: v for k, v in values.items() if isinstance(k, str) and isinstance(v, list) and len(v) in (2, 4) and all(isinstance(x, (int, float)) for x in v)}
             if not valid: return {"success": False, "error": "No valid calibration coordinates found."}
             backup = self.backup_current_calibration()
-            cfg = dict(self.get_config()); cfg.update(valid); save_config(cfg)
-            if self._tracker: self._tracker.config.update(valid)
-            return {"success": True, "path": str(path), "count": len(valid), "backup": backup.get("name")}
+            cfg = dict(self.get_config())
+            # A file that says which display it was made on can be re-projected
+            # onto the client area of the machine that imports it.
+            reference = preset_reference_rect(payload)
+            projected = {}
+            existing = cfg.get("_calibration_meta")
+            meta_map = dict(existing) if isinstance(existing, dict) else {}
+            if reference:
+                try:
+                    new_meta, projected = normalize_calibration_values(valid, reference)
+                    meta_map.update(new_meta)
+                except Exception:
+                    projected = {}
+            else:
+                # Raw pixels replace the old calibration — the old metadata
+                # has to go with it.
+                for key in valid:
+                    meta_map.pop(key, None)
+            cfg["_calibration_meta"] = meta_map
+            cfg.update(projected or valid)
+            save_config(cfg)
+            if self._tracker:
+                self._tracker.config.update(cfg)
+            return {"success": True, "path": str(path), "count": len(valid), "backup": backup.get("name"),
+                    "resolution": payload.get("resolution", ""), "scale": payload.get("scale", ""),
+                    "mode": payload.get("mode", ""), "reprojected": bool(projected)}
         except json.JSONDecodeError: return {"success": False, "error": "Invalid calibration JSON file."}
         except Exception as e: return {"success": False, "error": str(e)}
+
+    def apply_calibration_preset(self, preset: dict):
+        """Apply a calibration preset from the panel.
+
+        The coordinates are stored normalized, so the preset keeps working
+        when the resolution, the scale or the window mode of the game
+        changes. A preset that does not say which display it was made on is
+        taken as raw screen pixels.
+        """
+        try:
+            if not isinstance(preset, dict):
+                return {"success": False, "error": "Invalid preset."}
+            values = preset.get("calibrations")
+            if not isinstance(values, dict):
+                return {"success": False, "error": "The preset has no coordinates."}
+            valid = {k: v for k, v in values.items()
+                     if isinstance(k, str) and isinstance(v, list) and len(v) in (2, 4)
+                     and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in v)}
+            if not valid:
+                return {"success": False, "error": "The preset has no usable coordinates."}
+            cfg = dict(self.get_config())
+            meta_map = dict(cfg.get("_calibration_meta") or {}) if isinstance(cfg.get("_calibration_meta"), dict) else {}
+            reference = preset_reference_rect(preset)
+            projected = {}
+            if reference:
+                try:
+                    new_meta, projected = normalize_calibration_values(valid, reference)
+                    meta_map.update(new_meta)
+                except Exception:
+                    projected = {}
+            else:
+                # No reference: the raw pixels replace the old calibration, so
+                # the old metadata has to go with it.
+                for key in valid:
+                    meta_map.pop(key, None)
+            cfg["_calibration_meta"] = meta_map
+            cfg.update(projected or valid)
+            cfg["calibration_preset_resolution"] = str(preset.get("resolution", "") or "")
+            cfg["calibration_preset_scale"] = str(preset.get("scale", "") or "")
+            cfg["calibration_preset_mode"] = str(preset.get("mode", "") or "")
+            backup = self.backup_current_calibration()
+            save_config(cfg)
+            if self._tracker:
+                self._tracker.config.update(cfg)
+            return {"success": True, "count": len(valid), "backup": backup.get("name"),
+                    "reprojected": bool(projected)}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
 
     def display_calibration_on_screen(self, key: str, label: str = "", duration_ms: int = 2500):
         try:

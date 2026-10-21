@@ -524,8 +524,6 @@ export const RU_P7: Record<string, string> = {
         "Автоматически загружать свежие данные биомов/аур из внешних источников при запуске",
     "Reset character to Sol's Main Island during GLITCHED/DREAMSPACE/CYBERSPACE":
         "Ресетить персонажа на Sol's Main Island во время GLITCHED/DREAMSPACE/CYBERSPACE",
-    "⚠️ Deprecated: this feature relies on legacy Roblox log entries that no longer exist in the current game. It cannot be improved anymore and is kept non-interactive for compatibility.":
-        "⚠️ Устарело: функция опирается на старые записи логов Roblox, которых больше нет в текущей игре. Улучшить её нельзя; оставлена неинтерактивной для совместимости.",
     "⚠️ Disabled — auto-update points to original EndSol repo. Do not enable until repo is changed.":
         "⚠️ Отключено — авто-обновление указывает на оригинальный репозиторий EndSol. Не включайте, пока репозиторий не изменён.",
 
@@ -582,8 +580,8 @@ export const RU_P7: Record<string, string> = {
     "Did you forget to close the macro before joining?": "Забыли выключить макрос перед входом?",
     "If you forgot, the macro will": "Если забыли, макрос",
     "stop immediately!!": "немедленно остановится!!",
-    "✅ Nah. I'm good, keep this tuff macro running 🗣️🔥": "✅ Нет, всё норм, пусть этот крутой макрос работает 🗣️🔥",
-    "❌ I forgot to turn the macro off please spare me 😭🥀": "❌ Я забыл выключить макрос, пощадите 😭🥀",
+    "✅ Nah. I'm good, keep this tuff macro running": "✅ Нет, всё норм, пусть этот крутой макрос работает",
+    "❌ I forgot to turn the macro off please spare me": "❌ Я забыл выключить макрос, пощадите",
     "Response sent!": "Ответ отправлен!",
     "Neutral biome metadata loaded by the detector. Gameplay mechanics are not inferred here.":
         "Нейтральные метаданные биомов, загружаемые детектором. Игровая механика здесь не выводится.",

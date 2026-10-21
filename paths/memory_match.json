@@ -3,7 +3,13 @@
     "feature": "memory_match",
     "label": "memory_path",
     "created": "2026-09-15T08:26:02.481237+00:00",
-    "speed_multiplier": 1.0
+    "speed_multiplier": 1.0,
+    "client_rect": [
+      0,
+      0,
+      1920,
+      1080
+    ]
   },
   "events": [
     {

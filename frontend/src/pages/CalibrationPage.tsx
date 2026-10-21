@@ -137,6 +137,7 @@ const CALIBRATION_GROUPS: CalibrationGroup[] = [
             { key: "potion_recipe_button", label: "Open Recipe Button" },
             { key: "potion_auto_add_button", label: "Auto Add button" },
             { key: "potion_add_everything_button", label: "Add Everything Button (Simple mode)" },
+            { key: "potion_add_cancel_button", label: "Add Everything confirmation - Cancel button (Simple mode)" },
             { key: "potion_craft_button", label: "Craft Button (Simple mode)" },
             { key: "potion_auto_state_region", label: "Auto Button State Region (drag over the Auto button, Simple mode)", isRegion: true },
         ]
@@ -356,17 +357,12 @@ export default function CalibrationPage() {
     const importCalibrationFile = async () => {
         const result = await (window.pywebview?.api as any)?.import_calibration_file?.();
         const details = result?.validation_errors?.slice?.(0, 5)?.join("; ");
-        setCalibrationStatus(result?.success ? `Imported ${result.count} calibration values for ${result.resolution || "the selected profile"}. Backup: ${result.backup || "created"}.` : ((result?.error || "Import cancelled.") + (details ? ` ${details}` : "")));
+        const source = [result?.resolution, result?.scale, result?.mode].filter(Boolean).join(" ");
+        const tail = result?.reprojected ? " Coordinates were re-fitted to your client area." : "";
+        setCalibrationStatus(result?.success ? `Imported ${result.count} calibration values${source ? ` from ${source}` : ""}. Backup: ${result.backup || "created"}.${tail}` : ((result?.error || "Import cancelled.") + (details ? ` ${details}` : "")));
         if (result?.success) {
             const latest = await window.pywebview?.api?.get_config?.();
             if (latest) setConfig(latest as AppConfig);
-        }
-    };
-
-    const createCalibrationBackup = async () => {
-        const result = await (window.pywebview?.api as any)?.backup_current_calibration?.();
-        if (!result?.success) {
-            throw new Error(result?.error || "Could not create a calibration backup.");
         }
     };
 
@@ -393,7 +389,7 @@ export default function CalibrationPage() {
     useEffect(() => {
         let cancelled = false;
         setPresets([...BUILTIN_CALIBRATION_PRESETS] as any[]);
-        fetch("https://raw.githubusercontent.com/MiraxKito/EndSol-Macro/main/assets/macro_calibs_preset.json")
+        fetch("https://cdn.jsdelivr.net/gh/MiraxKito/EndSol-Macro@main/assets/macro_calibs_preset.json")
             .then(res => res.ok ? res.json() : Promise.reject(new Error(String(res.status))))
             .then(data => {
                 if (!cancelled && data && Array.isArray(data.presets)) {
@@ -445,16 +441,18 @@ export default function CalibrationPage() {
 
     const confirmPresetApply = async () => {
         if (pendingPreset && pendingPreset.calibrations) {
-            const newConfig = { ...config, ...pendingPreset.calibrations, calibration_preset_resolution: pendingPreset.resolution, calibration_preset_scale: pendingPreset.scale, calibration_preset_mode: pendingPreset.mode };
             try {
-                await createCalibrationBackup();
-                await saveConfig(newConfig);
+                // The backend stores the preset normalized, so it keeps working
+                // when the resolution, the scale or the window mode changes.
+                const result = await (window.pywebview?.api as any)?.apply_calibration_preset?.(pendingPreset);
+                if (!result?.success) throw new Error(result?.error || "Could not apply the preset.");
+                const latest = await window.pywebview?.api?.get_config?.();
+                if (latest) setConfig(latest as AppConfig);
                 setPresetStatus(`Preset applied: ${pendingPreset.resolution} (${pendingPreset.scale} ${pendingPreset.mode}); previous values backed up.`);
-                setTimeout(() => setPresetStatus(""), 5000);
             } catch (err) {
                 setPresetStatus("Failed to apply preset: " + String(err));
-                setTimeout(() => setPresetStatus(""), 5000);
             }
+            setTimeout(() => setPresetStatus(""), 5000);
         }
         setShowPresetModal(false);
         setPendingPreset(null);

@@ -32,10 +32,16 @@ export default function CreditsPage() {
                 <div style={{ textAlign: "center", marginBottom: "16px" }}>
                     <h3 style={{ margin: 0 }}>Mirax Kitoro</h3>
                     <p style={{ color: "var(--accent)", margin: "4px 0", fontSize: "14px" }}>EndSol Macro Developer</p>
-                    <p style={{ margin: "6px 0 0", fontSize: "13px" }}>
-                        <a href="https://github.com/MiraxKito/EndSol-Macro" target="_blank" rel="noreferrer" style={{ color: "var(--accent)" }}>
+                    <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap", marginTop: "10px" }}>
+                        <a className="btn btn-secondary" href="https://github.com/MiraxKito/EndSol-Macro" target="_blank" rel="noreferrer">
                             GitHub Repo
                         </a>
+                        <a className="btn btn-accent" href="https://github.com/MiraxKito/EndSol-Macro/issues" target="_blank" rel="noreferrer">
+                            Report an Issue
+                        </a>
+                    </div>
+                    <p style={{ margin: "10px 0 0", fontSize: "12px", color: "var(--text-muted)" }}>
+                        Found a bug or something that does not work? Open an issue and it gets looked at.
                     </p>
                 </div>
             </div>

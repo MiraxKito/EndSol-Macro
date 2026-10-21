@@ -190,6 +190,11 @@ export default function RemoteAccessPage() {
                                     ["/screenshot", "Screenshot to your webhooks"],
                                     ["/reroll_quest", "Reroll a daily quest"],
                                     ["/rejoin", "Close Roblox to force a rejoin (Auto Reconnect needed)"],
+                                    ["/toggle <feature> [on|off]", "Turn a feature on or off (fishing, dryrun, idle, potion, aura, ...)"],
+                                    ["/logs [lines]", "Send the last lines of the macro log"],
+                                    ["/biome", "Current biome, last aura and biome counts"],
+                                    ["/stats", "Today's macro stats"],
+                                    ["/restart_macro", "Stop and start the macro again"],
                                     ["/close_roblox_and_stop_macro", "Kill Roblox and stop the macro"],
                                     ["/help", "This list in Discord"],
                                 ].map(([cmd, desc]) => (

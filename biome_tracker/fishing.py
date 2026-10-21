@@ -4,11 +4,13 @@ import time
 from pathlib import Path
 from typing import Any, Callable
 import keyboard
-import autoit
 
 import numpy as np
-import pyautogui
 import win32clipboard
+
+# The input calls go through the proxy so the dry-run mode really keeps the
+# macro away from the game.
+from .input_proxy import autoit, pyautogui
 
 try:
     import mss

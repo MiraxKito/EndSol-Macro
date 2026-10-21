@@ -137,6 +137,79 @@ def record_calibration(config: dict[str, Any], key: str, value: list[int] | tupl
     config[str(key)] = list(map(int, value))
     apply_calibrations(config, rect)
 
+
+def rect_from_resolution(resolution: str) -> tuple[int, int, int, int] | None:
+    """Guess the client rectangle a preset was captured on from its resolution.
+
+    Only the screen size is known, so the rectangle is assumed to start at the
+    top left corner — that is what a fullscreen client looks like. A preset
+    that was made in a window carries its own "client_rect" and does not need
+    this fallback.
+    """
+    text = str(resolution or "").strip().lower().replace(" ", "")
+    if not text:
+        return None
+    if "x" not in text:
+        return None
+    width, _, height = text.partition("x")
+    try:
+        w = int(float(width))
+        h = int(float(height))
+    except (TypeError, ValueError):
+        return None
+    if w <= 0 or h <= 0:
+        return None
+    return (0, 0, w, h)
+
+
+def preset_reference_rect(preset: dict[str, Any]) -> tuple[int, int, int, int] | None:
+    """The client rectangle a shared calibration/preset was made on."""
+    if not isinstance(preset, dict):
+        return None
+    raw = preset.get("client_rect")
+    if isinstance(raw, (list, tuple)) and len(raw) >= 4:
+        try:
+            x = int(raw[0]); y = int(raw[1]); w = int(raw[2]); h = int(raw[3])
+        except (TypeError, ValueError):
+            x = y = w = h = 0
+        if w > 0 and h > 0:
+            return (x, y, w, h)
+    return rect_from_resolution(preset.get("resolution", ""))
+
+
+def normalize_calibration_values(
+    values: dict[str, Any],
+    reference: tuple[int, int, int, int] | None,
+    current: tuple[int, int, int, int] | None = None,
+) -> tuple[dict[str, Any], dict[str, list[int]]]:
+    """Turn pixel coordinates captured on `reference` into normalized metadata.
+
+    Returns the metadata (the portable part) and the coordinates projected
+    onto the current client rectangle, so a calibration that was made on
+    another resolution or in another window mode still lands on the right
+    spot after it is imported.
+    """
+    meta_map: dict[str, Any] = {}
+    projected: dict[str, list[int]] = {}
+    if not isinstance(values, dict) or not reference:
+        return meta_map, projected
+    cur = current or get_client_rect_screen()
+    for key, value in values.items():
+        if not isinstance(key, str) or not key:
+            continue
+        if not isinstance(value, (list, tuple)) or len(value) not in (2, 4):
+            continue
+        if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in value):
+            continue
+        meta = capture_calibration(list(value), reference)
+        if meta is None:
+            continue
+        meta_map[key] = meta
+        resolved = resolve_calibration(meta, cur)
+        if resolved is not None:
+            projected[key] = resolved
+    return meta_map, projected
+
 _RUNTIME_CONFIG: dict[str, Any] | None = None
 _RUNTIME_RECT_CACHE: tuple[int, int, int, int] | None = None
 _RUNTIME_RECT_CACHE_AT = 0.0

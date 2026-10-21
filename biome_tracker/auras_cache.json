@@ -1034,7 +1034,7 @@
     "flags": [],
     "_metadata_source": "fandom",
     "obtainment_type": "exclusive",
-    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Placeholder.png",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Watcher_collect.gif",
     "exclusive_biomes": [
       "THE RADIANT FOREST"
     ],
@@ -1134,7 +1134,7 @@
     "image_ingame_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/DoodleInGame.gif"
   },
   "Rekindle": {
-    "rarity": 5000,
+    "rarity": 7500,
     "native_rarity": null,
     "luck_exempt": false,
     "exclusive_biome": [
@@ -1146,13 +1146,13 @@
       1
     ],
     "limited": false,
-    "obtainment": "Exclusive to THE RADIANT FOREST (1 in 5,000); cannot be rolled through breakthrough elsewhere.",
+    "obtainment": "Exclusive to THE RADIANT FOREST (1 in 7,500); cannot be rolled through breakthrough elsewhere.",
     "rarity_name": "Epic",
     "description": "Rekindle is a Epic tier aura that was added in the Radiant Forest Update. It can only be rolled inside the The Radiant Forest with a chance of 1 in 7,500.",
     "flags": [],
     "_metadata_source": "fandom",
     "obtainment_type": "exclusive",
-    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Placeholder.png",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RekindleCollection.gif",
     "exclusive_biomes": [
       "THE RADIANT FOREST"
     ],
@@ -3934,7 +3934,7 @@
     "flags": [],
     "_metadata_source": "fandom",
     "obtainment_type": "exclusive",
-    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Placeholder.png",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MoonchildCollection.gif",
     "exclusive_biomes": [
       "THE RADIANT FOREST"
     ],
@@ -8422,36 +8422,6 @@
     "_metadata_source": "fandom",
     "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CotcmCollection.gif"
   },
-  "True_Jade": {
-    "rarity": 125000,
-    "native_rarity": null,
-    "luck_exempt": false,
-    "exclusive_biome": [
-      "THE RADIANT FOREST",
-      1
-    ],
-    "native_biome": [
-      "None",
-      1
-    ],
-    "limited": false,
-    "obtainment": "Exclusive to THE RADIANT FOREST (1 in 125,000); cannot be rolled through breakthrough elsewhere.",
-    "rarity_name": "Challenged",
-    "description": "True Jade is a Challenged tier aura that was added in the Radiant Forest Update. It is rollable with a 1/125,000 chance only after first rolling Jade and Jade : Purity.",
-    "flags": [],
-    "_metadata_source": "fandom",
-    "obtainment_type": "exclusive",
-    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TrueJadeCollection.gif",
-    "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TrueJadeCutscene.mp4",
-    "video_file": "TrueJadeCutscene.mp4",
-    "video_kind": "opening",
-    "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Windows96_-_Yujia_Forest.mp3",
-    "music_file": "Windows96 - Yujia Forest.mp3",
-    "appearance": "When equipped, True Jade places the player near multiple pebbles, rotating around the player. In the background, graphics of mountains can be seen, rotating in the opposite direction of the pebbles. Similarly to Jade, the player is surrounded by a circular, green aura.",
-    "lore": "They call him, \"Jade.\" The silent wanderer of the deep canopies. To the weary travelers who happened to cross his path, he seemed like nothing more than a quiet, weathered hermit: an old man with mass clinging to his cloak, eyes as still as mountain pools, and hands that guided the fleeing toward shelter. When the broken fell to their knees in the dark, it was his steady, root-like presence that offered them quiet ground to rest upon. They thought he was merely an elder who had spent a lifetime in the wild, a man who had simply lived among the pines for so long that he had taken on their silence. Little did the wanderers know, and little did the world know... He was that very forest .",
-    "image_ingame_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/True_jade_ingame.gif",
-    "is_exclusive": true
-  },
   "True_Kyawthuite": {
     "rarity": 825000,
     "native_rarity": null,
@@ -8506,6 +8476,36 @@
     "music_file": "Tido Kang - Star.mp3",
     "appearance": "True Twilight is a twilight-themed aura thats shows lots of purple and dark color. The aura provides a cresent moon for players to lie down on. There are multiple particles that resembles stars around the player.",
     "lore": "He calls her, \"Twilight.\" She was a quite, fragile girl, with a world of wonder locked behind her eyes. It was never her fault that tragedy found her so soon, stripping away her family and her home in a war she was too small to understand. Escaping into the deep woods that night, she left behind a burning world. At the heart of the trees, the Jewel of the Moon found her in the dark. It offered her peace. She accepted with all of her heart, to become the youngest of its guardians. For a long time, she did not feel alone. She found purpose in that duty. She tended to the pale flora, learning the gentle rhythm of the night, and guiding lost wanderers back to safety. Even as her kin faded into stone one by one, leaving her as the solitary keeper of a silent forest, she did not despair. She did not wait for a savior. She simply tended her garden, content to be the light in the dark for anyone who crossed her threshold. Little did the forest know, and little did she know, the most fragile among them would end up carrying the weight of eternity, over and over.",
+    "is_exclusive": true
+  },
+  "True_Jade": {
+    "rarity": 10250000,
+    "native_rarity": null,
+    "luck_exempt": false,
+    "exclusive_biome": [
+      "THE RADIANT FOREST",
+      1
+    ],
+    "native_biome": [
+      "None",
+      1
+    ],
+    "limited": false,
+    "obtainment": "Exclusive to THE RADIANT FOREST (1 in 10,250,000); cannot be rolled through breakthrough elsewhere.",
+    "rarity_name": "Challenged",
+    "description": "True Jade is a Challenged tier aura that was added in the Radiant Forest Update. It is rollable with a 1/125,000 chance only after first rolling Jade and Jade : Purity.",
+    "flags": [],
+    "_metadata_source": "fandom",
+    "obtainment_type": "exclusive",
+    "image_collection_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TrueJadeCollection.gif",
+    "video_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/TrueJadeCutscene.mp4",
+    "video_file": "TrueJadeCutscene.mp4",
+    "video_kind": "opening",
+    "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Windows96_-_Yujia_Forest.mp3",
+    "music_file": "Windows96 - Yujia Forest.mp3",
+    "appearance": "When equipped, True Jade places the player near multiple pebbles, rotating around the player. In the background, graphics of mountains can be seen, rotating in the opposite direction of the pebbles. Similarly to Jade, the player is surrounded by a circular, green aura.",
+    "lore": "They call him, \"Jade.\" The silent wanderer of the deep canopies. To the weary travelers who happened to cross his path, he seemed like nothing more than a quiet, weathered hermit: an old man with mass clinging to his cloak, eyes as still as mountain pools, and hands that guided the fleeing toward shelter. When the broken fell to their knees in the dark, it was his steady, root-like presence that offered them quiet ground to rest upon. They thought he was merely an elder who had spent a lifetime in the wild, a man who had simply lived among the pines for so long that he had taken on their silence. Little did the wanderers know, and little did the world know... He was that very forest .",
+    "image_ingame_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/True_jade_ingame.gif",
     "is_exclusive": true
   },
   "Glitch": {

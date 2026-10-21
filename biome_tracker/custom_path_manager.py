@@ -71,6 +71,60 @@ def _ensure_dirs():
     CUSTOM_PATHS_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def _client_rect_now() -> tuple[int, int, int, int] | None:
+    """The Roblox client area on the screen right now."""
+    try:
+        from .coordinates import get_client_rect_screen
+        return get_client_rect_screen()
+    except Exception:
+        return None
+
+
+def refit_path_events(events: list[dict], meta: dict | None) -> list[dict]:
+    """Move the mouse coordinates of a recorded path onto the current client
+    area.
+
+    A path that was recorded on another resolution or in another window mode
+    would otherwise drag the camera to the wrong spot. Only the mouse moves
+    are moved — the walk itself is keyboard only and stays untouched.
+    """
+    if not isinstance(events, list) or not isinstance(meta, dict):
+        return events
+    rect = meta.get("client_rect")
+    if not (isinstance(rect, (list, tuple)) and len(rect) >= 4):
+        return events
+    try:
+        rx, ry, rw, rh = (int(rect[0]), int(rect[1]), int(rect[2]), int(rect[3]))
+    except (TypeError, ValueError):
+        return events
+    if rw <= 0 or rh <= 0:
+        return events
+    cur = _client_rect_now()
+    if not cur:
+        return events
+    cx, cy, cw, ch = cur
+    if (rx, ry, rw, rh) == (cx, cy, cw, ch):
+        return events
+    out: list[dict] = []
+    changed = False
+    for ev in events:
+        if not isinstance(ev, dict) or str(ev.get("type", "")) != "mouse_move":
+            out.append(ev)
+            continue
+        try:
+            x = float(ev.get("x", 0))
+            y = float(ev.get("y", 0))
+        except (TypeError, ValueError):
+            out.append(ev)
+            continue
+        new_ev = dict(ev)
+        new_ev["x"] = int(round(cx + ((x - rx) / rw) * cw))
+        new_ev["y"] = int(round(cy + ((y - ry) / rh) * ch))
+        out.append(new_ev)
+        changed = True
+    return out if changed else events
+
+
 def list_custom_paths() -> list[dict[str, Any]]:
     """List all custom paths with metadata."""
     _ensure_dirs()
@@ -108,10 +162,12 @@ def get_custom_path(path_id: str) -> dict[str, Any] | None:
         return None
     try:
         with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
     except Exception:
         return None
-
+    if isinstance(data, dict) and isinstance(data.get("events"), list):
+        data["events"] = refit_path_events(data["events"], data.get("meta") or {})
+    return data
 
 def save_custom_path(
     path_id: str,
@@ -122,6 +178,7 @@ def save_custom_path(
     recorded_nonvip: bool | None = None,
     created: str = "",
     trigger: dict | None = None,
+    client_rect: list | tuple | None = None,
 ) -> bool:
     """Save a custom path with metadata.
 
@@ -150,6 +207,15 @@ def save_custom_path(
         meta["trigger"] = trigger
     if recorded_nonvip is not None:
         meta["recorded_nonvip"] = bool(recorded_nonvip)
+    # The client area the path was recorded on. The mouse moves are moved onto
+    # the current client area when the path is replayed, so a shared path
+    # still works on another resolution or in another window mode.
+    if isinstance(client_rect, (list, tuple)) and len(client_rect) >= 4:
+        try:
+            meta["client_rect"] = [int(client_rect[0]), int(client_rect[1]),
+                                   int(client_rect[2]), int(client_rect[3])]
+        except (TypeError, ValueError):
+            pass
     data = {
         "meta": meta,
         "events": events,
@@ -293,7 +359,9 @@ def load_path_for_feature_meta(feature: str) -> tuple[list[dict], dict | None]:
             events = data.get("events", []) if isinstance(data.get("events"), list) else []
         else:
             events = []
-        return events, None
+        # The mouse moves of the bundled paths are moved onto the current
+        # client area, so they still line up on another resolution.
+        return refit_path_events(events, (data.get("meta") or {}) if isinstance(data, dict) else {}), None
     except Exception:
         return [], None
 
@@ -369,8 +437,10 @@ def load_path_for_feature_with_vip(feature: str, has_vip: bool = True) -> list[d
         with open(default_file, "r", encoding="utf-8") as f:
             data = json.load(f)
         if isinstance(data, dict):
-            return data.get("events", []) if isinstance(data.get("events"), list) else []
-        return []
+            events = data.get("events", []) if isinstance(data.get("events"), list) else []
+        else:
+            events = []
+        return refit_path_events(events, (data.get("meta") or {}) if isinstance(data, dict) else {})
     except Exception:
         return []
 
@@ -381,11 +451,13 @@ def save_recording_as_custom(
     feature: str = "",
     speed_multiplier: float = 1.0,
     recorded_nonvip: bool | None = None,
+    client_rect: list | tuple | None = None,
 ) -> str:
     """
     Save a recording as a custom path. Returns the path_id.
     Used by the recorder to save directly to custom_paths/ instead of recorded_files/.
     recorded_nonvip stamps the walk-speed mode that was active while recording.
+    client_rect is the Roblox client area the recording was made on.
     """
     path_id = _sanitize_id(name)
     save_custom_path(
@@ -395,6 +467,7 @@ def save_recording_as_custom(
         label=name,
         speed_multiplier=speed_multiplier,
         recorded_nonvip=recorded_nonvip,
+        client_rect=client_rect,
     )
     return path_id
 

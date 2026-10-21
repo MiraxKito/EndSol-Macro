@@ -12,7 +12,7 @@
     "native_auras": [],
     "image_file": "Daytime img.png",
     "fandom_page": "https://sol-rng.fandom.com/wiki/NORMAL",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c9/Daytime_img.png/revision/latest?cb=20241116044859"
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Daytime_img.png"
   },
   "WINDY": {
     "name": "WINDY",
@@ -75,9 +75,9 @@
         "limited": false
       }
     ],
-    "image_file": "Windy img(fixed).png",
+    "image_file": "Windy03.10.26.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/WINDY",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/1/19/Windy_img%28fixed%29.png/revision/latest?cb=20241116060252",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Windy03.10.26.gif",
     "music_file": "Smooth Vibes (c).mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Smooth_Vibes_(c).mp3"
   },
@@ -177,9 +177,9 @@
         "limited": true
       }
     ],
-    "image_file": "snowy_img.png",
+    "image_file": "SnowyBiomeInGame.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/SNOWY",
-    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/snowy_img.png",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SnowyBiomeInGame.gif",
     "music_file": "Winter.ogg",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Winter.ogg"
   },
@@ -286,9 +286,9 @@
         "limited": true
       }
     ],
-    "image_file": "Rainy.png",
+    "image_file": "Rainy03.10.2026.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/RAINY",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/ec/Rainy.png/revision/latest?cb=20240510014540",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Rainy03.10.2026.gif",
     "music_file": "Lo-fi Chill A.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Lo-fi_Chill_A.mp3"
   },
@@ -348,7 +348,7 @@
     ],
     "image_file": "Sand Storm.png",
     "fandom_page": "https://sol-rng.fandom.com/wiki/SAND_STORM",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7c/Sand_Storm.png/revision/latest?cb=20241229095728",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Sand_Storm.png",
     "music_file": "Sandstorm.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Sandstorm.mp3"
   },
@@ -363,6 +363,13 @@
     "description": "The Hell Biome is a biome that released in the Era 7 update. It has a spawn chance of 1 in 6,666/s (0.015%/s) and lasts for 666 seconds (11 minutes and 6 seconds). Not much currently is known about it, but from appearance it seems to be a biome that consists of trees having their leaves dyed red, waterfalls and lakes being turned into lava, and having a hell-themed atmosphere. This biome has a Breakthrough Multiplier of 6x, it includes 9 unique Auras (with 1 being a mutation) and an exclusive. It also spawns an item called \"Eternal Flame\", which is used to craft the Strange Controller. The \"Eternal Flame\" can also be used as an offer to the Grail of Resonance while the Hell biome is still present, giving off +5% Luck and +2.5% Roll Speed",
     "breakthrough_multiplier": 6,
     "native_auras": [
+      {
+        "name": "HellFire",
+        "native_rarity": 796,
+        "breakthrough_rarity": 4776,
+        "exclusive_only": false,
+        "limited": false
+      },
       {
         "name": "Undead",
         "native_rarity": 2000,
@@ -406,16 +413,30 @@
         "limited": false
       },
       {
+        "name": "Volcanic",
+        "native_rarity": 80000000,
+        "breakthrough_rarity": 480000000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
         "name": "Pythios",
         "native_rarity": 111111111,
         "breakthrough_rarity": 666666666,
         "exclusive_only": false,
         "limited": false
+      },
+      {
+        "name": "Hellborn",
+        "native_rarity": 2644600640,
+        "breakthrough_rarity": null,
+        "exclusive_only": true,
+        "limited": false
       }
     ],
-    "image_file": "New Hell Biome.png",
+    "image_file": "Hell Updated 03.10.26.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/HELL",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/b3/New_Hell_Biome.png/revision/latest?cb=20260105024637",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Hell_Updated_03.10.26.gif",
     "music_file": "Sakupen Hell.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Sakupen_Hell.mp3"
   },
@@ -522,9 +543,9 @@
         "limited": true
       }
     ],
-    "image_file": "StarfallInGame.gif",
+    "image_file": "0-3-10-26.Starfall.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/STARFALL",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/cd/StarfallInGame.gif/revision/latest?cb=20260116104138",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/0-3-10-26.Starfall.gif",
     "music_file": "Analysis.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Analysis.mp3"
   },
@@ -557,6 +578,13 @@
         "name": "Hope",
         "native_rarity": 97745,
         "breakthrough_rarity": 488725,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Zeus",
+        "native_rarity": 900000,
+        "breakthrough_rarity": 4500000,
         "exclusive_only": false,
         "limited": false
       },
@@ -624,9 +652,9 @@
         "limited": true
       }
     ],
-    "image_file": "HeavenBiomeInGame.png",
+    "image_file": "Heaven03.10.26.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/HEAVEN",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/0/0a/HeavenBiomeInGame.png/revision/latest?cb=20251206084838",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Heaven03.10.26.gif",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Pro_Sound_Effects_-_Heavenly_Presence_Eerie_Melodic_Tones_Mystic.ogg",
     "music_file": "Pro Sound Effects - Heavenly Presence Eerie Melodic Tones Mystic.ogg"
   },
@@ -698,9 +726,9 @@
         "limited": true
       }
     ],
-    "image_file": "CorruptionBiomeNew.png",
+    "image_file": "CorruptionBiomeUpdated03.10.26.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/CORRUPTION",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/8/80/CorruptionBiomeNew.png/revision/latest?cb=20260104105018",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CorruptionBiomeUpdated03.10.26.gif",
     "music_file": "Corruption Is the worst biome.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Corruption_Is_the_worst_biome.mp3"
   },
@@ -765,9 +793,9 @@
         "limited": true
       }
     ],
-    "image_file": "Null daytime.png",
+    "image_file": "NullBiome.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/NULL",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/3/38/Null_daytime.png/revision/latest?cb=20241227051448",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/NullBiome.gif",
     "music_file": "Tension： Luminate.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Tension：_Luminate.mp3"
   },
@@ -843,6 +871,13 @@
         "limited": false
       },
       {
+        "name": "Content Deleted",
+        "native_rarity": 4040,
+        "breakthrough_rarity": null,
+        "exclusive_only": true,
+        "limited": false
+      },
+      {
         "name": "Glitch",
         "native_rarity": 12210110,
         "breakthrough_rarity": null,
@@ -859,7 +894,7 @@
     ],
     "image_file": "GlitchedBiomeSpawnIndicator.png",
     "fandom_page": "https://sol-rng.fandom.com/wiki/GLITCHED",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/58/GlitchedNew.png/revision/latest",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/GlitchedBiomeSpawnIndicator.png",
     "music_file": "OgresnidelyWhiplash.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/OgresnidelyWhiplash.mp3"
   },
@@ -927,6 +962,13 @@
         "name": "Antivirus",
         "native_rarity": 31250000,
         "breakthrough_rarity": 62500000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Virtual : Ultimate",
+        "native_rarity": 40000000,
+        "breakthrough_rarity": 80000000,
         "exclusive_only": false,
         "limited": false
       },
@@ -1010,7 +1052,7 @@
     ],
     "image_file": "CyberspaceNew.png",
     "fandom_page": "https://sol-rng.fandom.com/wiki/CYBERSPACE",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e9/CyberspaceNew.png/revision/latest?cb=20260730105943",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/CyberspaceNew.png",
     "music_file": "Underworld Factory.ogg",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Underworld_Factory.ogg"
   },
@@ -1110,9 +1152,9 @@
         "limited": false
       }
     ],
-    "image_file": "AstraiosClosingSingularity.mp4",
+    "image_file": "SingularityBiome.png",
     "fandom_page": "https://sol-rng.fandom.com/wiki/SINGULARITY",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/f/f7/SingularityBiome.png/revision/latest",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SingularityBiome.png",
     "music_file": "SUBVERSION ACT (SRNG Ver.) (Loop).mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SUBVERSION_ACT_(SRNG_Ver.)_(Loop).mp3"
   },
@@ -1184,16 +1226,16 @@
         "limited": false
       },
       {
-        "name": "Twilight : Withering Grace",
-        "native_rarity": 18000000,
-        "breakthrough_rarity": 180000000,
+        "name": "Dreamer",
+        "native_rarity": 31500000,
+        "breakthrough_rarity": 315000000,
         "exclusive_only": false,
         "limited": false
       },
       {
-        "name": "Dreamer",
-        "native_rarity": 31500000,
-        "breakthrough_rarity": 315000000,
+        "name": "Twilight : Withering Grace",
+        "native_rarity": 42265600,
+        "breakthrough_rarity": 422656000,
         "exclusive_only": false,
         "limited": false
       },
@@ -1203,11 +1245,25 @@
         "breakthrough_rarity": null,
         "exclusive_only": true,
         "limited": false
+      },
+      {
+        "name": "Lunar : Nightfall",
+        "native_rarity": 3000000,
+        "breakthrough_rarity": null,
+        "exclusive_only": true,
+        "limited": true
+      },
+      {
+        "name": "Lunar : Cultist",
+        "native_rarity": 2000000,
+        "breakthrough_rarity": null,
+        "exclusive_only": true,
+        "limited": true
       }
     ],
-    "image_file": "SUBVERSION ACT (SRNG Ver.) (Loop).mp3",
+    "image_file": "nighttime_img.png",
     "fandom_page": "https://sol-rng.fandom.com/wiki/TIME",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c9/Daytime_img.png/revision/latest",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/nighttime_img.png",
     "hidden": true,
     "music_file": "Inside Tracks - Sunset Chill (Bed Version).mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Inside_Tracks_-_Sunset_Chill_(Bed_Version).mp3"
@@ -1228,105 +1284,105 @@
         "native_rarity": 3000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Cryptfire",
         "native_rarity": 21000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Soul Hunter",
         "native_rarity": 40000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Dullahan",
         "native_rarity": 72000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Harvester",
         "native_rarity": 666000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Apostolos : Veil",
         "native_rarity": 800000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Lunar : Cultist",
         "native_rarity": 2000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Headless",
         "native_rarity": 3200000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Werewolf",
         "native_rarity": 3600000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Grief",
         "native_rarity": 88250000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Graveborn",
         "native_rarity": 290000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Afterparty",
         "native_rarity": 440000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Apocalypse",
         "native_rarity": 624000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Banshee",
         "native_rarity": 730000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Ravage",
         "native_rarity": 930000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       }
     ],
     "image_file": "Graveyard_Biome.png",
@@ -1349,77 +1405,77 @@
         "native_rarity": 200000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Vital",
         "native_rarity": 6000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Moonflower",
         "native_rarity": 10000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Nightmare Sky",
         "native_rarity": 190000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Apostolos : Veil",
         "native_rarity": 800000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Pump : Trickster",
         "native_rarity": 600000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Celestial : Wicked",
         "native_rarity": 1500000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Sinister",
         "native_rarity": 15000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Headless : Horseman",
         "native_rarity": 32000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Phantasma",
         "native_rarity": 462000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Arachnophobia",
         "native_rarity": 940000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       }
     ],
     "image_file": "Hallowed_Biome.png",
@@ -1442,166 +1498,166 @@
         "native_rarity": 150000000,
         "breakthrough_rarity": 300000000,
         "exclusive_only": false,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Aegis : Watergun",
         "native_rarity": 412500000,
         "breakthrough_rarity": 825000000,
         "exclusive_only": false,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Raft",
         "native_rarity": 8000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Buoyant",
         "native_rarity": 32000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Breeze",
         "native_rarity": 80000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Heatstroke",
         "native_rarity": 83430,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Floaty",
         "native_rarity": 600000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Beach Ball",
         "native_rarity": 1938000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Watermelon : Summersnack",
         "native_rarity": 3200000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Vendor",
         "native_rarity": 17500000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Nostalgia",
         "native_rarity": 20270000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Coconut",
         "native_rarity": 34720000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "FruitPunch",
         "native_rarity": 45000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Goose Rave",
         "native_rarity": 50000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Vacation",
         "native_rarity": 58620000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Bayview",
         "native_rarity": 60000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Bubble : Cascade",
         "native_rarity": 110000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Life Guard : On-Duty",
         "native_rarity": 600000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Tropical Isles",
         "native_rarity": 730000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Pool Party",
         "native_rarity": 972000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Crabtropica",
         "native_rarity": 1334221000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
-        "name": "Taverna",
+        "name": "Osteria",
         "native_rarity": 1444444444,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       },
       {
         "name": "Centaurus",
         "native_rarity": 3000000000,
         "breakthrough_rarity": null,
         "exclusive_only": true,
-        "limited": false
+        "limited": true
       }
     ],
     "image_file": "Blazing.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/BLAZING_SUN",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/c/c2/Blazing.gif/revision/latest?cb=20260905154556",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Blazing.gif",
     "music_file": "The blazing sun song.ogg",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/The_blazing_sun_song.ogg"
   },
@@ -1689,7 +1745,7 @@
     ],
     "image_file": "Bloodrain.png",
     "fandom_page": "https://sol-rng.fandom.com/wiki/BLOOD_RAIN",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/e/e5/Bloodrain.png/revision/latest?cb=20251018035833",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Bloodrain.png",
     "music_file": "Beneath-the-Dread-Moon.ogg",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Beneath-the-Dread-Moon.ogg"
   },
@@ -1855,7 +1911,7 @@
     "native_auras": [],
     "image_file": "Eggland Biome.jpg",
     "fandom_page": "https://sol-rng.fandom.com/wiki/EGGLAND",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/7/7e/Eggland_Biome.jpg/revision/latest?cb=20260330151134",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Eggland_Biome.jpg",
     "music_file": "SoftieSpringByVibinAlone.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/SoftieSpringByVibinAlone.mp3"
   },
@@ -2004,7 +2060,7 @@
         "limited": true
       },
       {
-        "name": "Taverna",
+        "name": "Osteria",
         "native_rarity": 722222222,
         "breakthrough_rarity": null,
         "exclusive_only": true,
@@ -2020,7 +2076,7 @@
     ],
     "image_file": "Incinerator.png",
     "fandom_page": "https://sol-rng.fandom.com/wiki/INCINERATOR",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/5b/Incinerator.png/revision/latest?cb=20260905213324"
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Incinerator.png"
   },
   "THE HYPERSPACE REALM": {
     "name": "THE HYPERSPACE REALM",
@@ -2043,7 +2099,7 @@
     ],
     "image_file": "AnotherRealmCutscene.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/THE_HYPERSPACE_REALM",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/b/ba/AnotherRealmBiome.png/revision/latest",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/AnotherRealmCutscene.gif",
     "music_file": "Camellia - Literal Crystal In The Cyphisonia.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Camellia_-_Literal_Crystal_In_The_Cyphisonia.mp3"
   },
@@ -2067,8 +2123,8 @@
       }
     ],
     "image_file": "MastermindCutscene.gif",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/THE_NULL%27S_EXISTENCE",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/5/54/MastermindBiomeUpdated.png/revision/latest",
+    "fandom_page": "https://sol-rng.fandom.com/wiki/THE_NULL'S_EXISTENCE",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/MastermindCutscene.gif",
     "music_file": "Bermuda_Δ_Triangle_-_Camellia.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Bermuda_Δ_Triangle_-_Camellia.mp3"
   },
@@ -2107,7 +2163,7 @@
     ],
     "image_file": "Order.gif",
     "fandom_page": "https://sol-rng.fandom.com/wiki/THE_CITADEL_OF_ORDERS",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/9/9f/CitadelofOrders.png/revision/latest",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Order.gif",
     "music_file": "Camellia - Parallel Universe Shifter.mp3",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Camellia_-_Parallel_Universe_Shifter.mp3"
   },
@@ -2138,37 +2194,220 @@
       }
     ],
     "image_file": "RfmEventCutsceneNew.gif",
-    "fandom_page": "https://sol-rng.fandom.com/wiki/%E8%B5%A4%E3%81%84%E6%BA%80%E6%9C%88",
-    "thumbnail_url": "https://static.wikia.nocookie.net/sol-rng/images/4/47/NewUnknownBiomePic.png/revision/latest",
+    "fandom_page": "https://sol-rng.fandom.com/wiki/赤い満月",
+    "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RfmEventCutsceneNew.gif",
     "music_file": "Derpcat - Throwback (TubeRipper.cc).ogg",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Derpcat_-_Throwback_(TubeRipper.cc).ogg"
   },
   "LOST FOREST": {
-    "description": "The Lost Forest is a biome that was released in the Eon 1-30 update. It has a 1 in 8,400/s (0.01190476%/s) chance of appearing, lasting for 420 seconds (7 minutes). During the Lost Forest biome, the map is shrouded in a deep green ambiance, enormous trees and stylistic windows are seen around the map, lights rise from the ground and small pixelated flowers are seen around. This biome has a Breakthrough Multiplier of 2x, it includes 17 unique Auras (with 5 being mutations)",
+    "description": "The Lost Forest is a biome that was released in the Eon 1-30 update. It has a 1 in 8,128/s (0.012303149%/s) chance of appearing, lasting for 450 seconds (7 minutes and 30 seconds). During the Lost Forest biome, the map is shrouded in a deep green ambiance, enormous trees and stylistic windows are seen around the map, lights rise from the ground and small pixelated flowers are seen around. This biome has a Breakthrough Multiplier of 2x, it includes 17 unique Auras (with 5 being mutations)",
     "how_to_get": "The Lost Forest is a biome that was released in the Eon 1-30 update.",
     "chat_message": "Leaves and bark unearth around you..",
-    "spawn_chance": "1 in 8,400/s",
-    "duration": "420 seconds (7 minutes)",
+    "spawn_chance": "1 in 8,128/s",
+    "duration": "450 seconds (7 minutes and 30 seconds)",
     "breakthrough_multiplier": 2,
     "color": "#27F55E",
     "category": "biome",
     "name": "LOST FOREST",
     "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Lost_Forest.png.png",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Alex_Guenoun_-_Ominous_Nature.mp3",
-    "music_file": "Alex Guenoun - Ominous Nature.mp3"
+    "music_file": "Alex Guenoun - Ominous Nature.mp3",
+    "native_auras": [
+      {
+        "name": "Flora",
+        "native_rarity": 1850,
+        "breakthrough_rarity": 3700,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Flutter",
+        "native_rarity": 2500,
+        "breakthrough_rarity": 5000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Marsh",
+        "native_rarity": 12500,
+        "breakthrough_rarity": 25000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Lantern",
+        "native_rarity": 166666,
+        "breakthrough_rarity": 333333,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Artifact",
+        "native_rarity": 250000,
+        "breakthrough_rarity": 500000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Veylune",
+        "native_rarity": 277500,
+        "breakthrough_rarity": 555000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Flutter : Buggify",
+        "native_rarity": 1000000,
+        "breakthrough_rarity": 2000000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Flora : Florest",
+        "native_rarity": 16400000,
+        "breakthrough_rarity": 32800000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Runic",
+        "native_rarity": 25000000,
+        "breakthrough_rarity": 50000000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Runic : Wilt",
+        "native_rarity": 43694372,
+        "breakthrough_rarity": 87388744,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Lily",
+        "native_rarity": 56000000,
+        "breakthrough_rarity": 112000000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Perpetual",
+        "native_rarity": 157500000,
+        "breakthrough_rarity": 315000000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Flora : Evergreen",
+        "native_rarity": 185036865,
+        "breakthrough_rarity": 370073730,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Hasuen",
+        "native_rarity": 242500000,
+        "breakthrough_rarity": 485000000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Ruins",
+        "native_rarity": 250000000,
+        "breakthrough_rarity": 500000000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Ruins : Withered",
+        "native_rarity": 400000000,
+        "breakthrough_rarity": 800000000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Tree House",
+        "native_rarity": 1900000000,
+        "breakthrough_rarity": 3800000000,
+        "exclusive_only": false,
+        "limited": false
+      }
+    ],
+    "image_file": "Lost_Forest.png.png",
+    "fandom_page": "https://sol-rng.fandom.com/wiki/LOST_FOREST"
   },
   "THE RADIANT FOREST": {
-    "description": "\"I will remember you again, I promise.\" The Radiant Forest is a Rare Biome that can only be spawned by using the Condensed Memory item inside of the Lost Forest biome during Nighttime, lasting for 1,320 Seconds (22 Minutes). During The Radiant Forest, a mechanic called \"Moon Catch\" becomes active, in which stars fall from the sky marked by a circle. Catching them gives a stack of Cor Lunae's Blessing, which grants +0.02x final luck up to 10 stacks. The biome has a breakthrough multiplier of 2x and will lock the current time to Nighttime while active; it includes 4 special, 4 unique auras (with 1 being a mutation) and 4 exclusives. During The Radiant Forest, a new mechanic called \"The Seven Radiant Moons\" becomes active. Located at the top of the screen, each moon lights up upon rolling a specific aura",
-    "how_to_get": "\"I will remember you again, I promise.\" The Radiant Forest is a Rare Biome that can only be spawned by using the Condensed Memory item inside of the Lost Forest biome during Nighttime, lasting for 1,320 Seconds (22 Minut",
+    "description": "\"I will remember you again, I promise.\" The Radiant Forest is a Rare Biome that can only be spawned by using the Condensed Memory item inside of the Lost Forest biome during Nighttime, lasting for 900 Seconds (15 Minutes). During The Radiant Forest, a mechanic called \"Moon Catch\" becomes active, in which stars fall from the sky marked by a circle. Catching them gives a stack of Cor Lunae's Blessing, which grants +0.015x final luck up to 10 stacks. The biome has a breakthrough multiplier of 2x and will lock the current time to Nighttime while active; it includes 4 special, 4 unique auras (with 1 being a mutation) and 4 exclusives. During The Radiant Forest, a new mechanic called \"The Seven Radiant Moons\" becomes active. Located at the top of the screen, each moon lights up upon rolling a specific aura",
+    "how_to_get": "\"I will remember you again, I promise.\" The Radiant Forest is a Rare Biome that can only be spawned by using the Condensed Memory item inside of the Lost Forest biome during Nighttime, lasting for 900 Seconds (15 Minutes",
     "chat_message": "Yet again, THEIR Memories Begin to Let Go...",
-    "spawn_chance": "The Radiant Forest is a Rare Biome that can only be spawned by using the Condensed Memory item inside of the Lost Forest biome during Nighttime, lasting for 1,320 Seconds (22 Minutes).",
-    "duration": "1,320 Seconds (22 Minutes)",
+    "spawn_chance": "The Radiant Forest is a Rare Biome that can only be spawned by using the Condensed Memory item inside of the Lost Forest biome during Nighttime, lasting for 900 Seconds (15 Minutes).",
+    "duration": "900 Seconds (15 Minutes)",
     "breakthrough_multiplier": 2,
     "color": "#8A48A8",
     "category": "rare",
     "name": "THE RADIANT FOREST",
     "thumbnail_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/RadiantForest.gif",
     "music_url": "https://sol-rng.fandom.com/wiki/Special:FilePath/Spade_-_He_Who_Bore_The_Eternal_Moon.mp3",
-    "music_file": "Spade_-_He_Who_Bore_The_Eternal_Moon.mp3"
+    "music_file": "Spade_-_He_Who_Bore_The_Eternal_Moon.mp3",
+    "native_auras": [
+      {
+        "name": "Watcher",
+        "native_rarity": 5000,
+        "breakthrough_rarity": null,
+        "exclusive_only": true,
+        "limited": false
+      },
+      {
+        "name": "Rekindle",
+        "native_rarity": 7500,
+        "breakthrough_rarity": null,
+        "exclusive_only": true,
+        "limited": false
+      },
+      {
+        "name": "Jade",
+        "native_rarity": 62500,
+        "breakthrough_rarity": 125000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Kyawthuite",
+        "native_rarity": 425000,
+        "breakthrough_rarity": 850000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Jade : Purity",
+        "native_rarity": 4625000,
+        "breakthrough_rarity": 9250000,
+        "exclusive_only": false,
+        "limited": false
+      },
+      {
+        "name": "Moonchild",
+        "native_rarity": 5000000,
+        "breakthrough_rarity": null,
+        "exclusive_only": true,
+        "limited": false
+      },
+      {
+        "name": "Cor Lunae",
+        "native_rarity": 50000000,
+        "breakthrough_rarity": null,
+        "exclusive_only": true,
+        "limited": false
+      },
+      {
+        "name": "Kyawthuite : Remembrance",
+        "native_rarity": 225000000,
+        "breakthrough_rarity": 450000000,
+        "exclusive_only": false,
+        "limited": false
+      }
+    ],
+    "image_file": "RadiantForest.gif",
+    "fandom_page": "https://sol-rng.fandom.com/wiki/THE_RADIANT_FOREST"
   }
 }

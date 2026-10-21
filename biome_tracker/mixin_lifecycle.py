@@ -1,6 +1,6 @@
 from .base_support import *
-from .coordinates import enable_dpi_awareness
-from .config import normalize_auto_pop_biomes
+from .coordinates import enable_dpi_awareness, get_client_rect_screen, resolve_calibration
+from .config import normalize_auto_pop_biomes, save_config as core_save_config
 
 class LifecycleMixin:
     # `detection_running` is a generation-aware property. Background loops
@@ -26,6 +26,49 @@ class LifecycleMixin:
             self._thread_gen = {}
         self._thread_gen[threading.get_ident()] = getattr(self, "_detection_gen", 0)
 
+    def _calibration_watch_loop(self):
+        """Keep the calibration coordinates in step with the Roblox window.
+
+        The normalized metadata is the truth — the pixel values are only the
+        projection onto the client area as it is right now. Whenever the
+        window is moved, resized or the game switches to another resolution
+        the coordinates are recalculated, so a calibration made in another
+        window mode still lands on the right spot.
+        """
+        while True:
+            try:
+                rect = get_client_rect_screen()
+                if rect and tuple(rect) != tuple(self._calibration_rect or ()):
+                    self._calibration_rect = rect
+                    self._refresh_calibration_pixels(rect)
+            except Exception:
+                pass
+            time.sleep(1.5)
+
+    def _refresh_calibration_pixels(self, rect):
+        """Recalculate the stored coordinates for the current client area."""
+        meta = self.config.get("_calibration_meta")
+        if not isinstance(meta, dict) or not meta:
+            return
+        changed = {}
+        for key, entry in meta.items():
+            if not isinstance(entry, dict):
+                continue
+            resolved = resolve_calibration(entry, rect)
+            if resolved is None:
+                continue
+            current = self.config.get(key)
+            if isinstance(current, (list, tuple)) and list(current) == list(resolved):
+                continue
+            self.config[key] = list(resolved)
+            changed[key] = list(resolved)
+        if not changed:
+            return
+        try:
+            core_save_config(changed)
+        except Exception:
+            pass
+
     def _unregister_loop_thread(self):
         try:
             self._thread_gen.pop(threading.get_ident(), None)
@@ -41,6 +84,18 @@ class LifecycleMixin:
 
         self.logs_dir = os.path.join(os.getenv('LOCALAPPDATA'), 'Roblox', 'logs')
         self.config = self.load_config()
+        # The dry-run mode belongs to the input layer, so it has to follow
+        # the config from the very beginning.
+        try:
+            from .input_proxy import set_dry_run, set_log_sink
+            set_dry_run(bool(self.config.get("dry_run", False)))
+            set_log_sink(self.dry_run_log)
+        except Exception:
+            pass
+        # The calibration coordinates follow the Roblox window — see
+        # _calibration_watch_loop.
+        self._calibration_rect = None
+        threading.Thread(target=self._calibration_watch_loop, daemon=True, name="CalibrationWatch").start()
         # Read both historical spellings without deleting or rewriting user data.
         raw_webhook = self.config.get("webhook_urls")
         if not raw_webhook:
@@ -126,15 +181,11 @@ class LifecycleMixin:
         self._detection_gen = 0
         self._thread_gen = {}
         self.detection_running = False
-        self._stop_player_logger_thread()
         self.detection_thread = None
         self.lock = threading.Lock()
         self._log_lock = threading.Lock()
         self._log_timer = None
-        self.player_log_queue = queue.Queue()
-        self.player_log_send_delay = float(self.config.get("player_log_send_delay", 2.0))
         self.biome_history = []
-        self.player_log_sender_running = False
 
         # item use
         self.last_br_time = datetime.min
@@ -242,7 +293,6 @@ class LifecycleMixin:
         self.enable_buff_glitched_var   = ConfigVar(self.config, "enable_buff_glitched", False)
         self.record_rarest_biome_var    = ConfigVar(self.config, "record_rare_biome", False)
         self.rarest_biome_keybind_var   = ConfigVar(self.config, "rare_biome_record_keybind", "shift + F8")
-        self.player_logger_var          = ConfigVar(self.config, "player_logger", True)
         self.click_delay_var            = ConfigVar(self.config, "inventory_click_delay", "0")
         self.enable_ocr_failsafe_var    = ConfigVar(self.config, "enable_ocr_failsafe", False)
         self.fishing_mode_var           = ConfigVar(self.config, "fishing_mode", False)
@@ -288,6 +338,11 @@ class LifecycleMixin:
                 ("check_merchant", "", "Use merchant teleporter and check for merchant."),
                 ("use", "{item_name} {amount}", "Use an item remotely."),
                 ("rejoin", "", "Close Roblox to force rejoin (requires Auto Reconnect enabled)."),
+                ("toggle", "{feature} [on|off]", "Turn a macro feature on or off (fishing, dryrun, idle, potion, ...)."),
+                ("logs", "[lines]", "Send the last lines of the macro log."),
+                ("biome", "", "Show the current biome, the last aura and the biome counts."),
+                ("stats", "", "Show today's macro stats."),
+                ("restart_macro", "", "Stop and start the macro again."),
             ]
         if not hasattr(self, "remote_worker_running"):
             self.remote_worker_running = False
@@ -481,13 +536,6 @@ class LifecycleMixin:
     def _on_exit_handler(self):
         try:
             self.detection_running = False
-            self.player_log_sender_running = False
-            self.player_logger_running = False
-            try:
-                if hasattr(self, "player_log_queue") and self.player_log_queue:
-                    self.player_log_queue.put(None)
-            except Exception:
-                pass
             if getattr(self, 'has_started_once', False):
                 if self.start_time:
                     now = datetime.now()

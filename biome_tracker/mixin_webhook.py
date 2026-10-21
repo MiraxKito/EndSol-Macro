@@ -361,7 +361,10 @@ class WebhookMixin:
             return "- (No webhook channels resolved)"
         return "\n".join(f"- {mention}" for mention in mentions)
 
-    # Custom embed messages for rare biomes — unique look & feel per biome
+    # Custom embed messages for rare biomes — unique look & feel per biome.
+    # The flavour text is written by hand, but the facts that change with
+    # every game update (duration, aura list) are filled in from the live
+    # biome data — see _fill_rare_biome_facts.
     RARE_BIOME_CUSTOM = {
         "GLITCHED": {
             "color": 0xbfff00,
@@ -369,8 +372,8 @@ class WebhookMixin:
             "title_end": " ANOMALY FIXED ",
             "desc_start": (
                 "> **Spawn:** 1 in 30,000 per biome change (~1 in 11.2M/s)\n"
-                "> **Duration:** 2m 44s | **BT:** Native auras ignore Breakthrough\n"
-                "> **Exclusive Auras:** FAULT, GLITCH, OPPRESSION *(cannot be rolled outside Glitched)*\n"
+                "> **Duration:** {duration} | **BT:** Native auras ignore Breakthrough\n"
+                "> **Exclusive Auras:** {auras} *(cannot be rolled outside Glitched)*\n"
                 "> \n"
                 "> *Glitches and errors all around the server.*"
             ),
@@ -382,8 +385,8 @@ class WebhookMixin:
             "title_end": "★ DREAMSPACE FADED ★",
             "desc_start": (
                 "> **Spawn:** 1 in 3,500,000/s during Normal biome\n"
-                "> **Duration:** 3m 12s | **BT:** No Breakthrough; spawns Heavenly Potions\n"
-                "> **Exclusive Auras:** ★, ★★, ★★★, Borealis, Dreammetric\n"
+                "> **Duration:** {duration} | **BT:** No Breakthrough; spawns Heavenly Potions\n"
+                "> **Exclusive Auras:** {auras}\n"
                 "> \n"
                 "> *Reality bends. Dreams take shape. Roll now — the window is brief.*"
             ),
@@ -396,8 +399,8 @@ class WebhookMixin:
             "desc_start": (
                 "> ## ⟨ Welcome to the Digital Realm ⟩\n"
                 "> **Source:** Strange Controller / Biome Randomizer (1 in 5,000)\n"
-                "> **Duration:** 12 min | **BT:** 2x Breakthrough | **16 unique auras**\n"
-                "> **Exclusive Auras:** Forbidden, PLAYER, Player Respawn, Virtual, Metabytes, Illusionary, Virtual: Fatal Error, Matrix, Antivirus, Virtual: Full Control, Virtual: Worldwide, Aegis, Pixelation, Matrix: Overdrive, Matrix: Reality, Cytokinesis\n"
+                "> **Duration:** {duration} | **BT:** {bt} Breakthrough | **{count} unique auras**\n"
+                "> **Exclusive Auras:** {auras}\n"
                 "> \n"
                 "> *The grid is live. 12 minutes to exploit it.*"
             ),
@@ -409,7 +412,7 @@ class WebhookMixin:
             "title_end": "◉ SINGULARITY COLLAPSED ◉",
             "desc_start": (
                 "> **Spawn:** 1 in 100 to replace STARFALL\n"
-                "> **Duration:** 20 min (or until ASTRAIOS rolled) | **BT:** 5x Breakthrough\n"
+                "> **Duration:** {duration} (or until ASTRAIOS rolled) | **BT:** {bt} Breakthrough\n"
                 "> **Key Aura:** GARGANTUA (1 in 430,000,000)\n"
                 "> \n"
                 "> *A gravitational anomaly. 20 minutes — maximize every roll.*"
@@ -422,8 +425,8 @@ class WebhookMixin:
             "title_end": "✦ MEMORIES LET GO ✦",
             "desc_start": (
                 "> **Spawn:** Condensed Memory used inside Lost Forest (Nighttime only)\n"
-                "> **Duration:** 22 min | time locked to Nighttime | **2x** multiplier\n"
-                "> **Auras:** 4 native, 8 exclusive\n"
+                "> **Duration:** {duration} | time locked to Nighttime | **{bt} multiplier**\n"
+                "> **Auras:** {count} native (4 special, 4 unique) + 4 exclusive\n"
                 "> \n"
                 "> *Yet again, THEIR Memories Begin to Let Go...*\n"
                 "> *\"I will remember you again, I promise.\"*"
@@ -483,6 +486,55 @@ class WebhookMixin:
             "desc_end": "> ## ⚔ The Citadel Dissolves ⚔\n> The Citadel of Orders has been dispelled.",
         },
     }
+
+    @staticmethod
+    def _compact_duration(duration):
+        """'2 minutes and 44 seconds (164 seconds) before disappearing' -> '2m 44s'."""
+        text = str(duration or "").strip()
+        if not text:
+            return ""
+        seconds = None
+        for pattern, factor in (
+            (r"\(\s*(\d+)\s*(?:s|sec|secs|seconds?)\s*\)", 1),
+            (r"(\d+)\s*(?:seconds?|secs?)\b", 1),
+            (r"(\d+)\s*(?:minutes?|mins?)\b", 60),
+            (r"\b(\d+)\s*(?:s|sec|secs)\b", 1),
+        ):
+            m = re.search(pattern, text, re.I)
+            if m:
+                seconds = int(m.group(1)) * factor
+                break
+        if not seconds:
+            return text
+        if seconds < 60:
+            return f"{seconds}s"
+        minutes, rest = divmod(seconds, 60)
+        return f"{minutes}m {rest}s" if rest else f"{minutes} min"
+
+    def _fill_rare_biome_facts(self, biome_meta, text):
+        """Fill the changing facts of a rare-biome message from the live data.
+
+        The copy is written by hand, but the duration and the aura list change
+        with every game update — so they are taken from the biome data instead
+        of being hardcoded.
+        """
+        if not text:
+            return text
+        try:
+            duration = self._compact_duration(biome_meta.get("duration"))
+            auras = []
+            for entry in (biome_meta.get("native_auras") or []):
+                name = entry.get("name") if isinstance(entry, dict) else entry
+                if name:
+                    auras.append(str(name))
+            multiplier = biome_meta.get("breakthrough_multiplier")
+            text = text.replace("{duration}", duration or "Unknown")
+            text = text.replace("{auras}", ", ".join(auras) if auras else "Unknown")
+            text = text.replace("{count}", str(len(auras)))
+            text = text.replace("{bt}", f"{multiplier}x" if multiplier else "none")
+            return text
+        except Exception:
+            return text
 
     def build_biome_webhook_description(self, biome, event_type, message_type="Test",
                                         custom_title=None, custom_desc=None,
@@ -641,6 +693,7 @@ class WebhookMixin:
                 custom_rare = self.RARE_BIOME_CUSTOM.get(biome) or {}
                 unique_title = (user_rare_overrides.get("title_start") if user_rare_overrides else None) or (custom_rare.get("title_start") if custom_rare else None)
                 unique_desc = (user_rare_overrides.get("desc_start") if user_rare_overrides else None) or (custom_rare.get("desc_start") if custom_rare else None)
+                unique_desc = self._fill_rare_biome_facts(biome_meta, unique_desc)
 
                 has_custom = bool(custom_title_value or custom_description_value)
 
@@ -1026,6 +1079,74 @@ class WebhookMixin:
             self.append_log(f"[Aura Webhook] {aura_name} announced despite configured minimum 1 in {minimum_value} ({_why}).")
         return False
 
+    def build_aura_webhook_description(self, aura_name, rarity=None, biome_message=""):
+        """Build the aura embed (title, description, color).
+
+        Single source of truth for the real send and for the Discord Webhook
+        Customization preview, so the preview shows exactly what Discord
+        receives.
+        """
+        real_key, aura_info = self._resolve_aura_info_for_webhook(aura_name)
+        data_rarity = aura_info.get("rarity") if isinstance(aura_info, dict) else None
+        rarity_value = _parse_rarity_value(rarity) if rarity is not None else _parse_rarity_value(data_rarity)
+
+        from .aura_classification import classify_aura
+        _classification = classify_aura(aura_name, aura_info)
+        _cls_type = str(_classification.get("type") or "normal")
+
+        force_ping_auras = str(self.config.get("force_ping_auras", "") or "").lower()
+        force_ping_list = [x.strip() for x in force_ping_auras.split(",") if x.strip()]
+        aura_name_norm = _normalize_aura_lookup(aura_name)
+        is_force_ping = bool(force_ping_list) and any(
+            aura_name_norm.startswith(x.replace("_", "").replace(" ", ""))
+            or x.replace("_", "").replace(" ", "") in aura_name_norm
+            for x in force_ping_list
+        )
+
+        color = 0xffffff
+        if real_key and isinstance(aura_info, dict) and aura_info:
+            rarity_name_field = aura_info.get("rarity_name") if isinstance(aura_info, dict) else None
+            source_text, condition_text = _aura_source_condition_lines(aura_info, _cls_type)
+            source_line = f"> **Source:** {source_text}" if source_text else ""
+            condition_line = f"> **Condition:** 🔒 {condition_text}" if condition_text else ""
+
+            if rarity_value is not None:
+                if 99000 <= rarity_value < 1000000:
+                    color = 0x3dd3e0
+                elif 1000000 <= rarity_value < 10000000:
+                    color = 0xff73ec
+                elif 10000000 <= rarity_value < 99000000:
+                    color = 0x2d30f7
+                elif 99000000 <= rarity_value < 1000000000:
+                    color = 0xed2f59
+                else:
+                    color = 0xff9447
+
+            rarity_lines = _aura_rarity_lines(aura_info, _cls_type, rarity_value, rarity_name_field)
+            _detail_parts = [*rarity_lines]
+            if source_line:
+                _detail_parts.append(source_line)
+            if condition_line:
+                _detail_parts.append(condition_line)
+            description = f"> ## ✨ Aura equipped: {aura_name}\n" + "\n".join(_detail_parts)
+            if biome_message:
+                description += f" {biome_message}"
+        else:
+            if is_force_ping:
+                color = 0xed2f59
+            # Aura not in auras.json — not enough data to determine source
+            unknown_source_line = "> **Source:** 🎲 Unknown source (aura not in the local database)"
+            if biome_message:
+                description = f"> ## ✨ Aura equipped: {aura_name}\n{unknown_source_line} {biome_message}"
+            else:
+                description = f"> ## ✨ Aura equipped: {aura_name}\n{unknown_source_line}"
+        return {
+            "title": "⭐ Aura Detection ⭐",
+            "description": description,
+            "color": color,
+            "rarity_value": rarity_value,
+        }
+
     def send_aura_webhook(self, aura_name, rarity, biome_message, screenshot_path=None):
         urls = self.get_webhook_list()
         if not urls:
@@ -1071,59 +1192,11 @@ class WebhookMixin:
         is_event_aura = aura_class_name == "event" or bool(aura_info.get("limited")) or "limited" in aura_flags or "event" in aura_flags
         bypass_class = aura_class_name in ("transcendent", "challenged", "challenged+")
 
-        rarity_line = ""
-        source_line = ""
-        condition_line = ""
-        if real_key and isinstance(aura_info, dict) and aura_info:
-            # Source/condition are computed for every KNOWN aura, regardless
-            # of whether a numeric rarity exists: the Fandom refresh leaves
-            # rarity null for many special auras (variants, craftables), but
-            # they still have a source — previously they fell into the "not
-            # enough data" branch and the webhook showed no details at all.
-            # Source = where it comes from; Condition = extra rule that is
-            # NOT already stated by Source, so the two never duplicate.
-            rarity_name_field = aura_info.get("rarity_name") if isinstance(aura_info, dict) else None
-            _cls_type = str(_classification.get("type") or "normal")
-            source_text, condition_text = _aura_source_condition_lines(aura_info, _cls_type)
-            source_line = f"> **Source:** {source_text}" if source_text else ""
-            condition_line = f"> **Condition:** 🔒 {condition_text}" if condition_text else ""
-
-            if rarity_value is not None:
-                if 99000 <= rarity_value < 1000000:
-                    color = 0x3dd3e0
-                elif 1000000 <= rarity_value < 10000000:
-                    color = 0xff73ec
-                elif 10000000 <= rarity_value < 99000000:
-                    color = 0x2d30f7
-                elif 99000000 <= rarity_value < 1000000000:
-                    color = 0xed2f59
-                else:
-                    color = 0xff9447
-
-            # Rarity lines (v1.0.5): the numeric chance lives ONLY here.
-            # Biome-exclusive auras use "Exclusive Rarity"; native auras get
-            # a separate "Native" line with biome/time + boosted chance.
-            # Crafted/potion/... auras without a numeric rarity simply omit
-            # the line — Source already explains their obtainment.
-            rarity_lines = _aura_rarity_lines(aura_info, _cls_type, rarity_value, rarity_name_field)
-
-            _detail_parts = [*rarity_lines]
-            if source_line:
-                _detail_parts.append(source_line)
-            if condition_line:
-                _detail_parts.append(condition_line)
-            description = f"> ## ✨ Aura equipped: {aura_name}\n" + "\n".join(_detail_parts)
-            if biome_message:
-                description += f" {biome_message}"
-        else:
-            if is_force_ping:
-                color = 0xed2f59
-            # Aura not in auras.json — not enough data to determine source
-            unknown_source_line = "> **Source:** 🎲 Unknown source (aura not in the local database)"
-            if biome_message:
-                description = f"> ## ✨ Aura equipped: {aura_name}\n{unknown_source_line} {biome_message}"
-            else:
-                description = f"> ## ✨ Aura equipped: {aura_name}\n{unknown_source_line}"
+        # The embed itself comes from one function, so the customization
+        # preview shows exactly what Discord receives.
+        built = self.build_aura_webhook_description(aura_name, rarity, biome_message)
+        description = built["description"]
+        color = built["color"]
         current_utc_time = discord_timestamp()
         embed = {
             "title": "⭐ Aura Detection ⭐",
@@ -1135,6 +1208,7 @@ class WebhookMixin:
             },
             "timestamp": current_utc_time
         }
+
         content = ""
         should_ping = False
         if is_event_aura:

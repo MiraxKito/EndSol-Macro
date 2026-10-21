@@ -82,8 +82,6 @@ DEFAULT_CONFIG: dict = {
     "auto_roll_biome_list": [],
     "autoroll_status_region": [689, 976, 133, 29],
     "autoroll_toggle_button": [761, 986],
-    "eden_contract_extra1_button": [0, 0],
-    "eden_contract_extra2_button": [0, 0],
     "eden_contract_interval": "3",
 
     # ── Multi-instance monitor (alerts from secondary Roblox windows) ──
@@ -194,7 +192,6 @@ DEFAULT_CONFIG: dict = {
     "chat_close_button": [140, 35],
     "chat_box_ocr_pos": [8, 101, 474, 269],
     "rare_biome_record_keybind": "shift + F8",
-    "player_logger": True,
 
     # ── Fishing calibration (calibrated for 1920x1080) ─────────────────
     "fishing_bar_region": [757, 762, 405, 21],
@@ -431,6 +428,9 @@ DEFAULT_CONFIG: dict = {
     "potion_occupancy": "full",                # "full" | "partial"
     "potion_add_everything_button": [845, 689],
     "potion_craft_button": [1066, 686],
+    # The game asks to confirm "add everything" - this is the button that
+    # closes that panel again (0 = not calibrated, the macro skips the click).
+    "potion_add_cancel_button": [822, 639],
     "potion_add_wait": "1.0",
     "potion_craft_wait": "4.0",
     "potion_auto_target_state": "on",          # "on" | "on_craft"
@@ -462,7 +462,6 @@ DEFAULT_CONFIG: dict = {
 
     # ── OCR / misc internals ──────────────────────────────────────────
     "ocr_failsafe_match_threshold": 0.7,
-    "player_log_send_delay": 2.0,
     "auto_update_biome_data": True,
     "auto_update_biome_aura_data": True,
     "custom_biome_overrides": _default_biome_overrides(),

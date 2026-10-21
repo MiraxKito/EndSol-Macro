@@ -56,6 +56,11 @@ _LAUNCHED_ACCOUNTS: dict[str, float] = {}  # usernames launched via the panel th
 # launch's slot.
 _LAUNCH_CONFIRMED: dict[str, float] = {}
 _LAUNCH_GEN: dict[str, int] = {}
+# pid -> account username. The launcher KNOWS which account it started, while
+# the client log only names the account once the client joined the game.
+# Without this the multi-instance list would show no account for a fresh
+# window (and the main window could not be resolved).
+_PID_ACCOUNT: dict[int, str] = {}
 _NTDLL: Any = None
 _AUTH_SESSION: Any = None
 _LOGIN_PROC: Any = None
@@ -966,14 +971,50 @@ def _build_launch_link(ticket: str, join_url: str = "") -> str:
     return link
 
 
+def launched_pid_account(pid: int) -> str:
+    """The account of a client this launcher started ('' when unknown)."""
+    try:
+        with _LOCK:
+            return str(_PID_ACCOUNT.get(int(pid)) or "")
+    except Exception:
+        return ""
+
+
+def _track_launched_pid(username: str, before: set[int]) -> None:
+    """Remember which client process belongs to the account we just launched.
+
+    The client log names the account only after the client joined the game
+    (a few seconds after the launch). Until then the multi-instance list
+    would show a window without an account, and the main window could not be
+    resolved from the account.
+    """
+    def _work() -> None:
+        deadline = time.time() + 120.0
+        while time.time() < deadline:
+            time.sleep(1.5)
+            try:
+                pids = set(_roblox_pids())
+            except Exception:
+                continue
+            new = [p for p in pids if p not in before]
+            if new:
+                with _LOCK:
+                    for pid in new:
+                        _PID_ACCOUNT[int(pid)] = username
+                return
+    threading.Thread(target=_work, name=f"EndSol launched pid {username}", daemon=True).start()
+
+
 def _running_accounts() -> dict[str, list[int]]:
     """Map account username -> pids of live Roblox windows running it.
 
-    Uses the SAME log->PID mapping and TutorialCursor username reader as the
+    Uses the SAME log->PID mapping and the same username reader as the
     multi-instance monitor (one source of truth for "which account is this
-    window"). The scan touches the Roblox logs directory, so it is cached for
-    a few seconds — the UI polls the state every 2 s and must not re-scan
-    logs on every poll. Non-Windows (tests) never scans and returns {}."""
+    window"). The username comes from the Roblox CLIENT log, so the official
+    client, Bloxstrap and Fishstrap all work the same way. The scan touches
+    the Roblox logs directory, so it is cached for a few seconds — the UI polls
+    the state every 2 s and must not re-scan logs on every poll. Non-Windows
+    (tests) never scans and returns {}."""
     now = time.time()
     with _LOCK:
         cached = _RUN_SCAN.get("map")
@@ -984,8 +1025,17 @@ def _running_accounts() -> dict[str, list[int]]:
         try:
             from . import multi_instance as _mi
             pids = [int(w["pid"]) for w in _mi._windows()]
+            with _LOCK:
+                # A closed client must not keep its slot: Windows recycles
+                # PIDs, and a stale entry would name the wrong account.
+                for stale in [p for p in _PID_ACCOUNT if p not in set(pids)]:
+                    _PID_ACCOUNT.pop(stale, None)
             for pid, path in (_mi._map_logs_to_pids(pids) if pids else {}).items():
-                name = str(_mi._log_username(path) or "").strip().lower()
+                # The launcher's own bookkeeping first: it knows the account of
+                # every client it started, even before the client logged in.
+                name = launched_pid_account(pid)
+                if not name:
+                    name = str(_mi._log_username(path) or "").strip().lower()
                 if name:
                     found.setdefault(name, []).append(int(pid))
         except Exception:
@@ -1288,7 +1338,12 @@ def launch_account(username: str, ps_link: str = "", own_server: bool | None = N
     else:
         final_place = ""
     try:
+        try:
+            pids_before = set(_roblox_pids())
+        except Exception:
+            pids_before = set()
         os.startfile(_build_launch_link(ticket, join_url))  # type: ignore[attr-defined]
+        _track_launched_pid(username, pids_before)
     except Exception as exc:
         return _launch_fail(username, {"success": False, "error": f"Failed to open the launch link: {exc}"})
     with _LOCK:

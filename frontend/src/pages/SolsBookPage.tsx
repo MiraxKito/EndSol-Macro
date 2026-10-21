@@ -7,6 +7,9 @@ import { claimAudio, onAudioOwnerChange, releaseAudio } from "../utils/audioLock
 // starts, so nothing ever plays on top of anything else.
 const VIDEO_OWNER = "solbook-video";
 const BOOK_MUSIC_OWNER = "solbook-music";
+// Every player needs its own id: two players with the same id would think
+// they are the same owner and the lock would let them play at the same time.
+let audioOwnerSeq = 0;
 
 type Entry = Record<string, any>;
 type MapData = Record<string, Entry>;
@@ -911,6 +914,8 @@ function AudioPlayer({ url, fileLabel, accent, source, sourceName }: {
   const { src, state } = useCachedMedia(url);
   const audioSrc = src || url;
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const loadedSrc = useRef<string>("");
+  const prevUrl = useRef<string>("");
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -922,7 +927,7 @@ function AudioPlayer({ url, fileLabel, accent, source, sourceName }: {
   const title = fileLabel ? prettyName(fileLabel) : prettyName(mediaFileName(url));
   // The built-in player: the track can be added to it from here.
   const player = useMusicPlayer();
-  const ownerId = `${BOOK_MUSIC_OWNER}:${url}`;
+  const ownerId = useMemo(() => `${BOOK_MUSIC_OWNER}:${++audioOwnerSeq}`, []);
 
   // A tab/entry switch swaps the src under the same element: the browser
   // silently stops playback while the old "playing" flag survived, so the
@@ -937,6 +942,33 @@ function AudioPlayer({ url, fileLabel, accent, source, sourceName }: {
   useEffect(() => {
     if (audioRef.current) audioRef.current.loop = loop;
   }, [loop]);
+
+  // The source is set by hand instead of through the src attribute: React
+  // would reload the file every time the local cache finished downloading,
+  // and the track jumped back to the beginning in the middle of the song.
+  // The position is carried over to the cached copy of the same track.
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el || !audioSrc) return;
+    if (loadedSrc.current === audioSrc) return;
+    // Same track, new file (the cache finished) — keep the position. A
+    // different track starts from the top.
+    const sameTrack = prevUrl.current === url;
+    prevUrl.current = url;
+    loadedSrc.current = audioSrc;
+    const wasPlaying = sameTrack && !el.paused;
+    const at = wasPlaying ? (el.currentTime || 0) : 0;
+    try {
+      el.src = audioSrc;
+      el.load();
+    } catch { /* ignore */ }
+    if (!wasPlaying) return;
+    const resume = () => {
+      if (at > 0) { try { el.currentTime = at; } catch { /* ignore */ } }
+      void el.play().catch(() => {});
+    };
+    el.addEventListener("loadedmetadata", resume, { once: true });
+  }, [audioSrc, url]);
 
   const fmtTime = (t: number) => {
     if (!Number.isFinite(t) || t < 0) return "0:00";
@@ -1048,7 +1080,6 @@ function AudioPlayer({ url, fileLabel, accent, source, sourceName }: {
       </div>
       <audio
         ref={audioRef}
-        src={audioSrc}
         preload="metadata"
         onPlay={() => { setPlaying(true); claimAudio(ownerId); }}
         onPause={() => { setPlaying(false); releaseAudio(ownerId); }}

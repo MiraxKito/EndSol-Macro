@@ -12,19 +12,28 @@ import difflib
 import itertools
 import zipfile, subprocess, tempfile
 import keyboard as kb
-import json, requests, time, os, threading, re, webbrowser, random, keyboard, pyautogui, autoit, psutil, \
+import json, requests, time, os, threading, re, webbrowser, random, keyboard, psutil, \
     locale, win32gui, win32process, win32con, ctypes, queue, mouse, sys, hashlib, winocr, asyncio, win32api, traceback
 
-current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.1.1")
+# The input functions go through the proxy: with the dry-run mode on the macro
+# must not touch the game, no matter which feature sends the click or the key.
+from .input_proxy import autoit, pyautogui
+
+current_ver = os.environ.get("ENDSOL_MACRO_VERSION", "v1.1.2")
+
+# Extra pause after a mouse action in the preparation sequences (character
+# reset, camera, menu tabs). The game UI needs a moment to react - clicking
+# too fast leaves a panel half open and the next click lands on it.
+PREP_MOUSE_EXTRA_DELAY = 0.5
 current_version = current_ver
 
 # The release this build belongs to. A fix release is published under its
-# own tag ("v1.1.1-fix") while the macro version stays "v1.1.1" — without
+# own tag ("v1.1.2-fix") while the macro version stays "v1.1.2" — without
 # the tag the update check compares the release tag with the macro version,
 # they never match and the "update available" prompt shows up on the very
 # build that IS the update. The build carries its own tag, so it can tell
 # that the newest release is the one it already is.
-current_release_tag = os.environ.get("ENDSOL_RELEASE_TAG", "v1.1.1-fix")
+current_release_tag = os.environ.get("ENDSOL_RELEASE_TAG", "v1.1.2")
 
 rare_biomes = ["GLITCHED", "DREAMSPACE", "CYBERSPACE", "SINGULARITY", "THE RADIANT FOREST"]
 admin_biomes = ["THE HYPERSPACE REALM", "赤い満月", "THE NULL'S EXISTENCE", "THE CITADEL OF ORDERS"]

@@ -933,29 +933,6 @@ class ActionsMixin:
         except Exception:
             pass
 
-    def _make_player_embed(self, kind, name, pid, ts_iso, duration_text=None, join_biome=None, left_biome=None):
-        color = 3066993 if kind == "join" else 15158332
-        title = "Player Joined" if kind == "join" else "Player Left"
-        if kind == "join" and join_biome:
-            title = f"Player Joined during {join_biome} biome"
-        elif kind == "leave" and left_biome:
-            title = f"Player Left during {left_biome} biome"    
-        desc = f"**{name}**\n`{pid}`"
-        fields = []
-        if duration_text:
-            fields.append({"name": "Stayed", "value": duration_text, "inline": True})
-        if kind == "leave" and join_biome:
-            fields.append({"name": "Joined During", "value": f"{join_biome} biome", "inline": True})
-        embed = {
-            "title": title,
-            "description": desc,
-            "color": color,
-            "timestamp": ts_iso,
-            "footer": {"text": "EndSol Macro • Player Logger"},
-            "fields": fields
-        }
-        return embed
-
     def _send_embeds_to_all(self, embeds):
         urls = self.get_webhook_list()
         if not urls:
@@ -2699,6 +2676,8 @@ class ActionsMixin:
         sequence aborts (returns False) the moment it turns True."""
         try:
             inventory_click_delay = int(self.config.get("inventory_click_delay", "0")) / 1000.0
+            # Extra settle after every mouse action in the prep sequence.
+            mouse_extra = PREP_MOUSE_EXTRA_DELAY
             tab_pos = self.config.get("potion_items_tab", [0, 0])
             search_pos = self.config.get("potion_search_bar", [0, 0])
             first_slot_pos = self.config.get("potion_first_potion_slot_pos", [0, 0])
@@ -2707,6 +2686,7 @@ class ActionsMixin:
                 self.config.get("potion_auto_button", [0, 0]),
             )
             recipe_btn = self.config.get("potion_recipe_button", [0, 0])
+            cancel_btn = self.config.get("potion_add_cancel_button", [0, 0])
 
             self.activate_roblox_window()
             time.sleep(0.5)
@@ -2722,13 +2702,13 @@ class ActionsMixin:
                 for _ in range(5):
                     if cancelled(): return False
                     self.Global_MouseClick(tab_pos[0], tab_pos[1])
-                    time.sleep(0.3)
+                    time.sleep(0.3 + mouse_extra)
 
             # Search bar: clear and type the potion name
             if search_pos and search_pos[0] > 0:
                 if cancelled(): return False
                 self.Global_MouseClick(search_pos[0], search_pos[1])
-                time.sleep(0.6 + inventory_click_delay)
+                time.sleep(0.6 + inventory_click_delay + mouse_extra)
                 autoit.send("^{a}")
                 time.sleep(0.6 + inventory_click_delay)
                 autoit.send("{BACKSPACE}")
@@ -2744,19 +2724,25 @@ class ActionsMixin:
                 for _ in range(3):
                     if cancelled(): return False
                     self.Global_MouseClick(first_slot_pos[0], first_slot_pos[1])
-                    time.sleep(0.3)
+                    time.sleep(0.3 + mouse_extra)
 
             # Click Auto Add button (must happen before opening recipe)
             if auto_btn and auto_btn[0] > 0:
                 if cancelled(): return False
                 self.Global_MouseClick(auto_btn[0], auto_btn[1])
-                time.sleep(0.5)
+                time.sleep(0.5 + mouse_extra)
+                # Auto Add opens the same confirmation panel as
+                # "Add Everything" - it has to be closed again, otherwise it
+                # sits on top of the recipe button.
+                if cancel_btn and int(cancel_btn[0] or 0) > 0:
+                    self.Global_MouseClick(int(cancel_btn[0]), int(cancel_btn[1]))
+                    time.sleep(0.5 + mouse_extra)
 
             # Click recipe button
             if recipe_btn and recipe_btn[0] > 0:
                 if cancelled(): return False
                 self.Global_MouseClick(recipe_btn[0], recipe_btn[1])
-                time.sleep(2.0)
+                time.sleep(2.0 + mouse_extra)
         except Exception as e:
             self.error_logging(e, "Potion prep sequence failed")
             return False
@@ -3017,6 +3003,7 @@ class ActionsMixin:
                 self._potion_thread_active = True
             add_btn = self.config.get("potion_add_everything_button", [0, 0])
             craft_btn = self.config.get("potion_craft_button", [0, 0])
+            cancel_btn = self.config.get("potion_add_cancel_button", [0, 0])
             if (not add_btn or int(add_btn[0] or 0) <= 0
                     or not craft_btn or int(craft_btn[0] or 0) <= 0):
                 self.append_log(
@@ -3047,6 +3034,11 @@ class ActionsMixin:
                 cycle += 1
                 self.Global_MouseClick(int(add_btn[0]), int(add_btn[1]))
                 time.sleep(add_wait)
+                # The game asks to confirm the addition - the panel stays open
+                # over the Craft button, so it has to be closed again first.
+                if cancel_btn and int(cancel_btn[0] or 0) > 0:
+                    self.Global_MouseClick(int(cancel_btn[0]), int(cancel_btn[1]))
+                    time.sleep(add_wait)
                 self.Global_MouseClick(int(craft_btn[0]), int(craft_btn[1]))
                 time.sleep(craft_wait)
                 if cycle % 10 == 1:
@@ -3158,8 +3150,22 @@ class ActionsMixin:
                                   lambda: True, _walk_mult(station_meta))
                 if _cancelled():
                     return
-                self._potion_simple_session(potion_name, duration=duration,
-                                            cancelled=_cancelled, manage_flag=False)
+                craft_mode = str(self.config.get("potion_craft_mode", "recording") or "recording")
+                recipe_file = str(self.config.get("selected_potion_file", "") or "").strip()
+                if craft_mode != "simple" and recipe_file and recipe_file.lower() != "none":
+                    # Recording mode: replay the recorded recipe for the
+                    # scheduled window. The character already stands at the
+                    # station — the walk above brought it there.
+                    self.append_log("[Potion] Replaying the recorded recipe (scheduled session).")
+                    self._potion_thread_launcher(
+                        recipe_file,
+                        "crafting_files_do_not_open",
+                        stop_after=duration,
+                        cancel_if=_cancelled,
+                    )
+                else:
+                    self._potion_simple_session(potion_name, duration=duration,
+                                                cancelled=_cancelled, manage_flag=False)
                 if not _cancelled():
                     # No walk back needed — a character reset returns to spawn.
                     self.append_log("[Potion] Resetting character (back to spawn).")
@@ -3262,9 +3268,14 @@ class ActionsMixin:
                             time.sleep(5)
                             continue
 
+                        switching_enabled = self.config.get("enable_potion_switching", False)
+                        simple_mode = str(self.config.get("potion_craft_mode", "recording") or "recording") == "simple"
+
                         # SIMPLE mode - no recording needed, the new UI
                         # is driven by the Add Everything / Craft calibrations.
-                        if str(self.config.get("potion_craft_mode", "recording") or "recording") == "simple":
+                        # With switching on, the potions below are crafted one
+                        # after the other instead of the single name.
+                        if simple_mode and not switching_enabled:
                             potion_name = str(self.config.get("potion_simple_name", "") or "").strip()
                             if not potion_name:
                                 time.sleep(2)
@@ -3274,16 +3285,16 @@ class ActionsMixin:
                             time.sleep(1.0)
                             continue
 
-                        switching_enabled = self.config.get("enable_potion_switching", False)
-
                         if switching_enabled:
                             current_index = 0
-                            slot_keys = [
-                                "selected_potion_file",
-                                "potion_file_1",
-                                "potion_file_2",
-                                "potion_file_3",
-                            ]
+                            # In simple mode the slots hold potion NAMES, in
+                            # recording mode they hold recipe files.
+                            slot_keys = (["potion_file_1", "potion_file_2", "potion_file_3"]
+                                         if simple_mode else
+                                         ["selected_potion_file",
+                                          "potion_file_1",
+                                          "potion_file_2",
+                                          "potion_file_3"])
                             while self.detection_running and self.enable_potion_crafting_var.get() and self._potion_gen == my_gen:
                                 if not bool(self.config.get("enable_potion_switching", False)): break
                                 interval = float(self.config.get("potion_switch_interval", "60"))
@@ -3291,11 +3302,11 @@ class ActionsMixin:
 
                                 if not target_file or target_file.lower() == "none":
                                     print(f"[Potion] Slot #{current_index} is empty. Skipping.")
-                                    current_index = (current_index + 1) % 4
+                                    current_index = (current_index + 1) % len(slot_keys)
                                     time.sleep(0.5)
                                     continue
 
-                                if str(self.config.get("potion_craft_mode", "recording") or "recording") == "simple":
+                                if simple_mode:
                                     potion_name = (target_file[:-5]
                                                    if target_file.lower().endswith(".json")
                                                    else target_file)
@@ -3319,7 +3330,7 @@ class ActionsMixin:
                                         stop_after=interval,
                                         cancel_if=lambda: not bool(self.config.get("enable_potion_switching", False)),
                                     )
-                                current_index = (current_index + 1) % 4
+                                current_index = (current_index + 1) % len(slot_keys)
                         else:
                             file_name = self.config.get("selected_potion_file", "").strip()
                             if not file_name or file_name.lower() == "none":
@@ -3556,9 +3567,26 @@ class ActionsMixin:
     # the macro and rejoins once the line is stable again.
     REJOIN_WAIT_SECONDS = 120.0      # window for the game's own auto-rejoin
     REJOIN_POLL_SECONDS = 5.0        # log poll inside that window
+    REJOIN_CONFIRM_DELAY = 25.0      # "Entered play session." -> make sure no error follows
     RECONNECT_CLOSE_DELAY = 30.0     # close Roblox -> wait 30s -> relaunch
     OFFLINE_POLL_SECONDS = 30.0      # internet poll while in offline mode
     OFFLINE_STABLE_DELAY = 15.0      # gap between the two quality probes
+
+    def _rejoin_failed_reason(self, text):
+        """The connection error the client logged after the disconnect.
+
+        Roblox writes "Error Code 277" (lost the server) or "Error Code 279"
+        (ID 17, failed to connect) when the client's own rejoin does not
+        work. Either one means the client is stuck on the error screen.
+        """
+        try:
+            from .multi_instance import ROBLOX_CONNECTION_ERROR_PATTERNS
+        except Exception:
+            ROBLOX_CONNECTION_ERROR_PATTERNS = ()
+        for pattern in ROBLOX_CONNECTION_ERROR_PATTERNS:
+            if pattern in text:
+                return pattern
+        return None
 
     def _wait_for_self_rejoin(self, window_seconds=None) -> bool:
         """Watch the post-disconnect log tail for the game's own auto-rejoin.
@@ -3570,10 +3598,13 @@ class ActionsMixin:
         longer before its retry lands, so the macro waits the whole window
         before taking over.
 
-        Recovery counts ONLY on a real play-session entry ("Entered play
-        session." or an equipped-aura RPC line) seen AFTER the disconnect
-        offset — "! Joining game" alone is NOT enough (with broken internet
-        the client can start rejoining and then hang)."""
+        "Entered play session." is only the entry into the place - the server
+        connection is not up yet (reconnect_logs_state says the same). The
+        client can enter the place and then fail with "Error Code 279", so a
+        connection error in the log cancels the recovery at once, and the
+        entry line only counts when nothing failed within the confirmation
+        window. The equipped-aura RPC is the reliable marker of a real
+        transition into the game."""
         try:
             log_file = getattr(self, "_disconnect_log_file", None)
             offset = int(getattr(self, "_disconnect_line_offset", 0) or 0)
@@ -3581,6 +3612,7 @@ class ActionsMixin:
                 return False
             deadline = time.time() + float(window_seconds or self.REJOIN_WAIT_SECONDS)
             announced = False
+            entered_at = None
             while self.detection_running and time.time() < deadline:
                 try:
                     with open(log_file, "rb") as f:
@@ -3592,7 +3624,20 @@ class ActionsMixin:
                 if not announced and "auto rejoin >> rejoin attempt" in text:
                     announced = True
                     self.append_log("[Disconnect] Roblox client is attempting its own auto-rejoin - waiting for it.")
-                if "entered play session" in text or '"state":"equipped' in text:
+                # A connection error means the client's own rejoin did not
+                # work, whatever the client logged before it.
+                failed = self._rejoin_failed_reason(text)
+                if failed:
+                    self.append_log(
+                        f"[Disconnect] The client's own rejoin failed ({failed}) - the macro takes over.")
+                    return False
+                if '"state":"equipped' in text:
+                    return True
+                if entered_at is None:
+                    if "entered play session" in text:
+                        entered_at = time.time()
+                elif (time.time() - entered_at) >= self.REJOIN_CONFIRM_DELAY:
+                    # The client stayed in the place without a connection error.
                     return True
                 time.sleep(self.REJOIN_POLL_SECONDS)
             return False
@@ -3671,8 +3716,8 @@ class ActionsMixin:
             self._offline_watch_active = False
 
     def _restart_after_offline(self):
-        """Когда интернет вернулся: сначала запуск макроса, потом перезаход
-        в игру (цикл с проверкой сети)."""
+        """The line is back: start the macro first, then walk into the game
+        again through the reconnect cycle."""
         try:
             self.start_detection()
         except Exception as e:
@@ -3685,11 +3730,12 @@ class ActionsMixin:
             self.error_logging(e, "_restart_after_offline: reconnect cycle")
 
     def _run_reconnect_cycle(self, current_attempt=1) -> bool:
-        """Закрыть окно Roblox, подождать 30 сек, перезапустить deep link и
-        довести до игры через кнопку Start. True — если вошли в игру.
+        """Close the Roblox window, wait 30 seconds, start the deep link again
+        and get into the game through the Start button.
 
-        Only call with a verified connection; every attempt re-checks the
-        network first and parks in offline mode if the line died mid-cycle."""
+        Returns True when the game was reached. Only call this with a verified
+        connection — every attempt checks the network again first and parks in
+        offline mode if the line died mid-cycle."""
         if getattr(self, "_reconnect_in_progress", False):
             return False
         self._reconnect_in_progress = True
@@ -4024,17 +4070,6 @@ class ActionsMixin:
                 return False
 
             win32api.SetConsoleCtrlHandler(_handler, True)
-        except Exception:
-            pass
-
-    def _enqueue_player_embed(self, embed):
-        if not hasattr(self, "player_log_queue") or self.player_log_queue is None:
-            try:
-                self.player_log_queue = queue.Queue()
-            except Exception:
-                return
-        try:
-            self.player_log_queue.put(embed)
         except Exception:
             pass
 
